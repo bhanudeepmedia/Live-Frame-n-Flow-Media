@@ -58,6 +58,80 @@
         -webkit-text-stroke: 0px;
         color: #ffffff;
       }
+      /* Music Player Styles */
+      .music-player-container {
+        position: fixed;
+        right: 30px;
+        bottom: 30px;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-family: 'Manrope', sans-serif;
+      }
+      .music-disc {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: conic-gradient(from 0deg, #1a1a1a 0%, #333 10%, #1a1a1a 20%, #333 30%, #1a1a1a 40%, #333 50%, #1a1a1a 60%, #333 70%, #1a1a1a 80%, #333 90%, #1a1a1a 100%);
+        border: 2px solid #22d3ee;
+        position: relative;
+        cursor: pointer;
+        box-shadow: 0 0 15px rgba(34, 211, 238, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .music-disc::before {
+        content: '';
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: #0a0a0a;
+        border-radius: 50%;
+        border: 1px solid #22d3ee;
+        z-index: 2;
+      }
+      .music-disc:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 25px rgba(34, 211, 238, 0.6);
+      }
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      .music-disc.playing {
+        animation: spin 3s linear infinite;
+      }
+      .music-disc.paused {
+        animation-play-state: paused;
+      }
+      .control-icon {
+        color: #22d3ee;
+        z-index: 10;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        position: absolute;
+        filter: drop-shadow(0 0 2px black);
+      }
+      .music-disc:hover .control-icon {
+        opacity: 1;
+      }
+      .music-toggle-text {
+        color: #22d3ee;
+        font-size: 14px;
+        font-weight: 600;
+        text-shadow: 0 0 10px rgba(34,211,238,0.5);
+        opacity: 0;
+        transform: translateX(10px);
+        transition: all 0.3s ease;
+        pointer-events: none;
+      }
+      .music-player-container:hover .music-toggle-text {
+        opacity: 1;
+        transform: translateX(0);
+      }
     </style>
 
 <link rel="stylesheet" href="/index.css">
@@ -77,5 +151,77 @@
 </head>
   <body>
     <div id="root"></div>
+
+    <!-- Background Music Player -->
+    <div class="music-player-container">
+      <div class="music-toggle-text">Sound On</div>
+      <div class="music-disc paused" id="musicDisc" onclick="toggleMusic()">
+        <!-- SVGs for controls -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="control-icon" id="playIcon">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+          <path d="M7 4v16l13 -8z" />
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="control-icon" id="pauseIcon" style="display: none;">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+          <path d="M6 5m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" />
+          <path d="M14 5m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" />
+        </svg>
+      </div>
+    </div>
+    <audio id="bgMusic" src="/assets/anthem.mp3" loop></audio>
+
+    <script>
+      const music = document.getElementById('bgMusic');
+      const disc = document.getElementById('musicDisc');
+      const playIcon = document.getElementById('playIcon');
+      const pauseIcon = document.getElementById('pauseIcon');
+      const textLabel = document.querySelector('.music-toggle-text');
+
+      function updateUI(isPlaying) {
+        if (isPlaying) {
+          disc.classList.remove('paused');
+          disc.classList.add('playing');
+          playIcon.style.display = 'none';
+          pauseIcon.style.display = 'block';
+          textLabel.textContent = "Sound On";
+        } else {
+          disc.classList.add('paused');
+          playIcon.style.display = 'block';
+          pauseIcon.style.display = 'none';
+          textLabel.textContent = "Sound Off";
+        }
+      }
+
+      function toggleMusic() {
+        if (music.paused) {
+          music.play();
+          updateUI(true);
+        } else {
+          music.pause();
+          updateUI(false);
+        }
+      }
+
+      // Try Auto-play on load
+      window.addEventListener('load', () => {
+        music.volume = 0.4; // Set volume to 40%
+        const attemptPlay = music.play();
+        
+        if (attemptPlay) {
+          attemptPlay.then(() => {
+            updateUI(true);
+          }).catch(error => {
+            console.log("Autoplay blocked, waiting for interaction");
+            updateUI(false); // Show paused state
+            // Interaction listener to start audio on first click anywhere
+            document.addEventListener('click', function startAudio() {
+              music.play();
+              updateUI(true);
+              document.removeEventListener('click', startAudio);
+            }, { once: true });
+          });
+        }
+      });
+    </script>
 </body>
 </html>
