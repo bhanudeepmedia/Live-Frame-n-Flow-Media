@@ -324,41 +324,84 @@
         const targetHeading = headings.find(h => h.textContent.includes('Book a Strategy Call'));
 
         if (targetHeading) {
-          const contentWrapper = targetHeading.parentElement;
-          if (!contentWrapper) return;
+          // Traverse up to find the Grid container (columns wrapper)
+          // Structure: h2 -> div (card) -> div (grid) -> div (container)
+          let gridContainer = targetHeading.parentElement;
+          while (gridContainer && (!gridContainer.className.includes('grid') || !gridContainer.className.includes('items-center'))) {
+            gridContainer = gridContainer.parentElement;
+            if (gridContainer && gridContainer.tagName === 'BODY') {
+              gridContainer = null;
+              break;
+            }
+          }
 
-          // Create form container
-          const wrapper = document.createElement('div');
-          wrapper.id = formId;
-          wrapper.style.marginTop = '3rem';
-          wrapper.style.backgroundColor = '#ffffff';
-          wrapper.style.borderRadius = '12px';
-          wrapper.style.overflow = 'hidden';
-          wrapper.style.padding = '4px';
+          if (!gridContainer) {
+            // Fallback: just use the parent of the card if grid search fails
+            gridContainer = targetHeading.parentElement.parentElement;
+          }
 
-          // Insert iframe
-          wrapper.innerHTML = `
-            <iframe
-                src="https://api.leadconnectorhq.com/widget/form/yvyIgjYCipZNwlThBQEM"
-                style="width:100%;height:100%;border:none;border-radius:4px;min-height:621px"
-                id="inline-yvyIgjYCipZNwlThBQEM" 
-                data-layout="{'id':'INLINE'}"
-                data-trigger-type="alwaysShow"
-                data-trigger-value=""
-                data-activation-type="alwaysActivated"
-                data-activation-value=""
-                data-deactivation-type="neverDeactivate"
-                data-deactivation-value=""
-                data-form-name="Marketing Form - Claim Offer"
-                data-height="621"
-                data-layout-iframe-id="inline-yvyIgjYCipZNwlThBQEM"
-                data-form-id="yvyIgjYCipZNwlThBQEM"
-                title="Marketing Form - Claim Offer"
-            >
-            </iframe>
-          `;
+          if (gridContainer && gridContainer.parentElement) {
+            // we want to insert AFTER the grid container, inside the main container
+            const mainContainer = gridContainer.parentElement;
 
-          contentWrapper.appendChild(wrapper);
+            // Create form container
+            const wrapper = document.createElement('div');
+            wrapper.id = formId;
+            wrapper.style.marginTop = '6rem';
+            wrapper.style.width = '100%';
+            wrapper.style.maxWidth = '100%';
+
+            // Add Section Title and Description
+            const titleBlock = document.createElement('div');
+            titleBlock.style.textAlign = 'center';
+            titleBlock.style.marginBottom = '3rem';
+            titleBlock.innerHTML = `
+                <h3 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; color: #fff; font-family: 'Space Grotesk', sans-serif;">Direct Inquiry</h3>
+                <p style="font-size: 1.125rem; color: rgba(255,255,255,0.6); font-family: 'Manrope', sans-serif;">Prefer to write to us? Fill out the form below and we'll be in touch instantly.</p>
+            `;
+            wrapper.appendChild(titleBlock);
+
+            // Iframe Container
+            const iframeContainer = document.createElement('div');
+            iframeContainer.style.backgroundColor = '#ffffff';
+            iframeContainer.style.borderRadius = '12px';
+            iframeContainer.style.overflow = 'hidden';
+            iframeContainer.style.padding = '4px';
+            iframeContainer.style.maxWidth = '800px';
+            iframeContainer.style.margin = '0 auto';
+            iframeContainer.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+
+            // Insert iframe
+            iframeContainer.innerHTML = `
+              <iframe
+                  src="https://api.leadconnectorhq.com/widget/form/yvyIgjYCipZNwlThBQEM"
+                  style="width:100%;height:100%;border:none;border-radius:4px;min-height:621px"
+                  id="inline-yvyIgjYCipZNwlThBQEM" 
+                  data-layout="{'id':'INLINE'}"
+                  data-trigger-type="alwaysShow"
+                  data-trigger-value=""
+                  data-activation-type="alwaysActivated"
+                  data-activation-value=""
+                  data-deactivation-type="neverDeactivate"
+                  data-deactivation-value=""
+                  data-form-name="Marketing Form - Claim Offer"
+                  data-height="621"
+                  data-layout-iframe-id="inline-yvyIgjYCipZNwlThBQEM"
+                  data-form-id="yvyIgjYCipZNwlThBQEM"
+                  title="Marketing Form - Claim Offer"
+              >
+              </iframe>
+            `;
+
+            wrapper.appendChild(iframeContainer);
+
+            // Insert the wrapper after the grid container
+            if (gridContainer.nextSibling) {
+              mainContainer.insertBefore(wrapper, gridContainer.nextSibling);
+            } else {
+              mainContainer.appendChild(wrapper);
+            }
+          }
         }
       }
 
