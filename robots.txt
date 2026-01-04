@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/sitemap.xml
