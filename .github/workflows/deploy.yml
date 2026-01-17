@@ -24,9 +24,8 @@ jobs:
           CI: false
         run: |
           cd copy-of-main-copy-of-frame-n-flow-media
-          npm config set legacy-peer-deps true
-          npm install
-          ls -la # Debug: verify files exist
+          rm -rf node_modules package-lock.json
+          npm install --legacy-peer-deps
           npm run build
 
       - name: Deploy
