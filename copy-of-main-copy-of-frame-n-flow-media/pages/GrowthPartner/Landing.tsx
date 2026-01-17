@@ -130,9 +130,9 @@ const Landing: React.FC = () => {
                         </motion.div>
 
                         <h1 className="text-6xl md:text-8xl font-display font-bold mb-8 leading-[0.9]">
-                            Turn Your <br />
+                            Connect. <br />
                             <span className="relative">
-                                <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-400">Network</span>
+                                <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-400">Refer.</span>
                                 <motion.svg
                                     className="absolute -bottom-4 left-0 w-full h-4 text-accent z-0"
                                     viewBox="0 0 100 10"
@@ -144,17 +144,18 @@ const Landing: React.FC = () => {
                                     <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="3" fill="none" />
                                 </motion.svg>
                             </span>
-                            <br /> Into Gold.
+                            <br /> Earn.
                         </h1>
 
                         <p className="text-xl text-white/70 font-light mb-10 max-w-lg leading-relaxed">
-                            Unlock the <strong className="text-white">GPP Ecosystem</strong>.
-                            Complete "missions" (referrals), level up your income, and unlock full-time career perks.
+                            Identify businesses that need growth. Introduce them to Frame n Flow. We handle the rest.
+                            <br /><br />
+                            <strong className="text-white">Strictly Referral Only.</strong> No service delivery. No billing. No aggressive sales.
                         </p>
 
                         <div className="flex flex-wrap gap-6">
                             <Button onClick={() => navigate('/growth-partner/apply')} className="px-10 py-5 text-xl bg-gradient-to-r from-accent to-accent/80 hover:scale-105 transition-transform shadow-lg shadow-accent/20">
-                                Start Mission 🚀
+                                Join the Ecosystem 🚀
                             </Button>
                         </div>
                     </motion.div>
@@ -174,9 +175,9 @@ const Landing: React.FC = () => {
                                 <div className="flex justify-between items-center mb-8">
                                     <h3 className="text-2xl font-display font-bold flex items-center gap-3">
                                         <Sparkles className="text-yellow-400" />
-                                        Loot Simulator
+                                        Earnings Potential
                                     </h3>
-                                    <div className="bg-white/10 px-3 py-1 rounded text-xs font-mono text-white/50">V 2.0</div>
+                                    <div className="bg-white/10 px-3 py-1 rounded text-xs font-mono text-white/50">Estimator</div>
                                 </div>
 
                                 {/* Interactive Sliders */}
@@ -185,7 +186,7 @@ const Landing: React.FC = () => {
                                     {/* Referrals */}
                                     <div className="group/slider">
                                         <div className="flex justify-between mb-4">
-                                            <label className="text-sm font-bold uppercase tracking-widest text-accent">Active Missions (Clients)</label>
+                                            <label className="text-sm font-bold uppercase tracking-widest text-accent">Successful Referrals</label>
                                             <span className="text-2xl font-black text-white bg-white/10 px-4 py-1 rounded-lg">{referrals}</span>
                                         </div>
                                         <input
@@ -202,7 +203,7 @@ const Landing: React.FC = () => {
                                     {/* Deal Value */}
                                     <div className="group/slider">
                                         <div className="flex justify-between mb-4">
-                                            <label className="text-sm font-bold uppercase tracking-widest text-purple-400">Loot Value ($)</label>
+                                            <label className="text-sm font-bold uppercase tracking-widest text-purple-400">Avg. Deal Size ($)</label>
                                             <span className="text-xl font-bold text-white">${dealValue.toLocaleString()}</span>
                                         </div>
                                         <input
@@ -223,7 +224,7 @@ const Landing: React.FC = () => {
                                     whileHover={{ scale: 1.02 }}
                                 >
                                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
-                                    <p className="text-white/40 text-sm font-bold uppercase mb-2 relative z-10">Potential Monthly XP (Cash)</p>
+                                    <p className="text-white/40 text-sm font-bold uppercase mb-2 relative z-10">Estimated Monthly Commission</p>
 
                                     <div className="flex items-center justify-center gap-2 relative z-10">
                                         <span className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50">
@@ -242,7 +243,7 @@ const Landing: React.FC = () => {
                                 </motion.div>
 
                                 <p className="text-[10px] text-white/20 mt-4 text-center">
-                                    *Loot drops (payouts) strictly capped between 20-30%. No cheat codes allowed.
+                                    *Commission variable between 20-30% based on deal structure.
                                 </p>
                             </div>
                         </div>
@@ -263,34 +264,56 @@ const Landing: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                         <UnlockableStep
                             index={0}
-                            icon={FileText}
-                            title="Zone 1: Apply"
-                            desc="Submit your player profile."
+                            icon={Search}
+                            title="1. Identify"
+                            desc="Find businesses needing visibility."
                         />
                         <UnlockableStep
                             index={1}
-                            icon={Search}
-                            title="Zone 2: Scouting"
-                            desc="We review your stats."
+                            icon={Users}
+                            title="2. Contact"
+                            desc="Start a genuine conversation."
                         />
                         <UnlockableStep
                             index={2}
-                            icon={Key}
-                            title="Zone 3: Access"
-                            desc="Get your dashboard key."
+                            icon={ArrowRight}
+                            title="3. Refer"
+                            desc="Introduce potential client to us."
                         />
                         <UnlockableStep
                             index={3}
-                            icon={Users}
-                            title="Zone 4: Outreach"
-                            desc="Start your missions."
+                            icon={ShieldCheck}
+                            title="4. Handover"
+                            desc="We handle strategy & closing."
                         />
                         <UnlockableStep
                             index={4}
                             icon={TrendingUp}
-                            title="Zone 5: Cash Out"
-                            desc="Claim your rewards."
+                            title="5. Earn"
+                            desc="Get paid on successful deals."
                         />
+                    </div>
+                </div>
+            </div>
+
+            {/* ---------------- WHAT YOU DON'T DO (Rules of Engagement) ---------------- */}
+            <div className="py-24 container mx-auto px-6">
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-12 text-center max-w-4xl mx-auto">
+                    <h2 className="text-3xl font-display font-bold mb-8">What You Don't Do</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                        {[
+                            "No Delivery",
+                            "No Billing",
+                            "No Sales Pressure",
+                            "No Ad Management",
+                            "No Support Tickets",
+                            "No Fixed Hours"
+                        ].map((item, i) => (
+                            <div key={i} className="flex items-center justify-center gap-3 p-4 bg-black/40 rounded-lg border border-red-500/20 text-white/60">
+                                <span className="text-red-500">✕</span>
+                                {item}
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -314,10 +337,10 @@ const Landing: React.FC = () => {
 
                             <div className="space-y-4">
                                 {[
-                                    { label: "The Student", desc: "Gain XP + Credits" },
-                                    { label: "The Side-Hustler", desc: "Passive Income Stream" },
-                                    { label: "The Networker", desc: "Monetize Contacts" },
-                                    { label: "The Closer", desc: "High-Ticket Sales" }
+                                    { label: "The Connector", desc: "Freelancers with client access" },
+                                    { label: "The Student", desc: "Looking for real business exposure" },
+                                    { label: "The Professional", desc: "Building a side income stream" },
+                                    { label: "The Founder", desc: "Monetizing B2B network" }
                                 ].map((char, i) => (
                                     <motion.div
                                         key={i}
