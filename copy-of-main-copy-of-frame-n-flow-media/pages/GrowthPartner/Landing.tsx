@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import {
     Calculator,
     Users,
@@ -11,288 +11,380 @@ import {
     ArrowRight,
     CheckCircle2,
     Lock,
+    Unlock,
     Search,
-    FileText
+    FileText,
+    Zap,
+    Sparkles
 } from 'lucide-react';
 import Button from '../../components/Button';
 import { useNavigate } from 'react-router-dom';
 
-// FadeIn Component for consistent animations
-const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: string }> = ({ children, delay = 0, className = "" }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.6, delay, ease: "easeOut" }}
-        className={className}
-    >
-        {children}
-    </motion.div>
-);
+// ------------------- ANIMATED COMPONENTS -------------------
+
+const UnlockableStep: React.FC<{
+    icon: React.ElementType,
+    title: string,
+    desc: string,
+    index: number
+}> = ({ icon: Icon, title, desc, index }) => {
+    const [isUnlocked, setIsUnlocked] = useState(false);
+    const ref = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ["start end", "center center"]
+    });
+
+    useEffect(() => {
+        const unsubscribe = scrollYProgress.on("change", (latest) => {
+            if (latest > 0.8 && !isUnlocked) setIsUnlocked(true);
+        });
+        return () => unsubscribe();
+    }, [scrollYProgress, isUnlocked]);
+
+    return (
+        <motion.div
+            ref={ref}
+            className={`relative p-8 rounded-2xl border transition-all duration-500 overflow-hidden group
+        ${isUnlocked
+                    ? 'bg-surface border-accent/50 shadow-[0_0_30px_-5px_var(--accent-color)]'
+                    : 'bg-white/5 border-white/10 grayscale-[0.8]'
+                }`}
+            whileHover={{ scale: isUnlocked ? 1.05 : 1, rotate: isUnlocked ? 1 : 0 }}
+        >
+            {/* Locked Overlay */}
+            <AnimatePresence>
+                {!isUnlocked && (
+                    <motion.div
+                        initial={{ opacity: 1 }}
+                        exit={{ opacity: 0, scale: 1.5, filter: "blur(10px)" }}
+                        className="absolute inset-0 z-20 bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center"
+                    >
+                        <Lock size={48} className="text-white/30 mb-2" />
+                        <span className="text-xs font-bold tracking-widest uppercase text-white/30">LOCKED</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Content */}
+            <div className="relative z-10 flex flex-col items-center text-center">
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-colors duration-500
+          ${isUnlocked ? 'bg-accent text-black rotate-12' : 'bg-white/10 text-white/30'}
+        `}>
+                    {isUnlocked ? <Icon size={32} /> : <Lock size={24} />}
+                </div>
+
+                <h3 className={`text-xl font-bold mb-2 ${isUnlocked ? 'text-white' : 'text-white/30'}`}>{title}</h3>
+                <p className={`text-sm ${isUnlocked ? 'text-white/60' : 'text-white/20'}`}>{desc}</p>
+            </div>
+
+            {/* Particle Effects on Unlock */}
+            {isUnlocked && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.2 }}
+                    className="absolute inset-0 bg-gradient-to-t from-accent/20 to-transparent pointer-events-none"
+                />
+            )}
+        </motion.div>
+    );
+};
 
 const Landing: React.FC = () => {
     const navigate = useNavigate();
 
-    // Calculator State
+    // Calculator State & Physics
     const [referrals, setReferrals] = useState(1);
     const [dealValue, setDealValue] = useState(5000);
-
-    // Logic: Max 30% commission
     const commissionRate = 0.30;
-    const estimatedEarnings = Math.round(referrals * dealValue * commissionRate);
+
+    // Animated Numbers
+    const earnings = Math.round(referrals * dealValue * commissionRate);
+    const animatedEarnings = useSpring(0, { stiffness: 100, damping: 20 });
+
+    useEffect(() => {
+        animatedEarnings.set(earnings);
+    }, [earnings]);
+
+    const displayEarnings = useTransform(animatedEarnings, (current) => Math.round(current).toLocaleString());
 
     return (
-        <div className="min-h-screen bg-background text-white pt-24 font-sans selection:bg-accent selection:text-black">
+        <div className="min-h-screen bg-background text-white pt-24 font-sans selection:bg-accent selection:text-black overflow-x-hidden">
 
-            {/* ---------------- HERO SECTION ---------------- */}
-            <div className="container mx-auto px-6 mb-20 md:mb-32">
+            {/* ---------------- HERO SECTION (Interactive 3D Float) ---------------- */}
+            <div className="container mx-auto px-6 mb-32">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-                    {/* Hero Copy */}
                     <motion.div
-                        initial={{ opacity: 0, x: -30 }}
+                        initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8 }}
+                        transition={{ type: "spring", bounce: 0.4 }}
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6">
-                            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                            <span className="text-accent text-xs font-bold tracking-widest uppercase">Open for Applications</span>
-                        </div>
+                        <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-accent/20 border border-accent/50 mb-8 cursor-pointer shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] hover:shadow-[0_0_40px_rgba(var(--accent-rgb),0.6)] transition-shadow"
+                        >
+                            <Zap className="text-accent fill-accent" size={16} />
+                            <span className="text-accent text-sm font-bold tracking-widest uppercase">Gamified Ecosystem Live</span>
+                        </motion.div>
 
-                        <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight">
-                            Monetize Your <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">Network.</span>
+                        <h1 className="text-6xl md:text-8xl font-display font-bold mb-8 leading-[0.9]">
+                            Turn Your <br />
+                            <span className="relative">
+                                <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-400">Network</span>
+                                <motion.svg
+                                    className="absolute -bottom-4 left-0 w-full h-4 text-accent z-0"
+                                    viewBox="0 0 100 10"
+                                    preserveAspectRatio="none"
+                                    initial={{ pathLength: 0 }}
+                                    animate={{ pathLength: 1 }}
+                                    transition={{ duration: 1, delay: 0.5 }}
+                                >
+                                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="3" fill="none" />
+                                </motion.svg>
+                            </span>
+                            <br /> Into Gold.
                         </h1>
 
-                        <p className="text-xl text-white/60 font-light mb-8 max-w-lg leading-relaxed">
-                            Join the Frame n Flow Growth Partner Program (GPP) — an open ecosystem where you connect potential clients, track deals transparently, and earn high-ticket commissions up to 30%.
+                        <p className="text-xl text-white/70 font-light mb-10 max-w-lg leading-relaxed">
+                            Unlock the <strong className="text-white">GPP Ecosystem</strong>.
+                            Complete "missions" (referrals), level up your income, and unlock full-time career perks.
                         </p>
 
-                        <p className="text-white/80 font-medium mb-10 border-l-2 border-accent pl-4">
-                            No fixed hours. No targets. No limits.
-                        </p>
-
-                        <div className="flex flex-wrap gap-4">
-                            <Button onClick={() => navigate('/growth-partner/apply')} className="px-8 py-4 text-lg">
-                                <span className="mr-2">👉</span> Apply Now
-                            </Button>
-                            <Button variant="outline" onClick={() => navigate('/growth-partner/login')} className="px-8 py-4 text-lg">
-                                <span className="mr-2">👉</span> Partner Login
+                        <div className="flex flex-wrap gap-6">
+                            <Button onClick={() => navigate('/growth-partner/apply')} className="px-10 py-5 text-xl bg-gradient-to-r from-accent to-accent/80 hover:scale-105 transition-transform shadow-lg shadow-accent/20">
+                                Start Mission 🚀
                             </Button>
                         </div>
                     </motion.div>
 
-                    {/* ---------------- EARNINGS SIMULATOR ---------------- */}
+                    {/* ---------------- GAMIFIED CALCULATOR ---------------- */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="bg-surface/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 lg:p-10 relative overflow-hidden"
+                        initial={{ opacity: 0, rotateY: 30, x: 50 }}
+                        animate={{ opacity: 1, rotateY: 0, x: 0 }}
+                        transition={{ type: "spring", duration: 1.5 }}
+                        className="perspective-1000"
                     >
-                        <div className="absolute top-0 right-0 p-4 opacity-5">
-                            <Calculator size={120} />
-                        </div>
+                        <div className="bg-[#111] border-2 border-white/10 rounded-3xl p-8 lg:p-10 relative shadow-2xl transform hover:rotate-y-2 transition-transform duration-500 group">
+                            {/* Glowing Background Effect */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-purple-500/5 rounded-3xl opacity-50 group-hover:opacity-100 transition-opacity" />
 
-                        <h3 className="text-2xl font-display font-bold mb-8 flex items-center gap-3">
-                            <Calculator className="text-accent" size={24} />
-                            Earnings Simulator
-                        </h3>
-
-                        {/* Inputs */}
-                        <div className="space-y-8 mb-10">
-
-                            {/* Monthly Referrals Slider */}
-                            <div>
-                                <div className="flex justify-between mb-4">
-                                    <label className="text-sm uppercase tracking-widest text-white/50 font-bold">Monthly Referrals</label>
-                                    <span className="text-xl font-bold text-white">{referrals} Clients</span>
+                            <div className="relative z-10">
+                                <div className="flex justify-between items-center mb-8">
+                                    <h3 className="text-2xl font-display font-bold flex items-center gap-3">
+                                        <Sparkles className="text-yellow-400" />
+                                        Loot Simulator
+                                    </h3>
+                                    <div className="bg-white/10 px-3 py-1 rounded text-xs font-mono text-white/50">V 2.0</div>
                                 </div>
-                                <input
-                                    type="range"
-                                    min="1"
-                                    max="10"
-                                    step="1"
-                                    value={referrals}
-                                    onChange={(e) => setReferrals(parseInt(e.target.value))}
-                                    className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
-                                />
-                            </div>
 
-                            {/* Deal Value Input */}
-                            <div>
-                                <div className="flex justify-between mb-2">
-                                    <label className="text-sm uppercase tracking-widest text-white/50 font-bold">Avg. Deal Value ($)</label>
-                                </div>
-                                <div className="relative">
-                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50">$</span>
-                                    <input
-                                        type="number"
-                                        value={dealValue}
-                                        onChange={(e) => setDealValue(parseInt(e.target.value) || 0)}
-                                        className="w-full bg-black/30 border border-white/10 rounded-lg py-3 pl-8 pr-4 text-white focus:border-accent focus:outline-none transition-colors"
-                                    />
-                                </div>
-                            </div>
+                                {/* Interactive Sliders */}
+                                <div className="space-y-10 mb-12">
 
-                            {/* Commission Rate Note */}
-                            <div className="flex items-center gap-2 text-sm text-accent bg-accent/10 p-3 rounded-lg border border-accent/20">
-                                <CheckCircle2 size={16} />
-                                <span>Up to 30% commission (based on deal terms)</span>
+                                    {/* Referrals */}
+                                    <div className="group/slider">
+                                        <div className="flex justify-between mb-4">
+                                            <label className="text-sm font-bold uppercase tracking-widest text-accent">Active Missions (Clients)</label>
+                                            <span className="text-2xl font-black text-white bg-white/10 px-4 py-1 rounded-lg">{referrals}</span>
+                                        </div>
+                                        <input
+                                            type="range"
+                                            min="1"
+                                            max="10"
+                                            step="1"
+                                            value={referrals}
+                                            onChange={(e) => setReferrals(parseInt(e.target.value))}
+                                            className="w-full h-4 bg-gray-800 rounded-full appearance-none cursor-pointer accent-accent hover:accent-white transition-all"
+                                        />
+                                    </div>
+
+                                    {/* Deal Value */}
+                                    <div className="group/slider">
+                                        <div className="flex justify-between mb-4">
+                                            <label className="text-sm font-bold uppercase tracking-widest text-purple-400">Loot Value ($)</label>
+                                            <span className="text-xl font-bold text-white">${dealValue.toLocaleString()}</span>
+                                        </div>
+                                        <input
+                                            type="range"
+                                            min="1000"
+                                            max="20000"
+                                            step="500"
+                                            value={dealValue}
+                                            onChange={(e) => setDealValue(parseInt(e.target.value))}
+                                            className="w-full h-4 bg-gray-800 rounded-full appearance-none cursor-pointer accent-purple-500 hover:accent-white transition-all"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Animated Result Box */}
+                                <motion.div
+                                    className="bg-gradient-to-r from-gray-900 to-black rounded-2xl p-8 text-center border border-white/10 relative overflow-hidden"
+                                    whileHover={{ scale: 1.02 }}
+                                >
+                                    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
+                                    <p className="text-white/40 text-sm font-bold uppercase mb-2 relative z-10">Potential Monthly XP (Cash)</p>
+
+                                    <div className="flex items-center justify-center gap-2 relative z-10">
+                                        <span className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50">
+                                            $<motion.span>{displayEarnings}</motion.span>
+                                        </span>
+                                    </div>
+
+                                    {/* Progress Bar Visual */}
+                                    <div className="w-full bg-gray-800 h-2 mt-6 rounded-full overflow-hidden">
+                                        <motion.div
+                                            className="h-full bg-gradient-to-r from-accent to-purple-500"
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${Math.min((earnings / 30000) * 100, 100)}%` }}
+                                        />
+                                    </div>
+                                </motion.div>
+
+                                <p className="text-[10px] text-white/20 mt-4 text-center">
+                                    *Loot drops (payouts) strictly capped between 20-30%. No cheat codes allowed.
+                                </p>
                             </div>
                         </div>
-
-                        {/* Output Display */}
-                        <div className="bg-black/40 rounded-xl p-6 text-center border border-white/5 mb-6">
-                            <p className="text-white/50 text-sm mb-2">Your Estimated Monthly Income</p>
-                            <div className="text-5xl font-display font-bold text-white mb-2">
-                                ${estimatedEarnings.toLocaleString()}
-                            </div>
-                            <p className="text-xs text-white/30">
-                                (Calculation: ${dealValue.toLocaleString()} × {referrals} deals × 30%)
-                            </p>
-                        </div>
-
-                        {/* Disclaimer */}
-                        <p className="text-xs text-white/30 leading-relaxed text-center">
-                            *Estimation is based on a maximum commission of 30%. Actual commission may vary between 20%–30% depending on deal structure and internal approval. Real earnings depend on deal value and conversion.
-                        </p>
                     </motion.div>
                 </div>
             </div>
 
-            {/* ---------------- HOW GPP WORKS (PROCESS) ---------------- */}
-            <div className="py-24 bg-surface border-y border-white/5">
+            {/* ---------------- UNLOCK THE ZONES (PROCESS) ---------------- */}
+            <div className="py-24 bg-[#050505] relative">
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
+
                 <div className="container mx-auto px-6">
-                    <FadeIn className="text-center mb-16">
-                        <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">How the GPP Works</h2>
-                        <p className="text-white/50 max-w-2xl mx-auto">A simple, transparent process designed for speed.</p>
-                    </FadeIn>
+                    <div className="text-center mb-20">
+                        <h2 className="text-4xl md:text-6xl font-display font-bold mb-6">Unlock The Zones</h2>
+                        <p className="text-white/50">Scroll to decrypt the GPP process.</p>
+                    </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-                        {[
-                            { icon: FileText, title: "Apply to GPP", desc: "Submit your application." },
-                            { icon: Search, title: "Get Shortlisted", desc: "Approved by Frame n Flow." },
-                            { icon: Lock, title: "Receive Access", desc: "Get secure dashboard login." },
-                            { icon: Users, title: "Start Outreach", desc: "Connect us with clients." },
-                            { icon: TrendingUp, title: "Get Paid", desc: "Earn on closed deals." }
-                        ].map((step, i) => (
-                            <FadeIn key={i} delay={i * 0.1} className="bg-white/5 p-6 rounded-xl border border-white/10 relative group hover:bg-white/10 transition-colors">
-                                <div className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-accent text-black font-bold flex items-center justify-center text-sm shadow-lg shadow-accent/20">
-                                    {i + 1}
-                                </div>
-                                <step.icon className="text-accent mb-4" size={32} />
-                                <h3 className="font-bold text-lg mb-2">{step.title}</h3>
-                                <p className="text-sm text-white/50">{step.desc}</p>
-                            </FadeIn>
-                        ))}
+                        <UnlockableStep
+                            index={0}
+                            icon={FileText}
+                            title="Zone 1: Apply"
+                            desc="Submit your player profile."
+                        />
+                        <UnlockableStep
+                            index={1}
+                            icon={Search}
+                            title="Zone 2: Scouting"
+                            desc="We review your stats."
+                        />
+                        <UnlockableStep
+                            index={2}
+                            icon={Key}
+                            title="Zone 3: Access"
+                            desc="Get your dashboard key."
+                        />
+                        <UnlockableStep
+                            index={3}
+                            icon={Users}
+                            title="Zone 4: Outreach"
+                            desc="Start your missions."
+                        />
+                        <UnlockableStep
+                            index={4}
+                            icon={TrendingUp}
+                            title="Zone 5: Cash Out"
+                            desc="Claim your rewards."
+                        />
                     </div>
                 </div>
             </div>
 
-            {/* ---------------- WHO CAN JOIN ---------------- */}
-            <div className="py-24 container mx-auto px-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <FadeIn>
-                        <h2 className="text-4xl md:text-5xl font-display font-bold mb-8">Who must join this program?</h2>
-                        <div className="space-y-6">
-                            {[
-                                "Students looking to earn through real business exposure",
-                                "Working professionals building side income",
-                                "Freelancers & consultants with client networks",
-                                "Sales-oriented individuals"
-                            ].map((item, i) => (
-                                <div key={i} className="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
-                                    <CheckCircle2 className="text-accent shrink-0 mt-1" />
-                                    <span className="text-lg text-white/80">{item}</span>
-                                </div>
-                            ))}
-                        </div>
-                        <p className="mt-8 text-white/50 italic border-l-2 border-accent/50 pl-4">
-                            This program is open to everyone with strong communication skills and a genuine network.
-                        </p>
-                    </FadeIn>
+            {/* ---------------- CHARACTER SELECTION (WHO CAN JOIN) ---------------- */}
+            <div className="py-32 container mx-auto px-6">
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="bg-surface border border-white/10 rounded-3xl p-12 relative overflow-hidden"
+                >
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 blur-[100px] rounded-full pointer-events-none" />
 
-                    {/* ---------------- FUTURE OPPORTUNITY ---------------- */}
-                    <FadeIn delay={0.2} className="bg-gradient-to-br from-accent/20 to-transparent p-1 rounded-2xl">
-                        <div className="bg-background rounded-xl p-8 lg:p-12 h-full border border-accent/20">
-                            <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-6">
-                                <Briefcase className="text-accent" size={32} />
-                            </div>
-                            <h3 className="text-3xl font-display font-bold mb-4">More Than Commission</h3>
-                            <p className="text-white/70 mb-8 leading-relaxed">
-                                High-performing Growth Partners may be considered for full-time roles at Frame n Flow Media in the future.
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+                        <div>
+                            <h2 className="text-4xl md:text-5xl font-display font-bold mb-8">Choose Your Character</h2>
+                            <p className="text-xl text-white/60 mb-10">
+                                If you fit one of these archetypes, you're ready to play.
                             </p>
 
-                            <h4 className="text-sm font-bold uppercase tracking-widest text-white/40 mb-4">We actively observe:</h4>
-                            <ul className="space-y-3 mb-8">
-                                {['Consistency', 'Communication quality', 'Deal integrity', 'Long-term mindset'].map(trait => (
-                                    <li key={trait} className="flex items-center gap-2 text-white/80">
-                                        <div className="w-1.5 h-1.5 bg-accent rounded-full" />
-                                        {trait}
-                                    </li>
+                            <div className="space-y-4">
+                                {[
+                                    { label: "The Student", desc: "Gain XP + Credits" },
+                                    { label: "The Side-Hustler", desc: "Passive Income Stream" },
+                                    { label: "The Networker", desc: "Monetize Contacts" },
+                                    { label: "The Closer", desc: "High-Ticket Sales" }
+                                ].map((char, i) => (
+                                    <motion.div
+                                        key={i}
+                                        whileHover={{ x: 10, backgroundColor: "rgba(255,255,255,0.1)" }}
+                                        className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 cursor-default"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-2 h-2 rounded-full bg-accent" />
+                                            <span className="font-bold text-lg">{char.label}</span>
+                                        </div>
+                                        <span className="text-white/40 text-sm font-mono">{char.desc}</span>
+                                    </motion.div>
                                 ))}
-                            </ul>
-
-                            <p className="text-xs text-white/30">
-                                *This is not guaranteed employment — but top performers don’t go unnoticed.
-                            </p>
+                            </div>
                         </div>
-                    </FadeIn>
-                </div>
-            </div>
 
-            {/* ---------------- WHY PARTNER & PAYOUTS ---------------- */}
-            <div className="py-24 bg-surface border-t border-white/5">
-                <div className="container mx-auto px-6">
+                        {/* Boss Level Content */}
+                        <div className="bg-gradient-to-b from-gray-900 to-black rounded-2xl border border-accent/30 p-8 text-center relative">
+                            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-accent text-black font-bold px-4 py-1 rounded-full text-xs uppercase tracking-widest">
+                                Boss Level Opportunity
+                            </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
-                        <FadeIn className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            {[
-                                { title: "End-to-End Execution", desc: "We handle strategy, fulfillment, delivery, and billing." },
-                                { title: "Transparent Tracking", desc: "Every referral, deal, and commission is tracked inside your dashboard." },
-                                { title: "Performance-Based", desc: "No levels. No caps. Your income scales with performance." },
-                                { title: "Flexible Work Model", desc: "Work from anywhere. Outreach on your terms." }
-                            ].map((card, i) => (
-                                <div key={i} className="p-6 bg-white/5 border border-white/10 rounded-xl hover:border-accent/30 transition-colors">
-                                    <h4 className="font-bold text-white mb-2">{card.title}</h4>
-                                    <p className="text-sm text-white/50">{card.desc}</p>
-                                </div>
-                            ))}
-                        </FadeIn>
-
-                        {/* Payout Info */}
-                        <FadeIn delay={0.2} className="bg-black/40 border border-white/10 rounded-xl p-8">
-                            <h3 className="text-2xl font-display font-bold mb-6">Payouts & Tracking</h3>
-                            <ul className="space-y-4 mb-8">
-                                <li className="flex justify-between items-center border-b border-white/5 pb-2">
-                                    <span className="text-white/60">Commission</span>
-                                    <span className="font-bold text-accent">20% – 30%</span>
-                                </li>
-                                <li className="flex justify-between items-center border-b border-white/5 pb-2">
-                                    <span className="text-white/60">Tracking</span>
-                                    <span className="font-bold text-white">Real-time</span>
-                                </li>
-                                <li className="flex justify-between items-center border-b border-white/5 pb-2">
-                                    <span className="text-white/60">Payout</span>
-                                    <span className="font-bold text-white">After Completion</span>
-                                </li>
-                            </ul>
-                            <p className="text-xs text-white/30 text-center">
-                                Commission percentage and payout timelines are subject to internal terms and deal structure.
+                            <Briefcase size={48} className="text-accent mx-auto mb-6 mt-4" />
+                            <h3 className="text-2xl font-bold mb-4">Unlock Full-Time Mode</h3>
+                            <p className="text-white/60 mb-6">
+                                Top-tier players unlock the ability to be hired full-time by Frame n Flow Media.
                             </p>
-                        </FadeIn>
+                            <div className="grid grid-cols-2 gap-4 text-xs font-mono text-white/40">
+                                <div className="bg-white/5 p-2 rounded">High Consistency</div>
+                                <div className="bg-white/5 p-2 rounded">Elite Deals</div>
+                            </div>
+                        </div>
                     </div>
-
-                    {/* Final CTA */}
-                    <div className="text-center">
-                        <Button onClick={() => navigate('/growth-partner/apply')} className="px-10 py-5 text-xl">
-                            Start Your GPP Application
-                        </Button>
-                    </div>
-                </div>
+                </motion.div>
             </div>
+
+            {/* ---------------- FINAL BOSS CTA ---------------- */}
+            <div className="pb-32 text-center container mx-auto px-6">
+                <h2 className="text-5xl md:text-9xl font-display font-black text-white/10 mb-8 select-none">
+                    READY?
+                </h2>
+                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                    <Button onClick={() => navigate('/growth-partner/apply')} className="px-12 py-6 text-2xl rounded-full bg-accent text-black font-black tracking-widest shadow-[0_0_50px_rgba(var(--accent-rgb),0.5)]">
+                        PRESS START
+                    </Button>
+                </motion.div>
+            </div>
+
         </div>
     );
 };
+
+// Helper for icon
+const Key: React.FC<{ size?: number, className?: string }> = ({ size, className }) => (
+    <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+    >
+        <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
+    </svg>
+);
 
 export default Landing;
