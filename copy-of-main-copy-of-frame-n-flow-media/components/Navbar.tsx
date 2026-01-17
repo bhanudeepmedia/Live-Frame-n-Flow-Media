@@ -40,7 +40,7 @@ const Navbar: React.FC = () => {
             <div className="flex justify-start items-center">
               <NavLink to="/" className="z-50 relative group inline-block">
                 <img
-                  src="https://img.sanishtech.com/u/0128afc80d3ab9715e398979f70f1b8a.png"
+                  src="/logo.png"
                   alt="Frame n Flow Logo"
                   className="h-8 md:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                 />
