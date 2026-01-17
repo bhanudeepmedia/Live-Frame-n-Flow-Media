@@ -50,9 +50,6 @@ const Founder: React.FC = () => {
               <img
                 src="/bhanu.png"
                 alt="Bhanu Deep"
-                onError={(e) => {
-                  e.currentTarget.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000&auto=format&fit=crop";
-                }}
                 className="w-full h-full object-cover object-top transition-all duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
