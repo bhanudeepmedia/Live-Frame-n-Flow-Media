@@ -148,9 +148,7 @@ const Landing: React.FC = () => {
                         </h1>
 
                         <p className="text-xl text-white/70 font-light mb-10 max-w-lg leading-relaxed">
-                            Identify businesses that need growth. Introduce them to Frame n Flow. We handle the rest.
-                            <br /><br />
-                            <strong className="text-white">Strictly Referral Only.</strong> No service delivery. No billing. No aggressive sales.
+                            Growth Partners cold-outreach potential clients, set appointments, join sales calls, and earn commission on every successful client conversion handled by Frame n Flow Media.
                         </p>
 
                         <div className="flex flex-wrap gap-6">
@@ -257,63 +255,121 @@ const Landing: React.FC = () => {
 
                 <div className="container mx-auto px-6">
                     <div className="text-center mb-20">
-                        <h2 className="text-4xl md:text-6xl font-display font-bold mb-6">Unlock The Zones</h2>
-                        <p className="text-white/50">Scroll to decrypt the GPP process.</p>
+                        <h2 className="text-4xl md:text-6xl font-display font-bold mb-6">Unlock The Workflow</h2>
+                        <p className="text-white/50">Your active role in the deal flow.</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                         <UnlockableStep
                             index={0}
-                            icon={Search}
-                            title="1. Identify"
-                            desc="Find businesses needing visibility."
+                            icon={Globe}
+                            title="1. Cold Outreach"
+                            desc="DM, Email, or Call via your channels."
                         />
                         <UnlockableStep
                             index={1}
-                            icon={Users}
-                            title="2. Contact"
-                            desc="Start a genuine conversation."
+                            icon={Search}
+                            title="2. Qualify"
+                            desc="Ensure they have a real need."
                         />
                         <UnlockableStep
                             index={2}
-                            icon={ArrowRight}
-                            title="3. Refer"
-                            desc="Introduce potential client to us."
+                            icon={FileText}
+                            title="3. Book Call"
+                            desc="Set appointment with our team."
                         />
                         <UnlockableStep
                             index={3}
-                            icon={ShieldCheck}
-                            title="4. Handover"
-                            desc="We handle strategy & closing."
+                            icon={Users}
+                            title="4. Join Call"
+                            desc="Bridge the relationship live."
                         />
                         <UnlockableStep
                             index={4}
                             icon={TrendingUp}
                             title="5. Earn"
-                            desc="Get paid on successful deals."
+                            desc="Get paid on successful conversion."
                         />
                     </div>
                 </div>
             </div>
 
             {/* ---------------- WHAT YOU DON'T DO (Rules of Engagement) ---------------- */}
+            {/* ---------------- DETAILED MISSION BRIEFING (Core Responsibilities) ---------------- */}
             <div className="py-24 container mx-auto px-6">
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-12 text-center max-w-4xl mx-auto">
-                    <h2 className="text-3xl font-display font-bold mb-8">What You Don't Do</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                        {[
-                            "No Delivery",
-                            "No Billing",
-                            "No Sales Pressure",
-                            "No Ad Management",
-                            "No Support Tickets",
-                            "No Fixed Hours"
-                        ].map((item, i) => (
-                            <div key={i} className="flex items-center justify-center gap-3 p-4 bg-black/40 rounded-lg border border-red-500/20 text-white/60">
-                                <span className="text-red-500">✕</span>
-                                {item}
+                <div className="bg-surface border border-white/10 rounded-3xl p-8 lg:p-12">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
+                        <div>
+                            <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">Mission Briefing</h2>
+                            <p className="text-white/50">Detailed breakdown of your responsibilities.</p>
+                        </div>
+                        <div className="bg-accent/10 px-4 py-2 rounded-full border border-accent/20 mt-4 md:mt-0">
+                            <span className="text-accent text-sm font-bold uppercase tracking-widest">Active Role</span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        {/* Left Column: Outreach & Setup */}
+                        <div className="space-y-10">
+                            <div>
+                                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                                    <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-sm">1</span>
+                                    Cold Outreach
+                                </h3>
+                                <p className="text-white/60 text-sm leading-relaxed mb-4">
+                                    Proactively reach out via Instagram, LinkedIn, WhatsApp, or Email. Your goal is to start professional conversations, not spam.
+                                </p>
+                                <ul className="grid grid-cols-2 gap-2 text-xs text-white/40">
+                                    <li className="flex items-center gap-2"><div className="w-1 h-1 bg-accent rounded-full" /> Personalized DMs</li>
+                                    <li className="flex items-center gap-2"><div className="w-1 h-1 bg-accent rounded-full" /> Value-driven approach</li>
+                                </ul>
                             </div>
-                        ))}
+
+                            <div>
+                                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                                    <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-sm">2</span>
+                                    Qualification & Setup
+                                </h3>
+                                <p className="text-white/60 text-sm leading-relaxed mb-4">
+                                    Ensure the prospect is a decision-maker with a real business need. Then, coordinate and book a discovery call.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Right Column: Calls & Closing */}
+                        <div className="space-y-10">
+                            <div>
+                                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                                    <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-sm">3</span>
+                                    Join the Call
+                                </h3>
+                                <p className="text-white/60 text-sm leading-relaxed mb-4">
+                                    <strong className="text-white">Mandatory:</strong> Join the scheduled call with our team. Introduce the prospect, provide context, and support the relationship. We handle the pitch.
+                                </p>
+                            </div>
+
+                            <div>
+                                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                                    <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-sm">4</span>
+                                    Follow-up & Earn
+                                </h3>
+                                <p className="text-white/60 text-sm leading-relaxed mb-4">
+                                    Ensure the prospect shows up. Assist in nudging them toward closure. Once signed and onboarded, you earn 20-30%.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* What You NOT Do - Integrated */}
+                    <div className="mt-16 pt-10 border-t border-white/10">
+                        <h3 className="text-lg font-bold text-white/80 mb-6 uppercase tracking-widest text-center">Out of Scope (What you don't do)</h3>
+                        <div className="flex flex-wrap justify-center gap-4">
+                            {["Service Delivery", "Strategy Creation", "Billing/Invoicing", "Leading the Pitch"].map((item, i) => (
+                                <span key={i} className="px-4 py-2 bg-black/40 border border-white/5 rounded-lg text-white/40 text-sm line-through decoration-red-500/50">
+                                    {item}
+                                </span>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
