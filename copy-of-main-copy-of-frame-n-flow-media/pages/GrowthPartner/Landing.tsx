@@ -134,12 +134,12 @@ const Landing: React.FC = () => {
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-400">Growth Partner.</span>
                         </h1>
 
-                        <h2 className="text-2xl md:text-3xl text-white/50 font-display font-bold mb-8 flex flex-col md:flex-row gap-2 md:gap-4">
-                            <span>1. Cold Outreach.</span>
+                        <h2 className="text-3xl md:text-5xl text-white/50 font-display font-bold mb-8 flex flex-col md:flex-row gap-2 md:gap-4 leading-tight">
+                            <span className="text-white">Outreach.</span>
                             <span className="hidden md:inline text-white/20">•</span>
-                            <span>2. Set Appts.</span>
+                            <span className="text-white">Appointments.</span>
                             <span className="hidden md:inline text-white/20">•</span>
-                            <span className="text-white">3. Earn Commission.</span>
+                            <span className="text-accent">Commission.</span>
                         </h2>
 
                         <p className="text-lg text-white/70 font-light mb-10 max-w-lg leading-relaxed border-l-2 border-accent/50 pl-6">
