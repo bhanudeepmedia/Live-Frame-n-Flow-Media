@@ -12,6 +12,13 @@ import Founder from './pages/Founder';
 import Work from './pages/Work';
 import Insights from './pages/Insights';
 
+// Growth Partner Imports
+import GrowthPartnerLanding from './pages/GrowthPartner/Landing';
+import GrowthPartnerApply from './pages/GrowthPartner/Apply';
+import GrowthPartnerLogin from './pages/GrowthPartner/Login';
+import GrowthPartnerDashboard from './pages/GrowthPartner/Dashboard';
+import AdminDashboard from './pages/Admin/Dashboard';
+
 // Placeholder components for routes not fully implemented in this demo
 const PlaceholderPage = ({ title }: { title: string }) => (
   <div className="min-h-screen flex items-center justify-center pt-20">
@@ -39,6 +46,16 @@ const App: React.FC = () => {
             <Route path="/founder-bhanudeep" element={<Founder />} />
             <Route path="/work" element={<Work />} />
             <Route path="/insights" element={<Insights />} />
+
+            {/* Growth Partner Ecosystem Routes */}
+            <Route path="/growth-partner" element={<GrowthPartnerLanding />} />
+            <Route path="/growth-partner/apply" element={<GrowthPartnerApply />} />
+            <Route path="/growth-partner/login" element={<GrowthPartnerLogin />} />
+            <Route path="/growth-partner/dashboard" element={<GrowthPartnerDashboard />} />
+
+            {/* Admin Routes */}
+            <Route path="/admin/login" element={<GrowthPartnerLogin />} />
+            <Route path="/admin/growth-partners-dashboard" element={<AdminDashboard />} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

@@ -1,12 +1,12 @@
 import { NavItem, ServiceItem, ProcessStep, Metric } from './types';
-import { 
-  BarChart3, 
-  Target, 
-  Cpu, 
-  TrendingUp, 
-  Monitor, 
-  PenTool, 
-  Camera 
+import {
+  BarChart3,
+  Target,
+  Cpu,
+  TrendingUp,
+  Monitor,
+  PenTool,
+  Camera
 } from 'lucide-react';
 
 export const NAV_ITEMS: NavItem[] = [
@@ -15,6 +15,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Services', path: '/services' },
   { label: 'Work', path: '/work' },
   { label: 'Insights', path: '/insights' },
+  { label: 'Growth Partner', path: '/growth-partner' },
   { label: 'Contact', path: '/contact' },
 ];
 
