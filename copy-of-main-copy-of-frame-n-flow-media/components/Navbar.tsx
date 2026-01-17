@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
                 <img
                   src="/logo.png"
                   alt="Frame n Flow Logo"
-                  className="h-8 md:h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                  className="h-12 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                 />
               </NavLink>
             </div>
