@@ -87,7 +87,7 @@ const Navbar: React.FC = () => {
 
               {/* Mobile Toggle */}
               <button
-                className="md:hidden z-50 text-white relative w-10 h-10 flex items-center justify-center"
+                className="md:hidden z-[70] text-white relative w-10 h-10 flex items-center justify-center"
                 onClick={() => setIsMobileOpen(!isMobileOpen)}
               >
                 {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
@@ -106,7 +106,7 @@ const Navbar: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-40 bg-background flex flex-col items-center justify-center p-6"
+            className="fixed inset-0 z-[60] bg-background flex flex-col items-center justify-center p-6"
           >
             <div className="flex flex-col space-y-8 text-center w-full max-w-xs">
               {NAV_ITEMS.map((item, index) => (
