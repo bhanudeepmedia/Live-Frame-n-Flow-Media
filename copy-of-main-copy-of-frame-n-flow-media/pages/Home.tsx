@@ -956,11 +956,8 @@ const Home: React.FC = () => {
                 <div className="relative w-full aspect-[4/5] overflow-hidden rounded-sm bg-black/50 border border-white/5">
                   {/* Founder Image with Fallback */}
                   <img
-                    src="https://img.sanishtech.com/u/f30f258d740556c62469e86b223d0dc9.png"
+                    src="/bhanudeep.png"
                     alt="Bhanu Deep - Founder"
-                    onError={(e) => {
-                      e.currentTarget.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000&auto=format&fit=crop";
-                    }}
                     className="w-full h-full object-cover object-top transition-all duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent" />
