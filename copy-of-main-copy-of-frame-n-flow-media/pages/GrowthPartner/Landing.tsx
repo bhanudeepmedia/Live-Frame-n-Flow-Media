@@ -123,38 +123,36 @@ const Landing: React.FC = () => {
                         <motion.div
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-accent/20 border border-accent/50 mb-8 cursor-pointer shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] hover:shadow-[0_0_40px_rgba(var(--accent-rgb),0.6)] transition-shadow"
+                            className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-accent/10 border border-accent/20 mb-8 cursor-default"
                         >
-                            <Zap className="text-accent fill-accent" size={16} />
-                            <span className="text-accent text-sm font-bold tracking-widest uppercase">Gamified Ecosystem Live</span>
+                            <Briefcase className="text-accent" size={16} />
+                            <span className="text-accent text-sm font-bold tracking-widest uppercase">Performance-Based Opportunity</span>
                         </motion.div>
 
-                        <h1 className="text-6xl md:text-8xl font-display font-bold mb-8 leading-[0.9]">
-                            Connect. <br />
-                            <span className="relative">
-                                <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-400">Refer.</span>
-                                <motion.svg
-                                    className="absolute -bottom-4 left-0 w-full h-4 text-accent z-0"
-                                    viewBox="0 0 100 10"
-                                    preserveAspectRatio="none"
-                                    initial={{ pathLength: 0 }}
-                                    animate={{ pathLength: 1 }}
-                                    transition={{ duration: 1, delay: 0.5 }}
-                                >
-                                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="3" fill="none" />
-                                </motion.svg>
-                            </span>
-                            <br /> Earn.
+                        <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-[1.1]">
+                            Become a <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-400">Growth Partner.</span>
                         </h1>
 
-                        <p className="text-xl text-white/70 font-light mb-10 max-w-lg leading-relaxed">
-                            Growth Partners cold-outreach potential clients, set appointments, join sales calls, and earn commission on every successful client conversion handled by Frame n Flow Media.
+                        <h2 className="text-2xl md:text-3xl text-white/50 font-display font-bold mb-8 flex flex-col md:flex-row gap-2 md:gap-4">
+                            <span>1. Cold Outreach.</span>
+                            <span className="hidden md:inline text-white/20">•</span>
+                            <span>2. Set Appts.</span>
+                            <span className="hidden md:inline text-white/20">•</span>
+                            <span className="text-white">3. Earn Commission.</span>
+                        </h2>
+
+                        <p className="text-lg text-white/70 font-light mb-10 max-w-lg leading-relaxed border-l-2 border-accent/50 pl-6">
+                            "Growth Partners cold-outreach potential clients, set appointments, join sales calls, and earn commission on every successful client conversion handled by Frame n Flow Media."
                         </p>
 
-                        <div className="flex flex-wrap gap-6">
-                            <Button onClick={() => navigate('/growth-partner/apply')} className="px-10 py-5 text-xl bg-gradient-to-r from-accent to-accent/80 hover:scale-105 transition-transform shadow-lg shadow-accent/20">
-                                Join the Ecosystem 🚀
+                        <div className="flex flex-wrap gap-4">
+                            <Button onClick={() => navigate('/growth-partner/apply')} className="px-8 py-4 text-lg bg-white text-black hover:scale-105">
+                                Apply Now 🚀
                             </Button>
+                            <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="px-8 py-4 text-lg border border-white/20 rounded-lg hover:bg-white/5 transition-colors font-bold uppercase tracking-wider text-sm">
+                                View Mission Brief
+                            </button>
                         </div>
                     </motion.div>
 
