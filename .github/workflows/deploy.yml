@@ -22,7 +22,7 @@ jobs:
       - name: Install and Build
         run: |
           cd copy-of-main-copy-of-frame-n-flow-media
-          npm install
+          npm install --legacy-peer-deps
           npm run build
 
       - name: Deploy
