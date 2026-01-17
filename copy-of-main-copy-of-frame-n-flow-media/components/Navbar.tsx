@@ -30,7 +30,7 @@ const Navbar: React.FC = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-background/90 backdrop-blur-md py-4' : 'bg-transparent py-6'
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-background/90 backdrop-blur-md py-2' : 'bg-transparent py-3'
           }`}
       >
         <div className="w-full max-w-[1800px] mx-auto px-4 md:px-12">
