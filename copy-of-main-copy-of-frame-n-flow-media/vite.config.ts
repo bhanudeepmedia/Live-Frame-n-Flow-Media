@@ -19,6 +19,6 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, '.'),
       }
     },
-    base: '/Live-Frame-n-Flow-Media/', // Critical for GitHub Pages deployment
+    base: '/', // Serving from root for custom domain framenflowmedia.in
   };
 });
