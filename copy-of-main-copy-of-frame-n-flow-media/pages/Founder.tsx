@@ -48,7 +48,7 @@ const Founder: React.FC = () => {
           >
             <div className="aspect-[4/5] rounded-lg overflow-hidden border border-white/10 relative group">
               <img
-                src="/bhanudeep.png"
+                src="/bhanudeep.png?v=new"
                 alt="Bhanu Deep"
                 className="w-full h-full object-cover object-top transition-all duration-700"
               />

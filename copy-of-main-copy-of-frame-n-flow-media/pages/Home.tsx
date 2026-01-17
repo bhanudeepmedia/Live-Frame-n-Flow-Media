@@ -956,7 +956,7 @@ const Home: React.FC = () => {
                 <div className="relative w-full aspect-[4/5] overflow-hidden rounded-sm bg-black/50 border border-white/5">
                   {/* Founder Image with Fallback */}
                   <img
-                    src="/bhanudeep.png"
+                    src="/bhanudeep.png?v=new"
                     alt="Bhanu Deep - Founder"
                     className="w-full h-full object-cover object-top transition-all duration-700"
                   />
