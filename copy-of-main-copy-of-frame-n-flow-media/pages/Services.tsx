@@ -226,7 +226,7 @@ const WebDevVisual = () => (
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
-            > Deploying to Edge...
+        Deploying to Edge...
       </motion.div>
     </div>
 
