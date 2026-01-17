@@ -1,375 +1,296 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import {
+    Calculator,
     Users,
-    TrendingUp,
-    DollarSign,
+    Briefcase,
+    Target,
     Globe,
-    Zap,
-    Target,
-    Briefcase,
-    ChevronRight,
-    CheckCircle2,
-    Rocket
-} from 'lucide-react';
-
-import React, { useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import {
-    Users,
     TrendingUp,
-    DollarSign,
-    Zap,
-    Briefcase,
-    ChevronRight,
+    ShieldCheck,
+    ArrowRight,
     CheckCircle2,
-    Rocket,
-    Crown,
-    Trophy,
-    Target,
-    Globe
+    Lock,
+    Search,
+    FileText
 } from 'lucide-react';
+import Button from '../../components/Button';
+import { useNavigate } from 'react-router-dom';
 
-const NumberTicker = ({ value }: { value: number }) => {
-    const [count, setCount] = useState(0);
-    useEffect(() => {
-        let start = 0;
-        const end = value;
-        const duration = 2000;
-        const increment = end / (duration / 16);
-
-        const timer = setInterval(() => {
-            start += increment;
-            if (start >= end) {
-                setCount(end);
-                clearInterval(timer);
-            } else {
-                setCount(Math.floor(start));
-            }
-        }, 16);
-        return () => clearInterval(timer);
-    }, [value]);
-
-    return <span>{count.toLocaleString()}</span>;
-};
-
-const Calculator = () => {
-    const [referrals, setReferrals] = useState(1);
-    const [dealValue, setDealValue] = useState(5000);
-    const commissionRate = 0.10; // 10%
-    const earnings = referrals * dealValue * commissionRate;
-
-    return (
-        <div className="bg-gradient-to-br from-surface to-surfaceHighlight border border-white/10 rounded-2xl p-8 shadow-2xl relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full blur-[50px] group-hover:bg-accent/20 transition-all" />
-
-            <h3 className="text-2xl font-display font-bold mb-6 flex items-center gap-2">
-                <DollarSign className="text-accent" /> Earnings Simulator
-            </h3>
-
-            <div className="space-y-8 relative z-10">
-                <div>
-                    <div className="flex justify-between mb-2 text-sm text-muted">
-                        <span>Monthly Referrals</span>
-                        <span className="text-white font-bold">{referrals} Clients</span>
-                    </div>
-                    <input
-                        type="range"
-                        min="1"
-                        max="20"
-                        value={referrals}
-                        onChange={(e) => setReferrals(parseInt(e.target.value))}
-                        className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent hover:accent-accent/80 transition-all"
-                    />
-                </div>
-
-                <div>
-                    <div className="flex justify-between mb-2 text-sm text-muted">
-                        <span>Avg. Deal Value</span>
-                        <span className="text-white font-bold">${dealValue.toLocaleString()}</span>
-                    </div>
-                    <input
-                        type="range"
-                        min="1000"
-                        max="50000"
-                        step="1000"
-                        value={dealValue}
-                        onChange={(e) => setDealValue(parseInt(e.target.value))}
-                        className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-purple-500 hover:accent-purple-400 transition-all"
-                    />
-                </div>
-
-                <div className="pt-6 border-t border-white/10 text-center">
-                    <p className="text-muted text-sm mb-1">Your Estimated Monthly Income</p>
-                    <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-400">
-                        ${earnings.toLocaleString()}
-                    </div>
-                    <p className="text-xs text-muted mt-2">*Based on standard 10% commission structure</p>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const JourneyStep = ({ icon: Icon, title, desc, delay, active }: any) => (
+// FadeIn Component for consistent animations
+const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: string }> = ({ children, delay = 0, className = "" }) => (
     <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay }}
-        className={`relative p-6 rounded-xl border ${active ? 'border-accent bg-accent/5' : 'border-white/5 bg-surface'} flex flex-col items-center text-center group hover:scale-105 transition-transform duration-300`}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.6, delay, ease: "easeOut" }}
+        className={className}
     >
-        <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-4 ${active ? 'bg-accent text-background' : 'bg-white/5 text-muted group-hover:text-white'}`}>
-            <Icon size={24} />
-        </div>
-        <h4 className={`text-lg font-bold mb-2 ${active ? 'text-accent' : 'text-white'}`}>{title}</h4>
-        <p className="text-sm text-muted leading-relaxed">{desc}</p>
-
-        {active && (
-            <div className="absolute -top-3 -right-3">
-                <span className="relative flex h-4 w-4">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-4 w-4 bg-accent"></span>
-                </span>
-            </div>
-        )}
+        {children}
     </motion.div>
 );
 
 const Landing: React.FC = () => {
-    const { scrollYProgress } = useScroll();
-    const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
+    const navigate = useNavigate();
+
+    // Calculator State
+    const [referrals, setReferrals] = useState(1);
+    const [dealValue, setDealValue] = useState(5000);
+
+    // Logic: Max 30% commission
+    const commissionRate = 0.30;
+    const estimatedEarnings = Math.round(referrals * dealValue * commissionRate);
 
     return (
-        <div className="min-h-screen bg-background font-sans overflow-x-hidden">
-            {/* Initial Hero Padding handled by pt-24 in content */}
+        <div className="min-h-screen bg-background text-white pt-24 font-sans selection:bg-accent selection:text-black">
 
-            {/* HERO SECTION */}
-            <section className="relative pt-32 pb-20 px-6 lg:px-20 overflow-hidden">
-                {/* Dynamic Background */}
-                <div className="absolute top-0 inset-x-0 h-[600px] pointer-events-none">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-accent/10 blur-[120px] rounded-full opacity-50 mix-blend-screen" />
-                    <div className="absolute top-20 right-20 w-64 h-64 bg-purple-500/10 blur-[80px] rounded-full animate-pulse" />
-                </div>
+            {/* ---------------- HERO SECTION ---------------- */}
+            <div className="container mx-auto px-6 mb-20 md:mb-32">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-                <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
-                    <div className="text-center lg:text-left">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-accent text-xs font-bold tracking-widest uppercase mb-6"
-                        >
-                            <Rocket size={14} /> Open for Applications
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="text-5xl lg:text-7xl font-display font-bold leading-[1.1] mb-6"
-                        >
-                            Monetize Your <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/50">Network.</span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="text-xl text-muted/80 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed"
-                        >
-                            Join the Frame n Flow Growth Partner ecosystem. Connect potential clients, track deals, and earn high-ticket commissions on autopilot.
-                        </motion.p>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 }}
-                            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-                        >
-                            <Link to="/growth-partner/apply" className="px-8 py-4 bg-accent text-background font-bold rounded-xl hover:scale-105 transition-transform flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(34,211,238,0.3)]">
-                                Apply Now <ChevronRight size={18} />
-                            </Link>
-                            <Link to="/growth-partner/login" className="px-8 py-4 bg-white/5 text-white font-medium rounded-xl hover:bg-white/10 border border-white/5 transition-all flex items-center justify-center">
-                                Partner Login
-                            </Link>
-                        </motion.div>
-                    </div>
-
-                    {/* Interactive Hero Visual */}
+                    {/* Hero Copy */}
                     <motion.div
-                        style={{ y }}
-                        className="relative hidden lg:block"
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8 }}
                     >
-                        <Calculator />
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6">
+                            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                            <span className="text-accent text-xs font-bold tracking-widest uppercase">Open for Applications</span>
+                        </div>
 
-                        {/* Floating 'Success' Cards */}
-                        <motion.div
-                            animate={{ y: [-10, 10, -10] }}
-                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                            className="absolute -right-8 -top-8 bg-[#1a1a1a]/90 backdrop-blur border border-green-500/30 p-4 rounded-xl shadow-xl"
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center text-green-500">
-                                    <DollarSign size={20} />
+                        <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight">
+                            Monetize Your <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">Network.</span>
+                        </h1>
+
+                        <p className="text-xl text-white/60 font-light mb-8 max-w-lg leading-relaxed">
+                            Join the Frame n Flow Growth Partner Program (GPP) — an open ecosystem where you connect potential clients, track deals transparently, and earn high-ticket commissions up to 30%.
+                        </p>
+
+                        <p className="text-white/80 font-medium mb-10 border-l-2 border-accent pl-4">
+                            No fixed hours. No targets. No limits.
+                        </p>
+
+                        <div className="flex flex-wrap gap-4">
+                            <Button onClick={() => navigate('/growth-partner/apply')} className="px-8 py-4 text-lg">
+                                <span className="mr-2">👉</span> Apply Now
+                            </Button>
+                            <Button variant="outline" onClick={() => navigate('/growth-partner/login')} className="px-8 py-4 text-lg">
+                                <span className="mr-2">👉</span> Partner Login
+                            </Button>
+                        </div>
+                    </motion.div>
+
+                    {/* ---------------- EARNINGS SIMULATOR ---------------- */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        className="bg-surface/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 lg:p-10 relative overflow-hidden"
+                    >
+                        <div className="absolute top-0 right-0 p-4 opacity-5">
+                            <Calculator size={120} />
+                        </div>
+
+                        <h3 className="text-2xl font-display font-bold mb-8 flex items-center gap-3">
+                            <Calculator className="text-accent" size={24} />
+                            Earnings Simulator
+                        </h3>
+
+                        {/* Inputs */}
+                        <div className="space-y-8 mb-10">
+
+                            {/* Monthly Referrals Slider */}
+                            <div>
+                                <div className="flex justify-between mb-4">
+                                    <label className="text-sm uppercase tracking-widest text-white/50 font-bold">Monthly Referrals</label>
+                                    <span className="text-xl font-bold text-white">{referrals} Clients</span>
                                 </div>
-                                <div>
-                                    <div className="text-xs text-muted">Just Payout</div>
-                                    <div className="font-bold text-white">+$2,450.00</div>
+                                <input
+                                    type="range"
+                                    min="1"
+                                    max="10"
+                                    step="1"
+                                    value={referrals}
+                                    onChange={(e) => setReferrals(parseInt(e.target.value))}
+                                    className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent"
+                                />
+                            </div>
+
+                            {/* Deal Value Input */}
+                            <div>
+                                <div className="flex justify-between mb-2">
+                                    <label className="text-sm uppercase tracking-widest text-white/50 font-bold">Avg. Deal Value ($)</label>
+                                </div>
+                                <div className="relative">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50">$</span>
+                                    <input
+                                        type="number"
+                                        value={dealValue}
+                                        onChange={(e) => setDealValue(parseInt(e.target.value) || 0)}
+                                        className="w-full bg-black/30 border border-white/10 rounded-lg py-3 pl-8 pr-4 text-white focus:border-accent focus:outline-none transition-colors"
+                                    />
                                 </div>
                             </div>
-                        </motion.div>
 
-                        <motion.div
-                            animate={{ y: [10, -10, 10] }}
-                            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                            className="absolute -left-8 bottom-20 bg-[#1a1a1a]/90 backdrop-blur border border-accent/30 p-4 rounded-xl shadow-xl"
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center text-accent">
-                                    <Users size={20} />
-                                </div>
-                                <div>
-                                    <div className="text-xs text-muted">New Partner</div>
-                                    <div className="font-bold text-white">Alex Joined</div>
-                                </div>
+                            {/* Commission Rate Note */}
+                            <div className="flex items-center gap-2 text-sm text-accent bg-accent/10 p-3 rounded-lg border border-accent/20">
+                                <CheckCircle2 size={16} />
+                                <span>Up to 30% commission (based on deal terms)</span>
                             </div>
-                        </motion.div>
+                        </div>
+
+                        {/* Output Display */}
+                        <div className="bg-black/40 rounded-xl p-6 text-center border border-white/5 mb-6">
+                            <p className="text-white/50 text-sm mb-2">Your Estimated Monthly Income</p>
+                            <div className="text-5xl font-display font-bold text-white mb-2">
+                                ${estimatedEarnings.toLocaleString()}
+                            </div>
+                            <p className="text-xs text-white/30">
+                                (Calculation: ${dealValue.toLocaleString()} × {referrals} deals × 30%)
+                            </p>
+                        </div>
+
+                        {/* Disclaimer */}
+                        <p className="text-xs text-white/30 leading-relaxed text-center">
+                            *Estimation is based on a maximum commission of 30%. Actual commission may vary between 20%–30% depending on deal structure and internal approval. Real earnings depend on deal value and conversion.
+                        </p>
                     </motion.div>
                 </div>
+            </div>
 
-                {/* Mobile Calculator visible only on small screens */}
-                <div className="mt-12 lg:hidden">
-                    <Calculator />
-                </div>
-            </section>
+            {/* ---------------- HOW GPP WORKS (PROCESS) ---------------- */}
+            <div className="py-24 bg-surface border-y border-white/5">
+                <div className="container mx-auto px-6">
+                    <FadeIn className="text-center mb-16">
+                        <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">How the GPP Works</h2>
+                        <p className="text-white/50 max-w-2xl mx-auto">A simple, transparent process designed for speed.</p>
+                    </FadeIn>
 
-            {/* LIVE STATS TICKER */}
-            <div className="border-y border-white/5 bg-white/[0.02] py-8 overflow-hidden">
-                <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                    <div>
-                        <div className="text-3xl font-display font-bold text-white mb-1"><NumberTicker value={120} />+</div>
-                        <div className="text-xs uppercase tracking-widest text-muted">Active Partners</div>
-                    </div>
-                    <div>
-                        <div className="text-3xl font-display font-bold text-accent mb-1">$<NumberTicker value={450} />k+</div>
-                        <div className="text-xs uppercase tracking-widest text-muted">Paid Out</div>
-                    </div>
-                    <div>
-                        <div className="text-3xl font-display font-bold text-white mb-1"><NumberTicker value={15} /></div>
-                        <div className="text-xs uppercase tracking-widest text-muted">Countries</div>
-                    </div>
-                    <div>
-                        <div className="text-3xl font-display font-bold text-purple-400 mb-1">24/7</div>
-                        <div className="text-xs uppercase tracking-widest text-muted">Support</div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                        {[
+                            { icon: FileText, title: "Apply to GPP", desc: "Submit your application." },
+                            { icon: Search, title: "Get Shortlisted", desc: "Approved by Frame n Flow." },
+                            { icon: Lock, title: "Receive Access", desc: "Get secure dashboard login." },
+                            { icon: Users, title: "Start Outreach", desc: "Connect us with clients." },
+                            { icon: TrendingUp, title: "Get Paid", desc: "Earn on closed deals." }
+                        ].map((step, i) => (
+                            <FadeIn key={i} delay={i * 0.1} className="bg-white/5 p-6 rounded-xl border border-white/10 relative group hover:bg-white/10 transition-colors">
+                                <div className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-accent text-black font-bold flex items-center justify-center text-sm shadow-lg shadow-accent/20">
+                                    {i + 1}
+                                </div>
+                                <step.icon className="text-accent mb-4" size={32} />
+                                <h3 className="font-bold text-lg mb-2">{step.title}</h3>
+                                <p className="text-sm text-white/50">{step.desc}</p>
+                            </FadeIn>
+                        ))}
                     </div>
                 </div>
             </div>
 
-            {/* GAMIFIED JOURNEY MAP */}
-            <section className="py-24 px-6 relative">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">Level Up Your Game</h2>
-                        <p className="text-muted text-lg">Unlock higher rewards as you scale.</p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
-                        {/* Connecting Line */}
-                        <div className="hidden md:block absolute top-[2.5rem] left-0 w-full h-0.5 bg-gradient-to-r from-accent/10 via-accent/50 to-purple-500/50 -z-10" />
-
-                        <JourneyStep
-                            title="Starter"
-                            icon={Target}
-                            desc="Complete profile & access dashboard. 5% commission on first deal."
-                            active={true}
-                            delay={0}
-                        />
-                        <JourneyStep
-                            title="Builder"
-                            icon={Briefcase}
-                            desc="Close 3 deals. Commission bumps to 10%. Access to marketing assets."
-                            delay={0.2}
-                        />
-                        <JourneyStep
-                            title="Closer"
-                            icon={TrendingUp}
-                            desc="Generate $50k revenue. 15% commission + Priority Support."
-                            delay={0.4}
-                        />
-                        <JourneyStep
-                            title="Elite Partner"
-                            icon={Crown}
-                            desc="$100k+ revenue. 20% commission, private slack channel, & annual retreat."
-                            delay={0.6}
-                        />
-                    </div>
-                </div>
-            </section>
-
-            {/* INFO & ELIGIBILITY */}
-            <section className="py-20 bg-surfaceHighlight/30 border-y border-white/5">
-                <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16">
-                    <div>
-                        <h3 className="text-3xl font-display font-bold mb-6">Who is this for?</h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {["Agency Owners", "Freelance Marketers", "Business Consultants", "Tech Influencers", "Startup Founders", "Sales Professionals"].map((role, i) => (
-                                <motion.div
-                                    key={i}
-                                    whileHover={{ x: 5 }}
-                                    className="flex items-center gap-3 p-3 rounded-lg bg-surface border border-white/5 hover:border-accent/30 transition-colors cursor-default"
-                                >
-                                    <div className="w-1.5 h-1.5 rounded-full bg-accent" />
-                                    <span className="font-medium text-white/80">{role}</span>
-                                </motion.div>
+            {/* ---------------- WHO CAN JOIN ---------------- */}
+            <div className="py-24 container mx-auto px-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <FadeIn>
+                        <h2 className="text-4xl md:text-5xl font-display font-bold mb-8">Who must join this program?</h2>
+                        <div className="space-y-6">
+                            {[
+                                "Students looking to earn through real business exposure",
+                                "Working professionals building side income",
+                                "Freelancers & consultants with client networks",
+                                "Sales-oriented individuals"
+                            ].map((item, i) => (
+                                <div key={i} className="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                                    <CheckCircle2 className="text-accent shrink-0 mt-1" />
+                                    <span className="text-lg text-white/80">{item}</span>
+                                </div>
                             ))}
                         </div>
-                    </div>
-                    <div>
-                        <h3 className="text-3xl font-display font-bold mb-6">Why Partner with Us?</h3>
-                        <div className="space-y-6">
-                            <div className="flex gap-4">
-                                <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-400 shrink-0">
-                                    <Globe size={24} />
-                                </div>
-                                <div>
-                                    <h4 className="font-bold text-lg mb-1">Global Infrastructure</h4>
-                                    <p className="text-muted text-sm">We handle fulfillment, billing, and delivery. You just make the intro.</p>
-                                </div>
+                        <p className="mt-8 text-white/50 italic border-l-2 border-accent/50 pl-4">
+                            This program is open to everyone with strong communication skills and a genuine network.
+                        </p>
+                    </FadeIn>
+
+                    {/* ---------------- FUTURE OPPORTUNITY ---------------- */}
+                    <FadeIn delay={0.2} className="bg-gradient-to-br from-accent/20 to-transparent p-1 rounded-2xl">
+                        <div className="bg-background rounded-xl p-8 lg:p-12 h-full border border-accent/20">
+                            <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mb-6">
+                                <Briefcase className="text-accent" size={32} />
                             </div>
-                            <div className="flex gap-4">
-                                <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center text-accent shrink-0">
-                                    <Zap size={24} />
-                                </div>
-                                <div>
-                                    <h4 className="font-bold text-lg mb-1">Instant Payouts</h4>
-                                    <p className="text-muted text-sm">Track earnings in real-time. Payouts processed weekly via Stripe or Wise.</p>
-                                </div>
-                            </div>
+                            <h3 className="text-3xl font-display font-bold mb-4">More Than Commission</h3>
+                            <p className="text-white/70 mb-8 leading-relaxed">
+                                High-performing Growth Partners may be considered for full-time roles at Frame n Flow Media in the future.
+                            </p>
+
+                            <h4 className="text-sm font-bold uppercase tracking-widest text-white/40 mb-4">We actively observe:</h4>
+                            <ul className="space-y-3 mb-8">
+                                {['Consistency', 'Communication quality', 'Deal integrity', 'Long-term mindset'].map(trait => (
+                                    <li key={trait} className="flex items-center gap-2 text-white/80">
+                                        <div className="w-1.5 h-1.5 bg-accent rounded-full" />
+                                        {trait}
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <p className="text-xs text-white/30">
+                                *This is not guaranteed employment — but top performers don’t go unnoticed.
+                            </p>
                         </div>
+                    </FadeIn>
+                </div>
+            </div>
+
+            {/* ---------------- WHY PARTNER & PAYOUTS ---------------- */}
+            <div className="py-24 bg-surface border-t border-white/5">
+                <div className="container mx-auto px-6">
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
+                        <FadeIn className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            {[
+                                { title: "End-to-End Execution", desc: "We handle strategy, fulfillment, delivery, and billing." },
+                                { title: "Transparent Tracking", desc: "Every referral, deal, and commission is tracked inside your dashboard." },
+                                { title: "Performance-Based", desc: "No levels. No caps. Your income scales with performance." },
+                                { title: "Flexible Work Model", desc: "Work from anywhere. Outreach on your terms." }
+                            ].map((card, i) => (
+                                <div key={i} className="p-6 bg-white/5 border border-white/10 rounded-xl hover:border-accent/30 transition-colors">
+                                    <h4 className="font-bold text-white mb-2">{card.title}</h4>
+                                    <p className="text-sm text-white/50">{card.desc}</p>
+                                </div>
+                            ))}
+                        </FadeIn>
+
+                        {/* Payout Info */}
+                        <FadeIn delay={0.2} className="bg-black/40 border border-white/10 rounded-xl p-8">
+                            <h3 className="text-2xl font-display font-bold mb-6">Payouts & Tracking</h3>
+                            <ul className="space-y-4 mb-8">
+                                <li className="flex justify-between items-center border-b border-white/5 pb-2">
+                                    <span className="text-white/60">Commission</span>
+                                    <span className="font-bold text-accent">20% – 30%</span>
+                                </li>
+                                <li className="flex justify-between items-center border-b border-white/5 pb-2">
+                                    <span className="text-white/60">Tracking</span>
+                                    <span className="font-bold text-white">Real-time</span>
+                                </li>
+                                <li className="flex justify-between items-center border-b border-white/5 pb-2">
+                                    <span className="text-white/60">Payout</span>
+                                    <span className="font-bold text-white">After Completion</span>
+                                </li>
+                            </ul>
+                            <p className="text-xs text-white/30 text-center">
+                                Commission percentage and payout timelines are subject to internal terms and deal structure.
+                            </p>
+                        </FadeIn>
+                    </div>
+
+                    {/* Final CTA */}
+                    <div className="text-center">
+                        <Button onClick={() => navigate('/growth-partner/apply')} className="px-10 py-5 text-xl">
+                            Start Your GPP Application
+                        </Button>
                     </div>
                 </div>
-            </section>
-
-            {/* FINAL CTA */}
-            <section className="py-32 px-6 text-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-accent/5" />
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-accent/20 blur-[100px] rounded-full pointer-events-none" />
-
-                <div className="relative z-10 max-w-3xl mx-auto">
-                    <h2 className="text-5xl md:text-7xl font-display font-bold mb-8">Ready to Scale?</h2>
-                    <p className="text-xl text-muted mb-10">
-                        Join 120+ partners earning passive income with Frame n Flow.
-                    </p>
-                    <Link
-                        to="/growth-partner/apply"
-                        className="inline-flex items-center gap-3 px-10 py-5 bg-white text-black font-bold text-xl rounded-full hover:scale-105 transition-transform shadow-[0_0_50px_rgba(255,255,255,0.3)]"
-                    >
-                        Start Your Journey <Rocket size={24} />
-                    </Link>
-                </div>
-            </section>
+            </div>
         </div>
     );
 };
