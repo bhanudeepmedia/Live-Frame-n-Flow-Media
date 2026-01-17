@@ -48,7 +48,7 @@ const Founder: React.FC = () => {
           >
             <div className="aspect-[4/5] rounded-lg overflow-hidden border border-white/10 relative group">
               <img
-                src="/bhanu-founder.png"
+                src="/bhanu.png"
                 alt="Bhanu Deep"
                 onError={(e) => {
                   e.currentTarget.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000&auto=format&fit=crop";
