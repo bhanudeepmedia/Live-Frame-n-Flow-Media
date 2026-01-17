@@ -374,7 +374,55 @@ const Landing: React.FC = () => {
                 </div>
             </div>
 
-            {/* ---------------- CHARACTER SELECTION (WHO CAN JOIN) ---------------- */}
+            {/* ---------------- LOGISTICS & REWARDS (DETAILS) ---------------- */}
+            <div className="py-20 container mx-auto px-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {/* Time & Structure */}
+                    <div className="bg-white/5 border border-white/10 p-8 rounded-2xl hover:bg-white/10 transition-colors">
+                        <div className="mb-4 bg-accent/20 w-12 h-12 rounded-lg flex items-center justify-center text-accent">
+                            <Briefcase size={24} />
+                        </div>
+                        <h3 className="text-xl font-bold mb-4">Work Structure</h3>
+                        <ul className="space-y-3 text-white/60 text-sm">
+                            <li className="flex items-start gap-2"><CheckCircle2 size={16} className="text-accent mt-0.5 shrink-0" /> Fully Remote Location</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 size={16} className="text-accent mt-0.5 shrink-0" /> No Fixed Hours (Self-managed)</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 size={16} className="text-accent mt-0.5 shrink-0" /> Performance-based Income</li>
+                        </ul>
+                    </div>
+
+                    {/* Performance Tracking */}
+                    <div className="bg-white/5 border border-white/10 p-8 rounded-2xl hover:bg-white/10 transition-colors">
+                        <div className="mb-4 bg-purple-500/20 w-12 h-12 rounded-lg flex items-center justify-center text-purple-400">
+                            <Target size={24} />
+                        </div>
+                        <h3 className="text-xl font-bold mb-4">Performance Tracking</h3>
+                        <p className="text-white/60 text-sm mb-4">
+                            All activities are tracked in the <strong className="text-white">Growth Partner Dashboard</strong>.
+                        </p>
+                        <ul className="space-y-3 text-white/60 text-sm">
+                            <li className="flex items-start gap-2"><CheckCircle2 size={16} className="text-purple-400 mt-0.5 shrink-0" /> Log Outreach & Calls</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 size={16} className="text-purple-400 mt-0.5 shrink-0" /> Track Appointments</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 size={16} className="text-purple-400 mt-0.5 shrink-0" /> Monitor Conversions</li>
+                        </ul>
+                    </div>
+
+                    {/* Career Growth */}
+                    <div className="bg-white/5 border border-white/10 p-8 rounded-2xl hover:bg-white/10 transition-colors">
+                        <div className="mb-4 bg-green-500/20 w-12 h-12 rounded-lg flex items-center justify-center text-green-400">
+                            <TrendingUp size={24} />
+                        </div>
+                        <h3 className="text-xl font-bold mb-4">Long-Term Career</h3>
+                        <p className="text-white/60 text-sm mb-4">
+                            Exceptional partners unlock <strong className="text-white">Full-Time Roles</strong>.
+                        </p>
+                        <ul className="space-y-3 text-white/60 text-sm">
+                            <li className="flex items-start gap-2"><CheckCircle2 size={16} className="text-green-400 mt-0.5 shrink-0" /> Higher Commission Tiers</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 size={16} className="text-green-400 mt-0.5 shrink-0" /> Priority Access to Leads</li>
+                            <li className="flex items-start gap-2"><CheckCircle2 size={16} className="text-green-400 mt-0.5 shrink-0" /> Agency Career Path</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <div className="py-32 container mx-auto px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
