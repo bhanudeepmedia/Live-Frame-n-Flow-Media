@@ -20,9 +20,13 @@ jobs:
           node-version: 20
 
       - name: Install and Build
+        env:
+          CI: false
         run: |
           cd copy-of-main-copy-of-frame-n-flow-media
-          npm install --legacy-peer-deps
+          npm config set legacy-peer-deps true
+          npm install
+          ls -la # Debug: verify files exist
           npm run build
 
       - name: Deploy
