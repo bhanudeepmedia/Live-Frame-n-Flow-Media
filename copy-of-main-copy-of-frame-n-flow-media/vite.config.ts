@@ -19,6 +19,6 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, '.'),
       }
     },
-    base: '/', // Serving from root for custom domain framenflowmedia.in
+    // base removed for Netlify deployment
   };
 });
