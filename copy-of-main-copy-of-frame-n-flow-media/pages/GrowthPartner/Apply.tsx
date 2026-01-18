@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { MockBackend } from '../../services/mockBackend';
+import { SupabaseBackend } from '../../services/supabaseService';
 import { Loader2, CheckCircle, AlertCircle, ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -40,7 +40,7 @@ const Apply: React.FC = () => {
 
         setStatus('submitting');
         try {
-            await MockBackend.submitApplication({
+            await SupabaseBackend.submitApplication({
                 ...formData,
                 // Combine city/country or keep separate if modified backend, 
                 // adhering to interface: city includes country or just city string.
@@ -175,8 +175,8 @@ const Apply: React.FC = () => {
                                         type="button"
                                         onClick={() => setFormData({ ...formData, background: bg })}
                                         className={`px-4 py-2 rounded-full border text-sm transition-all ${formData.background === bg
-                                                ? 'bg-accent/20 border-accent text-accent'
-                                                : 'bg-background border-white/10 text-muted hover:bg-white/5'
+                                            ? 'bg-accent/20 border-accent text-accent'
+                                            : 'bg-background border-white/10 text-muted hover:bg-white/5'
                                             }`}
                                     >
                                         {bg}
@@ -235,8 +235,8 @@ const Apply: React.FC = () => {
                                     type="button"
                                     onClick={() => handlePlatformToggle(p)}
                                     className={`px-4 py-3 rounded-xl border text-left text-sm transition-all flex items-center gap-2 ${formData.platforms.includes(p)
-                                            ? 'bg-accent/10 border-accent text-accent'
-                                            : 'bg-background border-white/10 text-muted hover:border-white/30'
+                                        ? 'bg-accent/10 border-accent text-accent'
+                                        : 'bg-background border-white/10 text-muted hover:border-white/30'
                                         }`}
                                 >
                                     <div className={`w-4 h-4 rounded-full border ${formData.platforms.includes(p) ? 'bg-accent border-accent' : 'border-muted'}`} />

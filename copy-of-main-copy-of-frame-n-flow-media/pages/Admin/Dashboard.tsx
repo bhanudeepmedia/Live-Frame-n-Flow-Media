@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { MockBackend, User, GrowthPartnerApplication, PartnerData } from '../../services/mockBackend';
+import { User, GrowthPartnerApplication, PartnerData } from '../../services/mockBackend';
+import { SupabaseBackend } from '../../services/supabaseService';
 import {
     Users,
     Search,
@@ -22,30 +23,33 @@ const AdminDashboard: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'applications' | 'partners'>('applications');
 
     useEffect(() => {
-        const currentUser = MockBackend.getCurrentUser();
-        if (!currentUser || currentUser.role !== 'admin') {
-            navigate('/growth-partner/login');
-            return;
-        }
-        setUser(currentUser);
-        refreshData();
+        const init = async () => {
+            const currentUser = await SupabaseBackend.getCurrentUser();
+            if (!currentUser || currentUser.role !== 'admin') {
+                navigate('/growth-partner/login');
+                return;
+            }
+            setUser(currentUser);
+            refreshData();
+        };
+        init();
     }, [navigate]);
 
     const refreshData = async () => {
-        const apps = await MockBackend.getApplications();
-        const parts = await MockBackend.getAllPartners();
+        const apps = await SupabaseBackend.getApplications();
+        const parts = await SupabaseBackend.getAllPartners();
         // Sort apps: pending first
         setApplications([...apps].sort((a, b) => (a.status === 'pending' ? -1 : 1)));
         setPartners(parts);
     };
 
-    const handleLogout = () => {
-        MockBackend.logout();
+    const handleLogout = async () => {
+        await SupabaseBackend.logout();
         navigate('/growth-partner/login');
     };
 
     const handleReview = async (appId: string, status: 'approved' | 'rejected') => {
-        await MockBackend.reviewApplication(appId, status);
+        await SupabaseBackend.reviewApplication(appId, status);
         refreshData();
     };
 

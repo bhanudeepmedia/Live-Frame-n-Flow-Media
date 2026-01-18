@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { MockBackend, User, PartnerData, OutreachLog } from '../../services/mockBackend';
+import { User, PartnerData, OutreachLog } from '../../services/mockBackend';
+import { SupabaseBackend } from '../../services/supabaseService';
 import {
     BarChart2,
     Send,
@@ -31,23 +32,28 @@ const Dashboard: React.FC = () => {
     });
 
     useEffect(() => {
-        const currentUser = MockBackend.getCurrentUser();
-        if (!currentUser || currentUser.role !== 'partner') {
-            navigate('/growth-partner/login');
-            return;
-        }
-        setUser(currentUser);
-        loadData(currentUser.partnerId!);
+        const init = async () => {
+            const currentUser = await SupabaseBackend.getCurrentUser();
+            if (!currentUser || currentUser.role !== 'partner') {
+                navigate('/growth-partner/login');
+                return;
+            }
+            setUser(currentUser);
+            if (currentUser.partnerId) loadData(currentUser.partnerId);
+        };
+        init();
     }, [navigate]);
 
     const loadData = async (partnerId: string) => {
-        const data = await MockBackend.getPartnerData(partnerId);
-        setPartnerData(data);
+        const data = await SupabaseBackend.getPartnerData(partnerId);
+        if (data) {
+            setPartnerData(data);
+        }
         setLoading(false);
     };
 
-    const handleLogout = () => {
-        MockBackend.logout();
+    const handleLogout = async () => {
+        await SupabaseBackend.logout();
         navigate('/growth-partner/login');
     };
 
@@ -55,7 +61,7 @@ const Dashboard: React.FC = () => {
         e.preventDefault();
         if (!user || !user.partnerId) return;
 
-        await MockBackend.logOutreach(user.partnerId, {
+        await SupabaseBackend.logOutreach(user.partnerId, {
             ...logForm,
             date: new Date().toISOString()
         });

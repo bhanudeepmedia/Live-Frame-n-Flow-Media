@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
-import { MockBackend } from '../../services/mockBackend';
-import { Lock, User, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
+import { SupabaseBackend } from '../../services/supabaseService';
+import { Lock, Mail, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -17,7 +17,7 @@ const Login: React.FC = () => {
         setError('');
 
         try {
-            const { user, error } = await MockBackend.login(username, password);
+            const { user, error } = await SupabaseBackend.login(email, password);
 
             if (error || !user) {
                 setError(error || 'Login failed');
@@ -62,15 +62,15 @@ const Login: React.FC = () => {
 
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-muted">Username</label>
+                        <label className="text-sm font-medium text-muted">Email</label>
                         <div className="relative">
-                            <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={18} />
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={18} />
                             <input
-                                type="text"
-                                value={username}
-                                onChange={e => setUsername(e.target.value)}
+                                type="email"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
                                 className="w-full bg-background border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-accent transition-colors"
-                                placeholder="Enter username"
+                                placeholder="name@example.com"
                                 required
                             />
                         </div>
