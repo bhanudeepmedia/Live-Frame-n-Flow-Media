@@ -43,6 +43,15 @@ const Overview = ({ partnerData, streak, user }: any) => {
     // Determine Symbol
     const symbol = partnerData.primary_currency === 'USD' ? '$' : '₹';
     const [showNotifications, setShowNotifications] = useState(false); // Added State
+    const [notifications, setNotifications] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchNotifs = async () => {
+            const notifs = await SupabaseBackend.getBroadcasts();
+            setNotifications(notifs);
+        };
+        fetchNotifs();
+    }, []);
 
     // Calculate Platform Split for Pie Chart
     const logs = partnerData.outreachLogs || [];
@@ -80,8 +89,9 @@ const Overview = ({ partnerData, streak, user }: any) => {
                         className="w-10 h-10 rounded-full bg-surface border border-white/10 flex items-center justify-center text-muted hover:text-white hover:bg-white/5 transition-colors relative"
                     >
                         <Bell size={20} />
-                        {/* Red Dot (Mock Notification) */}
-                        <div className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse border border-surface"></div>
+                        {notifications.length > 0 && (
+                            <div className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse border border-surface"></div>
+                        )}
                     </button>
 
                     {/* Notification Popup */}
@@ -91,18 +101,24 @@ const Overview = ({ partnerData, streak, user }: any) => {
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 10 }}
-                                className="absolute top-12 right-0 w-80 bg-[#0f0f12] border border-white/10 rounded-xl shadow-xl z-50 p-4"
+                                className="absolute top-12 right-0 w-80 bg-[#0f0f12] border border-white/10 rounded-xl shadow-xl z-50 p-4 max-h-64 overflow-y-auto"
                             >
                                 <div className="flex justify-between items-center mb-3">
                                     <h4 className="font-bold text-sm">Notifications</h4>
                                     <button onClick={() => setShowNotifications(false)}><X size={14} className="text-muted hover:text-white" /></button>
                                 </div>
                                 <div className="space-y-2">
-                                    <div className="bg-white/5 p-3 rounded-lg text-xs border-l-2 border-accent">
-                                        <div className="font-bold mb-1">Welcome to V2!</div>
-                                        <div className="text-muted">Explore the new dashboard features. Don't forget to update your bank details.</div>
-                                    </div>
-                                    <div className="text-center text-[10px] text-muted pt-2 uppercase tracking-widest">No other new updates</div>
+                                    {notifications.length === 0 ? (
+                                        <div className="text-center text-xs text-muted py-4">No new notifications</div>
+                                    ) : (
+                                        notifications.map(n => (
+                                            <div key={n.id} className="bg-white/5 p-3 rounded-lg text-xs border-l-2 border-accent">
+                                                <div className="font-bold mb-1">{n.title}</div>
+                                                <div className="text-muted">{n.message}</div>
+                                                <div className="text-[10px] text-muted mt-2 opacity-50">{new Date(n.created_at).toLocaleDateString()}</div>
+                                            </div>
+                                        ))
+                                    )}
                                 </div>
                             </motion.div>
                         )}

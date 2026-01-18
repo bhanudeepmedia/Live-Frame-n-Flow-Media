@@ -339,4 +339,55 @@ export const SupabaseBackend = {
 
         return data;
     }
+    // --- ADMIN EXTENSIONS ---
+    
+    getAllLeads: async () => {
+        // Fetch all leads
+        const { data: leads, error } = await supabase
+            .from('partner_leads')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) return [];
+        return leads;
+    },
+
+    updateLeadAdmin: async (leadId: string, updates: any) => {
+        // updates: { status, payout_status, admin_notes, is_duplicate, deal_value }
+        const { error } = await supabase.from('partner_leads').update(updates).eq('id', leadId);
+        return { error };
+    },
+
+    // Settings
+    getAdminSettings: async () => {
+        const { data } = await supabase.from('admin_settings').select('*').single();
+        return data || { commission_percentage: 20, accepted_platforms: ['Instagram', 'LinkedIn'], terms_content: '' };
+    },
+
+    updateAdminSettings: async (settings: any) => {
+        // Upsert based on there being only one row effectively
+        const { data: existing } = await supabase.from('admin_settings').select('id').single();
+        if (existing) {
+            const { error } = await supabase.from('admin_settings').update(settings).eq('id', existing.id);
+            return { error };
+        } else {
+            const { error } = await supabase.from('admin_settings').insert([settings]);
+            return { error };
+        }
+    },
+
+    // Broadcasts
+    sendBroadcast: async (title: string, message: string) => {
+        const { error } = await supabase.from('admin_notifications').insert([{ title, message }]);
+        return { error };
+    },
+
+    getBroadcasts: async () => {
+        const { data } = await supabase
+            .from('admin_notifications')
+            .select('*')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false });
+        return data || [];
+    }
 };
