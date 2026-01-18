@@ -1,19 +1,66 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { SupabaseBackend } from '../../services/supabaseService';
-import { Loader2, CheckCircle, AlertCircle, ChevronLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import {
+    Loader2,
+    CheckCircle,
+    ChevronLeft,
+    User,
+    Mail,
+    Phone,
+    MapPin,
+    Briefcase,
+    Zap,
+    Globe,
+    ArrowRight,
+    ShieldCheck,
+    Target
+} from 'lucide-react';
 
+// --- SUB-COMPONENTS ---
+const VerticalTape = ({ text, side = 'left', speed = 20 }: any) => (
+    <div className={`absolute top-0 ${side === 'left' ? 'left-4' : 'right-4'} h-[200%] w-12 overflow-hidden pointer-events-none opacity-20 hidden md:block`}>
+        <motion.div
+            animate={{ y: ["0%", "-50%"] }}
+            transition={{ repeat: Infinity, duration: speed, ease: "linear" }}
+            className="flex flex-col items-center gap-8 py-4"
+        >
+            {[...Array(20)].map((_, i) => (
+                <span key={i} className="text-xs font-mono font-bold text-white uppercase tracking-[0.3em] rotate-90 whitespace-nowrap">
+                    {text}
+                </span>
+            ))}
+        </motion.div>
+    </div>
+);
+
+const ProgressBar = ({ step, total }: any) => (
+    <div className="flex items-center gap-2 mb-8">
+        {[...Array(total)].map((_, i) => (
+            <div key={i} className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+                <motion.div
+                    initial={{ width: "0%" }}
+                    animate={{ width: i <= step ? "100%" : "0%" }}
+                    transition={{ duration: 0.5 }}
+                    className={`h-full ${i < step ? 'bg-accent' : i === step ? 'bg-white' : 'bg-transparent'}`}
+                />
+            </div>
+        ))}
+    </div>
+);
+
+// --- MAIN COMPONENT ---
 const Apply: React.FC = () => {
     const navigate = useNavigate();
+    const [step, setStep] = useState(0);
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
         phone: '',
         city: '',
         country: '',
-        background: 'Student',
+        background: '',
         experience: false,
         reason: '',
         platforms: [] as string[],
@@ -22,9 +69,10 @@ const Apply: React.FC = () => {
 
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
-    const platforms = ['Instagram', 'LinkedIn', 'WhatsApp', 'Email', 'Twitter/X', 'Cold Calling'];
+    const platformsList = ['Instagram', 'LinkedIn', 'WhatsApp', 'Email', 'Twitter/X', 'Cold Calling'];
     const backgrounds = ['Student', 'Freelancer', 'Entrepreneur', 'Working Professional', 'Other'];
 
+    // HANDLERS
     const handlePlatformToggle = (p: string) => {
         setFormData(prev => ({
             ...prev,
@@ -34,151 +82,75 @@ const Apply: React.FC = () => {
         }));
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!formData.agreed) return;
+    const nextStep = () => {
+        // Simple Validation
+        if (step === 0 && (!formData.fullName || !formData.email || !formData.phone)) return alert('Please fill all identity fields.');
+        if (step === 1 && (!formData.background)) return alert('Please select your background.');
+        if (step === 2 && (!formData.city || !formData.country || formData.platforms.length === 0)) return alert('Please complete location and platforms.');
 
+        setStep(prev => prev + 1);
+    };
+
+    const prevStep = () => setStep(prev => prev - 1);
+
+    const handleSubmit = async () => {
+        if (!formData.agreed) return alert('You must agree to the terms.');
+        if (!formData.reason) return alert('Please tell us why you want to join.');
+
+        setStatus('submitting');
         const { agreed, country, fullName, ...otherData } = formData;
 
         try {
             await SupabaseBackend.submitApplication({
                 ...otherData,
-                full_name: fullName, // Map to DB column
-                city: `${formData.city}, ${formData.country}` // Save country in city field
+                full_name: fullName,
+                city: `${formData.city}, ${formData.country}`
             });
             setStatus('success');
-            // Redirect after delay
-            setTimeout(() => navigate('/growth-partner'), 3000);
+            setTimeout(() => navigate('/growth-partner/login'), 4000);
         } catch (err: any) {
             console.error(err);
-            alert("Error submitting application: " + (err.message || JSON.stringify(err)));
+            alert("Error: " + (err.message || "Submission failed"));
             setStatus('error');
         }
     };
 
-    if (status === 'success') {
-        return (
-            <div className="min-h-screen bg-background flex items-center justify-center p-6">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="bg-surface p-8 rounded-2xl border border-green-500/20 text-center max-w-md w-full"
-                >
-                    <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 text-green-500">
-                        <CheckCircle size={40} />
-                    </div>
-                    <h2 className="text-2xl font-display font-bold mb-4">Application Received!</h2>
-                    <p className="text-muted mb-6">
-                        We've received your application. Our team will review it and you'll receive your login credentials via email once approved.
-                    </p>
-                    <button
-                        onClick={() => navigate('/growth-partner')}
-                        className="w-full py-3 bg-surfaceHighlight hover:bg-white/10 rounded-lg transition-colors"
-                    >
-                        Back to Home
-                    </button>
-                </motion.div>
-            </div>
-        );
-    }
-
-    return (
-        <div className="min-h-screen bg-background py-20 px-4 md:px-8 font-sans">
-            <Link to="/growth-partner" className="inline-flex items-center text-muted hover:text-white mb-8 transition-colors">
-                <ChevronLeft size={20} /> Back to Program Info
-            </Link>
-
-            <div className="max-w-3xl mx-auto">
-                <div className="text-center mb-12">
-                    <h1 className="text-3xl md:text-5xl font-display font-bold mb-4">Apply Now</h1>
-                    <p className="text-muted">Join the elite network of Growth Partners.</p>
-                </div>
-
-                <motion.form
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    onSubmit={handleSubmit}
-                    className="space-y-8 bg-surface/50 p-6 md:p-10 rounded-3xl border border-white/5 backdrop-blur-sm"
-                >
-                    {/* Personal Details */}
-                    <div className="space-y-6">
-                        <h3 className="text-xl font-bold border-b border-white/10 pb-2">Personal Details</h3>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <label className="text-sm text-muted">Full Name</label>
-                                <input
-                                    required
-                                    type="text"
-                                    value={formData.fullName}
-                                    onChange={e => setFormData({ ...formData, fullName: e.target.value })}
-                                    className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent transition-colors"
-                                    placeholder="John Doe"
-                                />
+    // --- RENDER STEPS ---
+    const renderStep = () => {
+        switch (step) {
+            case 0:
+                return (
+                    <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="space-y-6">
+                        <h2 className="text-2xl font-display font-bold">Agent Identity</h2>
+                        <div className="space-y-4">
+                            <div className="group">
+                                <label className="text-xs font-bold text-accent uppercase mb-2 block">Full Name</label>
+                                <input value={formData.fullName} onChange={e => setFormData({ ...formData, fullName: e.target.value })} className="input-premium w-full bg-[#111] border border-white/10 p-4 rounded-xl text-white focus:border-accent outline-none transition-colors" placeholder="John Doe" />
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-sm text-muted">Email Address</label>
-                                <input
-                                    required
-                                    type="email"
-                                    value={formData.email}
-                                    onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                    className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent transition-colors"
-                                    placeholder="john@example.com"
-                                />
+                            <div className="group">
+                                <label className="text-xs font-bold text-accent uppercase mb-2 block">Email Address</label>
+                                <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="input-premium w-full bg-[#111] border border-white/10 p-4 rounded-xl text-white focus:border-accent outline-none transition-colors" placeholder="agent@example.com" />
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-sm text-muted">Phone / WhatsApp</label>
-                                <input
-                                    required
-                                    type="text"
-                                    value={formData.phone}
-                                    onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                                    className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent transition-colors"
-                                    placeholder="+91 98765 43210"
-                                />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <label className="text-sm text-muted">City</label>
-                                    <input
-                                        required
-                                        type="text"
-                                        value={formData.city}
-                                        onChange={e => setFormData({ ...formData, city: e.target.value })}
-                                        className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent transition-colors"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm text-muted">Country</label>
-                                    <input
-                                        required
-                                        type="text"
-                                        value={formData.country}
-                                        onChange={e => setFormData({ ...formData, country: e.target.value })}
-                                        className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent transition-colors"
-                                    />
-                                </div>
+                            <div className="group">
+                                <label className="text-xs font-bold text-accent uppercase mb-2 block">Phone / WhatsApp</label>
+                                <input value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className="input-premium w-full bg-[#111] border border-white/10 p-4 rounded-xl text-white focus:border-accent outline-none transition-colors" placeholder="+1 234 567 890" />
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
+                );
+            case 1:
+                return (
+                    <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="space-y-6">
+                        <h2 className="text-2xl font-display font-bold">Background Check</h2>
 
-                    {/* Background */}
-                    <div className="space-y-6">
-                        <h3 className="text-xl font-bold border-b border-white/10 pb-2">Your Background</h3>
-
-                        <div className="space-y-4">
-                            <label className="text-sm text-muted">Current Role</label>
-                            <div className="flex flex-wrap gap-3">
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-accent uppercase mb-2 block">Current Role</label>
+                            <div className="grid grid-cols-2 gap-3">
                                 {backgrounds.map(bg => (
                                     <button
                                         key={bg}
-                                        type="button"
                                         onClick={() => setFormData({ ...formData, background: bg })}
-                                        className={`px-4 py-2 rounded-full border text-sm transition-all ${formData.background === bg
-                                            ? 'bg-accent/20 border-accent text-accent'
-                                            : 'bg-background border-white/10 text-muted hover:bg-white/5'
-                                            }`}
+                                        className={`p-3 rounded-lg border text-sm font-bold text-left transition-all ${formData.background === bg ? 'bg-accent/20 border-accent text-white shadow-[0_0_15px_rgba(249,115,22,0.3)]' : 'bg-white/5 border-white/10 text-muted hover:bg-white/10'}`}
                                     >
                                         {bg}
                                     </button>
@@ -186,96 +158,196 @@ const Apply: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-sm text-muted">Do you have prior sales experience?</label>
-                            <div className="flex gap-4">
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                    <input
-                                        type="radio"
-                                        name="exp"
-                                        checked={formData.experience}
-                                        onChange={() => setFormData({ ...formData, experience: true })}
-                                        className="accent-accent"
-                                    />
-                                    <span>Yes</span>
+                        <div className="pt-4 border-t border-white/10">
+                            <label className="text-xs font-bold text-accent uppercase mb-4 block">Prior Sales Experience?</label>
+                            <div className="flex gap-6">
+                                <label className="flex items-center gap-3 cursor-pointer group">
+                                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${formData.experience ? 'border-accent bg-accent' : 'border-white/20'}`}>
+                                        {formData.experience && <CheckCircle size={14} className="text-black" />}
+                                    </div>
+                                    <input type="radio" className="hidden" checked={formData.experience} onChange={() => setFormData({ ...formData, experience: true })} />
+                                    <span className={`text-sm ${formData.experience ? 'text-white' : 'text-muted group-hover:text-white'}`}>Yes, I have sold before.</span>
                                 </label>
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                    <input
-                                        type="radio"
-                                        name="exp"
-                                        checked={!formData.experience}
-                                        onChange={() => setFormData({ ...formData, experience: false })}
-                                        className="accent-accent"
-                                    />
-                                    <span>No</span>
+                                <label className="flex items-center gap-3 cursor-pointer group">
+                                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${!formData.experience ? 'border-accent bg-accent' : 'border-white/20'}`}>
+                                        {!formData.experience && <CheckCircle size={14} className="text-black" />}
+                                    </div>
+                                    <input type="radio" className="hidden" checked={!formData.experience} onChange={() => setFormData({ ...formData, experience: false })} />
+                                    <span className={`text-sm ${!formData.experience ? 'text-white' : 'text-muted group-hover:text-white'}`}>No, I'm new.</span>
                                 </label>
                             </div>
                         </div>
+                    </motion.div>
+                );
+            case 2:
+                return (
+                    <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="space-y-6">
+                        <h2 className="text-2xl font-display font-bold">Operational Base</h2>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="group">
+                                <label className="text-xs font-bold text-accent uppercase mb-2 block">City</label>
+                                <input value={formData.city} onChange={e => setFormData({ ...formData, city: e.target.value })} className="w-full bg-[#111] border border-white/10 p-4 rounded-xl text-white focus:border-accent outline-none" />
+                            </div>
+                            <div className="group">
+                                <label className="text-xs font-bold text-accent uppercase mb-2 block">Country</label>
+                                <input value={formData.country} onChange={e => setFormData({ ...formData, country: e.target.value })} className="w-full bg-[#111] border border-white/10 p-4 rounded-xl text-white focus:border-accent outline-none" />
+                            </div>
+                        </div>
 
-                        <div className="space-y-2">
-                            <label className="text-sm text-muted">Why do you want to be a Growth Partner?</label>
+                        <div className="pt-4">
+                            <label className="text-xs font-bold text-accent uppercase mb-3 block">Preferred Platforms</label>
+                            <div className="flex flex-wrap gap-2">
+                                {platformsList.map(p => (
+                                    <button
+                                        key={p}
+                                        onClick={() => handlePlatformToggle(p)}
+                                        className={`px-4 py-2 rounded-full text-xs font-bold border transition-all ${formData.platforms.includes(p) ? 'bg-white text-black border-white' : 'bg-transparent border-white/20 text-muted hover:border-white/50'}`}
+                                    >
+                                        {p}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </motion.div>
+                );
+            case 3:
+                return (
+                    <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -20, opacity: 0 }} className="space-y-6">
+                        <h2 className="text-2xl font-display font-bold">Mission Motivation</h2>
+
+                        <div>
+                            <label className="text-xs font-bold text-accent uppercase mb-2 block">Why should we recruit you?</label>
                             <textarea
-                                required
-                                rows={3}
                                 value={formData.reason}
                                 onChange={e => setFormData({ ...formData, reason: e.target.value })}
-                                className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent transition-colors resize-none"
-                                placeholder="Tell us about your motivation..."
+                                className="w-full h-32 bg-[#111] border border-white/10 p-4 rounded-xl text-white focus:border-accent outline-none resize-none"
+                                placeholder="I have a network of..."
                             />
                         </div>
-                    </div>
 
-                    {/* Outreach */}
-                    <div className="space-y-6">
-                        <h3 className="text-xl font-bold border-b border-white/10 pb-2">Outreach Strategy</h3>
-                        <label className="text-sm text-muted">Preferred Platforms (Select multiple)</label>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                            {platforms.map(p => (
-                                <button
-                                    key={p}
-                                    type="button"
-                                    onClick={() => handlePlatformToggle(p)}
-                                    className={`px-4 py-3 rounded-xl border text-left text-sm transition-all flex items-center gap-2 ${formData.platforms.includes(p)
-                                        ? 'bg-accent/10 border-accent text-accent'
-                                        : 'bg-background border-white/10 text-muted hover:border-white/30'
-                                        }`}
-                                >
-                                    <div className={`w-4 h-4 rounded-full border ${formData.platforms.includes(p) ? 'bg-accent border-accent' : 'border-muted'}`} />
-                                    {p}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Agreement */}
-                    <div className="pt-4 border-t border-white/10 text-sm md:text-base">
-                        <label className="flex items-start gap-3 cursor-pointer group">
-                            <input
-                                type="checkbox"
-                                required
-                                checked={formData.agreed}
-                                onChange={e => setFormData({ ...formData, agreed: e.target.checked })}
-                                className="mt-1 accent-accent w-4 h-4"
-                            />
-                            <span className="text-muted group-hover:text-white transition-colors">
-                                I understand this is a commission-based role and I agree to Frame n Flow Media’s partner terms.
+                        <label className="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/5 cursor-pointer hover:bg-white/10 transition-colors">
+                            <div className={`mt-1 min-w-[20px] h-5 rounded border flex items-center justify-center transition-colors ${formData.agreed ? 'bg-accent border-accent' : 'border-white/30'}`}>
+                                {formData.agreed && <CheckCircle size={14} className="text-black" />}
+                            </div>
+                            <input type="checkbox" className="hidden" checked={formData.agreed} onChange={e => setFormData({ ...formData, agreed: e.target.checked })} />
+                            <span className="text-xs text-muted leading-relaxed">
+                                I acknowledge that being a Growth Partner requires dedication. I agree to the terms of engagement and understand that this is a commission-based role.
                             </span>
                         </label>
+                    </motion.div>
+                );
+            default: return null;
+        }
+    };
+
+    if (status === 'success') {
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center p-6 relative overflow-hidden font-sans">
+                <VerticalTape text="MISSION ACCEPTED •" side="left" />
+                <VerticalTape text="WELCOME ABROAD •" side="right" />
+                <motion.div
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="bg-[#0a0a0a] p-10 rounded-3xl border border-green-500/20 text-center max-w-lg w-full relative z-10 shadow-[0_0_50px_rgba(34,197,94,0.1)]"
+                >
+                    <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
+                        <CheckCircle size={50} className="text-green-500" />
+                    </div>
+                    <h2 className="text-4xl font-display font-black mb-4 text-white">Transmission Received</h2>
+                    <p className="text-white/60 mb-8 leading-relaxed">
+                        Your application has been logged in our secure database. Mission Command will review your profile. Expect secure communication via email upon approval.
+                    </p>
+                    <button
+                        onClick={() => navigate('/growth-partner/login')}
+                        className="w-full py-4 bg-white text-black font-bold uppercase tracking-widest rounded-xl hover:bg-gray-200 transition-colors"
+                    >
+                        Access Login Terminal
+                    </button>
+                    <div className="mt-8 text-[10px] text-white/20 font-mono uppercase tracking-[0.2em] animate-pulse">
+                        Redirecting to Login...
+                    </div>
+                </motion.div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4 relative overflow-hidden font-sans">
+            {/* BACKGROUND ELEMENTS */}
+            <div className="fixed inset-0 pointer-events-none">
+                <VerticalTape text="CLASSIFIED • GROWTH PARTNER PROGRAM •" side="left" speed={30} />
+                <VerticalTape text="APPLICATION IN PROGRESS • DO NOT ABORT •" side="right" speed={25} />
+
+                {/* Gradient Glows */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-accent/5 blur-[120px] rounded-full opacity-50" />
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/5 blur-[120px] rounded-full opacity-30" />
+            </div>
+
+            {/* MAIN FORM CARD */}
+            <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full max-w-2xl relative z-10"
+            >
+                <div className="mb-8 flex items-center justify-between">
+                    <Link to="/growth-partner" className="text-white/40 hover:text-white transition-colors flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
+                        <ChevronLeft size={16} /> Abort Mission
+                    </Link>
+                    <div className="text-accent text-xs font-mono uppercase tracking-widest animate-pulse">System Active</div>
+                </div>
+
+                <div className="bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden">
+                    {/* Top Bar Decoration */}
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent opacity-50" />
+
+                    <div className="mb-8">
+                        <div className="flex justify-between items-end mb-4">
+                            <div>
+                                <h1 className="text-3xl font-display font-bold text-white mb-1">Mission Briefing</h1>
+                                <p className="text-white/40 text-sm">Step {step + 1} of 4</p>
+                            </div>
+                            <div className="text-right hidden sm:block">
+                                <span className="block text-2xl font-black text-white/10">0{step + 1}</span>
+                            </div>
+                        </div>
+                        <ProgressBar step={step} total={4} />
                     </div>
 
-                    <button
-                        type="submit"
-                        disabled={status === 'submitting'}
-                        className="w-full py-4 bg-accent text-background font-bold text-lg rounded-xl hover:bg-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                        {status === 'submitting' ? (
-                            <><Loader2 className="animate-spin" /> Submitting...</>
-                        ) : (
-                            'Submit Application'
-                        )}
-                    </button>
-                </motion.form>
-            </div>
+                    <form onSubmit={e => e.preventDefault()} className="min-h-[400px] flex flex-col justify-between">
+                        <AnimatePresence mode="wait">
+                            {renderStep()}
+                        </AnimatePresence>
+
+                        <div className="flex items-center gap-4 mt-10 pt-6 border-t border-white/5">
+                            {step > 0 && (
+                                <button
+                                    onClick={prevStep}
+                                    className="px-6 py-3 rounded-xl border border-white/10 text-white/60 hover:text-white hover:bg-white/5 transition-colors font-bold uppercase text-xs tracking-wider"
+                                >
+                                    Previous
+                                </button>
+                            )}
+
+                            {step < 3 ? (
+                                <button
+                                    onClick={nextStep}
+                                    className="flex-1 py-3 bg-white text-black font-bold uppercase tracking-wider rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                                >
+                                    Continue <ArrowRight size={16} />
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={handleSubmit}
+                                    disabled={status === 'submitting'}
+                                    className="flex-1 py-3 bg-gradient-to-r from-accent to-accent/80 text-black font-black uppercase tracking-wider rounded-xl hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(249,115,22,0.3)] disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {status === 'submitting' ? <Loader2 className="animate-spin" /> : 'Initialize Sequence'}
+                                </button>
+                            )}
+                        </div>
+                    </form>
+                </div>
+            </motion.div>
         </div>
     );
 };
