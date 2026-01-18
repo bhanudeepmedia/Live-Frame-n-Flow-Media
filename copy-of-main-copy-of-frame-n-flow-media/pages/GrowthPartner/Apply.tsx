@@ -38,14 +38,13 @@ const Apply: React.FC = () => {
         e.preventDefault();
         if (!formData.agreed) return;
 
-        const { agreed, country, ...submissionData } = formData;
+        const { agreed, country, fullName, ...otherData } = formData;
 
         try {
             await SupabaseBackend.submitApplication({
-                ...submissionData,
-                // Combine city/country or keep separate if modified backend, 
-                // adhering to interface: city includes country or just city string.
-                city: `${formData.city}, ${formData.country}`
+                ...otherData,
+                full_name: fullName, // Map to DB column
+                city: `${formData.city}, ${formData.country}` // Save country in city field
             });
             setStatus('success');
             // Redirect after delay
