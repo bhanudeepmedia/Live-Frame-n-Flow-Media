@@ -107,8 +107,8 @@ const Overview = ({
                                     <div className="font-bold text-sm">{app.fullName}</div>
                                     <div className="text-xs text-muted">{app.city} • {app.experience ? 'Exp' : 'No Exp'}</div>
                                     <div className="flex gap-2 mt-1">
-                                        {app.linkedin && <a href={app.linkedin} target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300"><Linkedin size={12} /></a>}
-                                        {app.social && <a href={app.social} target="_blank" rel="noreferrer" className="text-pink-400 hover:text-pink-300"><Globe size={12} /></a>}
+                                        {app.linkedin && <a href={app.linkedin} target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300" title="LinkedIn Profile"><Linkedin size={14} /></a>}
+                                        {app.social && <a href={app.social} target="_blank" rel="noreferrer" className="text-pink-400 hover:text-pink-300" title="Social Profile"><Globe size={14} /></a>}
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
