@@ -332,6 +332,139 @@ const Configuration = ({ adminSettings, setAdminSettings, handleSaveSettings }: 
     </div>
 );
 
+const ApplicationsManager = ({
+    applications,
+    partners,
+    handleReviewApp,
+    setSelectedApplicant // New callback
+}: any) => {
+    const [filter, setFilter] = useState<'pending' | 'activation' | 'rejected' | 'all'>('pending');
+
+    const pendingApps = applications.filter((a: any) => a.status === 'pending');
+    const rejectedApps = applications.filter((a: any) => a.status === 'rejected');
+
+    // Approved but NO partner record (Active) with this application_id 
+    // note: partners list already contains active partners
+    const activationApps = applications.filter((a: any) =>
+        a.status === 'approved' && !partners.find((p: any) => p.applicationId === a.id)
+    );
+
+    const getList = () => {
+        switch (filter) {
+            case 'pending': return pendingApps;
+            case 'activation': return activationApps;
+            case 'rejected': return rejectedApps;
+            default: return applications;
+        }
+    };
+
+    return (
+        <div className="space-y-6 animate-fade-in">
+            {/* HEADER & TABS */}
+            <div className="flex justify-between items-center">
+                <h2 className="text-3xl font-display font-bold">Applications</h2>
+                <div className="flex bg-white/5 rounded-lg p-1 gap-1">
+                    {['pending', 'activation', 'rejected', 'all'].map(f => (
+                        <button
+                            key={f}
+                            onClick={() => setFilter(f as any)}
+                            className={`px-4 py-2 rounded-md text-sm font-bold capitalize transition-all ${filter === f ? 'bg-accent text-black' : 'text-muted hover:text-white'}`}
+                        >
+                            {f === 'activation' ? 'Onboarding' : f}
+                            {(f === 'pending' && pendingApps.length > 0) && <span className="ml-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">{pendingApps.length}</span>}
+                            {(f === 'activation' && activationApps.length > 0) && <span className="ml-2 bg-yellow-500 text-black text-[10px] px-1.5 py-0.5 rounded-full">{activationApps.length}</span>}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* LIST */}
+            <div className="bg-surface border border-white/10 rounded-xl overflow-hidden">
+                <table className="w-full text-left text-sm">
+                    <thead className="bg-white/5 text-muted uppercase text-xs">
+                        <tr>
+                            <th className="p-4">Applicant</th>
+                            <th className="p-4">Details</th>
+                            <th className="p-4">Date</th>
+                            <th className="p-4">Status</th>
+                            <th className="p-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5">
+                        {getList().length === 0 ? <tr><td colSpan={5} className="p-8 text-center text-muted">No applications found in this category.</td></tr> : getList().map((app: any) => (
+                            <tr key={app.id} className="hover:bg-white/5">
+                                <td className="p-4">
+                                    <div className="font-bold">{app.fullName}</div>
+                                    <div className="text-xs text-muted">{app.email}</div>
+                                </td>
+                                <td className="p-4 text-xs text-muted">
+                                    {app.city} • {app.experience ? 'Exp' : 'No Exp'}
+                                </td>
+                                <td className="p-4 text-xs font-mono text-muted">
+                                    {new Date(app.appliedAt).toLocaleDateString()}
+                                </td>
+                                <td className="p-4">
+                                    <span className={`px-2 py-1 rounded text-xs uppercase font-bold ${app.status === 'approved' ? 'bg-green-500/20 text-green-500' :
+                                        app.status === 'rejected' ? 'bg-red-500/20 text-red-500' :
+                                            'bg-yellow-500/20 text-yellow-500'
+                                        }`}>
+                                        {app.status}
+                                    </span>
+                                </td>
+                                <td className="p-4 text-right flex justify-end gap-2">
+                                    <button onClick={() => setSelectedApplicant(app)} className="p-2 bg-white/5 rounded hover:bg-white/10 text-xs font-bold mr-2">View Profile</button>
+
+                                    {/* Action Buttons based on Status */}
+                                    {app.status === 'pending' && (
+                                        <>
+                                            <button onClick={() => handleReviewApp(app.id, 'approved')} className="text-green-400 p-1 hover:bg-green-500/20 rounded"><CheckCircle size={16} /></button>
+                                            <button onClick={() => handleReviewApp(app.id, 'rejected')} className="text-red-400 p-1 hover:bg-red-500/20 rounded"><XCircle size={16} /></button>
+                                        </>
+                                    )}
+                                    {/* Mail Button for Approved but not yet Partner (Active) */}
+                                    {(app.status === 'approved') && (
+                                        <button
+                                            onClick={() => {
+                                                const subject = "Application Approved - Frame n Flow Media GPP";
+                                                const body = `Hello ${app.fullName.split(' ')[0]},\n\nWe are pleased to accept you into the Growth Partner Program.\n\nPlease activate your account by creating your credentials here:\n${window.location.origin}/#/growth-partner/signup\n\n(This link allows you to set your password)\n\nWelcome aboard,\nFrame n Flow Media Team`;
+                                                window.location.href = `mailto:${app.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                                            }}
+                                            className="text-blue-400 p-1 hover:bg-blue-500/20 rounded"
+                                            title="Send Acceptance Email"
+                                        >
+                                            <Mail size={16} />
+                                        </button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* DEFAULT MAIL TEMPLATE BOX */}
+            <div className="bg-surface border border-white/10 p-6 rounded-xl mt-8">
+                <h3 className="font-bold flex items-center gap-2 mb-4"><Mail size={18} /> Default Acceptance Template</h3>
+                <div className="bg-black/30 p-4 rounded-lg font-mono text-xs text-muted whitespace-pre-wrap select-all border border-white/5">
+                    {`Subject: Application Approved - Frame n Flow Media GPP
+
+Hello [Name],
+
+We are pleased to accept you into the Growth Partner Program.
+
+Please activate your account by creating your credentials here:
+${window.location.origin}/#/growth-partner/signup
+
+(This link allows you to set your password)
+
+Welcome aboard,
+Frame n Flow Media Team`}
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // --- MAIN COMPONENT ---
 
 const AdminDashboard: React.FC = () => {
@@ -341,12 +474,13 @@ const AdminDashboard: React.FC = () => {
     const [partners, setPartners] = useState<any[]>([]);
     const [allLeads, setAllLeads] = useState<any[]>([]);
     const [adminSettings, setAdminSettings] = useState<any>({});
-    const [activeTab, setActiveTab] = useState<'overview' | 'partners' | 'leads' | 'payouts' | 'settings'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'partners' | 'apps' | 'leads' | 'payouts' | 'settings'>('overview');
 
     // UI State
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
-    const [selectedPartner, setSelectedPartner] = useState<any | null>(null); // For Profile Modal
+    const [selectedPartner, setSelectedPartner] = useState<any | null>(null); // For Partner Modal
+    const [selectedApplicant, setSelectedApplicant] = useState<any | null>(null); // For Applicant Modal
     const [broadcastForm, setBroadcastForm] = useState({ title: '', message: '' });
     const [broadcasts, setBroadcasts] = useState<any[]>([]); // New state
 
@@ -449,6 +583,9 @@ const AdminDashboard: React.FC = () => {
                     <button onClick={() => setActiveTab('partners')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'partners' ? 'bg-accent text-background' : 'text-muted hover:text-white'}`}>
                         <Users size={18} /> GP Management
                     </button>
+                    <button onClick={() => setActiveTab('apps')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'apps' ? 'bg-accent text-background' : 'text-muted hover:text-white'}`}>
+                        <FileText size={18} /> Applications
+                    </button>
                     <button onClick={() => setActiveTab('leads')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'leads' ? 'bg-accent text-background' : 'text-muted hover:text-white'}`}>
                         <Briefcase size={18} /> Leads & Deals
                     </button>
@@ -487,6 +624,12 @@ const AdminDashboard: React.FC = () => {
                     allLeads={allLeads}
                     getPartnerName={getPartnerName}
                     setSelectedPartner={setSelectedPartner}
+                />}
+                {activeTab === 'apps' && <ApplicationsManager
+                    applications={applications}
+                    partners={partners}
+                    handleReviewApp={handleReviewApp}
+                    setSelectedApplicant={setSelectedApplicant}
                 />}
                 {activeTab === 'leads' && <LeadsTable
                     allLeads={allLeads}
@@ -558,8 +701,77 @@ const AdminDashboard: React.FC = () => {
                         </motion.div>
                     </motion.div>
                 )}
+                {selectedApplicant && (
+                    <motion.div
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm"
+                        onClick={() => setSelectedApplicant(null)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }}
+                            className="bg-surface border border-white/10 w-full max-w-2xl rounded-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <div className="p-8 border-b border-white/10 flex justify-between items-start">
+                                <div>
+                                    <h2 className="text-2xl font-bold font-display">{selectedApplicant.fullName}</h2>
+                                    <p className="text-sm text-accent">{selectedApplicant.status} Applicant</p>
+                                </div>
+                                <button onClick={() => setSelectedApplicant(null)} className="text-muted hover:text-white"><XCircle size={24} /></button>
+                            </div>
+                            <div className="p-8 space-y-6">
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div className="bg-white/5 p-4 rounded-xl">
+                                        <h4 className="text-xs text-muted uppercase mb-2">Contact Info</h4>
+                                        <div className="text-sm font-bold mb-1">{selectedApplicant.email}</div>
+                                        <div className="text-sm text-muted mb-1">{selectedApplicant.phone}</div>
+                                        <div className="text-sm text-accent">{selectedApplicant.city}</div>
+                                    </div>
+                                    <div className="bg-white/5 p-4 rounded-xl">
+                                        <h4 className="text-xs text-muted uppercase mb-2">Background</h4>
+                                        <div className="text-sm font-bold mb-1">{selectedApplicant.background}</div>
+                                        <div className="text-sm text-muted">{selectedApplicant.experience ? 'Prior Experience: Yes' : 'Prior Experience: No'}</div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white/5 p-4 rounded-xl">
+                                    <h4 className="text-xs text-muted uppercase mb-2">Digital Footprint</h4>
+                                    <div className="space-y-2">
+                                        {selectedApplicant.linkedin ? (
+                                            <a href={selectedApplicant.linkedin} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors">
+                                                <Linkedin size={16} /> {selectedApplicant.linkedin}
+                                            </a>
+                                        ) : <span className="text-muted italic text-sm">No LinkedIn provided</span>}
+
+                                        {selectedApplicant.social ? (
+                                            <a href={selectedApplicant.social} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-pink-400 hover:text-pink-300 transition-colors">
+                                                <Globe size={16} /> {selectedApplicant.social}
+                                            </a>
+                                        ) : <span className="text-muted italic text-sm">No Social provided</span>}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h4 className="font-bold mb-2">Mission Reasoning</h4>
+                                    <div className="p-4 bg-white/5 rounded-xl text-sm italic border border-white/5 text-muted">
+                                        "{selectedApplicant.reason}"
+                                    </div>
+                                </div>
+
+                                <div className="bg-white/5 p-4 rounded-xl">
+                                    <h4 className="text-xs text-muted uppercase mb-2">Platforms</h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        {selectedApplicant.platforms?.map((p: string) => (
+                                            <span key={p} className="px-2 py-1 bg-white/10 rounded text-xs">{p}</span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
             </AnimatePresence>
-        </div>
+        </div >
     );
 };
 
