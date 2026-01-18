@@ -146,11 +146,11 @@ const Landing: React.FC = () => {
                             "Growth Partners cold-outreach potential clients, set appointments, join sales calls, and earn commission on every successful client conversion handled by Frame n Flow Media."
                         </p>
 
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <Button onClick={() => navigate('/growth-partner/apply')} className="w-full sm:w-auto px-8 py-4 text-lg bg-white text-black hover:scale-105 justify-center">
+                        <div className="flex flex-col sm:flex-row gap-4 mt-8">
+                            <Button onClick={() => navigate('/growth-partner/apply')} className="w-full sm:w-auto min-w-[180px] px-8 py-4 text-lg font-bold bg-gradient-to-r from-accent to-accent/80 text-black hover:scale-105 shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] justify-center">
                                 Apply Now 🚀
                             </Button>
-                            <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="w-full sm:w-auto px-8 py-4 text-lg border border-white/20 rounded-lg hover:bg-white/5 transition-colors font-bold uppercase tracking-wider text-sm">
+                            <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="w-full sm:w-auto min-w-[180px] px-8 py-4 text-lg border border-accent/30 text-accent rounded-lg hover:bg-accent/10 transition-colors font-bold uppercase tracking-wider text-sm">
                                 View Mission Brief
                             </button>
                         </div>
@@ -421,23 +421,23 @@ const Landing: React.FC = () => {
                     </div>
                 </div>
             </div>
-            <div className="py-32 container mx-auto px-6">
+            <div className="py-20 md:py-32 container mx-auto px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="bg-surface border border-white/10 rounded-3xl p-12 relative overflow-hidden"
+                    className="bg-surface border border-white/10 rounded-3xl p-6 md:p-12 relative overflow-hidden"
                 >
                     <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 blur-[100px] rounded-full pointer-events-none" />
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center relative z-10">
                         <div>
                             <h2 className="text-4xl md:text-5xl font-display font-bold mb-8">Choose Your Character</h2>
                             <p className="text-xl text-white/60 mb-10">
                                 If you fit one of these archetypes, you're ready to play.
                             </p>
 
-                            <div className="space-y-4">
+                            <div className="space-y-3 md:space-y-4">
                                 {[
                                     { label: "The Connector", desc: "Freelancers with client access" },
                                     { label: "The Student", desc: "Looking for real business exposure" },
@@ -447,13 +447,13 @@ const Landing: React.FC = () => {
                                     <motion.div
                                         key={i}
                                         whileHover={{ x: 10, backgroundColor: "rgba(255,255,255,0.1)" }}
-                                        className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 cursor-default"
+                                        className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 cursor-default gap-2 sm:gap-4"
                                     >
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-2 h-2 rounded-full bg-accent" />
-                                            <span className="font-bold text-lg">{char.label}</span>
+                                        <div className="flex items-center gap-3 md:gap-4">
+                                            <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-accent shrink-0" />
+                                            <span className="font-bold text-base md:text-lg text-white">{char.label}</span>
                                         </div>
-                                        <span className="text-white/40 text-sm font-mono">{char.desc}</span>
+                                        <span className="text-white/40 text-xs md:text-sm font-mono pl-5 sm:pl-0">{char.desc}</span>
                                     </motion.div>
                                 ))}
                             </div>
