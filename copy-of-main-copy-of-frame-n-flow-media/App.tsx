@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
@@ -30,41 +30,58 @@ const PlaceholderPage = ({ title }: { title: string }) => (
   </div>
 );
 
+const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const location = useLocation();
+  const hideNavFooterSteps = [
+    '/growth-partner/dashboard',
+    '/admin/growth-partners-dashboard',
+    '/growth-partner/signup',
+    '/growth-partner/login'
+  ];
+  const shouldHide = hideNavFooterSteps.includes(location.pathname);
+
+  return (
+    <div className="min-h-screen bg-background text-white font-sans selection:bg-accent selection:text-background">
+      <ScrollToTop />
+      <CustomCursor />
+      {!shouldHide && <Navbar />}
+
+      <main>
+        {children}
+      </main>
+
+      {!shouldHide && <Footer />}
+    </div>
+  );
+};
+
 const App: React.FC = () => {
   return (
     <Router>
-      <div className="min-h-screen bg-background text-white font-sans selection:bg-accent selection:text-background">
-        <ScrollToTop />
-        <CustomCursor />
-        <Navbar />
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/approach" element={<Approach />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/founder-bhanudeep" element={<Founder />} />
+          <Route path="/work" element={<Work />} />
+          <Route path="/insights" element={<Insights />} />
 
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/approach" element={<Approach />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/founder-bhanudeep" element={<Founder />} />
-            <Route path="/work" element={<Work />} />
-            <Route path="/insights" element={<Insights />} />
+          {/* Growth Partner Ecosystem Routes */}
+          <Route path="/growth-partner" element={<GrowthPartnerLanding />} />
+          <Route path="/growth-partner/apply" element={<GrowthPartnerApply />} />
+          <Route path="/growth-partner/signup" element={<GrowthPartnerSignup />} />
+          <Route path="/growth-partner/login" element={<GrowthPartnerLogin />} />
+          <Route path="/growth-partner/dashboard" element={<GrowthPartnerDashboard />} />
 
-            {/* Growth Partner Ecosystem Routes */}
-            <Route path="/growth-partner" element={<GrowthPartnerLanding />} />
-            <Route path="/growth-partner/apply" element={<GrowthPartnerApply />} />
-            <Route path="/growth-partner/signup" element={<GrowthPartnerSignup />} />
-            <Route path="/growth-partner/login" element={<GrowthPartnerLogin />} />
-            <Route path="/growth-partner/dashboard" element={<GrowthPartnerDashboard />} />
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<GrowthPartnerLogin />} />
+          <Route path="/admin/growth-partners-dashboard" element={<AdminDashboard />} />
 
-            {/* Admin Routes */}
-            <Route path="/admin/login" element={<GrowthPartnerLogin />} />
-            <Route path="/admin/growth-partners-dashboard" element={<AdminDashboard />} />
-
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-
-        <Footer />
-      </div>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Layout>
     </Router>
   );
 };
