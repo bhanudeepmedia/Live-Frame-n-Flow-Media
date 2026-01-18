@@ -25,7 +25,9 @@ import {
     CreditCard,
     Mail,
     Linkedin,
-    Globe // Added Imports
+    Globe,
+    Trash2,
+    RotateCcw
 } from 'lucide-react';
 
 // --- SUB-COMPONENTS DEFINED OUTSIDE TO PREVENT RE-RENDER FOCUS LOSS ---
@@ -336,6 +338,7 @@ const ApplicationsManager = ({
     applications,
     partners,
     handleReviewApp,
+    handleDeleteApp, // New Prop
     setSelectedApplicant // New callback
 }: any) => {
     const [filter, setFilter] = useState<'pending' | 'activation' | 'rejected' | 'all'>('pending');
@@ -423,17 +426,29 @@ const ApplicationsManager = ({
                                     )}
                                     {/* Mail Button for Approved but not yet Partner (Active) */}
                                     {(app.status === 'approved') && (
-                                        <button
-                                            onClick={() => {
-                                                const subject = "Application Approved - Frame n Flow Media GPP";
-                                                const body = `Hello ${app.fullName.split(' ')[0]},\n\nWe are pleased to accept you into the Growth Partner Program.\n\nPlease activate your account by creating your credentials here:\n${window.location.origin}/#/growth-partner/signup\n\n(This link allows you to set your password)\n\nWelcome aboard,\nFrame n Flow Media Team`;
-                                                window.location.href = `mailto:${app.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                                            }}
-                                            className="text-blue-400 p-1 hover:bg-blue-500/20 rounded"
-                                            title="Send Acceptance Email"
-                                        >
-                                            <Mail size={16} />
-                                        </button>
+                                        <>
+                                            <button
+                                                onClick={() => {
+                                                    const subject = "Application Approved - Frame n Flow Media GPP";
+                                                    const body = `Hello ${app.fullName.split(' ')[0]},\n\nWe are pleased to accept you into the Growth Partner Program.\n\nPlease activate your account by creating your credentials here:\n${window.location.origin}/#/growth-partner/signup\n\n(This link allows you to set your password)\n\nWelcome aboard,\nFrame n Flow Media Team`;
+                                                    window.location.href = `mailto:${app.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                                                }}
+                                                className="text-blue-400 p-1 hover:bg-blue-500/20 rounded"
+                                                title="Send Acceptance Email"
+                                            >
+                                                <Mail size={16} />
+                                            </button>
+                                            <button onClick={() => handleReviewApp(app.id, 'pending')} className="text-yellow-400 p-1 hover:bg-yellow-500/20 rounded" title="Unapprove (Revert to Pending)"><RotateCcw size={16} /></button>
+                                            <button onClick={() => handleDeleteApp(app.id)} className="text-red-400 p-1 hover:bg-red-500/20 rounded" title="Delete Applicant"><Trash2 size={16} /></button>
+                                        </>
+                                    )}
+
+                                    {/* STATUS: REJECTED */}
+                                    {app.status === 'rejected' && (
+                                        <>
+                                            <button onClick={() => handleReviewApp(app.id, 'approved')} className="text-green-400 p-1 hover:bg-green-500/20 rounded" title="Re-Approve"><RotateCcw size={16} /></button>
+                                            <button onClick={() => handleDeleteApp(app.id)} className="text-red-400 p-1 hover:bg-red-500/20 rounded" title="Delete Applicant"><Trash2 size={16} /></button>
+                                        </>
                                     )}
                                 </td>
                             </tr>
@@ -518,9 +533,15 @@ const AdminDashboard: React.FC = () => {
         navigate('/growth-partner/login');
     };
 
-    const handleReviewApp = async (appId: string, status: 'approved' | 'rejected') => {
-        if (!confirm(`Are you sure you want to ${status} this application?`)) return;
+    const handleReviewApp = async (appId: string, status: 'approved' | 'rejected' | 'pending') => {
+        if (!confirm(`Are you sure you want to change status to ${status}?`)) return;
         await SupabaseBackend.reviewApplication(appId, status);
+        refreshData();
+    };
+
+    const handleDeleteApp = async (appId: string) => {
+        if (!confirm('Are you sure you want to PERMANENTLY DELETE this applicant? This cannot be undone.')) return;
+        await SupabaseBackend.deleteApplication(appId);
         refreshData();
     };
 
@@ -629,6 +650,7 @@ const AdminDashboard: React.FC = () => {
                     applications={applications}
                     partners={partners}
                     handleReviewApp={handleReviewApp}
+                    handleDeleteApp={handleDeleteApp}
                     setSelectedApplicant={setSelectedApplicant}
                 />}
                 {activeTab === 'leads' && <LeadsTable

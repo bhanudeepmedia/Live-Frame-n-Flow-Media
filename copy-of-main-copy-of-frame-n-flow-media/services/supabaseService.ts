@@ -224,18 +224,20 @@ export const SupabaseBackend = {
         }));
     },
 
-    reviewApplication: async (appId: string, status: 'approved' | 'rejected') => {
+    reviewApplication: async (appId: string, status: 'approved' | 'rejected' | 'pending') => {
         const { error } = await supabase
             .from('applications')
             .update({ status })
             .eq('id', appId);
 
-        // Note: Actual user creation should be handled via a Backend process or manually in Supabase Dashboard
-        // as we cannot safely create other users from the client side without Service Role.
-        if (status === 'approved') {
-            // Optional: You could trigger an Edge Function here
-        }
+        return { success: !error };
+    },
 
+    deleteApplication: async (appId: string) => {
+        const { error } = await supabase
+            .from('applications')
+            .delete()
+            .eq('id', appId);
         return { success: !error };
     },
 
