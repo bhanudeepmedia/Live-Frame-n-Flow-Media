@@ -25,6 +25,280 @@ import {
     CreditCard
 } from 'lucide-react';
 
+// --- SUB-COMPONENTS DEFINED OUTSIDE TO PREVENT RE-RENDER FOCUS LOSS ---
+
+const Overview = ({
+    partners,
+    allLeads,
+    applications,
+    broadcastForm,
+    setBroadcastForm,
+    handlePostBroadcast,
+    handleReviewApp
+}: any) => {
+    const totalOutreach = partners.reduce((acc: any, p: any) => acc + p.outreachLogs.reduce((l: any, log: any) => l + log.count, 0), 0);
+    const totalRevenue = partners.reduce((acc: any, p: any) => acc + (p.earnings?.total || 0), 0);
+    const totalPendingPayout = allLeads.filter((l: any) => l.payout_status === 'pending' && l.status === 'Converted').reduce((acc: any, l: any) => acc + (l.potential_commission || 0), 0);
+    const activePartners = partners.length;
+
+    return (
+        <div className="space-y-6 animate-fade-in pb-20">
+            <h2 className="text-3xl font-display font-bold">Command Center</h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className="bg-surface border border-white/10 p-6 rounded-xl relative overflow-hidden">
+                    <div className="absolute right-0 top-0 p-4 opacity-5"><Users size={60} /></div>
+                    <div className="text-sm text-muted mb-1">Active GPs</div>
+                    <div className="text-3xl font-bold">{activePartners}</div>
+                </div>
+                <div className="bg-surface border border-white/10 p-6 rounded-xl relative overflow-hidden">
+                    <div className="absolute right-0 top-0 p-4 opacity-5"><TrendingUp size={60} /></div>
+                    <div className="text-sm text-muted mb-1">Total Outreach</div>
+                    <div className="text-3xl font-bold">{totalOutreach.toLocaleString()}</div>
+                </div>
+                <div className="bg-surface border border-white/10 p-6 rounded-xl relative overflow-hidden">
+                    <div className="absolute right-0 top-0 p-4 opacity-5"><DollarSign size={60} /></div>
+                    <div className="text-sm text-muted mb-1">Attr. Revenue</div>
+                    <div className="text-3xl font-bold text-green-400">₹{totalRevenue.toLocaleString()}</div>
+                </div>
+                <div className="bg-surface border border-white/10 p-6 rounded-xl relative overflow-hidden">
+                    <div className="absolute right-0 top-0 p-4 opacity-5"><AlertTriangle size={60} /></div>
+                    <div className="text-sm text-muted mb-1">Liabilities</div>
+                    <div className="text-3xl font-bold text-yellow-400">₹{totalPendingPayout.toLocaleString()}</div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-surface border border-white/10 p-6 rounded-xl">
+                    <h3 className="font-bold mb-4 flex items-center gap-2"><Bell size={18} /> Broadcast Notification</h3>
+                    <form onSubmit={handlePostBroadcast} className="space-y-4">
+                        <input value={broadcastForm.title} onChange={e => setBroadcastForm({ ...broadcastForm, title: e.target.value })} placeholder="Notification Title" className="w-full bg-background border border-white/10 p-3 rounded-lg" required />
+                        <textarea value={broadcastForm.message} onChange={e => setBroadcastForm({ ...broadcastForm, message: e.target.value })} placeholder="Message to all partners..." className="w-full bg-background border border-white/10 p-3 rounded-lg h-24" required />
+                        <button type="submit" className="bg-accent text-background px-4 py-2 rounded-lg font-bold w-full hover:bg-white text-sm">Send Broadcast</button>
+                    </form>
+                </div>
+
+                <div className="bg-surface border border-white/10 p-6 rounded-xl">
+                    <h3 className="font-bold mb-4">Pending Applications</h3>
+                    <div className="space-y-3 max-h-64 overflow-y-auto pr-2 no-scrollbar">
+                        {applications.filter((a: any) => a.status === 'pending').length === 0 ? <div className="text-muted text-sm italic">No pending apps.</div> : applications.filter((a: any) => a.status === 'pending').map((app: any) => (
+                            <div key={app.id} className="flex justify-between items-center bg-white/5 p-3 rounded-lg">
+                                <div>
+                                    <div className="font-bold text-sm">{app.fullName}</div>
+                                    <div className="text-xs text-muted">{app.city} • {app.experience ? 'Exp' : 'No Exp'}</div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <button onClick={() => handleReviewApp(app.id, 'approved')} className="text-green-400 p-1 hover:bg-green-500/20 rounded"><CheckCircle size={16} /></button>
+                                    <button onClick={() => handleReviewApp(app.id, 'rejected')} className="text-red-400 p-1 hover:bg-red-500/20 rounded"><XCircle size={16} /></button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const PartnersManager = ({
+    partners,
+    searchQuery,
+    setSearchQuery,
+    applications,
+    allLeads,
+    getPartnerName,
+    setSelectedPartner
+}: any) => {
+    const filteredPartners = partners.filter((p: any) => {
+        const name = getPartnerName(p.id).toLowerCase();
+        return name.includes(searchQuery.toLowerCase());
+    });
+
+    return (
+        <div className="space-y-6 animate-fade-in">
+            <div className="flex justify-between items-center">
+                <h2 className="text-3xl font-display font-bold">Growth Partners</h2>
+                <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={16} />
+                    <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search..." className="bg-surface border border-white/10 pl-10 pr-4 py-2 rounded-lg text-sm w-64" />
+                </div>
+            </div>
+
+            <div className="bg-surface border border-white/10 rounded-xl overflow-hidden">
+                <table className="w-full text-left text-sm">
+                    <thead className="bg-white/5 text-muted uppercase text-xs">
+                        <tr>
+                            <th className="p-4">Partner</th>
+                            <th className="p-4">Status</th>
+                            <th className="p-4 text-center">Outreach</th>
+                            <th className="p-4 text-center">Leads</th>
+                            <th className="p-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5">
+                        {filteredPartners.map((p: any) => {
+                            const totalOutreach = p.outreachLogs.reduce((acc: any, l: any) => acc + l.count, 0);
+                            const totalLeads = allLeads.filter((l: any) => l.partner_id === p.id).length;
+                            return (
+                                <tr key={p.id} className="hover:bg-white/5 transition-colors">
+                                    <td className="p-4">
+                                        <div className="font-bold">{getPartnerName(p.id)}</div>
+                                        <div className="text-xs text-muted">{p.stage}</div>
+                                    </td>
+                                    <td className="p-4"><span className="text-green-500 bg-green-500/10 px-2 py-1 rounded text-xs">Active</span></td>
+                                    <td className="p-4 text-center font-mono">{totalOutreach}</td>
+                                    <td className="p-4 text-center font-mono">{totalLeads}</td>
+                                    <td className="p-4 text-right">
+                                        <button onClick={() => setSelectedPartner(p)} className="p-2 bg-white/5 rounded hover:bg-white/10 text-xs font-bold">View Profile</button>
+                                    </td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};
+
+const LeadsTable = ({ allLeads, getPartnerName, refreshData }: any) => {
+    return (
+        <div className="space-y-6 animate-fade-in">
+            <h2 className="text-3xl font-display font-bold">All Leads & Deals</h2>
+            <div className="bg-surface border border-white/10 rounded-xl overflow-hidden">
+                <table className="w-full text-left text-sm">
+                    <thead className="bg-white/5 text-muted uppercase text-xs">
+                        <tr>
+                            <th className="p-4">Date</th>
+                            <th className="p-4">Partner</th>
+                            <th className="p-4">Business</th>
+                            <th className="p-4">Source</th>
+                            <th className="p-4">Status</th>
+                            <th className="p-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5">
+                        {allLeads.length === 0 ? <tr><td colSpan={6} className="p-8 text-center text-muted">No leads recorded.</td></tr> : allLeads.map((lead: any) => (
+                            <tr key={lead.id} className="hover:bg-white/5">
+                                <td className="p-4 text-muted text-xs">{new Date(lead.created_at).toLocaleDateString()}</td>
+                                <td className="p-4 font-bold">{getPartnerName(lead.partner_id)}</td>
+                                <td className="p-4">
+                                    <div>{lead.business_name}</div>
+                                    <div className="text-xs text-muted">{lead.contact_person}</div>
+                                </td>
+                                <td className="p-4 text-xs">{lead.source_platform}</td>
+                                <td className="p-4">
+                                    <span className={`px-2 py-1 rounded text-xs ${lead.status === 'Converted' ? 'bg-green-500/20 text-green-500' : 'bg-blue-500/10 text-blue-400'}`}>{lead.status}</span>
+                                    {lead.is_duplicate && <span className="ml-2 bg-red-500/20 text-red-500 px-2 py-1 rounded text-xs">Dupe</span>}
+                                </td>
+                                <td className="p-4 text-right">
+                                    <button
+                                        onClick={async () => {
+                                            await SupabaseBackend.updateLeadAdmin(lead.id, { is_duplicate: !lead.is_duplicate });
+                                            refreshData();
+                                        }}
+                                        className="text-xs bg-white/5 px-2 py-1 rounded hover:bg-white/10"
+                                    >
+                                        {lead.is_duplicate ? 'Un-Flag' : 'Flag Dupe'}
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
+};
+
+const PayoutsManager = ({ allLeads, getPartnerName, refreshData, adminSettings }: any) => {
+    const payableLeads = allLeads.filter((l: any) => l.status === 'Converted');
+
+    const handlePayoutUpdate = async (leadId: string, status: string) => {
+        await SupabaseBackend.updateLeadAdmin(leadId, { payout_status: status });
+        refreshData();
+    };
+
+    return (
+        <div className="space-y-6 animate-fade-in">
+            <h2 className="text-3xl font-display font-bold">Commissions & Payouts</h2>
+            <div className="bg-surface border border-white/10 rounded-xl overflow-hidden">
+                <table className="w-full text-left text-sm">
+                    <thead className="bg-white/5 text-muted uppercase text-xs">
+                        <tr>
+                            <th className="p-4">GP Name</th>
+                            <th className="p-4">Deal</th>
+                            <th className="p-4">Deal Value</th>
+                            <th className="p-4">Commission (20%)</th>
+                            <th className="p-4">Status</th>
+                            <th className="p-4 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5">
+                        {payableLeads.length === 0 ? <tr><td colSpan={6} className="p-8 text-center text-muted">No converted deals ready for payout.</td></tr> : payableLeads.map((lead: any) => (
+                            <tr key={lead.id} className="hover:bg-white/5">
+                                <td className="p-4 font-bold">{getPartnerName(lead.partner_id)}</td>
+                                <td className="p-4 text-xs">{lead.business_name}</td>
+                                <td className="p-4">
+                                    <input
+                                        placeholder="Set Value"
+                                        className="bg-black/20 border border-white/10 rounded w-24 p-1 text-xs"
+                                        onBlur={async (e) => {
+                                            const val = parseFloat(e.target.value);
+                                            if (val) await SupabaseBackend.updateLeadAdmin(lead.id, { deal_value: val, potential_commission: val * (adminSettings.commission_percentage / 100 || 0.2) });
+                                            refreshData();
+                                        }}
+                                        defaultValue={lead.deal_value || ''}
+                                    />
+                                </td>
+                                <td className="p-4 font-bold text-green-400">
+                                    ₹{lead.potential_commission?.toLocaleString() || 0}
+                                </td>
+                                <td className="p-4 uppercase text-xs font-bold">{lead.payout_status || 'Pending'}</td>
+                                <td className="p-4 text-right space-x-2">
+                                    {lead.payout_status !== 'paid' && (
+                                        <button onClick={() => handlePayoutUpdate(lead.id, 'paid')} className="bg-green-500 text-black px-3 py-1 rounded text-xs font-bold hover:bg-green-400">Mark Paid</button>
+                                    )}
+                                    {lead.payout_status === 'paid' && <span className="text-muted text-xs"><CheckCircle size={14} className="inline mr-1" /> Paid</span>}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
+};
+
+const Configuration = ({ adminSettings, setAdminSettings, handleSaveSettings }: any) => (
+    <div className="space-y-6 animate-fade-in max-w-2xl">
+        <h2 className="text-3xl font-display font-bold">System Configuration</h2>
+        <form onSubmit={handleSaveSettings} className="bg-surface border border-white/10 p-6 rounded-xl space-y-4">
+            <div>
+                <label className="text-xs text-muted uppercase block mb-1">Commission Percentage (%)</label>
+                <input
+                    type="number"
+                    value={adminSettings.commission_percentage || 20}
+                    onChange={e => setAdminSettings({ ...adminSettings, commission_percentage: parseInt(e.target.value) })}
+                    className="bg-background border border-white/10 p-3 rounded-lg w-full text-white"
+                />
+            </div>
+            <div>
+                <label className="text-xs text-muted uppercase block mb-1">Accepted Platforms (Comma sep)</label>
+                <input
+                    type="text"
+                    value={adminSettings.accepted_platforms?.join(', ') || ''}
+                    onChange={e => setAdminSettings({ ...adminSettings, accepted_platforms: e.target.value.split(',').map((s: string) => s.trim()) })}
+                    className="bg-background border border-white/10 p-3 rounded-lg w-full text-white"
+                />
+            </div>
+            <button className="bg-accent text-background px-6 py-2 rounded-lg font-bold w-full hover:bg-white mt-4">Save Configuration</button>
+        </form>
+    </div>
+);
+
+// --- MAIN COMPONENT ---
+
 const AdminDashboard: React.FC = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState<User | null>(null);
@@ -57,11 +331,8 @@ const AdminDashboard: React.FC = () => {
         setLoading(true);
         const apps = await SupabaseBackend.getApplications();
         const parts = await SupabaseBackend.getAllPartners();
-        const leads = await SupabaseBackend.getAllLeads(); // New function
+        const leads = await SupabaseBackend.getAllLeads();
         const settings = await SupabaseBackend.getAdminSettings();
-
-        // Join leads with partner names for easier display
-        // We do this matching in render time usually, but fine here
 
         setApplications([...apps].sort((a, b) => (a.status === 'pending' ? -1 : 1)));
         setPartners(parts);
@@ -101,265 +372,6 @@ const AdminDashboard: React.FC = () => {
         return app?.fullName || 'Unknown';
     };
 
-    // --- SUB-COMPONENTS ---
-
-    const Overview = () => {
-        const totalOutreach = partners.reduce((acc, p) => acc + p.outreachLogs.reduce((l: any, log: any) => l + log.count, 0), 0);
-        const totalRevenue = partners.reduce((acc, p) => acc + (p.earnings?.total || 0), 0);
-        const totalPendingPayout = allLeads.filter(l => l.payout_status === 'pending' && l.status === 'Converted').reduce((acc, l) => acc + (l.potential_commission || 0), 0);
-        const activePartners = partners.length;
-
-        return (
-            <div className="space-y-6 animate-fade-in pb-20">
-                <h2 className="text-3xl font-display font-bold">Command Center</h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div className="bg-surface border border-white/10 p-6 rounded-xl relative overflow-hidden">
-                        <div className="absolute right-0 top-0 p-4 opacity-5"><Users size={60} /></div>
-                        <div className="text-sm text-muted mb-1">Active GPs</div>
-                        <div className="text-3xl font-bold">{activePartners}</div>
-                    </div>
-                    <div className="bg-surface border border-white/10 p-6 rounded-xl relative overflow-hidden">
-                        <div className="absolute right-0 top-0 p-4 opacity-5"><TrendingUp size={60} /></div>
-                        <div className="text-sm text-muted mb-1">Total Outreach</div>
-                        <div className="text-3xl font-bold">{totalOutreach.toLocaleString()}</div>
-                    </div>
-                    <div className="bg-surface border border-white/10 p-6 rounded-xl relative overflow-hidden">
-                        <div className="absolute right-0 top-0 p-4 opacity-5"><DollarSign size={60} /></div>
-                        <div className="text-sm text-muted mb-1">Attr. Revenue</div>
-                        <div className="text-3xl font-bold text-green-400">₹{totalRevenue.toLocaleString()}</div>
-                    </div>
-                    <div className="bg-surface border border-white/10 p-6 rounded-xl relative overflow-hidden">
-                        <div className="absolute right-0 top-0 p-4 opacity-5"><AlertTriangle size={60} /></div>
-                        <div className="text-sm text-muted mb-1">Liabilities</div>
-                        <div className="text-3xl font-bold text-yellow-400">₹{totalPendingPayout.toLocaleString()}</div>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="bg-surface border border-white/10 p-6 rounded-xl">
-                        <h3 className="font-bold mb-4 flex items-center gap-2"><Bell size={18} /> Broadcast Notification</h3>
-                        <form onSubmit={handlePostBroadcast} className="space-y-4">
-                            <input value={broadcastForm.title} onChange={e => setBroadcastForm({ ...broadcastForm, title: e.target.value })} placeholder="Notification Title" className="w-full bg-background border border-white/10 p-3 rounded-lg" required />
-                            <textarea value={broadcastForm.message} onChange={e => setBroadcastForm({ ...broadcastForm, message: e.target.value })} placeholder="Message to all partners..." className="w-full bg-background border border-white/10 p-3 rounded-lg h-24" required />
-                            <button type="submit" className="bg-accent text-background px-4 py-2 rounded-lg font-bold w-full hover:bg-white text-sm">Send Broadcast</button>
-                        </form>
-                    </div>
-
-                    <div className="bg-surface border border-white/10 p-6 rounded-xl">
-                        <h3 className="font-bold mb-4">Pending Applications</h3>
-                        <div className="space-y-3 max-h-64 overflow-y-auto pr-2 no-scrollbar">
-                            {applications.filter(a => a.status === 'pending').length === 0 ? <div className="text-muted text-sm italic">No pending apps.</div> : applications.filter(a => a.status === 'pending').map(app => (
-                                <div key={app.id} className="flex justify-between items-center bg-white/5 p-3 rounded-lg">
-                                    <div>
-                                        <div className="font-bold text-sm">{app.fullName}</div>
-                                        <div className="text-xs text-muted">{app.city} • {app.experience ? 'Exp' : 'No Exp'}</div>
-                                    </div>
-                                    <div className="flex gap-2">
-                                        <button onClick={() => handleReviewApp(app.id, 'approved')} className="text-green-400 p-1 hover:bg-green-500/20 rounded"><CheckCircle size={16} /></button>
-                                        <button onClick={() => handleReviewApp(app.id, 'rejected')} className="text-red-400 p-1 hover:bg-red-500/20 rounded"><XCircle size={16} /></button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    };
-
-    const PartnersManager = () => {
-        const filteredPartners = partners.filter(p => {
-            const name = getPartnerName(p.id).toLowerCase();
-            return name.includes(searchQuery.toLowerCase());
-        });
-
-        return (
-            <div className="space-y-6 animate-fade-in">
-                <div className="flex justify-between items-center">
-                    <h2 className="text-3xl font-display font-bold">Growth Partners</h2>
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={16} />
-                        <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search..." className="bg-surface border border-white/10 pl-10 pr-4 py-2 rounded-lg text-sm w-64" />
-                    </div>
-                </div>
-
-                <div className="bg-surface border border-white/10 rounded-xl overflow-hidden">
-                    <table className="w-full text-left text-sm">
-                        <thead className="bg-white/5 text-muted uppercase text-xs">
-                            <tr>
-                                <th className="p-4">Partner</th>
-                                <th className="p-4">Status</th>
-                                <th className="p-4 text-center">Outreach</th>
-                                <th className="p-4 text-center">Leads</th>
-                                <th className="p-4 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                            {filteredPartners.map(p => {
-                                const totalOutreach = p.outreachLogs.reduce((acc: any, l: any) => acc + l.count, 0);
-                                const totalLeads = allLeads.filter(l => l.partner_id === p.id).length;
-                                return (
-                                    <tr key={p.id} className="hover:bg-white/5 transition-colors">
-                                        <td className="p-4">
-                                            <div className="font-bold">{getPartnerName(p.id)}</div>
-                                            <div className="text-xs text-muted">{p.stage}</div>
-                                        </td>
-                                        <td className="p-4"><span className="text-green-500 bg-green-500/10 px-2 py-1 rounded text-xs">Active</span></td>
-                                        <td className="p-4 text-center font-mono">{totalOutreach}</td>
-                                        <td className="p-4 text-center font-mono">{totalLeads}</td>
-                                        <td className="p-4 text-right">
-                                            <button onClick={() => setSelectedPartner(p)} className="p-2 bg-white/5 rounded hover:bg-white/10 text-xs font-bold">View Profile</button>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        );
-    };
-
-    const LeadsTable = () => {
-        // Filter leads logic here (status, GP, etc)
-        return (
-            <div className="space-y-6 animate-fade-in">
-                <h2 className="text-3xl font-display font-bold">All Leads & Deals</h2>
-                <div className="bg-surface border border-white/10 rounded-xl overflow-hidden">
-                    <table className="w-full text-left text-sm">
-                        <thead className="bg-white/5 text-muted uppercase text-xs">
-                            <tr>
-                                <th className="p-4">Date</th>
-                                <th className="p-4">Partner</th>
-                                <th className="p-4">Business</th>
-                                <th className="p-4">Source</th>
-                                <th className="p-4">Status</th>
-                                <th className="p-4 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                            {allLeads.length === 0 ? <tr><td colSpan={6} className="p-8 text-center text-muted">No leads recorded.</td></tr> : allLeads.map(lead => (
-                                <tr key={lead.id} className="hover:bg-white/5">
-                                    <td className="p-4 text-muted text-xs">{new Date(lead.created_at).toLocaleDateString()}</td>
-                                    <td className="p-4 font-bold">{getPartnerName(lead.partner_id)}</td>
-                                    <td className="p-4">
-                                        <div>{lead.business_name}</div>
-                                        <div className="text-xs text-muted">{lead.contact_person}</div>
-                                    </td>
-                                    <td className="p-4 text-xs">{lead.source_platform}</td>
-                                    <td className="p-4">
-                                        <span className={`px-2 py-1 rounded text-xs ${lead.status === 'Converted' ? 'bg-green-500/20 text-green-500' : 'bg-blue-500/10 text-blue-400'}`}>{lead.status}</span>
-                                        {lead.is_duplicate && <span className="ml-2 bg-red-500/20 text-red-500 px-2 py-1 rounded text-xs">Dupe</span>}
-                                    </td>
-                                    <td className="p-4 text-right">
-                                        <button
-                                            onClick={async () => {
-                                                await SupabaseBackend.updateLeadAdmin(lead.id, { is_duplicate: !lead.is_duplicate });
-                                                refreshData();
-                                            }}
-                                            className="text-xs bg-white/5 px-2 py-1 rounded hover:bg-white/10"
-                                        >
-                                            {lead.is_duplicate ? 'Un-Flag' : 'Flag Dupe'}
-                                        </button>
-                                        {/* More actions can go here */}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        )
-    }
-
-    const PayoutsManager = () => {
-        // Filter for converted items
-        const payableLeads = allLeads.filter(l => l.status === 'Converted');
-
-        const handlePayoutUpdate = async (leadId: string, status: string) => {
-            await SupabaseBackend.updateLeadAdmin(leadId, { payout_status: status });
-            refreshData();
-        };
-
-        return (
-            <div className="space-y-6 animate-fade-in">
-                <h2 className="text-3xl font-display font-bold">Commissions & Payouts</h2>
-                <div className="bg-surface border border-white/10 rounded-xl overflow-hidden">
-                    <table className="w-full text-left text-sm">
-                        <thead className="bg-white/5 text-muted uppercase text-xs">
-                            <tr>
-                                <th className="p-4">GP Name</th>
-                                <th className="p-4">Deal</th>
-                                <th className="p-4">Deal Value</th>
-                                <th className="p-4">Commission (20%)</th>
-                                <th className="p-4">Status</th>
-                                <th className="p-4 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                            {payableLeads.length === 0 ? <tr><td colSpan={6} className="p-8 text-center text-muted">No converted deals ready for payout.</td></tr> : payableLeads.map(lead => (
-                                <tr key={lead.id} className="hover:bg-white/5">
-                                    <td className="p-4 font-bold">{getPartnerName(lead.partner_id)}</td>
-                                    <td className="p-4 text-xs">{lead.business_name}</td>
-                                    <td className="p-4">
-                                        <input
-                                            placeholder="Set Value"
-                                            className="bg-black/20 border border-white/10 rounded w-24 p-1 text-xs"
-                                            onBlur={async (e) => {
-                                                const val = parseFloat(e.target.value);
-                                                if (val) await SupabaseBackend.updateLeadAdmin(lead.id, { deal_value: val, potential_commission: val * (adminSettings.commission_percentage / 100 || 0.2) });
-                                                refreshData();
-                                            }}
-                                            defaultValue={lead.deal_value || ''}
-                                        />
-                                    </td>
-                                    <td className="p-4 font-bold text-green-400">
-                                        ₹{lead.potential_commission?.toLocaleString() || 0}
-                                    </td>
-                                    <td className="p-4 uppercase text-xs font-bold">{lead.payout_status || 'Pending'}</td>
-                                    <td className="p-4 text-right space-x-2">
-                                        {lead.payout_status !== 'paid' && (
-                                            <button onClick={() => handlePayoutUpdate(lead.id, 'paid')} className="bg-green-500 text-black px-3 py-1 rounded text-xs font-bold hover:bg-green-400">Mark Paid</button>
-                                        )}
-                                        {lead.payout_status === 'paid' && <span className="text-muted text-xs"><CheckCircle size={14} className="inline mr-1" /> Paid</span>}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        )
-    };
-
-    const Configuration = () => (
-        <div className="space-y-6 animate-fade-in max-w-2xl">
-            <h2 className="text-3xl font-display font-bold">System Configuration</h2>
-            <form onSubmit={handleSaveSettings} className="bg-surface border border-white/10 p-6 rounded-xl space-y-4">
-                <div>
-                    <label className="text-xs text-muted uppercase block mb-1">Commission Percentage (%)</label>
-                    <input
-                        type="number"
-                        value={adminSettings.commission_percentage || 20}
-                        onChange={e => setAdminSettings({ ...adminSettings, commission_percentage: parseInt(e.target.value) })}
-                        className="bg-background border border-white/10 p-3 rounded-lg w-full text-white"
-                    />
-                </div>
-                <div>
-                    <label className="text-xs text-muted uppercase block mb-1">Accepted Platforms (Comma sep)</label>
-                    <input
-                        type="text"
-                        value={adminSettings.accepted_platforms?.join(', ') || ''}
-                        onChange={e => setAdminSettings({ ...adminSettings, accepted_platforms: e.target.value.split(',').map(s => s.trim()) })}
-                        className="bg-background border border-white/10 p-3 rounded-lg w-full text-white"
-                    />
-                </div>
-                <button className="bg-accent text-background px-6 py-2 rounded-lg font-bold w-full hover:bg-white mt-4">Save Configuration</button>
-            </form>
-        </div>
-    );
-
     return (
         <div className="min-h-screen bg-background font-sans text-white flex">
             {/* ADMIN SIDEBAR */}
@@ -394,11 +406,40 @@ const AdminDashboard: React.FC = () => {
 
             {/* MAIN CONTENT */}
             <main className="flex-1 ml-64 p-8">
-                {activeTab === 'overview' && <Overview />}
-                {activeTab === 'partners' && <PartnersManager />}
-                {activeTab === 'leads' && <LeadsTable />}
-                {activeTab === 'payouts' && <PayoutsManager />}
-                {activeTab === 'settings' && <Configuration />}
+                {activeTab === 'overview' && <Overview
+                    partners={partners}
+                    allLeads={allLeads}
+                    applications={applications}
+                    broadcastForm={broadcastForm}
+                    setBroadcastForm={setBroadcastForm}
+                    handlePostBroadcast={handlePostBroadcast}
+                    handleReviewApp={handleReviewApp}
+                />}
+                {activeTab === 'partners' && <PartnersManager
+                    partners={partners}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    applications={applications}
+                    allLeads={allLeads}
+                    getPartnerName={getPartnerName}
+                    setSelectedPartner={setSelectedPartner}
+                />}
+                {activeTab === 'leads' && <LeadsTable
+                    allLeads={allLeads}
+                    getPartnerName={getPartnerName}
+                    refreshData={refreshData}
+                />}
+                {activeTab === 'payouts' && <PayoutsManager
+                    allLeads={allLeads}
+                    getPartnerName={getPartnerName}
+                    refreshData={refreshData}
+                    adminSettings={adminSettings}
+                />}
+                {activeTab === 'settings' && <Configuration
+                    adminSettings={adminSettings}
+                    setAdminSettings={setAdminSettings}
+                    handleSaveSettings={handleSaveSettings}
+                />}
             </main>
 
             {/* PARTNER PROFILE MODAL */}
