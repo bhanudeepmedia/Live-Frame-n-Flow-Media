@@ -264,7 +264,37 @@ export const SupabaseBackend = {
         return { success: !error, error };
     },
 
-    // --- Partner Actions ---
+    // --- Partner Leads ---
+    getLeads: async (partnerId: string) => {
+        const { data, error } = await supabase
+            .from('partner_leads')
+            .select('*')
+            .eq('partner_id', partnerId)
+            .order('created_at', { ascending: false });
+        return data || [];
+    },
+
+    addLead: async (lead: any) => {
+        const { data, error } = await supabase.from('partner_leads').insert([lead]).select().single();
+        return { data, error };
+    },
+
+    updateLead: async (leadId: string, updates: any) => {
+        const { error } = await supabase.from('partner_leads').update(updates).eq('id', leadId);
+        return { error };
+    },
+
+    deleteLead: async (leadId: string) => {
+        const { error } = await supabase.from('partner_leads').delete().eq('id', leadId);
+        return { error };
+    },
+
+    // --- Partner Profile & Bank ---
+    updatePartnerDetails: async (partnerId: string, updates: any) => {
+        const { error } = await supabase.from('partners').update(updates).eq('id', partnerId);
+        return { error };
+    },
+
     updateBankDetails: async (partnerId: string, details: any) => {
         const { error } = await supabase
             .from('partners')
@@ -301,7 +331,8 @@ export const SupabaseBackend = {
                 notes: log.notes,
                 date: log.date,
                 location: log.location,
-                niche: log.niche
+                niche: log.niche,
+                appointments_booked: log.appointments_booked || 0
             }])
             .select()
             .single();
