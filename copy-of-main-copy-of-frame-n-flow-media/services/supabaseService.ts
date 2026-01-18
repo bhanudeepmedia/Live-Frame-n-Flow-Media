@@ -338,9 +338,9 @@ export const SupabaseBackend = {
             .single();
 
         return data;
-    }
+    },
     // --- ADMIN EXTENSIONS ---
-    
+
     getAllLeads: async () => {
         // Fetch all leads
         const { data: leads, error } = await supabase
