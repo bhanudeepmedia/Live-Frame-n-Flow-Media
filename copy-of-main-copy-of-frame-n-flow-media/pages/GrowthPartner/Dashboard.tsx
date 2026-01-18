@@ -170,7 +170,7 @@ const LeadsManager = ({ user }: any) => {
                         </div>
                         <div className="flex items-center gap-4">
                             <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${lead.status.toLowerCase().includes('converted') ? 'bg-green-500/20 text-green-500' :
-                                    lead.status.toLowerCase().includes('lost') ? 'bg-red-500/20 text-red-500' : 'bg-blue-500/20 text-blue-500'
+                                lead.status.toLowerCase().includes('lost') ? 'bg-red-500/20 text-red-500' : 'bg-blue-500/20 text-blue-500'
                                 }`}>
                                 {lead.status}
                             </span>
@@ -495,6 +495,31 @@ const Dashboard: React.FC = () => {
 
                                     <button type="submit" className="w-full bg-accent text-background font-bold py-4 rounded-xl hover:bg-white transition-colors">Submit Daily Log</button>
                                 </form>
+                            </div>
+
+                            <div className="space-y-4 pt-4 pb-20">
+                                <h3 className="font-bold text-xl">Recent Logs</h3>
+                                {partnerData.outreachLogs.length === 0 ? (
+                                    <div className="text-center text-muted italic">No logs found.</div>
+                                ) : (
+                                    partnerData.outreachLogs.slice(0, 20).map((log: any) => (
+                                        <div key={log.id} className="bg-surface border border-white/5 p-4 rounded-xl flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-muted">
+                                                    {['Instagram', 'LinkedIn'].includes(log.medium) ? <Send size={18} /> : <Calendar size={18} />}
+                                                </div>
+                                                <div>
+                                                    <div className="font-bold text-sm">{new Date(log.date).toLocaleDateString()}</div>
+                                                    <div className="text-xs text-muted">{log.medium} • {log.count} sent</div>
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="text-xs text-green-400 font-bold">{log.interested} Leads</div>
+                                                <div className="text-[10px] text-muted">{log.appointments_booked || 0} Booked</div>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
                             </div>
                         </div>
                     )}
