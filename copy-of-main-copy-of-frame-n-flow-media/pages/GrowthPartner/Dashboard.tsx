@@ -18,8 +18,11 @@ import {
     Trash2,
     X,
     Calendar,
-    ChevronDown,
-    ChevronUp
+    MapPin,
+    Briefcase,
+    Flame,
+    UserCircle,
+    Camera
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
@@ -35,15 +38,19 @@ const Dashboard: React.FC = () => {
         replies: 0,
         interested: 0,
         notes: '',
-        date: new Date().toISOString().split('T')[0] // Default to today YYYY-MM-DD
+        date: new Date().toISOString().split('T')[0],
+        location: '',
+        niche: ''
     });
 
-    // Bank Details Editing
+    // Edit UI States
     const [isEditingBank, setIsEditingBank] = useState(false);
     const [bankForm, setBankForm] = useState<any>({});
-
-    // Log Editing
     const [editingLogId, setEditingLogId] = useState<string | null>(null);
+
+    // Profile Image State
+    const [showProfileEdit, setShowProfileEdit] = useState(false);
+    const [avatarUrl, setAvatarUrl] = useState('');
 
     useEffect(() => {
         const init = async () => {
@@ -53,6 +60,9 @@ const Dashboard: React.FC = () => {
                 return;
             }
             setUser(currentUser);
+            // We assume user object might have an avatar_url if we fetched it, 
+            // but for now we might need to fetch profile specifically or rely on SupabaseBackend to attach it.
+            // Let's assume user.avatarUrl exists in our enhanced User type, or we fetch it.
             if (currentUser.partnerId) loadData(currentUser.partnerId);
         };
         init();
@@ -76,32 +86,28 @@ const Dashboard: React.FC = () => {
         e.preventDefault();
         if (!user || !user.partnerId) return;
 
+        const submissionData = {
+            ...logForm,
+            date: new Date(logForm.date).toISOString()
+        };
+
         if (editingLogId) {
-            // Update existing log
-            await SupabaseBackend.updateLog(editingLogId, {
-                ...logForm,
-                // Ensure date is ISO
-                date: new Date(logForm.date).toISOString()
-            });
+            await SupabaseBackend.updateLog(editingLogId, submissionData);
             setEditingLogId(null);
         } else {
-            // Create new log
-            await SupabaseBackend.logOutreach(user.partnerId, {
-                ...logForm,
-                date: new Date(logForm.date).toISOString()
-            });
+            await SupabaseBackend.logOutreach(user.partnerId, submissionData);
         }
 
-        // Refresh data
         loadData(user.partnerId);
-        setLogForm({
-            medium: 'Instagram',
+        // Reset form but keep location/niche/medium as they likely don't change often
+        setLogForm(prev => ({
+            ...prev,
             count: 0,
             replies: 0,
             interested: 0,
             notes: '',
             date: new Date().toISOString().split('T')[0]
-        });
+        }));
     };
 
     const handleDeleteLog = async (logId: string) => {
@@ -110,7 +116,7 @@ const Dashboard: React.FC = () => {
         if (user?.partnerId) loadData(user.partnerId);
     };
 
-    const handleEditLogInit = (log: OutreachLog) => {
+    const handleEditLogInit = (log: OutreachLog | any) => {
         setEditingLogId(log.id);
         setLogForm({
             medium: log.medium,
@@ -118,282 +124,382 @@ const Dashboard: React.FC = () => {
             replies: log.replies,
             interested: log.interested,
             notes: log.notes || '',
-            date: new Date(log.date).toISOString().split('T')[0]
+            date: new Date(log.date).toISOString().split('T')[0],
+            location: log.location || '',
+            niche: log.niche || ''
         });
-        // Scroll to form (optional)
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleSaveBankDetails = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user?.partnerId) return;
-
         await SupabaseBackend.updateBankDetails(user.partnerId, bankForm);
         setIsEditingBank(false);
         loadData(user.partnerId);
     };
 
+    const handleUpdateProfile = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!user) return;
+        await SupabaseBackend.updateProfile(user.id, { avatar_url: avatarUrl });
+        setShowProfileEdit(false);
+        // Reload page to reflect changes nicely or update local state
+        window.location.reload();
+    };
+
+    // --- Helpers ---
     const canEditLog = (dateStr: string) => {
         const logDate = new Date(dateStr);
         const now = new Date();
         const diffHours = (now.getTime() - logDate.getTime()) / (1000 * 60 * 60);
-        return diffHours <= 48; // Allow editing for 48 hours
+        return diffHours <= 48;
     };
 
-    if (loading || !partnerData) return <div className="min-h-screen bg-background flex items-center justify-center text-white">Loading Dashboard...</div>;
+    const calculateStreak = (logs: any[]) => {
+        if (!logs || logs.length === 0) return 0;
 
-    // Calculate stats
-    const totalOutreach = partnerData.outreachLogs.reduce((acc, l) => acc + l.count, 0);
-    const totalReplies = partnerData.outreachLogs.reduce((acc, l) => acc + l.replies, 0);
-    const totalLeads = partnerData.outreachLogs.reduce((acc, l) => acc + l.interested, 0);
+        // Sort logs by date descending
+        const sortedLogs = [...logs].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-    // Gamification progress
-    const nextStageThreshold = totalOutreach < 50 ? 50 : totalOutreach < 100 ? 100 : totalOutreach < 200 ? 200 : 500;
-    const progressPercent = Math.min(100, (totalOutreach / nextStageThreshold) * 100);
+        // Get unique dates
+        const uniqueDates = Array.from(new Set(sortedLogs.map(l => new Date(l.date).toLocaleDateString())));
+
+        let streak = 0;
+        const today = new Date().toLocaleDateString();
+        const yesterday = new Date(Date.now() - 86400000).toLocaleDateString();
+
+        // Check if active today or yesterday to start streak
+        if (uniqueDates[0] === today || uniqueDates[0] === yesterday) {
+            streak = 1;
+            let checksDate = new Date(uniqueDates[0]);
+
+            for (let i = 1; i < uniqueDates.length; i++) {
+                const prevDate = new Date(checksDate);
+                prevDate.setDate(prevDate.getDate() - 1);
+
+                if (uniqueDates[i] === prevDate.toLocaleDateString()) {
+                    streak++;
+                    checksDate = prevDate;
+                } else {
+                    break;
+                }
+            }
+        }
+        return streak;
+    };
+
+    // Group logs by Month
+    const groupedLogs = partnerData?.outreachLogs.reduce((acc: any, log) => {
+        const monthYear = new Date(log.date).toLocaleString('default', { month: 'long', year: 'numeric' });
+        if (!acc[monthYear]) acc[monthYear] = [];
+        acc[monthYear].push(log);
+        return acc;
+    }, {}) || {};
+
+    if (loading || !partnerData) return <div className="min-h-screen bg-background flex items-center justify-center text-white">Loading Portal...</div>;
+
+    const streak = calculateStreak(partnerData.outreachLogs);
 
     return (
         <div className="min-h-screen bg-background font-sans text-white pb-20">
-            {/* Top Bar */}
-            <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-white/5">
-                <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-background font-bold">
+            {/* Cleaner Header - Floating Controls */}
+            <div className="fixed top-6 right-6 z-50 flex items-center gap-4">
+                <div className="relative group">
+                    <button
+                        onClick={() => setShowProfileEdit(!showProfileEdit)}
+                        className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/10 hover:border-accent transition-colors bg-surface"
+                    >
+                        {/* We can display avatar here if we had it in user object, currently showing initial */}
+                        <div className="w-full h-full flex items-center justify-center bg-accent text-background font-bold text-xl">
                             {user?.name.charAt(0)}
                         </div>
-                        <div>
-                            <h1 className="font-bold leading-tight">{user?.name}</h1>
-                            <div className="text-xs text-muted flex items-center gap-1">
-                                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> {partnerData.stage}
-                            </div>
-                        </div>
-                    </div>
-                    <button
-                        onClick={handleLogout}
-                        className="p-2 hover:bg-white/10 rounded-full transition-colors text-muted hover:text-white"
-                    >
-                        <LogOut size={20} />
                     </button>
+                    {/* Add Photo Hint */}
+                    {!showProfileEdit && (
+                        <div className="absolute top-14 right-0 w-max bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-white/10">
+                            Edit Profile
+                        </div>
+                    )}
                 </div>
-            </header>
 
-            <div className="pt-28 px-6 max-w-7xl mx-auto space-y-8">
-
-                {/* Welcome Section */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex flex-col md:flex-row gap-6 md:items-center justify-between"
+                <button
+                    onClick={handleLogout}
+                    className="p-3 bg-surface/80 backdrop-blur border border-white/10 rounded-full hover:bg-white/10 transition-colors text-muted hover:text-white"
+                    title="Logout"
                 >
-                    <div>
-                        <h2 className="text-3xl font-display font-bold">Dashboard</h2>
-                        <p className="text-muted">Let's build growth today.</p>
-                    </div>
+                    <LogOut size={20} />
+                </button>
+            </div>
 
-                    {/* Stage Card */}
-                    <div className="bg-surfaceHighlight border border-white/10 p-4 rounded-xl flex items-center gap-4 min-w-[300px]">
-                        <div className="p-3 bg-accent/20 rounded-lg text-accent">
-                            <Trophy size={24} />
-                        </div>
-                        <div className="flex-1">
-                            <div className="flex justify-between text-sm mb-1">
-                                <span className="font-bold opacity-80">{partnerData.stage}</span>
-                                <span className="text-muted">{Math.round(progressPercent)}% to next level</span>
-                            </div>
-                            <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                                <motion.div
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${progressPercent}%` }}
-                                    className="h-full bg-accent"
-                                />
-                            </div>
+            {/* Profile Edit Modal (Simple) */}
+            <AnimatePresence>
+                {showProfileEdit && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        className="fixed top-20 right-6 z-50 bg-surface border border-white/10 p-4 rounded-xl shadow-xl w-72"
+                    >
+                        <h4 className="font-bold mb-2">Update Profile Image</h4>
+                        <form onSubmit={handleUpdateProfile} className="space-y-3">
+                            <input
+                                type="url"
+                                placeholder="Paste Image URL..."
+                                value={avatarUrl}
+                                onChange={e => setAvatarUrl(e.target.value)}
+                                className="w-full bg-background border border-white/10 rounded p-2 text-sm focus:border-accent outline-none"
+                            />
+                            <p className="text-xs text-muted">Copy an image link from Discord, LinkedIn, etc.</p>
+                            <button className="w-full py-2 bg-accent text-background font-bold rounded text-sm hover:bg-white">Save Image</button>
+                        </form>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <div className="pt-20 px-6 max-w-5xl mx-auto space-y-10">
+
+                {/* Header Section */}
+                <div>
+                    <div className="flex items-center gap-3 mb-2">
+                        <span className="text-accent tracking-widest text-xs font-bold uppercase">Growth Partner Portal</span>
+                        <div className="flex items-center gap-1 bg-orange-500/10 text-orange-500 px-2 py-0.5 rounded-full text-xs font-bold border border-orange-500/20">
+                            <Flame size={12} fill="currentColor" /> {streak} Day Streak
                         </div>
                     </div>
-                </motion.div>
+                    <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">Welcome back, {user?.name.split(' ')[0]}</h1>
+                    <p className="text-muted max-w-xl">Track your outreach, manage your earnings, and grow your network. Consistency is key.</p>
+                </div>
 
+                {/* Main Stats */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-surface border border-white/5 p-4 rounded-xl">
+                        <div className="text-muted text-xs mb-1">Total Outreach</div>
+                        <div className="text-2xl font-bold">{partnerData.outreachLogs.reduce((acc, l) => acc + l.count, 0)}</div>
+                    </div>
+                    <div className="bg-surface border border-white/5 p-4 rounded-xl">
+                        <div className="text-muted text-xs mb-1">Total Leads</div>
+                        <div className="text-2xl font-bold text-green-400">{partnerData.outreachLogs.reduce((acc, l) => acc + l.interested, 0)}</div>
+                    </div>
+                    <div className="bg-surface border border-white/5 p-4 rounded-xl">
+                        <div className="text-muted text-xs mb-1">Earnings</div>
+                        <div className="text-2xl font-bold text-yellow-400">₹{partnerData.earnings.total}</div>
+                    </div>
+                    <div className="bg-surface border border-white/5 p-4 rounded-xl">
+                        <div className="text-muted text-xs mb-1">Current Stage</div>
+                        <div className="text-2xl font-bold text-accent">{partnerData.stage}</div>
+                    </div>
+                </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Log Activity Form */}
-                    <div className="lg:col-span-2 space-y-6">
-                        <h3 className="text-xl font-bold flex items-center gap-2">
-                            {editingLogId ? <Edit2 size={20} className="text-yellow-400" /> : <Plus size={20} className="text-accent" />}
-                            {editingLogId ? 'Edit Activity Entry' : 'Log Activity'}
-                        </h3>
+                    <div className="lg:col-span-2 space-y-8">
 
-                        <form onSubmit={handleSubmitLog} className={`bg-surface border ${editingLogId ? 'border-yellow-500/50' : 'border-white/10'} p-6 rounded-2xl space-y-6 transition-colors`}>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-sm text-muted">Date</label>
-                                    <input
-                                        type="date"
-                                        required
-                                        value={logForm.date}
-                                        onChange={e => setLogForm({ ...logForm, date: e.target.value })}
-                                        className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent text-white scheme-dark"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm text-muted">Platform</label>
-                                    <select
-                                        value={logForm.medium}
-                                        onChange={e => setLogForm({ ...logForm, medium: e.target.value })}
-                                        className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent appearance-none"
-                                    >
-                                        {['Instagram', 'LinkedIn', 'WhatsApp', 'Email', 'Calls'].map(m => (
-                                            <option key={m} value={m}>{m}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm text-muted">Outreach Count</label>
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        value={logForm.count}
-                                        onChange={e => setLogForm({ ...logForm, count: parseInt(e.target.value) || 0 })}
-                                        className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm text-muted">Replies Received</label>
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        value={logForm.replies}
-                                        onChange={e => setLogForm({ ...logForm, replies: parseInt(e.target.value) || 0 })}
-                                        className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm text-muted">Interested Leads</label>
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        value={logForm.interested}
-                                        onChange={e => setLogForm({ ...logForm, interested: parseInt(e.target.value) || 0 })}
-                                        className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm text-muted">Notes (Optional)</label>
-                                <textarea
-                                    rows={2}
-                                    value={logForm.notes}
-                                    onChange={e => setLogForm({ ...logForm, notes: e.target.value })}
-                                    className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent resize-none"
-                                />
-                            </div>
-
-                            <div className="flex justify-end gap-3">
+                        {/* THE FORM */}
+                        <div className="bg-surface border border-white/10 rounded-2xl overflow-hidden">
+                            <div className="p-4 border-b border-white/5 bg-white/5 flex items-center justify-between">
+                                <h3 className="font-bold flex items-center gap-2">
+                                    {editingLogId ? <Edit2 size={18} className="text-yellow-400" /> : <Plus size={18} className="text-accent" />}
+                                    {editingLogId ? 'Edit Log Entry' : 'Log New Activity'}
+                                </h3>
                                 {editingLogId && (
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setEditingLogId(null);
-                                            setLogForm({ medium: 'Instagram', count: 0, replies: 0, interested: 0, notes: '', date: new Date().toISOString().split('T')[0] });
-                                        }}
-                                        className="px-6 py-3 bg-white/5 text-muted font-bold rounded-lg hover:bg-white/10 transition-all"
-                                    >
-                                        Cancel
-                                    </button>
+                                    <button onClick={() => { setEditingLogId(null); setLogForm(prev => ({ ...prev, notes: '', count: 0, replies: 0, interested: 0 })); }} className="text-xs text-muted hover:text-white">Cancel Edit</button>
                                 )}
+                            </div>
+                            <form onSubmit={handleSubmitLog} className="p-6 space-y-6">
+                                {/* Row 1: Date & Platform */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-muted uppercase tracking-wider">Date</label>
+                                        <div className="relative">
+                                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" size={16} />
+                                            <input
+                                                type="date"
+                                                required
+                                                value={logForm.date}
+                                                onChange={e => setLogForm({ ...logForm, date: e.target.value })}
+                                                className="w-full bg-background border border-white/10 rounded-lg py-3 pl-10 pr-3 focus:outline-none focus:border-accent text-white scheme-dark"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-muted uppercase tracking-wider">Platform</label>
+                                        <div className="relative">
+                                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">
+                                                {logForm.medium === 'Instagram' ? <MessageCircle size={16} /> : <Send size={16} />}
+                                            </div>
+                                            <select
+                                                value={logForm.medium}
+                                                onChange={e => setLogForm({ ...logForm, medium: e.target.value })}
+                                                className="w-full bg-background border border-white/10 rounded-lg py-3 pl-10 pr-3 focus:outline-none focus:border-accent appearance-none"
+                                            >
+                                                {['Instagram', 'LinkedIn', 'WhatsApp', 'Email', 'Calls'].map(m => (
+                                                    <option key={m} value={m}>{m}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Row 2: Location & Niche */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-muted uppercase tracking-wider">Target Location</label>
+                                        <div className="relative">
+                                            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" size={16} />
+                                            <input
+                                                type="text"
+                                                placeholder="e.g. New York, USA"
+                                                value={logForm.location}
+                                                onChange={e => setLogForm({ ...logForm, location: e.target.value })}
+                                                className="w-full bg-background border border-white/10 rounded-lg py-3 pl-10 pr-3 focus:outline-none focus:border-accent"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-muted uppercase tracking-wider">Target Niche</label>
+                                        <div className="relative">
+                                            <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" size={16} />
+                                            <input
+                                                type="text"
+                                                placeholder="e.g. Real Estate"
+                                                value={logForm.niche}
+                                                onChange={e => setLogForm({ ...logForm, niche: e.target.value })}
+                                                className="w-full bg-background border border-white/10 rounded-lg py-3 pl-10 pr-3 focus:outline-none focus:border-accent"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Row 3: Stats */}
+                                <div className="grid grid-cols-3 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-muted uppercase tracking-wider">Sent</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            value={logForm.count}
+                                            onChange={e => setLogForm({ ...logForm, count: parseInt(e.target.value) || 0 })}
+                                            className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent font-mono text-center"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-muted uppercase tracking-wider">Replies</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            value={logForm.replies}
+                                            onChange={e => setLogForm({ ...logForm, replies: parseInt(e.target.value) || 0 })}
+                                            className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent font-mono text-center"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-green-400 uppercase tracking-wider">Leads</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            value={logForm.interested}
+                                            onChange={e => setLogForm({ ...logForm, interested: parseInt(e.target.value) || 0 })}
+                                            className="w-full bg-background border border-green-500/30 rounded-lg p-3 focus:outline-none focus:border-green-400 text-green-400 font-bold font-mono text-center"
+                                        />
+                                    </div>
+                                </div>
+
                                 <button
                                     type="submit"
-                                    className="px-6 py-3 bg-accent text-background font-bold rounded-lg hover:bg-white transition-all flex items-center gap-2"
+                                    className="w-full py-4 bg-accent text-background font-bold rounded-xl hover:bg-white transition-all flex items-center justify-center gap-2 text-lg"
                                 >
-                                    <Save size={18} /> {editingLogId ? 'Update Entry' : 'Save Entry'}
+                                    <Save size={20} /> {editingLogId ? 'Update Log' : 'Save Daily Log'}
                                 </button>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
 
-                        <div className="space-y-4">
-                            <h3 className="text-xl font-bold">Recent Activity</h3>
-                            <div className="space-y-3">
-                                {partnerData.outreachLogs.length === 0 ? (
-                                    <div className="text-muted italic">No activity logged yet. Start today!</div>
-                                ) : (
-                                    partnerData.outreachLogs.slice(0, 10).map(log => (
-                                        <div key={log.id} className="bg-surface/50 border border-white/5 p-4 rounded-xl flex items-center justify-between group">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 rounded-lg bg-surfaceHighlight flex items-center justify-center text-muted">
-                                                    {log.medium === 'Instagram' ? <MessageCircle size={18} /> :
-                                                        log.medium === 'LinkedIn' ? <Send size={18} /> :
-                                                            <BarChart2 size={18} />}
-                                                </div>
-                                                <div>
-                                                    <div className="font-bold">{log.medium} Outreach</div>
-                                                    <div className="text-xs text-muted">
-                                                        {new Date(log.date).toLocaleDateString()}
-                                                        {log.notes && <span className="ml-2 opacity-50 truncate max-w-[150px] inline-block align-bottom">- {log.notes}</span>}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center gap-4">
-                                                <div className="text-right">
-                                                    <div className="font-mono text-accent font-bold">+{log.count}</div>
-                                                    <div className="text-xs text-green-400">{log.interested} Leads</div>
-                                                </div>
-
-                                                {/* Edit/Delete Actions - Only if recent */}
-                                                {canEditLog(log.date) && (
-                                                    <div className="flex items-center gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <button
-                                                            onClick={() => handleEditLogInit(log)}
-                                                            className="p-2 hover:bg-white/10 rounded-lg text-muted hover:text-white" title="Edit"
-                                                        >
-                                                            <Edit2 size={16} />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleDeleteLog(log.id)}
-                                                            className="p-2 hover:bg-red-500/20 rounded-lg text-muted hover:text-red-500" title="Delete"
-                                                        >
-                                                            <Trash2 size={16} />
-                                                        </button>
-                                                    </div>
-                                                )}
-                                            </div>
+                        {/* MONTHLY FEED */}
+                        <div className="space-y-6">
+                            <h3 className="text-xl font-bold tracking-tight">Performance History</h3>
+                            {Object.keys(groupedLogs).length === 0 ? (
+                                <div className="text-center py-12 border border-dashed border-white/10 rounded-xl text-muted">
+                                    No history yet. Log your first activity!
+                                </div>
+                            ) : (
+                                Object.entries(groupedLogs).map(([month, logs]: [string, any]) => (
+                                    <div key={month} className="space-y-3">
+                                        <div className="sticky top-20 z-10 bg-background/95 backdrop-blur py-2 px-1 border-b border-white/5 text-sm font-bold text-muted uppercase tracking-widest">
+                                            {month}
                                         </div>
-                                    ))
-                                )}
-                            </div>
+                                        {logs.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((log: any) => (
+                                            <div key={log.id} className="bg-surface border border-white/5 p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:border-white/10 transition-colors">
+                                                <div className="flex items-start gap-4">
+                                                    <div className="mt-1 w-10 h-10 rounded-lg bg-surfaceHighlight flex items-center justify-center text-muted shrink-0">
+                                                        {log.medium === 'Instagram' ? <MessageCircle size={18} /> :
+                                                            log.medium === 'LinkedIn' ? <Send size={18} /> :
+                                                                <BarChart2 size={18} />}
+                                                    </div>
+                                                    <div>
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="font-bold">{log.medium}</span>
+                                                            <span className="text-xs text-muted">• {new Date(log.date).toLocaleDateString()}</span>
+                                                        </div>
+                                                        <div className="text-xs text-muted mt-1 flex flex-wrap gap-2">
+                                                            {log.location && <span className="flex items-center gap-1"><MapPin size={10} /> {log.location}</span>}
+                                                            {log.niche && <span className="flex items-center gap-1"><Briefcase size={10} /> {log.niche}</span>}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto mt-2 sm:mt-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/5">
+                                                    <div className="text-center">
+                                                        <div className="text-xs text-muted uppercase">Sent</div>
+                                                        <div className="font-mono font-bold">{log.count}</div>
+                                                    </div>
+                                                    <div className="text-center">
+                                                        <div className="text-xs text-muted uppercase">Replies</div>
+                                                        <div className="font-mono font-bold">{log.replies}</div>
+                                                    </div>
+                                                    <div className="text-center">
+                                                        <div className="text-xs text-green-500 uppercase">Leads</div>
+                                                        <div className="font-mono font-bold text-green-400">{log.interested}</div>
+                                                    </div>
+
+                                                    {/* Actions */}
+                                                    {canEditLog(log.date) && (
+                                                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity pl-2 border-l border-white/10">
+                                                            <button
+                                                                onClick={() => handleEditLogInit(log)}
+                                                                className="p-2 hover:bg-white/10 rounded text-muted hover:text-white"
+                                                            >
+                                                                <Edit2 size={14} />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDeleteLog(log.id)}
+                                                                className="p-2 hover:bg-red-500/10 rounded text-muted hover:text-red-500"
+                                                            >
+                                                                <Trash2 size={14} />
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ))
+                            )}
                         </div>
                     </div>
 
-                    {/* Sidebar / Earnings / Bank */}
+                    {/* Sidebar: Earnings & Bank */}
                     <div className="space-y-6">
-                        <div className="bg-gradient-to-br from-surface to-surfaceHighlight border border-white/10 p-6 rounded-2xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-4 opacity-10">
-                                <DollarSign size={100} />
-                            </div>
-                            <h3 className="text-lg font-bold mb-4">Total Earnings</h3>
-                            <div className="text-4xl font-display font-bold mb-2">₹{partnerData.earnings.total}</div>
-                            <div className="flex gap-4 text-sm mb-6">
-                                <div>
-                                    <div className="text-muted">Paid</div>
-                                    <div className="font-bold text-green-400">₹{partnerData.earnings.paid}</div>
-                                </div>
-                                <div>
-                                    <div className="text-muted">Pending</div>
-                                    <div className="font-bold text-yellow-400">₹{partnerData.earnings.pending}</div>
-                                </div>
-                            </div>
-                            <button className="w-full py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors">
-                                Request Payout
-                            </button>
-                        </div>
-
-                        {/* Bank Details Section */}
+                        {/* BANK DETAILS */}
                         <div className="bg-surface border border-white/10 p-6 rounded-2xl">
                             <div className="flex justify-between items-center mb-4">
                                 <h3 className="text-lg font-bold flex items-center gap-2">
-                                    <CreditCard size={18} /> Payment Info
+                                    <CreditCard size={18} /> Payout Details
                                 </h3>
                                 <button
                                     onClick={() => setIsEditingBank(!isEditingBank)}
                                     className="text-xs bg-white/5 hover:bg-white/10 px-2 py-1 rounded transition-colors text-muted hover:text-white"
                                 >
-                                    {isEditingBank ? 'Cancel' : 'Edit'}
+                                    {isEditingBank ? 'Cancel' : 'Edit Info'}
                                 </button>
                             </div>
 
@@ -436,7 +542,7 @@ const Dashboard: React.FC = () => {
                                             />
                                         </div>
                                         <div className="space-y-1">
-                                            <label className="text-xs text-muted">IFSC Code</label>
+                                            <label className="text-xs text-muted">IFSC / Routing Code</label>
                                             <input
                                                 type="text"
                                                 value={bankForm.ifsc || ''}
@@ -444,7 +550,7 @@ const Dashboard: React.FC = () => {
                                                 className="w-full bg-background border border-white/10 rounded p-2 text-sm focus:border-accent focus:outline-none"
                                             />
                                         </div>
-                                        <button type="submit" className="w-full py-2 bg-accent text-background font-bold rounded hover:bg-white text-sm">Save Details</button>
+                                        <button type="submit" className="w-full py-2 bg-accent text-background font-bold rounded hover:bg-white text-sm">Save Payment Info</button>
                                     </motion.form>
                                 ) : (
                                     <motion.div
@@ -452,28 +558,29 @@ const Dashboard: React.FC = () => {
                                         animate={{ opacity: 1 }}
                                         className="space-y-4"
                                     >
-                                        {Object.keys(partnerData.bankDetails).length === 0 ? (
-                                            <div className="text-center py-4 bg-background/50 rounded-lg border border-dashed border-white/10">
-                                                <p className="text-sm text-muted">No payment details added.</p>
-                                                <button onClick={() => setIsEditingBank(true)} className="text-accent text-sm hover:underline mt-1">Add details</button>
+                                        {Object.keys(partnerData.bankDetails || {}).length === 0 ? (
+                                            <div className="text-center py-6 bg-background/50 rounded-lg border border-dashed border-white/10">
+                                                <p className="text-sm text-muted mb-2">No payment details added yet.</p>
+                                                <button onClick={() => setIsEditingBank(true)} className="px-4 py-2 bg-white/5 rounded text-sm hover:bg-white/10">Add Payment Info</button>
                                             </div>
                                         ) : (
-                                            <>
+                                            <div className="bg-background/50 p-4 rounded-xl space-y-3">
                                                 {partnerData.bankDetails.upiId && (
-                                                    <div className="bg-background p-3 rounded-lg text-sm">
-                                                        <div className="text-muted text-xs mb-1">UPI ID</div>
+                                                    <div>
+                                                        <div className="text-muted text-xs uppercase tracking-wider mb-1">UPI ID</div>
                                                         <div className="font-mono">{partnerData.bankDetails.upiId}</div>
                                                     </div>
                                                 )}
                                                 {partnerData.bankDetails.accountNumber && (
-                                                    <div className="bg-background p-3 rounded-lg text-sm">
-                                                        <div className="text-muted text-xs mb-1">Bank Transfer</div>
+                                                    <div>
+                                                        <hr className="border-white/5 my-2" />
+                                                        <div className="text-muted text-xs uppercase tracking-wider mb-1">Bank Transfer</div>
                                                         <div className="font-bold">{partnerData.bankDetails.bankName}</div>
-                                                        <div className="font-mono text-muted text-xs">{partnerData.bankDetails.accountNumber}</div>
-                                                        <div className="font-mono text-muted text-xs">{partnerData.bankDetails.ifsc}</div>
+                                                        <div className="font-mono text-muted text-xs">A/C: {partnerData.bankDetails.accountNumber}</div>
+                                                        <div className="font-mono text-muted text-xs">IFSC: {partnerData.bankDetails.ifsc}</div>
                                                     </div>
                                                 )}
-                                            </>
+                                            </div>
                                         )}
                                     </motion.div>
                                 )}

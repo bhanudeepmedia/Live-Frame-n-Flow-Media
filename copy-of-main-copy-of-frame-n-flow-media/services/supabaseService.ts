@@ -256,6 +256,14 @@ export const SupabaseBackend = {
         };
     },
 
+    updateProfile: async (userId: string, updates: { avatar_url?: string }) => {
+        const { error } = await supabase
+            .from('profiles')
+            .update(updates)
+            .eq('id', userId);
+        return { success: !error, error };
+    },
+
     // --- Partner Actions ---
     updateBankDetails: async (partnerId: string, details: any) => {
         const { error } = await supabase
@@ -291,7 +299,9 @@ export const SupabaseBackend = {
                 replies: log.replies,
                 interested: log.interested,
                 notes: log.notes,
-                date: log.date
+                date: log.date,
+                location: log.location,
+                niche: log.niche
             }])
             .select()
             .single();
