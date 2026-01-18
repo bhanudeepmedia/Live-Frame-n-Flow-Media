@@ -15,7 +15,8 @@ import {
     Search,
     FileText,
     Zap,
-    Sparkles
+    Sparkles,
+    LogIn
 } from 'lucide-react';
 import Button from '../../components/Button';
 import { useNavigate } from 'react-router-dom';
@@ -150,8 +151,9 @@ const Landing: React.FC = () => {
                             <Button onClick={() => navigate('/growth-partner/apply')} className="w-full sm:w-auto min-w-[180px] px-8 py-4 text-lg font-bold bg-gradient-to-r from-accent to-accent/80 text-black hover:scale-105 shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] justify-center">
                                 Apply Now 🚀
                             </Button>
-                            <button onClick={() => navigate('/growth-partner/login')} className="w-full sm:w-auto min-w-[150px] px-8 py-4 text-lg font-bold bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors border border-white/10">
-                                Log In
+                            <button onClick={() => navigate('/growth-partner/login')} className="w-full sm:w-auto min-w-[180px] px-8 py-4 text-lg font-bold bg-white/5 text-white/90 border border-white/10 rounded-lg hover:border-accent hover:text-accent hover:bg-black hover:shadow-[0_0_15px_rgba(249,115,22,0.3)] transition-all duration-300 flex items-center justify-center gap-3 backdrop-blur-sm group">
+                                <LogIn size={20} className="group-hover:translate-x-1 transition-transform" />
+                                <span>Partner Login</span>
                             </button>
                             <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="w-full sm:w-auto min-w-[180px] px-8 py-4 text-lg border border-accent/30 text-accent rounded-lg hover:bg-accent/10 transition-colors font-bold uppercase tracking-wider text-sm justify-center flex items-center">
                                 View Mission Brief
