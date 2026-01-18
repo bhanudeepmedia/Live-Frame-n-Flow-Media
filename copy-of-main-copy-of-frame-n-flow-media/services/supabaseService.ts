@@ -37,12 +37,14 @@ export const SupabaseBackend = {
                 partnerId = partner.id;
             } else {
                 // AUTO-HEAL: If no partner record, check for APPROVED Application
-                const { data: app } = await supabase
+                const { data: apps } = await supabase
                     .from('applications')
                     .select('id')
                     .eq('email', email)
                     .eq('status', 'approved')
-                    .single();
+                    .limit(1);
+
+                const app = apps?.[0]; // robust handle duplicates
 
                 if (app) {
                     console.log("Found approved app but no partner record. creating...");
@@ -77,12 +79,14 @@ export const SupabaseBackend = {
     // Signup for Approved Partners
     signup: async (email: string, password: string, fullName: string) => {
         // 1. Verify Application exists and is Approved
-        const { data: app, error: appError } = await supabase
+        const { data: apps, error: appError } = await supabase
             .from('applications')
             .select('*')
             .eq('email', email)
             .eq('status', 'approved')
-            .single();
+            .limit(1);
+
+        const app = apps?.[0];
 
         if (appError || !app) {
             return { error: 'No approved application found for this email. Please apply first or wait for approval.' };
