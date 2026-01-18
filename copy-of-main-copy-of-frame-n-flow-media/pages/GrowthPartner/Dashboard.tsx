@@ -31,7 +31,8 @@ import {
     Send,
     MessageCircle,
     PieChart,
-    TrendingUp
+    TrendingUp,
+    Target
 } from 'lucide-react';
 
 // --- SUB-COMPONENTS ---
