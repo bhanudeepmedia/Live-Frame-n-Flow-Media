@@ -42,11 +42,13 @@ import {
 const Overview = ({ partnerData, streak, user }: any) => {
     // Determine Symbol
     const symbol = partnerData.primary_currency === 'USD' ? '$' : '₹';
+    const [showNotifications, setShowNotifications] = useState(false); // Added State
 
-    // ... (Stats Logic Unchanged) ...
+    // Calculate Platform Split for Pie Chart
     const logs = partnerData.outreachLogs || [];
     const leads = logs.map((l: any) => l.interested).reduce((a: any, b: any) => a + b, 0);
 
+    // ... (Stats Logic Unchanged) ...
     const instaStats = logs.filter((l: any) => l.medium === 'Instagram');
     const linkedInStats = logs.filter((l: any) => l.medium === 'LinkedIn');
 
@@ -71,13 +73,40 @@ const Overview = ({ partnerData, streak, user }: any) => {
                     <h2 className="text-3xl font-display font-bold">Performance Hub</h2>
                     <p className="text-muted">Welcome back, {user?.name.split(' ')[0]}. You are on a <span className="text-orange-500 font-bold flex inline-flex items-center gap-1"><Flame size={16} fill="currentColor" /> {streak} day streak!</span></p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 relative">
                     {/* Notification Bell */}
-                    <button className="w-10 h-10 rounded-full bg-surface border border-white/10 flex items-center justify-center text-muted hover:text-white hover:bg-white/5 transition-colors relative">
+                    <button
+                        onClick={() => setShowNotifications(!showNotifications)}
+                        className="w-10 h-10 rounded-full bg-surface border border-white/10 flex items-center justify-center text-muted hover:text-white hover:bg-white/5 transition-colors relative"
+                    >
                         <Bell size={20} />
                         {/* Red Dot (Mock Notification) */}
                         <div className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse border border-surface"></div>
                     </button>
+
+                    {/* Notification Popup */}
+                    <AnimatePresence>
+                        {showNotifications && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                className="absolute top-12 right-0 w-80 bg-[#0f0f12] border border-white/10 rounded-xl shadow-xl z-50 p-4"
+                            >
+                                <div className="flex justify-between items-center mb-3">
+                                    <h4 className="font-bold text-sm">Notifications</h4>
+                                    <button onClick={() => setShowNotifications(false)}><X size={14} className="text-muted hover:text-white" /></button>
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="bg-white/5 p-3 rounded-lg text-xs border-l-2 border-accent">
+                                        <div className="font-bold mb-1">Welcome to V2!</div>
+                                        <div className="text-muted">Explore the new dashboard features. Don't forget to update your bank details.</div>
+                                    </div>
+                                    <div className="text-center text-[10px] text-muted pt-2 uppercase tracking-widest">No other new updates</div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
                     <div className="flex items-center gap-2 bg-surface border border-white/10 px-4 py-2 rounded-full">
                         <div className="text-xs font-bold text-muted uppercase tracking-wider">Current Tier</div>
@@ -136,25 +165,25 @@ const Overview = ({ partnerData, streak, user }: any) => {
                     </div>
                 </div>
 
-                {/* 2. LEAD PIE */}
-                <div className="bg-surface border border-white/5 p-6 rounded-3xl">
+                {/* 2. LEAD PIE (LAYOUT FIXED) */}
+                <div className="bg-surface border border-white/5 p-6 rounded-3xl flex flex-col justify-between">
                     <h3 className="font-bold mb-6 flex items-center gap-2 text-sm text-muted uppercase tracking-wider">
                         <PieChart size={16} /> Lead Sources
                     </h3>
-                    <div className="flex items-center gap-8">
+                    <div className="flex flex-col xl:flex-row items-center gap-8 h-full justify-center">
                         <div className="w-32 h-32 rounded-full shrink-0 relative" style={{ background: `conic-gradient(#A855F7 0% ${instaPer}%, #3B82F6 ${instaPer}% ${instaPer + linkedInPer}%, #22c55e ${instaPer + linkedInPer}% 100%)` }}>
                             <div className="absolute inset-4 bg-surface rounded-full"></div>
                         </div>
-                        <div className="space-y-3 text-sm flex-1">
-                            <div className="flex justify-between items-center">
+                        <div className="space-y-3 text-sm flex-1 w-full">
+                            <div className="flex justify-between items-center p-2 rounded hover:bg-white/5 transition-colors">
                                 <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-purple-500"></div> Instagram</div>
                                 <div className="font-bold">{Math.round(instaPer)}%</div>
                             </div>
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-between items-center p-2 rounded hover:bg-white/5 transition-colors">
                                 <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-blue-500"></div> LinkedIn</div>
                                 <div className="font-bold">{Math.round(linkedInPer)}%</div>
                             </div>
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-between items-center p-2 rounded hover:bg-white/5 transition-colors">
                                 <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-green-500"></div> Other</div>
                                 <div className="font-bold">{Math.round(100 - (instaPer + linkedInPer))}%</div>
                             </div>
@@ -578,20 +607,20 @@ const Dashboard: React.FC = () => {
                                     <div className="grid grid-cols-3 gap-4">
                                         <div>
                                             <label className="text-xs font-bold text-muted uppercase">Sent</label>
-                                            <input type="number" min="0" value={logForm.count} onChange={e => setLogForm({ ...logForm, count: parseInt(e.target.value) || 0 })} className="w-full bg-background border border-white/10 rounded-lg p-3 mt-1 text-center font-mono" />
+                                            <input type="number" min="0" value={logForm.count === 0 ? '' : logForm.count} onChange={e => setLogForm({ ...logForm, count: parseInt(e.target.value) || 0 })} className="w-full bg-background border border-white/10 rounded-lg p-3 mt-1 text-center font-mono" />
                                         </div>
                                         <div>
                                             <label className="text-xs font-bold text-muted uppercase">Replies</label>
-                                            <input type="number" min="0" value={logForm.replies} onChange={e => setLogForm({ ...logForm, replies: parseInt(e.target.value) || 0 })} className="w-full bg-background border border-white/10 rounded-lg p-3 mt-1 text-center font-mono" />
+                                            <input type="number" min="0" value={logForm.replies === 0 ? '' : logForm.replies} onChange={e => setLogForm({ ...logForm, replies: parseInt(e.target.value) || 0 })} className="w-full bg-background border border-white/10 rounded-lg p-3 mt-1 text-center font-mono" />
                                         </div>
                                         <div>
                                             <label className="text-xs font-bold text-green-400 uppercase">Leads</label>
-                                            <input type="number" min="0" value={logForm.interested} onChange={e => setLogForm({ ...logForm, interested: parseInt(e.target.value) || 0 })} className="w-full bg-background border border-green-500/20 rounded-lg p-3 mt-1 text-center font-mono text-green-400 font-bold" />
+                                            <input type="number" min="0" value={logForm.interested === 0 ? '' : logForm.interested} onChange={e => setLogForm({ ...logForm, interested: parseInt(e.target.value) || 0 })} className="w-full bg-background border border-green-500/20 rounded-lg p-3 mt-1 text-center font-mono text-green-400 font-bold" />
                                         </div>
                                     </div>
                                     <div>
                                         <label className="text-xs font-bold text-blue-400 uppercase">Appointments Booked</label>
-                                        <input type="number" min="0" value={logForm.appointments_booked} onChange={e => setLogForm({ ...logForm, appointments_booked: parseInt(e.target.value) || 0 })} className="w-full bg-background border border-blue-500/20 rounded-lg p-3 mt-1 text-center font-mono text-blue-400 font-bold" />
+                                        <input type="number" min="0" value={logForm.appointments_booked === 0 ? '' : logForm.appointments_booked} onChange={e => setLogForm({ ...logForm, appointments_booked: parseInt(e.target.value) || 0 })} className="w-full bg-background border border-blue-500/20 rounded-lg p-3 mt-1 text-center font-mono text-blue-400 font-bold" />
                                     </div>
                                     <div>
                                         <label className="text-xs font-bold text-muted uppercase">Target Location & Niche</label>
