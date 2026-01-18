@@ -38,7 +38,7 @@ const Apply: React.FC = () => {
         e.preventDefault();
         if (!formData.agreed) return;
 
-        const { agreed, ...submissionData } = formData;
+        const { agreed, country, ...submissionData } = formData;
 
         try {
             await SupabaseBackend.submitApplication({
