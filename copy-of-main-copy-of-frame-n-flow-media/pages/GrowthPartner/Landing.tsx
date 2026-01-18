@@ -123,34 +123,34 @@ const Landing: React.FC = () => {
                         <motion.div
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-accent/10 border border-accent/20 mb-8 cursor-default"
+                            className="inline-flex items-center gap-2 px-4 py-1.5 md:px-6 md:py-2 rounded-full bg-accent/10 border border-accent/20 mb-6 md:mb-8 cursor-default"
                         >
-                            <Briefcase className="text-accent" size={16} />
-                            <span className="text-accent text-sm font-bold tracking-widest uppercase">Performance-Based Opportunity</span>
+                            <Briefcase className="text-accent" size={14} />
+                            <span className="text-accent text-xs md:text-sm font-bold tracking-widest uppercase">Performance-Based Opportunity</span>
                         </motion.div>
 
-                        <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-[1.1]">
+                        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-display font-bold mb-6 leading-tight">
                             Become a <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-purple-400">Growth Partner.</span>
                         </h1>
 
-                        <h2 className="text-3xl md:text-5xl text-white/50 font-display font-bold mb-8 flex flex-col md:flex-row gap-2 md:gap-4 leading-tight">
+                        <h2 className="text-xl sm:text-2xl lg:text-5xl text-white/50 font-display font-bold mb-8 flex flex-wrap gap-x-3 gap-y-1 items-center leading-tight">
                             <span className="text-white">Outreach.</span>
-                            <span className="hidden md:inline text-white/20">•</span>
+                            <span className="hidden sm:inline text-white/20">•</span>
                             <span className="text-white">Appointments.</span>
-                            <span className="hidden md:inline text-white/20">•</span>
+                            <span className="hidden sm:inline text-white/20">•</span>
                             <span className="text-accent">Commission.</span>
                         </h2>
 
-                        <p className="text-lg text-white/70 font-light mb-10 max-w-lg leading-relaxed border-l-2 border-accent/50 pl-6">
+                        <p className="text-base md:text-lg text-white/70 font-light mb-8 md:mb-10 max-w-lg leading-relaxed border-l-2 border-accent/50 pl-6">
                             "Growth Partners cold-outreach potential clients, set appointments, join sales calls, and earn commission on every successful client conversion handled by Frame n Flow Media."
                         </p>
 
-                        <div className="flex flex-wrap gap-4">
-                            <Button onClick={() => navigate('/growth-partner/apply')} className="px-8 py-4 text-lg bg-white text-black hover:scale-105">
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <Button onClick={() => navigate('/growth-partner/apply')} className="w-full sm:w-auto px-8 py-4 text-lg bg-white text-black hover:scale-105 justify-center">
                                 Apply Now 🚀
                             </Button>
-                            <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="px-8 py-4 text-lg border border-white/20 rounded-lg hover:bg-white/5 transition-colors font-bold uppercase tracking-wider text-sm">
+                            <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="w-full sm:w-auto px-8 py-4 text-lg border border-white/20 rounded-lg hover:bg-white/5 transition-colors font-bold uppercase tracking-wider text-sm">
                                 View Mission Brief
                             </button>
                         </div>
@@ -161,15 +161,15 @@ const Landing: React.FC = () => {
                         initial={{ opacity: 0, rotateY: 30, x: 50 }}
                         animate={{ opacity: 1, rotateY: 0, x: 0 }}
                         transition={{ type: "spring", duration: 1.5 }}
-                        className="perspective-1000"
+                        className="perspective-1000 mt-10 lg:mt-0"
                     >
-                        <div className="bg-[#111] border-2 border-white/10 rounded-3xl p-8 lg:p-10 relative shadow-2xl transform hover:rotate-y-2 transition-transform duration-500 group">
+                        <div className="bg-[#111] border-2 border-white/10 rounded-3xl p-6 lg:p-10 relative shadow-2xl transform hover:rotate-y-2 transition-transform duration-500 group">
                             {/* Glowing Background Effect */}
                             <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-purple-500/5 rounded-3xl opacity-50 group-hover:opacity-100 transition-opacity" />
 
                             <div className="relative z-10">
-                                <div className="flex justify-between items-center mb-8">
-                                    <h3 className="text-2xl font-display font-bold flex items-center gap-3">
+                                <div className="flex justify-between items-center mb-6 lg:mb-8">
+                                    <h3 className="text-xl lg:text-2xl font-display font-bold flex items-center gap-2 lg:gap-3">
                                         <Sparkles className="text-yellow-400" />
                                         Earnings Potential
                                     </h3>
@@ -177,13 +177,13 @@ const Landing: React.FC = () => {
                                 </div>
 
                                 {/* Interactive Sliders */}
-                                <div className="space-y-10 mb-12">
+                                <div className="space-y-8 lg:space-y-10 mb-8 lg:mb-12">
 
                                     {/* Referrals */}
                                     <div className="group/slider">
                                         <div className="flex justify-between mb-4">
-                                            <label className="text-sm font-bold uppercase tracking-widest text-accent">Successful Referrals</label>
-                                            <span className="text-2xl font-black text-white bg-white/10 px-4 py-1 rounded-lg">{referrals}</span>
+                                            <label className="text-xs lg:text-sm font-bold uppercase tracking-widest text-accent">Successful Referrals</label>
+                                            <span className="text-xl lg:text-2xl font-black text-white bg-white/10 px-4 py-1 rounded-lg">{referrals}</span>
                                         </div>
                                         <input
                                             type="range"
@@ -199,8 +199,8 @@ const Landing: React.FC = () => {
                                     {/* Deal Value */}
                                     <div className="group/slider">
                                         <div className="flex justify-between mb-4">
-                                            <label className="text-sm font-bold uppercase tracking-widest text-purple-400">Avg. Deal Size ($)</label>
-                                            <span className="text-xl font-bold text-white">${dealValue.toLocaleString()}</span>
+                                            <label className="text-xs lg:text-sm font-bold uppercase tracking-widest text-purple-400">Avg. Deal Size ($)</label>
+                                            <span className="text-lg lg:text-xl font-bold text-white">${dealValue.toLocaleString()}</span>
                                         </div>
                                         <input
                                             type="range"
@@ -216,20 +216,20 @@ const Landing: React.FC = () => {
 
                                 {/* Animated Result Box */}
                                 <motion.div
-                                    className="bg-gradient-to-r from-gray-900 to-black rounded-2xl p-8 text-center border border-white/10 relative overflow-hidden"
+                                    className="bg-gradient-to-r from-gray-900 to-black rounded-2xl p-6 lg:p-8 text-center border border-white/10 relative overflow-hidden"
                                     whileHover={{ scale: 1.02 }}
                                 >
                                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
-                                    <p className="text-white/40 text-sm font-bold uppercase mb-2 relative z-10">Estimated Monthly Commission</p>
+                                    <p className="text-white/40 text-[10px] lg:text-sm font-bold uppercase mb-2 relative z-10">Estimated Monthly Commission</p>
 
                                     <div className="flex items-center justify-center gap-2 relative z-10">
-                                        <span className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50">
+                                        <span className="text-4xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50">
                                             $<motion.span>{displayEarnings}</motion.span>
                                         </span>
                                     </div>
 
                                     {/* Progress Bar Visual */}
-                                    <div className="w-full bg-gray-800 h-2 mt-6 rounded-full overflow-hidden">
+                                    <div className="w-full bg-gray-800 h-2 mt-4 lg:mt-6 rounded-full overflow-hidden">
                                         <motion.div
                                             className="h-full bg-gradient-to-r from-accent to-purple-500"
                                             initial={{ width: 0 }}
@@ -248,16 +248,16 @@ const Landing: React.FC = () => {
             </div>
 
             {/* ---------------- UNLOCK THE ZONES (PROCESS) ---------------- */}
-            <div className="py-24 bg-[#050505] relative">
+            <div className="py-16 md:py-24 bg-[#050505] relative">
                 <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
 
                 <div className="container mx-auto px-6">
-                    <div className="text-center mb-20">
-                        <h2 className="text-4xl md:text-6xl font-display font-bold mb-6">Unlock The Workflow</h2>
+                    <div className="text-center mb-12 md:mb-20">
+                        <h2 className="text-3xl md:text-6xl font-display font-bold mb-4 md:mb-6">Unlock The Workflow</h2>
                         <p className="text-white/50">Your active role in the deal flow.</p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
                         <UnlockableStep
                             index={0}
                             icon={Globe}
@@ -294,15 +294,15 @@ const Landing: React.FC = () => {
 
             {/* ---------------- WHAT YOU DON'T DO (Rules of Engagement) ---------------- */}
             {/* ---------------- DETAILED MISSION BRIEFING (Core Responsibilities) ---------------- */}
-            <div className="py-24 container mx-auto px-6">
-                <div className="bg-surface border border-white/10 rounded-3xl p-8 lg:p-12">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
+            <div className="py-16 md:py-24 container mx-auto px-6">
+                <div className="bg-surface border border-white/10 rounded-3xl p-6 md:p-12">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-12">
                         <div>
-                            <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">Mission Briefing</h2>
-                            <p className="text-white/50">Detailed breakdown of your responsibilities.</p>
+                            <h2 className="text-3xl md:text-5xl font-display font-bold mb-3 md:mb-4">Mission Briefing</h2>
+                            <p className="text-white/50 text-sm md:text-base">Detailed breakdown of your responsibilities.</p>
                         </div>
                         <div className="bg-accent/10 px-4 py-2 rounded-full border border-accent/20 mt-4 md:mt-0">
-                            <span className="text-accent text-sm font-bold uppercase tracking-widest">Active Role</span>
+                            <span className="text-accent text-xs md:text-sm font-bold uppercase tracking-widest">Active Role</span>
                         </div>
                     </div>
 
