@@ -283,19 +283,32 @@ const Apply: React.FC = () => {
                 <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/5 blur-[120px] rounded-full opacity-30" />
             </div>
 
+            {/* HEADER BAR */}
+            <div className="absolute top-0 left-0 w-full p-6 z-20 flex justify-between items-center pointer-events-none">
+                <Link
+                    to="/growth-partner"
+                    className="pointer-events-auto px-4 py-2 rounded-full bg-red-500/5 border border-red-500/20 text-red-500/80 hover:text-white hover:bg-red-600 hover:border-red-500 transition-all duration-300 flex items-center gap-2 text-xs font-bold uppercase tracking-widest backdrop-blur-md group shadow-lg hover:shadow-red-900/50"
+                >
+                    <ChevronLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+                    <span className="hidden sm:inline">Abort Mission</span>
+                    <span className="sm:hidden">Exit</span>
+                </Link>
+
+                <div className="pointer-events-auto px-4 py-2 rounded-full bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 flex items-center gap-3 backdrop-blur-md shadow-lg shadow-emerald-900/20 cursor-help hover:bg-emerald-500/10 transition-colors" title="Connection Secure">
+                    <div className="relative">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                        <div className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-75" />
+                    </div>
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em]">System Active</span>
+                </div>
+            </div>
+
             {/* MAIN FORM CARD */}
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="w-full max-w-2xl relative z-10"
+                className="w-full max-w-2xl relative z-10 mt-16 md:mt-0"
             >
-                <div className="mb-8 flex items-center justify-between">
-                    <Link to="/growth-partner" className="text-white/40 hover:text-white transition-colors flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
-                        <ChevronLeft size={16} /> Abort Mission
-                    </Link>
-                    <div className="text-accent text-xs font-mono uppercase tracking-widest animate-pulse">System Active</div>
-                </div>
-
                 <div className="bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden">
                     {/* Top Bar Decoration */}
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent opacity-50" />
