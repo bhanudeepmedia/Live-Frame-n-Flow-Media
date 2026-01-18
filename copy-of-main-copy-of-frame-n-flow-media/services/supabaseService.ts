@@ -389,5 +389,14 @@ export const SupabaseBackend = {
             .eq('is_active', true)
             .order('created_at', { ascending: false });
         return data || [];
+    },
+
+    deleteBroadcast: async (id: string) => {
+        // Soft delete
+        const { error } = await supabase
+            .from('admin_notifications')
+            .update({ is_active: false })
+            .eq('id', id);
+        return { error };
     }
 };

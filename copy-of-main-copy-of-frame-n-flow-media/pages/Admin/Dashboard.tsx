@@ -34,7 +34,9 @@ const Overview = ({
     broadcastForm,
     setBroadcastForm,
     handlePostBroadcast,
-    handleReviewApp
+    handleReviewApp,
+    broadcasts, // New Prop
+    handleDeleteBroadcast // New Prop
 }: any) => {
     const totalOutreach = partners.reduce((acc: any, p: any) => acc + p.outreachLogs.reduce((l: any, log: any) => l + log.count, 0), 0);
     const totalRevenue = partners.reduce((acc: any, p: any) => acc + (p.earnings?.total || 0), 0);
@@ -71,11 +73,26 @@ const Overview = ({
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="bg-surface border border-white/10 p-6 rounded-xl">
                     <h3 className="font-bold mb-4 flex items-center gap-2"><Bell size={18} /> Broadcast Notification</h3>
-                    <form onSubmit={handlePostBroadcast} className="space-y-4">
+                    <form onSubmit={handlePostBroadcast} className="space-y-4 mb-8">
                         <input value={broadcastForm.title} onChange={e => setBroadcastForm({ ...broadcastForm, title: e.target.value })} placeholder="Notification Title" className="w-full bg-background border border-white/10 p-3 rounded-lg" required />
                         <textarea value={broadcastForm.message} onChange={e => setBroadcastForm({ ...broadcastForm, message: e.target.value })} placeholder="Message to all partners..." className="w-full bg-background border border-white/10 p-3 rounded-lg h-24" required />
                         <button type="submit" className="bg-accent text-background px-4 py-2 rounded-lg font-bold w-full hover:bg-white text-sm">Send Broadcast</button>
                     </form>
+
+                    <h4 className="text-xs font-bold text-muted uppercase mb-3">Recent Broadcasts</h4>
+                    <div className="space-y-2 max-h-40 overflow-y-auto no-scrollbar">
+                        {(!broadcasts || broadcasts.length === 0) && <div className="text-xs text-muted italic">No active broadcasts.</div>}
+                        {broadcasts?.map((b: any) => (
+                            <div key={b.id} className="flex justify-between items-start bg-white/5 p-3 rounded-lg border border-white/5">
+                                <div>
+                                    <div className="text-sm font-bold">{b.title}</div>
+                                    <div className="text-xs text-muted truncate max-w-[200px]">{b.message}</div>
+                                    <div className="text-[10px] text-muted mt-1">{new Date(b.created_at).toLocaleDateString()}</div>
+                                </div>
+                                <button onClick={() => handleDeleteBroadcast(b.id)} className="text-muted hover:text-red-400 p-1"><XCircle size={14} /></button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 <div className="bg-surface border border-white/10 p-6 rounded-xl">
@@ -313,6 +330,7 @@ const AdminDashboard: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [selectedPartner, setSelectedPartner] = useState<any | null>(null); // For Profile Modal
     const [broadcastForm, setBroadcastForm] = useState({ title: '', message: '' });
+    const [broadcasts, setBroadcasts] = useState<any[]>([]); // New state
 
     useEffect(() => {
         const init = async () => {
@@ -333,11 +351,13 @@ const AdminDashboard: React.FC = () => {
         const parts = await SupabaseBackend.getAllPartners();
         const leads = await SupabaseBackend.getAllLeads();
         const settings = await SupabaseBackend.getAdminSettings();
+        const bcs = await SupabaseBackend.getBroadcasts();
 
         setApplications([...apps].sort((a, b) => (a.status === 'pending' ? -1 : 1)));
         setPartners(parts);
         setAllLeads(leads);
         setAdminSettings(settings);
+        setBroadcasts(bcs);
         setLoading(false);
     };
 
@@ -354,9 +374,20 @@ const AdminDashboard: React.FC = () => {
 
     const handlePostBroadcast = async (e: React.FormEvent) => {
         e.preventDefault();
-        await SupabaseBackend.sendBroadcast(broadcastForm.title, broadcastForm.message);
-        alert('Notification sent to all partners!');
-        setBroadcastForm({ title: '', message: '' });
+        const { error } = await SupabaseBackend.sendBroadcast(broadcastForm.title, broadcastForm.message);
+        if (error) {
+            alert('Error sending notification. Ensure DB Schema is updated.');
+        } else {
+            alert('Notification sent to all partners!');
+            setBroadcastForm({ title: '', message: '' });
+            refreshData();
+        }
+    };
+
+    const handleDeleteBroadcast = async (id: string) => {
+        if (!confirm('Delete this broadcast? Partners will no longer see it.')) return;
+        await SupabaseBackend.deleteBroadcast(id);
+        refreshData();
     };
 
     const handleSaveSettings = async (e: React.FormEvent) => {
@@ -414,6 +445,8 @@ const AdminDashboard: React.FC = () => {
                     setBroadcastForm={setBroadcastForm}
                     handlePostBroadcast={handlePostBroadcast}
                     handleReviewApp={handleReviewApp}
+                    broadcasts={broadcasts}
+                    handleDeleteBroadcast={handleDeleteBroadcast}
                 />}
                 {activeTab === 'partners' && <PartnersManager
                     partners={partners}

@@ -42,16 +42,23 @@ import {
 const Overview = ({ partnerData, streak, user }: any) => {
     // Determine Symbol
     const symbol = partnerData.primary_currency === 'USD' ? '$' : '₹';
-    const [showNotifications, setShowNotifications] = useState(false); // Added State
+    const [showNotifications, setShowNotifications] = useState(false);
     const [notifications, setNotifications] = useState<any[]>([]);
 
     useEffect(() => {
         const fetchNotifs = async () => {
             const notifs = await SupabaseBackend.getBroadcasts();
-            setNotifications(notifs);
+            const cleared = JSON.parse(localStorage.getItem('cleared_notifications') || '[]');
+            setNotifications(notifs.filter((n: any) => !cleared.includes(n.id)));
         };
         fetchNotifs();
     }, []);
+
+    const clearNotification = (id: string) => {
+        const cleared = JSON.parse(localStorage.getItem('cleared_notifications') || '[]');
+        localStorage.setItem('cleared_notifications', JSON.stringify([...cleared, id]));
+        setNotifications(notifications.filter(n => n.id !== id));
+    };
 
     // Calculate Platform Split for Pie Chart
     const logs = partnerData.outreachLogs || [];
@@ -111,11 +118,17 @@ const Overview = ({ partnerData, streak, user }: any) => {
                                     {notifications.length === 0 ? (
                                         <div className="text-center text-xs text-muted py-4">No new notifications</div>
                                     ) : (
-                                        notifications.map(n => (
-                                            <div key={n.id} className="bg-white/5 p-3 rounded-lg text-xs border-l-2 border-accent">
-                                                <div className="font-bold mb-1">{n.title}</div>
-                                                <div className="text-muted">{n.message}</div>
-                                                <div className="text-[10px] text-muted mt-2 opacity-50">{new Date(n.created_at).toLocaleDateString()}</div>
+                                        notifications.map((n: any) => (
+                                            <div key={n.id} className="bg-white/5 p-3 rounded-lg text-xs border-l-2 border-accent relative group">
+                                                <button
+                                                    onClick={() => clearNotification(n.id)}
+                                                    className="absolute top-2 right-2 text-muted hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                                >
+                                                    <X size={12} />
+                                                </button>
+                                                <div className="font-bold mb-1 pr-4">{n.title}</div>
+                                                <div className="text-muted mb-2">{n.message}</div>
+                                                <div className="text-[10px] text-muted opacity-50">{new Date(n.created_at).toLocaleDateString()}</div>
                                             </div>
                                         ))
                                     )}
