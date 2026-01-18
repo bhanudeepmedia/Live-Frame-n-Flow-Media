@@ -32,7 +32,8 @@ import {
     MessageCircle,
     PieChart,
     TrendingUp,
-    Target
+    Target,
+    Bell // Added
 } from 'lucide-react';
 
 // --- SUB-COMPONENTS ---
@@ -42,7 +43,7 @@ const Overview = ({ partnerData, streak, user }: any) => {
     // Determine Symbol
     const symbol = partnerData.primary_currency === 'USD' ? '$' : '₹';
 
-    // Calculate Platform Split for Pie Chart
+    // ... (Stats Logic Unchanged) ...
     const logs = partnerData.outreachLogs || [];
     const leads = logs.map((l: any) => l.interested).reduce((a: any, b: any) => a + b, 0);
 
@@ -57,21 +58,31 @@ const Overview = ({ partnerData, streak, user }: any) => {
     const instaPer = (instaLeads / totalForPie) * 100;
     const linkedInPer = (linkedInLeads / totalForPie) * 100;
 
-    // Monthly Earnings Goal (Static Goal: 50,000)
+    // Monthly Earnings Goal
     const monthlyGoal = 50000;
     const currentEarnings = (partnerData.earnings.paid || 0) + (partnerData.earnings.pending || 0);
     const goalPer = Math.min(100, (currentEarnings / monthlyGoal) * 100);
 
     return (
-        <div className="space-y-8 animate-fade-in">
+        <div className="space-y-8 animate-fade-in relative">
+            {/* Header with Bell */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h2 className="text-3xl font-display font-bold">Performance Hub</h2>
                     <p className="text-muted">Welcome back, {user?.name.split(' ')[0]}. You are on a <span className="text-orange-500 font-bold flex inline-flex items-center gap-1"><Flame size={16} fill="currentColor" /> {streak} day streak!</span></p>
                 </div>
-                <div className="flex items-center gap-2 bg-surface border border-white/10 px-4 py-2 rounded-full">
-                    <div className="text-xs font-bold text-muted uppercase tracking-wider">Current Tier</div>
-                    <div className="text-accent font-bold">{partnerData.stage}</div>
+                <div className="flex items-center gap-3">
+                    {/* Notification Bell */}
+                    <button className="w-10 h-10 rounded-full bg-surface border border-white/10 flex items-center justify-center text-muted hover:text-white hover:bg-white/5 transition-colors relative">
+                        <Bell size={20} />
+                        {/* Red Dot (Mock Notification) */}
+                        <div className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse border border-surface"></div>
+                    </button>
+
+                    <div className="flex items-center gap-2 bg-surface border border-white/10 px-4 py-2 rounded-full">
+                        <div className="text-xs font-bold text-muted uppercase tracking-wider">Current Tier</div>
+                        <div className="text-accent font-bold">{partnerData.stage}</div>
+                    </div>
                 </div>
             </div>
 
@@ -95,7 +106,8 @@ const Overview = ({ partnerData, streak, user }: any) => {
                     <div className="text-3xl font-bold text-blue-400">{logs.reduce((acc: any, l: any) => acc + (l.appointments_booked || 0), 0)}</div>
                 </div>
                 <div className="bg-surface border border-white/5 p-5 rounded-2xl relative overflow-hidden group hover:border-white/10 transition-colors">
-                    <div className="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><DollarSign size={80} /></div>
+                    {/* Changed background icon to CreditCard to avoid confusion with currency symbol */}
+                    <div className="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><CreditCard size={80} /></div>
                     <div className="text-muted text-xs uppercase tracking-wider mb-2">Pipeline Value</div>
                     <div className="text-3xl font-bold text-yellow-400">{symbol}{currentEarnings}</div>
                 </div>
