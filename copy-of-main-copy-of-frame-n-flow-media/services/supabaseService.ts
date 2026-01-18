@@ -24,20 +24,49 @@ export const SupabaseBackend = {
 
         // Fetch Partner ID if partner
         let partnerId = undefined;
-        if (profile?.role === 'partner') {
+        let partnerRole = profile?.role || 'partner'; // Default to partner
+
+        if (true) { // Always check for partner record to support auto-creation
             const { data: partner } = await supabase
                 .from('partners')
                 .select('id')
                 .eq('user_id', data.user.id)
                 .single();
-            partnerId = partner?.id;
+
+            if (partner) {
+                partnerId = partner.id;
+            } else {
+                // AUTO-HEAL: If no partner record, check for APPROVED Application
+                const { data: app } = await supabase
+                    .from('applications')
+                    .select('id')
+                    .eq('email', email)
+                    .eq('status', 'approved')
+                    .single();
+
+                if (app) {
+                    console.log("Found approved app but no partner record. creating...");
+                    const { data: newPartner, error: createError } = await supabase
+                        .from('partners')
+                        .insert({
+                            user_id: data.user.id,
+                            application_id: app.id,
+                            stage: 'Starter',
+                            earnings_total: 0
+                        })
+                        .select()
+                        .single();
+
+                    if (newPartner) partnerId = newPartner.id;
+                }
+            }
         }
 
         const user: User = {
             id: data.user.id,
             username: email, // Using email as username
             name: profile?.full_name || email.split('@')[0],
-            role: profile?.role as any || 'partner',
+            role: partnerRole as any,
             partnerId,
             email: email
         };

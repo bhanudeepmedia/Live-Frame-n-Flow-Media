@@ -28,7 +28,12 @@ const Signup: React.FC = () => {
                 navigate('/growth-partner/dashboard');
             }
         } catch (err: any) {
-            setErrorMsg(err.message || 'An unexpected error occurred');
+            console.error(err);
+            if (err.message?.includes('registered') || err.message?.includes('exists')) {
+                setErrorMsg('Account already exists! Please Log In to activate access.');
+            } else {
+                setErrorMsg(err.message || 'An unexpected error occurred');
+            }
             setStatus('error');
         }
     };
