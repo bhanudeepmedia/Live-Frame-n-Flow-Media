@@ -115,7 +115,7 @@ const Overview = ({
                                     <button
                                         onClick={() => {
                                             const subject = "Application Approved - Frame n Flow Media GPP";
-                                            const body = `Hello ${app.fullName.split(' ')[0]},\n\nWe are pleased to accept you into the Growth Partner Program.\n\nPlease create your username and password by going into this specific page:\n${window.location.origin}/#/growth-partner/login\n\n(Select 'Create Account' if available or wait for your credentials)\n\nWelcome aboard,\nFrame n Flow Media Team`;
+                                            const body = `Hello ${app.fullName.split(' ')[0]},\n\nWe are pleased to accept you into the Growth Partner Program.\n\nPlease activate your account by creating your credentials here:\n${window.location.origin}/#/growth-partner/signup\n\n(This link allows you to set your password)\n\nWelcome aboard,\nFrame n Flow Media Team`;
                                             window.location.href = `mailto:${app.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                                         }}
                                         className="text-blue-400 p-1 hover:bg-blue-500/20 rounded"
