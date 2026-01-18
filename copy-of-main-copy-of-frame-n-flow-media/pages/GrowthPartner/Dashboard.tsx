@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { User, PartnerData, OutreachLog } from '../../services/mockBackend';
 import { SupabaseBackend } from '../../services/supabaseService';
@@ -13,7 +13,13 @@ import {
     LogOut,
     Plus,
     Save,
-    CreditCard
+    CreditCard,
+    Edit2,
+    Trash2,
+    X,
+    Calendar,
+    ChevronDown,
+    ChevronUp
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
@@ -28,8 +34,16 @@ const Dashboard: React.FC = () => {
         count: 0,
         replies: 0,
         interested: 0,
-        notes: ''
+        notes: '',
+        date: new Date().toISOString().split('T')[0] // Default to today YYYY-MM-DD
     });
+
+    // Bank Details Editing
+    const [isEditingBank, setIsEditingBank] = useState(false);
+    const [bankForm, setBankForm] = useState<any>({});
+
+    // Log Editing
+    const [editingLogId, setEditingLogId] = useState<string | null>(null);
 
     useEffect(() => {
         const init = async () => {
@@ -48,6 +62,7 @@ const Dashboard: React.FC = () => {
         const data = await SupabaseBackend.getPartnerData(partnerId);
         if (data) {
             setPartnerData(data);
+            setBankForm(data.bankDetails || {});
         }
         setLoading(false);
     };
@@ -61,14 +76,68 @@ const Dashboard: React.FC = () => {
         e.preventDefault();
         if (!user || !user.partnerId) return;
 
-        await SupabaseBackend.logOutreach(user.partnerId, {
-            ...logForm,
-            date: new Date().toISOString()
-        });
+        if (editingLogId) {
+            // Update existing log
+            await SupabaseBackend.updateLog(editingLogId, {
+                ...logForm,
+                // Ensure date is ISO
+                date: new Date(logForm.date).toISOString()
+            });
+            setEditingLogId(null);
+        } else {
+            // Create new log
+            await SupabaseBackend.logOutreach(user.partnerId, {
+                ...logForm,
+                date: new Date(logForm.date).toISOString()
+            });
+        }
 
         // Refresh data
         loadData(user.partnerId);
-        setLogForm({ medium: 'Instagram', count: 0, replies: 0, interested: 0, notes: '' });
+        setLogForm({
+            medium: 'Instagram',
+            count: 0,
+            replies: 0,
+            interested: 0,
+            notes: '',
+            date: new Date().toISOString().split('T')[0]
+        });
+    };
+
+    const handleDeleteLog = async (logId: string) => {
+        if (!confirm('Are you sure you want to delete this entry?')) return;
+        await SupabaseBackend.deleteLog(logId);
+        if (user?.partnerId) loadData(user.partnerId);
+    };
+
+    const handleEditLogInit = (log: OutreachLog) => {
+        setEditingLogId(log.id);
+        setLogForm({
+            medium: log.medium,
+            count: log.count,
+            replies: log.replies,
+            interested: log.interested,
+            notes: log.notes || '',
+            date: new Date(log.date).toISOString().split('T')[0]
+        });
+        // Scroll to form (optional)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleSaveBankDetails = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!user?.partnerId) return;
+
+        await SupabaseBackend.updateBankDetails(user.partnerId, bankForm);
+        setIsEditingBank(false);
+        loadData(user.partnerId);
+    };
+
+    const canEditLog = (dateStr: string) => {
+        const logDate = new Date(dateStr);
+        const now = new Date();
+        const diffHours = (now.getTime() - logDate.getTime()) / (1000 * 60 * 60);
+        return diffHours <= 48; // Allow editing for 48 hours
     };
 
     if (loading || !partnerData) return <div className="min-h-screen bg-background flex items-center justify-center text-white">Loading Dashboard...</div>;
@@ -78,7 +147,7 @@ const Dashboard: React.FC = () => {
     const totalReplies = partnerData.outreachLogs.reduce((acc, l) => acc + l.replies, 0);
     const totalLeads = partnerData.outreachLogs.reduce((acc, l) => acc + l.interested, 0);
 
-    // Gamification progress (Mock logic)
+    // Gamification progress
     const nextStageThreshold = totalOutreach < 50 ? 50 : totalOutreach < 100 ? 100 : totalOutreach < 200 ? 200 : 500;
     const progressPercent = Math.min(100, (totalOutreach / nextStageThreshold) * 100);
 
@@ -141,41 +210,27 @@ const Dashboard: React.FC = () => {
                     </div>
                 </motion.div>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    {[
-                        { label: "Total Outreach", val: totalOutreach, icon: Send, color: "text-blue-400" },
-                        { label: "Total Replies", val: totalReplies, icon: MessageCircle, color: "text-purple-400" },
-                        { label: "Qualified Leads", val: totalLeads, icon: Target, color: "text-green-400" },
-                        { label: "Pending Earnings", val: `$${partnerData.earnings.pending}`, icon: DollarSign, color: "text-yellow-400" }
-                    ].map((stat, idx) => (
-                        <motion.div
-                            key={idx}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: idx * 0.1 }}
-                            className="bg-surface border border-white/5 p-6 rounded-2xl hover:border-white/20 transition-colors"
-                        >
-                            <div className="flex justify-between items-start mb-4">
-                                <div className={`p-2 rounded-lg bg-white/5 ${stat.color}`}>
-                                    <stat.icon size={20} />
-                                </div>
-                            </div>
-                            <div className="text-3xl font-display font-bold mb-1">{stat.val}</div>
-                            <div className="text-sm text-muted">{stat.label}</div>
-                        </motion.div>
-                    ))}
-                </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Log Activity Form */}
                     <div className="lg:col-span-2 space-y-6">
                         <h3 className="text-xl font-bold flex items-center gap-2">
-                            <Plus size={20} className="text-accent" /> Log Activity
+                            {editingLogId ? <Edit2 size={20} className="text-yellow-400" /> : <Plus size={20} className="text-accent" />}
+                            {editingLogId ? 'Edit Activity Entry' : 'Log Activity'}
                         </h3>
 
-                        <form onSubmit={handleSubmitLog} className="bg-surface border border-white/10 p-6 rounded-2xl space-y-6">
+                        <form onSubmit={handleSubmitLog} className={`bg-surface border ${editingLogId ? 'border-yellow-500/50' : 'border-white/10'} p-6 rounded-2xl space-y-6 transition-colors`}>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-sm text-muted">Date</label>
+                                    <input
+                                        type="date"
+                                        required
+                                        value={logForm.date}
+                                        onChange={e => setLogForm({ ...logForm, date: e.target.value })}
+                                        className="w-full bg-background border border-white/10 rounded-lg p-3 focus:outline-none focus:border-accent text-white scheme-dark"
+                                    />
+                                </div>
                                 <div className="space-y-2">
                                     <label className="text-sm text-muted">Platform</label>
                                     <select
@@ -230,12 +285,24 @@ const Dashboard: React.FC = () => {
                                 />
                             </div>
 
-                            <div className="flex justify-end">
+                            <div className="flex justify-end gap-3">
+                                {editingLogId && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setEditingLogId(null);
+                                            setLogForm({ medium: 'Instagram', count: 0, replies: 0, interested: 0, notes: '', date: new Date().toISOString().split('T')[0] });
+                                        }}
+                                        className="px-6 py-3 bg-white/5 text-muted font-bold rounded-lg hover:bg-white/10 transition-all"
+                                    >
+                                        Cancel
+                                    </button>
+                                )}
                                 <button
                                     type="submit"
                                     className="px-6 py-3 bg-accent text-background font-bold rounded-lg hover:bg-white transition-all flex items-center gap-2"
                                 >
-                                    <Save size={18} /> Save Entry
+                                    <Save size={18} /> {editingLogId ? 'Update Entry' : 'Save Entry'}
                                 </button>
                             </div>
                         </form>
@@ -246,20 +313,45 @@ const Dashboard: React.FC = () => {
                                 {partnerData.outreachLogs.length === 0 ? (
                                     <div className="text-muted italic">No activity logged yet. Start today!</div>
                                 ) : (
-                                    partnerData.outreachLogs.slice(0, 5).map(log => (
-                                        <div key={log.id} className="bg-surface/50 border border-white/5 p-4 rounded-xl flex items-center justify-between">
+                                    partnerData.outreachLogs.slice(0, 10).map(log => (
+                                        <div key={log.id} className="bg-surface/50 border border-white/5 p-4 rounded-xl flex items-center justify-between group">
                                             <div className="flex items-center gap-4">
                                                 <div className="w-10 h-10 rounded-lg bg-surfaceHighlight flex items-center justify-center text-muted">
-                                                    {log.medium === 'Instagram' ? <MessageCircle size={18} /> : <Send size={18} />}
+                                                    {log.medium === 'Instagram' ? <MessageCircle size={18} /> :
+                                                        log.medium === 'LinkedIn' ? <Send size={18} /> :
+                                                            <BarChart2 size={18} />}
                                                 </div>
                                                 <div>
                                                     <div className="font-bold">{log.medium} Outreach</div>
-                                                    <div className="text-xs text-muted">{new Date(log.date).toLocaleDateString()}</div>
+                                                    <div className="text-xs text-muted">
+                                                        {new Date(log.date).toLocaleDateString()}
+                                                        {log.notes && <span className="ml-2 opacity-50 truncate max-w-[150px] inline-block align-bottom">- {log.notes}</span>}
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <div className="font-mono text-accent font-bold">+{log.count} Sent</div>
-                                                <div className="text-xs text-green-400">{log.interested} Leads</div>
+                                            <div className="flex items-center gap-4">
+                                                <div className="text-right">
+                                                    <div className="font-mono text-accent font-bold">+{log.count}</div>
+                                                    <div className="text-xs text-green-400">{log.interested} Leads</div>
+                                                </div>
+
+                                                {/* Edit/Delete Actions - Only if recent */}
+                                                {canEditLog(log.date) && (
+                                                    <div className="flex items-center gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <button
+                                                            onClick={() => handleEditLogInit(log)}
+                                                            className="p-2 hover:bg-white/10 rounded-lg text-muted hover:text-white" title="Edit"
+                                                        >
+                                                            <Edit2 size={16} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDeleteLog(log.id)}
+                                                            className="p-2 hover:bg-red-500/20 rounded-lg text-muted hover:text-red-500" title="Delete"
+                                                        >
+                                                            <Trash2 size={16} />
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     ))
@@ -275,15 +367,15 @@ const Dashboard: React.FC = () => {
                                 <DollarSign size={100} />
                             </div>
                             <h3 className="text-lg font-bold mb-4">Total Earnings</h3>
-                            <div className="text-4xl font-display font-bold mb-2">${partnerData.earnings.total}</div>
+                            <div className="text-4xl font-display font-bold mb-2">₹{partnerData.earnings.total}</div>
                             <div className="flex gap-4 text-sm mb-6">
                                 <div>
                                     <div className="text-muted">Paid</div>
-                                    <div className="font-bold text-green-400">${partnerData.earnings.paid}</div>
+                                    <div className="font-bold text-green-400">₹{partnerData.earnings.paid}</div>
                                 </div>
                                 <div>
                                     <div className="text-muted">Pending</div>
-                                    <div className="font-bold text-yellow-400">${partnerData.earnings.pending}</div>
+                                    <div className="font-bold text-yellow-400">₹{partnerData.earnings.pending}</div>
                                 </div>
                             </div>
                             <button className="w-full py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors">
@@ -291,21 +383,101 @@ const Dashboard: React.FC = () => {
                             </button>
                         </div>
 
+                        {/* Bank Details Section */}
                         <div className="bg-surface border border-white/10 p-6 rounded-2xl">
-                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                                <CreditCard size={18} /> Bank Details
-                            </h3>
-                            <div className="space-y-4">
-                                <div className="bg-background p-3 rounded-lg text-sm">
-                                    <div className="text-muted text-xs mb-1">Account Holder</div>
-                                    <div>{partnerData.bankDetails?.accountHolder || 'Not set'}</div>
-                                </div>
-                                <div className="bg-background p-3 rounded-lg text-sm">
-                                    <div className="text-muted text-xs mb-1">Account Number</div>
-                                    <div className="font-mono">{partnerData.bankDetails?.accountNumber ? '•••• ' + partnerData.bankDetails.accountNumber.slice(-4) : 'Not set'}</div>
-                                </div>
-                                <button className="w-full text-xs text-accent hover:underline">Update Details</button>
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-lg font-bold flex items-center gap-2">
+                                    <CreditCard size={18} /> Payment Info
+                                </h3>
+                                <button
+                                    onClick={() => setIsEditingBank(!isEditingBank)}
+                                    className="text-xs bg-white/5 hover:bg-white/10 px-2 py-1 rounded transition-colors text-muted hover:text-white"
+                                >
+                                    {isEditingBank ? 'Cancel' : 'Edit'}
+                                </button>
                             </div>
+
+                            <AnimatePresence mode="wait">
+                                {isEditingBank ? (
+                                    <motion.form
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        onSubmit={handleSaveBankDetails}
+                                        className="space-y-4"
+                                    >
+                                        <div className="space-y-1">
+                                            <label className="text-xs text-muted">UPI ID (Preferred)</label>
+                                            <input
+                                                type="text"
+                                                value={bankForm.upiId || ''}
+                                                onChange={e => setBankForm({ ...bankForm, upiId: e.target.value })}
+                                                className="w-full bg-background border border-white/10 rounded p-2 text-sm focus:border-accent focus:outline-none"
+                                                placeholder="username@upi"
+                                            />
+                                        </div>
+                                        <hr className="border-white/5" />
+                                        <div className="space-y-1">
+                                            <label className="text-xs text-muted">Bank Name</label>
+                                            <input
+                                                type="text"
+                                                value={bankForm.bankName || ''}
+                                                onChange={e => setBankForm({ ...bankForm, bankName: e.target.value })}
+                                                className="w-full bg-background border border-white/10 rounded p-2 text-sm focus:border-accent focus:outline-none"
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="text-xs text-muted">Account Number</label>
+                                            <input
+                                                type="text"
+                                                value={bankForm.accountNumber || ''}
+                                                onChange={e => setBankForm({ ...bankForm, accountNumber: e.target.value })}
+                                                className="w-full bg-background border border-white/10 rounded p-2 text-sm focus:border-accent focus:outline-none"
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="text-xs text-muted">IFSC Code</label>
+                                            <input
+                                                type="text"
+                                                value={bankForm.ifsc || ''}
+                                                onChange={e => setBankForm({ ...bankForm, ifsc: e.target.value })}
+                                                className="w-full bg-background border border-white/10 rounded p-2 text-sm focus:border-accent focus:outline-none"
+                                            />
+                                        </div>
+                                        <button type="submit" className="w-full py-2 bg-accent text-background font-bold rounded hover:bg-white text-sm">Save Details</button>
+                                    </motion.form>
+                                ) : (
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className="space-y-4"
+                                    >
+                                        {Object.keys(partnerData.bankDetails).length === 0 ? (
+                                            <div className="text-center py-4 bg-background/50 rounded-lg border border-dashed border-white/10">
+                                                <p className="text-sm text-muted">No payment details added.</p>
+                                                <button onClick={() => setIsEditingBank(true)} className="text-accent text-sm hover:underline mt-1">Add details</button>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                {partnerData.bankDetails.upiId && (
+                                                    <div className="bg-background p-3 rounded-lg text-sm">
+                                                        <div className="text-muted text-xs mb-1">UPI ID</div>
+                                                        <div className="font-mono">{partnerData.bankDetails.upiId}</div>
+                                                    </div>
+                                                )}
+                                                {partnerData.bankDetails.accountNumber && (
+                                                    <div className="bg-background p-3 rounded-lg text-sm">
+                                                        <div className="text-muted text-xs mb-1">Bank Transfer</div>
+                                                        <div className="font-bold">{partnerData.bankDetails.bankName}</div>
+                                                        <div className="font-mono text-muted text-xs">{partnerData.bankDetails.accountNumber}</div>
+                                                        <div className="font-mono text-muted text-xs">{partnerData.bankDetails.ifsc}</div>
+                                                    </div>
+                                                )}
+                                            </>
+                                        )}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </div>
                 </div>

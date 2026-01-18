@@ -256,6 +256,31 @@ export const SupabaseBackend = {
         };
     },
 
+    // --- Partner Actions ---
+    updateBankDetails: async (partnerId: string, details: any) => {
+        const { error } = await supabase
+            .from('partners')
+            .update({ bank_details: details })
+            .eq('id', partnerId);
+        return { success: !error, error };
+    },
+
+    deleteLog: async (logId: string) => {
+        const { error } = await supabase
+            .from('outreach_logs')
+            .delete()
+            .eq('id', logId);
+        return { success: !error, error };
+    },
+
+    updateLog: async (logId: string, updates: any) => {
+        const { error } = await supabase
+            .from('outreach_logs')
+            .update(updates)
+            .eq('id', logId);
+        return { success: !error, error };
+    },
+
     logOutreach: async (partnerId: string, log: any) => {
         const { data, error } = await supabase
             .from('outreach_logs')
