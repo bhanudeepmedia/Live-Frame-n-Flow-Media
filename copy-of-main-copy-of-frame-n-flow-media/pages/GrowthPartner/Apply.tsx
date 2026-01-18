@@ -38,10 +38,11 @@ const Apply: React.FC = () => {
         e.preventDefault();
         if (!formData.agreed) return;
 
-        setStatus('submitting');
+        const { agreed, ...submissionData } = formData;
+
         try {
             await SupabaseBackend.submitApplication({
-                ...formData,
+                ...submissionData,
                 // Combine city/country or keep separate if modified backend, 
                 // adhering to interface: city includes country or just city string.
                 city: `${formData.city}, ${formData.country}`
