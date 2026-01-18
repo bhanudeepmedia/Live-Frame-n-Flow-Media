@@ -151,14 +151,60 @@ const Landing: React.FC = () => {
                             <Button onClick={() => navigate('/growth-partner/apply')} className="w-full sm:w-auto min-w-[180px] px-8 py-4 text-lg font-bold bg-gradient-to-r from-accent to-accent/80 text-black hover:scale-105 shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] justify-center">
                                 Apply Now 🚀
                             </Button>
-                            <button onClick={() => navigate('/growth-partner/login')} className="w-full sm:w-auto min-w-[180px] px-8 py-4 text-lg font-bold bg-white/5 text-white/90 border border-white/10 rounded-lg hover:border-accent hover:text-accent hover:bg-black hover:shadow-[0_0_15px_rgba(249,115,22,0.3)] transition-all duration-300 flex items-center justify-center gap-3 backdrop-blur-sm group">
-                                <LogIn size={20} className="group-hover:translate-x-1 transition-transform" />
-                                <span>Partner Login</span>
-                            </button>
                             <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="w-full sm:w-auto min-w-[180px] px-8 py-4 text-lg border border-accent/30 text-accent rounded-lg hover:bg-accent/10 transition-colors font-bold uppercase tracking-wider text-sm justify-center flex items-center">
                                 View Mission Brief
                             </button>
                         </div>
+
+                        {/* ---------------- LOGIN TERMINAL (PREMIUM MINI-SECTION) ---------------- */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5 }}
+                            className="mt-10"
+                        >
+                            <div
+                                onClick={() => navigate('/growth-partner/login')}
+                                className="inline-flex items-center gap-0 p-[2px] rounded-2xl bg-gradient-to-r from-white/10 via-white/5 to-white/10 hover:from-accent/50 hover:via-purple-500/50 hover:to-accent/50 transition-all duration-500 cursor-pointer group shadow-2xl hover:shadow-[0_0_30px_rgba(249,115,22,0.3)]"
+                            >
+                                <div className="bg-[#050505] rounded-[14px] px-6 py-3 flex items-center gap-6 relative overflow-hidden">
+
+                                    {/* Scrolling Scanline Effect */}
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out" />
+
+                                    {/* Text Info */}
+                                    <div className="z-10">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/40 group-hover:text-accent transition-colors">System Online</span>
+                                        </div>
+                                        <div className="text-white font-bold text-sm flex items-center gap-2">
+                                            Partner Access Terminal <ArrowRight size={14} className="text-muted group-hover:text-white group-hover:translate-x-1 transition-all" />
+                                        </div>
+                                    </div>
+
+                                    {/* Mini Graphical Animation (Data Wave) */}
+                                    <div className="flex items-end gap-[2px] h-8 z-10 opacity-50 group-hover:opacity-100 transition-opacity">
+                                        {[...Array(8)].map((_, i) => (
+                                            <motion.div
+                                                key={i}
+                                                animate={{
+                                                    height: [4, 16, 8, 24, 4],
+                                                    backgroundColor: ["#333", "#f97316", "#333"]
+                                                }}
+                                                transition={{
+                                                    repeat: Infinity,
+                                                    duration: 1.5,
+                                                    delay: i * 0.1,
+                                                    ease: "easeInOut"
+                                                }}
+                                                className="w-1 rounded-full bg-white/20"
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
                     </motion.div>
 
                     {/* ---------------- GAMIFIED CALCULATOR ---------------- */}
