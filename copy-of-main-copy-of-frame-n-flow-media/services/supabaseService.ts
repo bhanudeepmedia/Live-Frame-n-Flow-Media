@@ -173,7 +173,9 @@ export const SupabaseBackend = {
             reason: result.reason,
             platforms: result.platforms || [],
             status: result.status,
-            appliedAt: result.created_at
+            appliedAt: result.created_at,
+            linkedin: result.linkedin_url,
+            social: result.social_url
         }));
     },
 

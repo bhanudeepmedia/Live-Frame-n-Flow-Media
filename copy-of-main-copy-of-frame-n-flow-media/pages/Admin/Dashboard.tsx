@@ -22,7 +22,10 @@ import {
     Bell,
     ExternalLink,
     Filter,
-    CreditCard
+    CreditCard,
+    Mail,
+    Linkedin,
+    Globe // Added Imports
 } from 'lucide-react';
 
 // --- SUB-COMPONENTS DEFINED OUTSIDE TO PREVENT RE-RENDER FOCUS LOSS ---
@@ -103,10 +106,25 @@ const Overview = ({
                                 <div>
                                     <div className="font-bold text-sm">{app.fullName}</div>
                                     <div className="text-xs text-muted">{app.city} • {app.experience ? 'Exp' : 'No Exp'}</div>
+                                    <div className="flex gap-2 mt-1">
+                                        {app.linkedin && <a href={app.linkedin} target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300"><Linkedin size={12} /></a>}
+                                        {app.social && <a href={app.social} target="_blank" rel="noreferrer" className="text-pink-400 hover:text-pink-300"><Globe size={12} /></a>}
+                                    </div>
                                 </div>
                                 <div className="flex gap-2">
-                                    <button onClick={() => handleReviewApp(app.id, 'approved')} className="text-green-400 p-1 hover:bg-green-500/20 rounded"><CheckCircle size={16} /></button>
-                                    <button onClick={() => handleReviewApp(app.id, 'rejected')} className="text-red-400 p-1 hover:bg-red-500/20 rounded"><XCircle size={16} /></button>
+                                    <button
+                                        onClick={() => {
+                                            const subject = "Application Approved - Frame n Flow Media GPP";
+                                            const body = `Hello ${app.fullName.split(' ')[0]},\n\nWe are pleased to accept you into the Growth Partner Program.\n\nPlease create your username and password by going into this specific page:\n${window.location.origin}/#/growth-partner/login\n\n(Select 'Create Account' if available or wait for your credentials)\n\nWelcome aboard,\nFrame n Flow Media Team`;
+                                            window.location.href = `mailto:${app.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                                        }}
+                                        className="text-blue-400 p-1 hover:bg-blue-500/20 rounded"
+                                        title="Send Acceptance Email"
+                                    >
+                                        <Mail size={16} />
+                                    </button>
+                                    <button onClick={() => handleReviewApp(app.id, 'approved')} className="text-green-400 p-1 hover:bg-green-500/20 rounded" title="Approve"><CheckCircle size={16} /></button>
+                                    <button onClick={() => handleReviewApp(app.id, 'rejected')} className="text-red-400 p-1 hover:bg-red-500/20 rounded" title="Reject"><XCircle size={16} /></button>
                                 </div>
                             </div>
                         ))}

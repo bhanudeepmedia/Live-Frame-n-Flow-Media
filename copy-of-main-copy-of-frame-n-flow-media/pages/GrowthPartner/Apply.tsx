@@ -58,6 +58,8 @@ const Apply: React.FC = () => {
         fullName: '',
         email: '',
         phone: '',
+        linkedin: '',
+        social: '',
         city: '',
         country: '',
         background: '',
@@ -84,7 +86,7 @@ const Apply: React.FC = () => {
 
     const nextStep = () => {
         // Simple Validation
-        if (step === 0 && (!formData.fullName || !formData.email || !formData.phone)) return alert('Please fill all identity fields.');
+        if (step === 0 && (!formData.fullName || !formData.email || !formData.phone || !formData.linkedin || !formData.social)) return alert('Please fill all identity fields including social links.');
         if (step === 1 && (!formData.background)) return alert('Please select your background.');
         if (step === 2 && (!formData.city || !formData.country || formData.platforms.length === 0)) return alert('Please complete location and platforms.');
 
@@ -104,13 +106,15 @@ const Apply: React.FC = () => {
             await SupabaseBackend.submitApplication({
                 ...otherData,
                 full_name: fullName,
-                city: `${formData.city}, ${formData.country}`
+                city: `${formData.city}, ${formData.country}`,
+                linkedin_url: formData.linkedin,
+                social_url: formData.social
             });
             setStatus('success');
             setTimeout(() => navigate('/growth-partner/login'), 4000);
         } catch (err: any) {
             console.error(err);
-            alert("Error: " + (err.message || "Submission failed"));
+            alert("Error: " + (err.message || "Submission failed. Ensure DB Schema is updated."));
             setStatus('error');
         }
     };
@@ -127,13 +131,25 @@ const Apply: React.FC = () => {
                                 <label className="text-xs font-bold text-accent uppercase mb-2 block">Full Name</label>
                                 <input value={formData.fullName} onChange={e => setFormData({ ...formData, fullName: e.target.value })} className="input-premium w-full bg-[#111] border border-white/10 p-4 rounded-xl text-white focus:border-accent outline-none transition-colors" placeholder="John Doe" />
                             </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="group">
+                                    <label className="text-xs font-bold text-accent uppercase mb-2 block">Email Address</label>
+                                    <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="input-premium w-full bg-[#111] border border-white/10 p-4 rounded-xl text-white focus:border-accent outline-none transition-colors" placeholder="agent@example.com" />
+                                </div>
+                                <div className="group">
+                                    <label className="text-xs font-bold text-accent uppercase mb-2 block">Phone / WhatsApp</label>
+                                    <input value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className="input-premium w-full bg-[#111] border border-white/10 p-4 rounded-xl text-white focus:border-accent outline-none transition-colors" placeholder="+1 234 567 890" />
+                                </div>
+                            </div>
+
+                            {/* NEW COLUMNS */}
                             <div className="group">
-                                <label className="text-xs font-bold text-accent uppercase mb-2 block">Email Address</label>
-                                <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="input-premium w-full bg-[#111] border border-white/10 p-4 rounded-xl text-white focus:border-accent outline-none transition-colors" placeholder="agent@example.com" />
+                                <label className="text-xs font-bold text-accent uppercase mb-2 block">LinkedIn Profile URL</label>
+                                <input value={formData.linkedin} onChange={e => setFormData({ ...formData, linkedin: e.target.value })} className="input-premium w-full bg-[#111] border border-white/10 p-4 rounded-xl text-white focus:border-accent outline-none transition-colors" placeholder="https://linkedin.com/in/..." />
                             </div>
                             <div className="group">
-                                <label className="text-xs font-bold text-accent uppercase mb-2 block">Phone / WhatsApp</label>
-                                <input value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className="input-premium w-full bg-[#111] border border-white/10 p-4 rounded-xl text-white focus:border-accent outline-none transition-colors" placeholder="+1 234 567 890" />
+                                <label className="text-xs font-bold text-accent uppercase mb-2 block">Social Profile URL (Insta/FB)</label>
+                                <input value={formData.social} onChange={e => setFormData({ ...formData, social: e.target.value })} className="input-premium w-full bg-[#111] border border-white/10 p-4 rounded-xl text-white focus:border-accent outline-none transition-colors" placeholder="https://instagram.com/..." />
                             </div>
                         </div>
                     </motion.div>
