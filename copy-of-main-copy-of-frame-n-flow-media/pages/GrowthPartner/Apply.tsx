@@ -283,38 +283,27 @@ const Apply: React.FC = () => {
                 <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/5 blur-[120px] rounded-full opacity-30" />
             </div>
 
-            {/* HEADER BAR */}
-            <div className="absolute top-0 left-0 w-full p-6 z-20 flex justify-between items-center pointer-events-none">
-                <Link
-                    to="/growth-partner"
-                    className="pointer-events-auto px-4 py-2 rounded-full bg-red-500/5 border border-red-500/20 text-red-500/80 hover:text-white hover:bg-red-600 hover:border-red-500 transition-all duration-300 flex items-center gap-2 text-xs font-bold uppercase tracking-widest backdrop-blur-md group shadow-lg hover:shadow-red-900/50"
-                >
-                    <ChevronLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-                    <span className="hidden sm:inline">Abort Mission</span>
-                    <span className="sm:hidden">Exit</span>
-                </Link>
-
-                <div className="pointer-events-auto px-4 py-2 rounded-full bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 flex items-center gap-3 backdrop-blur-md shadow-lg shadow-emerald-900/20 cursor-help hover:bg-emerald-500/10 transition-colors" title="Connection Secure">
-                    <div className="relative">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                        <div className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-75" />
-                    </div>
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em]">System Active</span>
-                </div>
-            </div>
-
             {/* MAIN FORM CARD */}
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="w-full max-w-2xl relative z-10 mt-16 md:mt-0"
+                className="w-full max-w-2xl relative z-10 mt-16 md:mt-24"
             >
                 <div className="bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden">
                     {/* Top Bar Decoration */}
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent to-transparent opacity-50" />
 
+                    {/* INTERNAL CONTROLS */}
+                    <Link
+                        to="/growth-partner"
+                        className="absolute top-6 right-6 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/40 hover:text-white transition-colors z-20"
+                        title="Abort Mission"
+                    >
+                        <ChevronLeft size={20} />
+                    </Link>
+
                     <div className="mb-8">
-                        <div className="flex justify-between items-end mb-4">
+                        <div className="flex justify-between items-end mb-4 pr-10">
                             <div>
                                 <h1 className="text-3xl font-display font-bold text-white mb-1">Mission Briefing</h1>
                                 <p className="text-white/40 text-sm">Step {step + 1} of 4</p>
@@ -326,37 +315,44 @@ const Apply: React.FC = () => {
                         <ProgressBar step={step} total={4} />
                     </div>
 
-                    <form onSubmit={e => e.preventDefault()} className="min-h-[400px] flex flex-col justify-between">
+                    <form onSubmit={e => e.preventDefault()} className="min-h-[400px] flex flex-col justify-between relative">
                         <AnimatePresence mode="wait">
                             {renderStep()}
                         </AnimatePresence>
 
-                        <div className="flex items-center gap-4 mt-10 pt-6 border-t border-white/5">
-                            {step > 0 && (
-                                <button
-                                    onClick={prevStep}
-                                    className="px-6 py-3 rounded-xl border border-white/10 text-white/60 hover:text-white hover:bg-white/5 transition-colors font-bold uppercase text-xs tracking-wider"
-                                >
-                                    Previous
-                                </button>
-                            )}
+                        <div className="flex flex-col gap-4 mt-10 pt-6 border-t border-white/5">
+                            <div className="flex items-center gap-4">
+                                {step > 0 && (
+                                    <button
+                                        onClick={prevStep}
+                                        className="px-6 py-3 rounded-xl border border-white/10 text-white/60 hover:text-white hover:bg-white/5 transition-colors font-bold uppercase text-xs tracking-wider"
+                                    >
+                                        Previous
+                                    </button>
+                                )}
 
-                            {step < 3 ? (
-                                <button
-                                    onClick={nextStep}
-                                    className="flex-1 py-3 bg-white text-black font-bold uppercase tracking-wider rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
-                                >
-                                    Continue <ArrowRight size={16} />
-                                </button>
-                            ) : (
-                                <button
-                                    onClick={handleSubmit}
-                                    disabled={status === 'submitting'}
-                                    className="flex-1 py-3 bg-gradient-to-r from-accent to-accent/80 text-black font-black uppercase tracking-wider rounded-xl hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(249,115,22,0.3)] disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    {status === 'submitting' ? <Loader2 className="animate-spin" /> : 'Initialize Sequence'}
-                                </button>
-                            )}
+                                {step < 3 ? (
+                                    <button
+                                        onClick={nextStep}
+                                        className="flex-1 py-3 bg-white text-black font-bold uppercase tracking-wider rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                                    >
+                                        Continue <ArrowRight size={16} />
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={handleSubmit}
+                                        disabled={status === 'submitting'}
+                                        className="flex-1 py-3 bg-gradient-to-r from-accent to-accent/80 text-black font-black uppercase tracking-wider rounded-xl hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(249,115,22,0.3)] disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {status === 'submitting' ? <Loader2 className="animate-spin" /> : 'Initialize Sequence'}
+                                    </button>
+                                )}
+                            </div>
+
+                            <div className="flex justify-center items-center gap-2 opacity-30 mt-2">
+                                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                                <span className="text-[10px] font-mono uppercase tracking-widest text-green-500">System Active</span>
+                            </div>
                         </div>
                     </form>
                 </div>
