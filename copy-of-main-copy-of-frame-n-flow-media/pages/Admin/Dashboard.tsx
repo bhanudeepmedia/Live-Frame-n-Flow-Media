@@ -210,10 +210,88 @@ const AdminDashboard: React.FC = () => {
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0 }}
-                                className="bg-surface border border-white/10 rounded-xl overflow-hidden"
+                                className="space-y-8"
                             >
-                                <div className="p-4 border-b border-white/5">
-                                    <h3 className="font-bold">Active Growth Partners</h3>
+                                {/* Stat Cards */}
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div className="p-6 rounded-2xl bg-surface border border-white/5 relative overflow-hidden group">
+                                        <div className="absolute right-0 top-0 w-32 h-32 bg-accent/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-accent/20 transition-all"></div>
+                                        <div className="relative">
+                                            <p className="text-muted text-sm mb-1">Total Active Partners</p>
+                                            <h3 className="text-4xl font-display font-bold">{partners.length}</h3>
+                                        </div>
+                                    </div>
+                                    <div className="p-6 rounded-2xl bg-surface border border-white/5 relative overflow-hidden group">
+                                        <div className="absolute right-0 top-0 w-32 h-32 bg-green-500/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-green-500/20 transition-all"></div>
+                                        <div className="relative">
+                                            <p className="text-muted text-sm mb-1">Total Impressions</p>
+                                            <h3 className="text-4xl font-display font-bold">
+                                                {partners.reduce((sum, p) => sum + p.outreachLogs.reduce((lSum, l) => lSum + (l.count || 0), 0), 0).toLocaleString()}
+                                            </h3>
+                                        </div>
+                                    </div>
+                                    <div className="p-6 rounded-2xl bg-surface border border-white/5 relative overflow-hidden group">
+                                        <div className="absolute right-0 top-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-purple-500/20 transition-all"></div>
+                                        <div className="relative">
+                                            <p className="text-muted text-sm mb-1">Total Paid Out</p>
+                                            <h3 className="text-4xl font-display font-bold">
+                                                ₹{partners.reduce((sum, p) => sum + p.earnings.paid, 0).toLocaleString()}
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h3 className="text-xl font-bold">Partner Performance</h3>
+
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {partners.map(p => {
+                                        const app = applications.find(a => a.id === p.applicationId);
+                                        return (
+                                            <div key={p.id} className="p-6 rounded-2xl bg-surface border border-white/5 hover:border-white/10 transition-all">
+                                                <div className="flex justify-between items-start mb-6">
+                                                    <div>
+                                                        <h4 className="font-bold text-lg">{app?.fullName || 'Unknown Partner'}</h4>
+                                                        <p className="text-muted text-xs mb-2">ID: {p.id.slice(0, 4)}...</p>
+                                                        <p className="text-sm text-accent lowercase bg-accent/10 inline-block px-2 py-0.5 rounded-full border border-accent/20">{p.stage}</p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <p className="text-xs text-muted">Total Earnings</p>
+                                                        <p className="font-mono text-lg text-green-400">₹{p.earnings.total}</p>
+                                                    </div>
+                                                </div>
+
+                                                {/* Mini Chart for last 7 logs */}
+                                                <div className="h-32 flex items-end gap-2 mb-6 border-b border-white/5 pb-2">
+                                                    {p.outreachLogs.length === 0 ? (
+                                                        <div className="w-full h-full flex items-center justify-center text-muted text-xs italic">
+                                                            No activity logs yet
+                                                        </div>
+                                                    ) : (
+                                                        p.outreachLogs.slice(0, 10).reverse().map((log, i) => (
+                                                            <div key={i} className="flex-1 group relative">
+                                                                <div
+                                                                    className="w-full bg-accent/30 rounded-t-sm hover:bg-accent transition-colors"
+                                                                    style={{ height: `${Math.min((log.count / 1000) * 100, 100)}%` }}
+                                                                ></div>
+                                                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block bg-black text-xs p-2 rounded whitespace-nowrap z-10 border border-white/20">
+                                                                    {new Date(log.date).toLocaleDateString()}: {log.count} views
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    )}
+                                                </div>
+
+                                                <div className="flex justify-between items-center text-sm text-muted">
+                                                    <span>Last Active: {p.outreachLogs[0] ? new Date(p.outreachLogs[0].date).toLocaleDateString() : 'Never'}</span>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                    {partners.length === 0 && (
+                                        <div className="col-span-full p-12 text-center text-muted border border-dashed border-white/10 rounded-2xl">
+                                            No active partners yet. Approve applications to get started.
+                                        </div>
+                                    )}
                                 </div>
                                 {/* Simplified list for partner management */}
                                 <div className="divide-y divide-white/5">

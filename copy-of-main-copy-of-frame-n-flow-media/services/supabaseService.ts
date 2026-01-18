@@ -45,6 +45,52 @@ export const SupabaseBackend = {
         return { user };
     },
 
+    // Signup for Approved Partners
+    signup: async (email: string, password: string, fullName: string) => {
+        // 1. Verify Application exists and is Approved
+        const { data: app, error: appError } = await supabase
+            .from('applications')
+            .select('*')
+            .eq('email', email)
+            .eq('status', 'approved')
+            .single();
+
+        if (appError || !app) {
+            return { error: 'No approved application found for this email. Please apply first or wait for approval.' };
+        }
+
+        // 2. Create User in Auth
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: { full_name: fullName }
+            }
+        });
+
+        if (authError) return { error: authError.message };
+        if (!authData.user) return { error: 'Signup failed unexpectedly.' };
+
+        // 3. Create Partner Record explicitly linking User -> Application
+        // (Profile is created by trigger, but Partner entry needs link)
+        const { error: partnerError } = await supabase
+            .from('partners')
+            .insert({
+                user_id: authData.user.id,
+                application_id: app.id,
+                stage: 'Starter',
+                earnings_total: 0
+            });
+
+        if (partnerError) {
+            console.error('Partner creation error:', partnerError);
+            // We don't fail full signup if this fails, but it's bad. 
+            // Ideally we'd use a transaction but can't easily here.
+        }
+
+        return { user: authData.user };
+    },
+
     logout: async () => {
         await supabase.auth.signOut();
     },

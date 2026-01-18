@@ -15,6 +15,7 @@ import Insights from './pages/Insights';
 // Growth Partner Imports
 import GrowthPartnerLanding from './pages/GrowthPartner/Landing';
 import GrowthPartnerApply from './pages/GrowthPartner/Apply';
+import GrowthPartnerSignup from './pages/GrowthPartner/Signup';
 import GrowthPartnerLogin from './pages/GrowthPartner/Login';
 import GrowthPartnerDashboard from './pages/GrowthPartner/Dashboard';
 import AdminDashboard from './pages/Admin/Dashboard';
@@ -50,6 +51,7 @@ const App: React.FC = () => {
             {/* Growth Partner Ecosystem Routes */}
             <Route path="/growth-partner" element={<GrowthPartnerLanding />} />
             <Route path="/growth-partner/apply" element={<GrowthPartnerApply />} />
+            <Route path="/growth-partner/signup" element={<GrowthPartnerSignup />} />
             <Route path="/growth-partner/login" element={<GrowthPartnerLogin />} />
             <Route path="/growth-partner/dashboard" element={<GrowthPartnerDashboard />} />
 
