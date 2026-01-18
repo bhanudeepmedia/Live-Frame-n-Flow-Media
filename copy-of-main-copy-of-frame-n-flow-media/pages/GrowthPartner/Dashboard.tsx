@@ -27,63 +27,169 @@ import {
     Mail,
     User as UserIcon,
     Menu,
-    X
+    X,
+    Send,
+    MessageCircle,
+    PieChart,
+    TrendingUp
 } from 'lucide-react';
 
 // --- SUB-COMPONENTS ---
 
-// 1. OVERVIEW
+// 1. OVERVIEW (INFOGRAPHICS ENHANCED)
 const Overview = ({ partnerData, streak, user }: any) => {
+    // Calculate Platform Split for Pie Chart
+    const logs = partnerData.outreachLogs || [];
+    const leads = logs.map((l: any) => l.interested).reduce((a: any, b: any) => a + b, 0); // Total leads count
+
+    // Safety check for pie chart data
+    const instaStats = logs.filter((l: any) => l.medium === 'Instagram');
+    const linkedInStats = logs.filter((l: any) => l.medium === 'LinkedIn');
+
+    // We base the pie chart on LEAD GENERATION, not just outreach
+    const instaLeads = instaStats.reduce((acc: any, l: any) => acc + l.interested, 0);
+    const linkedInLeads = linkedInStats.reduce((acc: any, l: any) => acc + l.interested, 0);
+    const otherLeads = leads - (instaLeads + linkedInLeads);
+
+    const totalForPie = Math.max(1, leads); // Avoid division by zero
+    const instaPer = (instaLeads / totalForPie) * 100;
+    const linkedInPer = (linkedInLeads / totalForPie) * 100;
+
+    // Monthly Earnings Goal (Static Goal: ₹50,000)
+    const monthlyGoal = 50000;
+    const currentEarnings = (partnerData.earnings.paid || 0) + (partnerData.earnings.pending || 0);
+    const goalPer = Math.min(100, (currentEarnings / monthlyGoal) * 100);
+
     return (
         <div className="space-y-8 animate-fade-in">
-            <div>
-                <h2 className="text-3xl font-display font-bold">Welcome, {user?.name.split(' ')[0]}</h2>
-                <p className="text-muted">Here is your growth snapshot.</p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 className="text-3xl font-display font-bold">Performance Hub</h2>
+                    <p className="text-muted">Welcome back, {user?.name.split(' ')[0]}. You are on a <span className="text-orange-500 font-bold flex inline-flex items-center gap-1"><Flame size={16} fill="currentColor" /> {streak} day streak!</span></p>
+                </div>
+                <div className="flex items-center gap-2 bg-surface border border-white/10 px-4 py-2 rounded-full">
+                    <div className="text-xs font-bold text-muted uppercase tracking-wider">Current Tier</div>
+                    <div className="text-accent font-bold">{partnerData.stage}</div>
+                </div>
             </div>
 
+            {/* TOP ROW: KEY METRICS CARDS */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-surface border border-white/5 p-5 rounded-xl">
+                <div className="bg-surface border border-white/5 p-5 rounded-2xl relative overflow-hidden group hover:border-white/10 transition-colors">
+                    <div className="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Send size={80} /></div>
                     <div className="text-muted text-xs uppercase tracking-wider mb-2">Total Outreach</div>
-                    <div className="text-3xl font-bold">{partnerData.outreachLogs.reduce((acc: any, l: any) => acc + l.count, 0)}</div>
+                    <div className="text-3xl font-bold">{logs.reduce((acc: any, l: any) => acc + l.count, 0)}</div>
+                    <div className="text-xs text-green-400 mt-1 flex items-center gap-1"><TrendingUp size={12} /> Top performer</div>
                 </div>
-                <div className="bg-surface border border-white/5 p-5 rounded-xl">
-                    <div className="text-muted text-xs uppercase tracking-wider mb-2">Active Streak</div>
-                    <div className="text-3xl font-bold text-orange-500 flex items-center gap-2">
-                        <Flame fill="currentColor" size={24} /> {streak}
+                <div className="bg-surface border border-white/5 p-5 rounded-2xl relative overflow-hidden group hover:border-white/10 transition-colors">
+                    <div className="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Target size={80} /></div>
+                    <div className="text-muted text-xs uppercase tracking-wider mb-2">Total Leads</div>
+                    <div className="text-3xl font-bold text-white">{leads}</div>
+                    <div className="text-xs text-muted mt-1">Avg {(leads / Math.max(1, logs.length)).toFixed(1)} per day</div>
+                </div>
+                <div className="bg-surface border border-white/5 p-5 rounded-2xl relative overflow-hidden group hover:border-white/10 transition-colors">
+                    <div className="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Calendar size={80} /></div>
+                    <div className="text-muted text-xs uppercase tracking-wider mb-2">Booked Calls</div>
+                    <div className="text-3xl font-bold text-blue-400">{logs.reduce((acc: any, l: any) => acc + (l.appointments_booked || 0), 0)}</div>
+                </div>
+                <div className="bg-surface border border-white/5 p-5 rounded-2xl relative overflow-hidden group hover:border-white/10 transition-colors">
+                    <div className="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><DollarSign size={80} /></div>
+                    <div className="text-muted text-xs uppercase tracking-wider mb-2">Pipeline Value</div>
+                    <div className="text-3xl font-bold text-yellow-400">₹{currentEarnings}</div>
+                </div>
+            </div>
+
+            {/* MIDDLE ROW: INFOGRAPHICS */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                {/* 1. MONTHLY GOAL RING */}
+                <div className="bg-surface border border-white/5 p-6 rounded-3xl flex flex-col items-center justify-center relative">
+                    <h3 className="w-full font-bold text-left mb-4 flex items-center gap-2 text-sm text-muted uppercase tracking-wider">
+                        <Target size={16} /> Monthly Goal
+                    </h3>
+                    <div className="relative w-48 h-48 flex items-center justify-center">
+                        {/* SVG Circle Progress */}
+                        <svg className="w-full h-full -rotate-90">
+                            <circle cx="96" cy="96" r="88" className="stroke-white/5" strokeWidth="12" fill="none" />
+                            <circle
+                                cx="96" cy="96" r="88"
+                                className="stroke-accent transition-all duration-1000 ease-out"
+                                strokeWidth="12"
+                                fill="none"
+                                strokeDasharray={553}
+                                strokeDashoffset={553 - (553 * goalPer) / 100}
+                                strokeLinecap="round"
+                            />
+                        </svg>
+                        <div className="absolute flex flex-col items-center">
+                            <span className="text-3xl font-bold font-display">{Math.round(goalPer)}%</span>
+                            <span className="text-xs text-muted">of ₹50k Goal</span>
+                        </div>
+                    </div>
+                    <div className="mt-4 text-center">
+                        <div className="text-sm font-bold text-white">₹{currentEarnings.toLocaleString()} / ₹50,000</div>
+                        <div className="text-xs text-muted">Keep pushing! You're doing great.</div>
                     </div>
                 </div>
-                <div className="bg-surface border border-white/5 p-5 rounded-xl">
-                    <div className="text-muted text-xs uppercase tracking-wider mb-2">Leads Generated</div>
-                    <div className="text-3xl font-bold text-green-400">{partnerData.outreachLogs.reduce((acc: any, l: any) => acc + l.interested, 0)}</div>
-                </div>
-                <div className="bg-surface border border-white/5 p-5 rounded-xl">
-                    <div className="text-muted text-xs uppercase tracking-wider mb-2">Pending Comm.</div>
-                    <div className="text-3xl font-bold text-yellow-400">₹{partnerData.earnings.pending}</div>
-                </div>
-            </div>
 
-            {/* Performance Graph (Simplified Visual) */}
-            <div className="bg-surface border border-white/5 p-6 rounded-2xl">
-                <h3 className="font-bold mb-4">Recent Activity</h3>
-                <div className="h-40 flex items-end gap-2">
-                    {partnerData.outreachLogs.slice(0, 14).reverse().map((log: any, i: number) => {
-                        const heightPer = Math.min(100, (log.count / 50) * 100); // assume 50 is max daily goal
-                        return (
-                            <div key={i} className="flex-1 flex flex-col items-center gap-1 group">
-                                <div
-                                    className="w-full bg-accent/50 rounded-t-sm transition-all group-hover:bg-accent relative"
-                                    style={{ height: `${heightPer}%` }}
-                                >
-                                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap border border-white/10 z-10">
-                                        {log.count} sent
-                                    </div>
-                                </div>
-                                <div className="text-[10px] text-muted rotate-0 truncate w-full text-center">{new Date(log.date).getDate()}</div>
+                {/* 2. LEAD SOURCES PIE */}
+                <div className="bg-surface border border-white/5 p-6 rounded-3xl">
+                    <h3 className="font-bold mb-6 flex items-center gap-2 text-sm text-muted uppercase tracking-wider">
+                        <PieChart size={16} /> Lead Sources
+                    </h3>
+                    <div className="flex items-center gap-8">
+                        {/* CSS Conic Gradient Pie */}
+                        <div
+                            className="w-32 h-32 rounded-full shrink-0 relative"
+                            style={{
+                                background: `conic-gradient(
+                                    #A855F7 0% ${instaPer}%, 
+                                    #3B82F6 ${instaPer}% ${instaPer + linkedInPer}%, 
+                                    #22c55e ${instaPer + linkedInPer}% 100%
+                                )`
+                            }}
+                        >
+                            <div className="absolute inset-4 bg-surface rounded-full"></div>
+                        </div>
+                        <div className="space-y-3 text-sm flex-1">
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-purple-500"></div> Instagram</div>
+                                <div className="font-bold">{Math.round(instaPer)}%</div>
                             </div>
-                        );
-                    })}
-                    {partnerData.outreachLogs.length === 0 && <div className="w-full text-center text-muted self-center">No activity to show yet.</div>}
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-blue-500"></div> LinkedIn</div>
+                                <div className="font-bold">{Math.round(linkedInPer)}%</div>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-green-500"></div> Other</div>
+                                <div className="font-bold">{Math.round(100 - (instaPer + linkedInPer))}%</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                {/* 3. RECENT TREND GRAPH */}
+                <div className="bg-surface border border-white/5 p-6 rounded-3xl flex flex-col">
+                    <h3 className="font-bold mb-4 flex items-center gap-2 text-sm text-muted uppercase tracking-wider">
+                        <TrendingUp size={16} /> 14-Day Trend
+                    </h3>
+                    <div className="flex-1 flex items-end gap-2 h-full min-h-[150px]">
+                        {logs.slice(0, 7).reverse().map((log: any, i: number) => {
+                            const h = Math.min(100, (log.count / 50) * 100);
+                            return (
+                                <div key={i} className="flex-1 flex flex-col items-center gap-1 group h-full justify-end">
+                                    <div
+                                        className="w-full bg-white/10 rounded-t-lg transition-all group-hover:bg-accent relative"
+                                        style={{ height: `${h}%` }}
+                                    ></div>
+                                    <div className="text-[10px] text-muted">{new Date(log.date).getDate()}</div>
+                                </div>
+                            );
+                        })}
+                        {logs.length === 0 && <div className="w-full h-full flex items-center justify-center text-muted text-xs">Not enough data</div>}
+                    </div>
+                </div>
+
             </div>
         </div>
     );
