@@ -182,7 +182,7 @@ const Landing: React.FC = () => {
                                     {/* Referrals */}
                                     <div className="group/slider">
                                         <div className="flex justify-between mb-4">
-                                            <label className="text-xs lg:text-sm font-bold uppercase tracking-widest text-accent">Successful Referrals</label>
+                                            <label className="text-xs lg:text-sm font-bold uppercase tracking-widest text-accent">Successful Conversion</label>
                                             <span className="text-xl lg:text-2xl font-black text-white bg-white/10 px-4 py-1 rounded-lg">{referrals}</span>
                                         </div>
                                         <input
