@@ -49,8 +49,9 @@ const Apply: React.FC = () => {
             setStatus('success');
             // Redirect after delay
             setTimeout(() => navigate('/growth-partner'), 3000);
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
+            alert("Error submitting application: " + (err.message || JSON.stringify(err)));
             setStatus('error');
         }
     };
