@@ -403,13 +403,26 @@ const AdminDashboard: React.FC = () => {
         return app?.fullName || 'Unknown';
     };
 
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white space-y-4">
+                <div className="text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50 animate-pulse">
+                    Frame n Flow Media
+                </div>
+                <div className="text-accent text-sm font-mono tracking-widest uppercase animate-pulse">
+                    GPP Admin Portal Loading...
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="min-h-screen bg-background font-sans text-white flex">
             {/* ADMIN SIDEBAR */}
-            <aside className="w-64 bg-surface border-r border-white/5 flex flex-col fixed inset-y-0 z-40">
+            <aside className="w-64 bg-[#0a0a0a] border-r border-white/5 flex flex-col fixed inset-y-0 z-40 bg-gradient-to-b from-black via-black to-accent/5">
                 <div className="p-6">
-                    <div className="font-bold text-xl font-display">Admin<span className="text-accent">Portal</span></div>
-                    <div className="text-xs text-muted">Founder Access</div>
+                    <div className="font-bold text-xl font-display">Frame n Flow <span className="text-accent">Media</span></div>
+                    <div className="text-xs text-muted tracking-widest uppercase mt-1">GPP Admin</div>
                 </div>
                 <nav className="flex-1 px-4 space-y-1">
                     <button onClick={() => setActiveTab('overview')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'overview' ? 'bg-accent text-background' : 'text-muted hover:text-white'}`}>

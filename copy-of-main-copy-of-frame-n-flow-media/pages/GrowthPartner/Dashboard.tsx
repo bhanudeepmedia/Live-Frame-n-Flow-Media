@@ -86,7 +86,7 @@ const Overview = ({ partnerData, streak, user }: any) => {
             {/* Header with Bell */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-3xl font-display font-bold">Performance Hub</h2>
+                    <h2 className="text-3xl font-display font-bold">Growth Partner Program</h2>
                     <p className="text-muted">Welcome back, {user?.name.split(' ')[0]}. You are on a <span className="text-orange-500 font-bold flex inline-flex items-center gap-1"><Flame size={16} fill="currentColor" /> {streak} day streak!</span></p>
                 </div>
                 <div className="flex items-center gap-3 relative">
@@ -523,7 +523,18 @@ const Dashboard: React.FC = () => {
     // Currency Symbol Helper
     const symbol = partnerData?.primary_currency === 'USD' ? '$' : '₹';
 
-    if (loading || !partnerData) return <div className="min-h-screen bg-background flex items-center justify-center text-white">Loading Portal...</div>;
+    if (loading || !partnerData) {
+        return (
+            <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white space-y-4">
+                <div className="text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50 animate-pulse">
+                    Frame n Flow Media
+                </div>
+                <div className="text-accent text-sm font-mono tracking-widest uppercase animate-pulse">
+                    Loading GPP...
+                </div>
+            </div>
+        )
+    }
 
     const streak = calculateStreak();
 
@@ -547,11 +558,11 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* SIDEBAR */}
-            <aside className={`fixed md:relative inset-y-0 left-0 w-64 bg-surface border-r border-white/5 transform transition-transform z-40 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+            <aside className={`fixed md:relative inset-y-0 left-0 w-64 bg-[#0a0a0a] border-r border-white/5 transform transition-transform z-40 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 bg-gradient-to-b from-black via-black to-accent/5`}>
                 <div className="p-6 h-full flex flex-col">
                     <div className="mb-10 hidden md:block">
-                        <div className="font-bold text-xl font-display tracking-tight">Frame n Flow <span className="text-accent">Partner</span></div>
-                        <div className="text-xs text-muted mt-1 uppercase tracking-widest pl-1">Portal v2.0</div>
+                        <div className="font-bold text-xl font-display tracking-tight">Frame n Flow <span className="text-accent">Media</span></div>
+                        <div className="text-xs text-muted mt-1 uppercase tracking-widest pl-1">GPP</div>
                     </div>
 
                     <nav className="space-y-2 flex-1 pt-12 md:pt-0">

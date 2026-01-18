@@ -146,11 +146,14 @@ const Landing: React.FC = () => {
                             "Growth Partners cold-outreach potential clients, set appointments, join sales calls, and earn commission on every successful client conversion handled by Frame n Flow Media."
                         </p>
 
-                        <div className="flex flex-col sm:flex-row gap-4 mt-8">
+                        <div className="flex flex-col sm:flex-row gap-4 mt-8 flex-wrap">
                             <Button onClick={() => navigate('/growth-partner/apply')} className="w-full sm:w-auto min-w-[180px] px-8 py-4 text-lg font-bold bg-gradient-to-r from-accent to-accent/80 text-black hover:scale-105 shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] justify-center">
                                 Apply Now 🚀
                             </Button>
-                            <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="w-full sm:w-auto min-w-[180px] px-8 py-4 text-lg border border-accent/30 text-accent rounded-lg hover:bg-accent/10 transition-colors font-bold uppercase tracking-wider text-sm">
+                            <button onClick={() => navigate('/growth-partner/login')} className="w-full sm:w-auto min-w-[150px] px-8 py-4 text-lg font-bold bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors border border-white/10">
+                                Log In
+                            </button>
+                            <button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })} className="w-full sm:w-auto min-w-[180px] px-8 py-4 text-lg border border-accent/30 text-accent rounded-lg hover:bg-accent/10 transition-colors font-bold uppercase tracking-wider text-sm justify-center flex items-center">
                                 View Mission Brief
                             </button>
                         </div>
