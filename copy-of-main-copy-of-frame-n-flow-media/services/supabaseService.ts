@@ -161,6 +161,18 @@ export const SupabaseBackend = {
 
     // --- Public: Apply ---
     submitApplication: async (data: Omit<GrowthPartnerApplication, 'id' | 'status' | 'appliedAt'>) => {
+        // 1. Check for duplicates
+        const { data: existing } = await supabase
+            .from('applications')
+            .select('id')
+            .eq('email', data.email)
+            .maybeSingle();
+
+        if (existing) {
+            throw new Error("Application with this email already submitted. Please wait for response.");
+        }
+
+        // 2. Submit
         const { data: result, error } = await supabase
             .from('applications')
             .insert([{ ...data, status: 'pending' }])
