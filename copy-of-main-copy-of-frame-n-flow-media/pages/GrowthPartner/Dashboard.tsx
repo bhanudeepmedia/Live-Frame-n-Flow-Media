@@ -39,24 +39,25 @@ import {
 
 // 1. OVERVIEW (INFOGRAPHICS ENHANCED)
 const Overview = ({ partnerData, streak, user }: any) => {
+    // Determine Symbol
+    const symbol = partnerData.primary_currency === 'USD' ? '$' : '₹';
+
     // Calculate Platform Split for Pie Chart
     const logs = partnerData.outreachLogs || [];
-    const leads = logs.map((l: any) => l.interested).reduce((a: any, b: any) => a + b, 0); // Total leads count
+    const leads = logs.map((l: any) => l.interested).reduce((a: any, b: any) => a + b, 0);
 
-    // Safety check for pie chart data
     const instaStats = logs.filter((l: any) => l.medium === 'Instagram');
     const linkedInStats = logs.filter((l: any) => l.medium === 'LinkedIn');
 
-    // We base the pie chart on LEAD GENERATION, not just outreach
     const instaLeads = instaStats.reduce((acc: any, l: any) => acc + l.interested, 0);
     const linkedInLeads = linkedInStats.reduce((acc: any, l: any) => acc + l.interested, 0);
-    const otherLeads = leads - (instaLeads + linkedInLeads);
 
-    const totalForPie = Math.max(1, leads); // Avoid division by zero
+    // Safety for pie chart
+    const totalForPie = Math.max(1, leads);
     const instaPer = (instaLeads / totalForPie) * 100;
     const linkedInPer = (linkedInLeads / totalForPie) * 100;
 
-    // Monthly Earnings Goal (Static Goal: ₹50,000)
+    // Monthly Earnings Goal (Static Goal: 50,000)
     const monthlyGoal = 50000;
     const currentEarnings = (partnerData.earnings.paid || 0) + (partnerData.earnings.pending || 0);
     const goalPer = Math.min(100, (currentEarnings / monthlyGoal) * 100);
@@ -74,7 +75,7 @@ const Overview = ({ partnerData, streak, user }: any) => {
                 </div>
             </div>
 
-            {/* TOP ROW: KEY METRICS CARDS */}
+            {/* TOP ROW: KEY METRICS */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-surface border border-white/5 p-5 rounded-2xl relative overflow-hidden group hover:border-white/10 transition-colors">
                     <div className="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Send size={80} /></div>
@@ -96,60 +97,40 @@ const Overview = ({ partnerData, streak, user }: any) => {
                 <div className="bg-surface border border-white/5 p-5 rounded-2xl relative overflow-hidden group hover:border-white/10 transition-colors">
                     <div className="absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><DollarSign size={80} /></div>
                     <div className="text-muted text-xs uppercase tracking-wider mb-2">Pipeline Value</div>
-                    <div className="text-3xl font-bold text-yellow-400">₹{currentEarnings}</div>
+                    <div className="text-3xl font-bold text-yellow-400">{symbol}{currentEarnings}</div>
                 </div>
             </div>
 
             {/* MIDDLE ROW: INFOGRAPHICS */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-                {/* 1. MONTHLY GOAL RING */}
+                {/* 1. GOAL RING */}
                 <div className="bg-surface border border-white/5 p-6 rounded-3xl flex flex-col items-center justify-center relative">
                     <h3 className="w-full font-bold text-left mb-4 flex items-center gap-2 text-sm text-muted uppercase tracking-wider">
                         <Target size={16} /> Monthly Goal
                     </h3>
                     <div className="relative w-48 h-48 flex items-center justify-center">
-                        {/* SVG Circle Progress */}
                         <svg className="w-full h-full -rotate-90">
                             <circle cx="96" cy="96" r="88" className="stroke-white/5" strokeWidth="12" fill="none" />
-                            <circle
-                                cx="96" cy="96" r="88"
-                                className="stroke-accent transition-all duration-1000 ease-out"
-                                strokeWidth="12"
-                                fill="none"
-                                strokeDasharray={553}
-                                strokeDashoffset={553 - (553 * goalPer) / 100}
-                                strokeLinecap="round"
-                            />
+                            <circle cx="96" cy="96" r="88" className="stroke-accent transition-all duration-1000 ease-out" strokeWidth="12" fill="none" strokeDasharray={553} strokeDashoffset={553 - (553 * goalPer) / 100} strokeLinecap="round" />
                         </svg>
                         <div className="absolute flex flex-col items-center">
                             <span className="text-3xl font-bold font-display">{Math.round(goalPer)}%</span>
-                            <span className="text-xs text-muted">of ₹50k Goal</span>
+                            <span className="text-xs text-muted">of {symbol}50k Goal</span>
                         </div>
                     </div>
                     <div className="mt-4 text-center">
-                        <div className="text-sm font-bold text-white">₹{currentEarnings.toLocaleString()} / ₹50,000</div>
+                        <div className="text-sm font-bold text-white">{symbol}{currentEarnings.toLocaleString()} / {symbol}50,000</div>
                         <div className="text-xs text-muted">Keep pushing! You're doing great.</div>
                     </div>
                 </div>
 
-                {/* 2. LEAD SOURCES PIE */}
+                {/* 2. LEAD PIE */}
                 <div className="bg-surface border border-white/5 p-6 rounded-3xl">
                     <h3 className="font-bold mb-6 flex items-center gap-2 text-sm text-muted uppercase tracking-wider">
                         <PieChart size={16} /> Lead Sources
                     </h3>
                     <div className="flex items-center gap-8">
-                        {/* CSS Conic Gradient Pie */}
-                        <div
-                            className="w-32 h-32 rounded-full shrink-0 relative"
-                            style={{
-                                background: `conic-gradient(
-                                    #A855F7 0% ${instaPer}%, 
-                                    #3B82F6 ${instaPer}% ${instaPer + linkedInPer}%, 
-                                    #22c55e ${instaPer + linkedInPer}% 100%
-                                )`
-                            }}
-                        >
+                        <div className="w-32 h-32 rounded-full shrink-0 relative" style={{ background: `conic-gradient(#A855F7 0% ${instaPer}%, #3B82F6 ${instaPer}% ${instaPer + linkedInPer}%, #22c55e ${instaPer + linkedInPer}% 100%)` }}>
                             <div className="absolute inset-4 bg-surface rounded-full"></div>
                         </div>
                         <div className="space-y-3 text-sm flex-1">
@@ -169,7 +150,7 @@ const Overview = ({ partnerData, streak, user }: any) => {
                     </div>
                 </div>
 
-                {/* 3. RECENT TREND GRAPH */}
+                {/* 3. TREND GRAPH */}
                 <div className="bg-surface border border-white/5 p-6 rounded-3xl flex flex-col">
                     <h3 className="font-bold mb-4 flex items-center gap-2 text-sm text-muted uppercase tracking-wider">
                         <TrendingUp size={16} /> 14-Day Trend
@@ -179,10 +160,7 @@ const Overview = ({ partnerData, streak, user }: any) => {
                             const h = Math.min(100, (log.count / 50) * 100);
                             return (
                                 <div key={i} className="flex-1 flex flex-col items-center gap-1 group h-full justify-end">
-                                    <div
-                                        className="w-full bg-white/10 rounded-t-lg transition-all group-hover:bg-accent relative"
-                                        style={{ height: `${h}%` }}
-                                    ></div>
+                                    <div className="w-full bg-white/10 rounded-t-lg transition-all group-hover:bg-accent relative" style={{ height: `${h}%` }}></div>
                                     <div className="text-[10px] text-muted">{new Date(log.date).getDate()}</div>
                                 </div>
                             );
@@ -190,7 +168,6 @@ const Overview = ({ partnerData, streak, user }: any) => {
                         {logs.length === 0 && <div className="w-full h-full flex items-center justify-center text-muted text-xs">Not enough data</div>}
                     </div>
                 </div>
-
             </div>
         </div>
     );
@@ -313,8 +290,9 @@ const Resources = () => (
 const ProfileSettings = ({ user, partnerData, refresh }: any) => {
     const [form, setForm] = useState({
         phone: partnerData?.phone || '',
-        location: partnerData?.location || '', // Assuming we map city -> location for display
+        location: partnerData?.location || '',
         timezone: partnerData?.timezone || 'IST',
+        primary_currency: partnerData?.primary_currency || 'INR',
         upiId: partnerData?.bankDetails?.upiId || '',
         bankName: partnerData?.bankDetails?.bankName || '',
         accountNumber: partnerData?.bankDetails?.accountNumber || '',
@@ -326,7 +304,8 @@ const ProfileSettings = ({ user, partnerData, refresh }: any) => {
         // Update general partner details
         await SupabaseBackend.updatePartnerDetails(user.partnerId, {
             phone: form.phone,
-            timezone: form.timezone
+            timezone: form.timezone,
+            primary_currency: form.primary_currency
         });
         // Update bank
         await SupabaseBackend.updateBankDetails(user.partnerId, {
@@ -360,6 +339,13 @@ const ProfileSettings = ({ user, partnerData, refresh }: any) => {
                             <label className="text-xs text-muted">Timezone</label>
                             <select value={form.timezone} onChange={e => setForm({ ...form, timezone: e.target.value })} className="w-full bg-background border border-white/10 rounded p-2 text-white">
                                 <option>IST (India)</option><option>EST (US)</option><option>PST (US)</option><option>GMT (UK)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="text-xs text-muted">Primary Currency</label>
+                            <select value={form.primary_currency} onChange={e => setForm({ ...form, primary_currency: e.target.value })} className="w-full bg-background border border-white/10 rounded p-2 text-white">
+                                <option value="INR">INR (₹)</option>
+                                <option value="USD">USD ($)</option>
                             </select>
                         </div>
                     </div>
@@ -464,6 +450,9 @@ const Dashboard: React.FC = () => {
         setView('overview'); // Go back to overview after log
     };
 
+    // Currency Symbol Helper
+    const symbol = partnerData?.primary_currency === 'USD' ? '$' : '₹';
+
     if (loading || !partnerData) return <div className="min-h-screen bg-background flex items-center justify-center text-white">Loading Portal...</div>;
 
     const streak = calculateStreak();
@@ -539,15 +528,15 @@ const Dashboard: React.FC = () => {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div className="bg-surface p-6 rounded-xl border border-white/5">
                                     <div className="text-sm text-muted mb-1">Total Lifetime Earnings</div>
-                                    <div className="text-3xl font-bold">₹{partnerData.earnings.total}</div>
+                                    <div className="text-3xl font-bold">{symbol}{partnerData.earnings.total}</div>
                                 </div>
                                 <div className="bg-surface p-6 rounded-xl border border-white/5">
                                     <div className="text-sm text-muted mb-1">Approved & Paid</div>
-                                    <div className="text-3xl font-bold text-green-400">₹{partnerData.earnings.paid}</div>
+                                    <div className="text-3xl font-bold text-green-400">{symbol}{partnerData.earnings.paid}</div>
                                 </div>
                                 <div className="bg-surface p-6 rounded-xl border border-white/5">
                                     <div className="text-sm text-muted mb-1">Pending Approval</div>
-                                    <div className="text-3xl font-bold text-yellow-400">₹{partnerData.earnings.pending}</div>
+                                    <div className="text-3xl font-bold text-yellow-400">{symbol}{partnerData.earnings.pending}</div>
                                 </div>
                             </div>
                             <div className="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20 text-sm">
@@ -561,7 +550,8 @@ const Dashboard: React.FC = () => {
                             <h2 className="text-3xl font-display font-bold">Daily Activity Log</h2>
                             <div className="bg-surface border border-white/10 rounded-2xl p-8">
                                 <form onSubmit={handleSubmitLog} className="space-y-6">
-                                    <div className="grid grid-cols-2 gap-4">
+                                    {/* FIXED: grid-cols-1 on mobile for Platform/Date */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label className="text-xs font-bold text-muted uppercase">Date</label>
                                             <input type="date" value={logForm.date} onChange={e => setLogForm({ ...logForm, date: e.target.value })} className="w-full bg-background border border-white/10 rounded-lg p-3 text-white scheme-dark mt-1" />
