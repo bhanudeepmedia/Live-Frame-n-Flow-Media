@@ -531,15 +531,38 @@ const Landing: React.FC = () => {
             </div>
 
             {/* ---------------- FINAL BOSS CTA ---------------- */}
-            <div className="pb-32 text-center container mx-auto px-6">
-                <h2 className="text-5xl md:text-9xl font-display font-black text-white/10 mb-8 select-none">
-                    READY?
-                </h2>
-                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                    <Button onClick={() => navigate('/growth-partner/apply')} className="px-12 py-6 text-2xl rounded-full bg-accent text-black font-black tracking-widest shadow-[0_0_50px_rgba(var(--accent-rgb),0.5)]">
-                        PRESS START
-                    </Button>
-                </motion.div>
+            {/* ---------------- FINAL BOSS CTA ---------------- */}
+            <div className="relative py-32 text-center container mx-auto px-6 overflow-hidden">
+                {/* Background Grid Ambience */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:2rem_2rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
+
+                <div className="relative z-10 flex flex-col items-center justify-center">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.8 }}
+                        className="mb-10"
+                    >
+                        <h2 className="text-6xl md:text-9xl font-display font-black text-transparent bg-clip-text bg-gradient-to-b from-white/10 to-transparent select-none leading-tight">
+                            READY?
+                        </h2>
+                        <p className="text-accent font-mono text-sm md:text-base tracking-[0.8em] uppercase -mt-3 md:-mt-6 text-center opacity-80 animate-pulse">
+                            PLAYER 1
+                        </p>
+                    </motion.div>
+
+                    <motion.button
+                        onClick={() => navigate('/growth-partner/apply')}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="group relative px-10 py-4 bg-accent text-black font-bold text-lg tracking-widest uppercase rounded-full overflow-hidden transition-all shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] hover:shadow-[0_0_40px_rgba(var(--accent-rgb),0.6)]"
+                    >
+                        <span className="relative z-10 flex items-center gap-3">
+                            START GAME <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </span>
+                        <div className="absolute inset-0 bg-white/30 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none" />
+                    </motion.button>
+                </div>
             </div>
 
         </div>
