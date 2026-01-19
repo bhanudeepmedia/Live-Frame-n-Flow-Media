@@ -771,6 +771,8 @@ const AdminDashboard: React.FC = () => {
 
     const [earningForm, setEarningForm] = useState({ leadName: '', amount: '', date: new Date().toISOString().split('T')[0] }); // New State
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [profileTab, setProfileTab] = useState('overview'); // For GP Profile Modal tabs
+
 
     useEffect(() => {
         const init = async () => {
@@ -933,6 +935,11 @@ const AdminDashboard: React.FC = () => {
         }
     };
 
+
+    const closePartnerModal = () => {
+        setSelectedPartner(null);
+        setProfileTab('overview'); // Reset to overview tab when closing
+    };
 
     const getPartnerName = (pid: string) => {
         const p = partners.find(ptr => ptr.id === pid);
@@ -1176,13 +1183,12 @@ const AdminDashboard: React.FC = () => {
                 {selectedPartner && (() => {
                     const partnerApp = applications.find((a: any) => a.id === selectedPartner.applicationId);
                     const partnerLeads = allLeads.filter((l: any) => l.partner_id === selectedPartner.id);
-                    const [profileTab, setProfileTab] = React.useState('overview');
 
                     return (
                         <motion.div
                             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                             className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-2 md:p-4 backdrop-blur-sm overflow-y-auto"
-                            onClick={() => setSelectedPartner(null)}
+                            onClick={closePartnerModal}
                         >
                             <motion.div
                                 initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }}
@@ -1192,7 +1198,7 @@ const AdminDashboard: React.FC = () => {
                                 {/* HEADER */}
                                 <div className="relative bg-gradient-to-r from-accent/20 via-purple-500/20 to-blue-500/20 p-6 md:p-8 border-b border-white/10">
                                     <button
-                                        onClick={() => setSelectedPartner(null)}
+                                        onClick={closePartnerModal}
                                         className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors"
                                     >
                                         <XCircle size={28} />
@@ -1221,8 +1227,8 @@ const AdminDashboard: React.FC = () => {
                                                 key={tab}
                                                 onClick={() => setProfileTab(tab)}
                                                 className={`px-6 py-4 font-bold text-sm uppercase tracking-wider transition-all whitespace-nowrap ${profileTab === tab
-                                                        ? 'text-accent border-b-2 border-accent bg-accent/5'
-                                                        : 'text-muted hover:text-white hover:bg-white/5'
+                                                    ? 'text-accent border-b-2 border-accent bg-accent/5'
+                                                    : 'text-muted hover:text-white hover:bg-white/5'
                                                     }`}
                                             >
                                                 {tab}
@@ -1393,8 +1399,8 @@ const AdminDashboard: React.FC = () => {
                                                                 </div>
                                                                 <div className="flex flex-col items-end gap-2">
                                                                     <span className={`px-3 py-1 rounded-full text-xs font-bold ${lead.status === 'Converted' ? 'bg-green-500/20 text-green-400' :
-                                                                            lead.status === 'Lost' ? 'bg-red-500/20 text-red-400' :
-                                                                                'bg-blue-500/20 text-blue-400'
+                                                                        lead.status === 'Lost' ? 'bg-red-500/20 text-red-400' :
+                                                                            'bg-blue-500/20 text-blue-400'
                                                                         }`}>{lead.status}</span>
                                                                     <span className="text-xs text-muted">{new Date(lead.created_at).toLocaleDateString()}</span>
                                                                 </div>
@@ -1435,9 +1441,9 @@ const AdminDashboard: React.FC = () => {
                                                                 <div className="flex flex-col items-end gap-2">
                                                                     <div className="text-2xl font-bold text-green-400">₹{Number(earning.amount).toLocaleString()}</div>
                                                                     <span className={`px-3 py-1 rounded-full text-xs font-bold ${earning.status === 'paid' ? 'bg-green-500/20 text-green-400' :
-                                                                            earning.status === 'approved' ? 'bg-blue-500/20 text-blue-400' :
-                                                                                earning.status === 'rejected' ? 'bg-red-500/20 text-red-400' :
-                                                                                    'bg-yellow-500/20 text-yellow-400'
+                                                                        earning.status === 'approved' ? 'bg-blue-500/20 text-blue-400' :
+                                                                            earning.status === 'rejected' ? 'bg-red-500/20 text-red-400' :
+                                                                                'bg-yellow-500/20 text-yellow-400'
                                                                         }`}>{earning.status}</span>
                                                                     <span className="text-xs text-muted">{new Date(earning.date).toLocaleDateString()}</span>
                                                                 </div>
@@ -1463,7 +1469,7 @@ const AdminDashboard: React.FC = () => {
                                         Reset Password
                                     </button>
                                     <button
-                                        onClick={() => setSelectedPartner(null)}
+                                        onClick={closePartnerModal}
                                         className="flex-1 bg-white/10 text-white py-3 px-6 rounded-xl font-bold hover:bg-white/20 transition-all">
                                         Close
                                     </button>
