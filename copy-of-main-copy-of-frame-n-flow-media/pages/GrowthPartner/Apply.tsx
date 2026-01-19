@@ -15,7 +15,8 @@ import {
     Globe,
     ArrowRight,
     ShieldCheck,
-    Target
+    Target,
+    X // Added X icon
 } from 'lucide-react';
 
 // --- SUB-COMPONENTS ---
@@ -54,6 +55,14 @@ const ProgressBar = ({ step, total }: any) => (
 const Apply: React.FC = () => {
     const navigate = useNavigate();
     const [step, setStep] = useState(0);
+    const [hasApplied, setHasApplied] = useState(false);
+
+    // Check if user already applied
+    React.useEffect(() => {
+        if (localStorage.getItem('gpp_applied') === 'true') {
+            setHasApplied(true);
+        }
+    }, []);
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -110,13 +119,16 @@ const Apply: React.FC = () => {
                 city: `${formData.city}, ${formData.country}`
             };
 
-            // Only add social fields if provided (to handle cases where DB columns don't exist yet)
+            // Only add social fields if provided
             if (linkedin) submissionData.linkedin_url = linkedin;
             if (social) submissionData.social_url = social;
 
             await SupabaseBackend.submitApplication(submissionData);
+
+            // Mark as applied in local storage
+            localStorage.setItem('gpp_applied', 'true');
             setStatus('success');
-            setTimeout(() => navigate('/growth-partner/login'), 4000);
+            // No redirection - user sees success screen
         } catch (err: any) {
             console.error('Application submission error:', err);
 
@@ -267,31 +279,72 @@ const Apply: React.FC = () => {
         }
     };
 
+    // --- ALREADY APPLIED STATE ---
+    if (hasApplied && status !== 'success') {
+        return (
+            <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4 font-sans relative overflow-hidden">
+                <div className="absolute inset-0 pointer-events-none opacity-20"><VerticalTape text="ACCESS DENIED • DUPLICATE ENTRY •" side="left" /></div>
+                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="max-w-md w-full bg-[#0a0a0a] border border-red-500/20 rounded-3xl p-8 text-center relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-50" />
+                    <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500/20">
+                        <ShieldCheck size={40} className="text-red-500" />
+                    </div>
+                    <h2 className="text-2xl font-bold font-display text-white mb-2">Identity Recognized</h2>
+                    <p className="text-muted mb-8 text-sm leading-relaxed">
+                        You have already submitted your dossier. Duplicate entries are unauthorized.
+                        <br /><br />
+                        <span className="text-white/80 font-mono tracking-wide text-xs border border-white/10 px-3 py-1 rounded bg-white/5">STATUS: PENDING CLASSIFICATION</span>
+                    </p>
+                    <Link to="/" className="inline-block px-6 py-3 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl font-bold uppercase text-xs tracking-widest transition-colors">
+                        Return to Base
+                    </Link>
+                </motion.div>
+            </div>
+        );
+    }
+
+    // --- SUCCESS STATE ---
     if (status === 'success') {
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center p-6 relative overflow-hidden font-sans">
-                <VerticalTape text="MISSION ACCEPTED •" side="left" />
-                <VerticalTape text="WELCOME ABROAD •" side="right" />
+            <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4 font-sans relative overflow-hidden">
+                <div className="absolute inset-0 bg-accent/5 animate-pulse pointer-events-none" />
                 <motion.div
-                    initial={{ scale: 0.8, opacity: 0 }}
+                    initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="bg-[#0a0a0a] p-10 rounded-3xl border border-green-500/20 text-center max-w-lg w-full relative z-10 shadow-[0_0_50px_rgba(34,197,94,0.1)]"
+                    className="max-w-lg w-full bg-[#0a0a0a] border border-accent/30 rounded-3xl p-10 text-center relative shadow-2xl shadow-accent/10"
                 >
-                    <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
-                        <CheckCircle size={50} className="text-green-500" />
-                    </div>
-                    <h2 className="text-4xl font-display font-black mb-4 text-white">Transmission Received</h2>
-                    <p className="text-white/60 mb-8 leading-relaxed">
-                        Your application has been logged in our secure database. Mission Command will review your profile. Expect secure communication via email upon approval.
-                    </p>
                     <button
-                        onClick={() => navigate('/growth-partner/login')}
-                        className="w-full py-4 bg-white text-black font-bold uppercase tracking-widest rounded-xl hover:bg-gray-200 transition-colors"
+                        onClick={() => { setStatus('idle'); setHasApplied(true); }}
+                        className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors"
                     >
-                        Access Login Terminal
+                        <X size={24} />
                     </button>
-                    <div className="mt-8 text-[10px] text-white/20 font-mono uppercase tracking-[0.2em] animate-pulse">
-                        Redirecting to Login...
+
+                    <motion.div
+                        initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}
+                        className="w-24 h-24 bg-accent text-black rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-accent/20"
+                    >
+                        <CheckCircle size={48} />
+                    </motion.div>
+
+                    <h2 className="text-3xl font-display font-bold text-white mb-2">Transmission Complete</h2>
+                    <p className="text-accent font-mono text-xs tracking-[0.2em] mb-6 uppercase">Application Encrypted & Sent</p>
+
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-6 mb-8 text-left">
+                        <p className="text-muted text-sm leading-relaxed mb-4">
+                            Your dossier has been securely transmitted to HQ. Our intelligence unit will review your credentials.
+                        </p>
+                        <div className="flex items-start gap-3">
+                            <div className="w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center mt-0.5"><div className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></div></div>
+                            <div className="flex-1">
+                                <p className="text-white text-sm font-bold">Next Directives:</p>
+                                <p className="text-muted text-xs mt-1">Stand by for email communication. Do not submit duplicate entries.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="text-[10px] text-white/20 font-mono uppercase">
+                        Session ID: {Math.random().toString(36).substring(7).toUpperCase()}
                     </div>
                 </motion.div>
             </div>
