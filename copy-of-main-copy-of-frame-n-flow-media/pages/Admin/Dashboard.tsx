@@ -298,6 +298,9 @@ const CommissionsManager = ({ partners, getPartnerName, refreshData }: any) => {
             alert('Update failed: ' + res.error);
             return;
         }
+        if (res.warning) {
+            alert('Warning: ' + res.warning);
+        }
         refreshData();
     };
 

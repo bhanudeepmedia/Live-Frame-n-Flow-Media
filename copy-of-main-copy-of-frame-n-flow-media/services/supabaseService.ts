@@ -372,16 +372,36 @@ export const SupabaseBackend = {
     },
 
     updateEarningStatus: async (earningId: string, newStatus: 'approved' | 'paid', partnerId: string, amount: number) => {
+        // 1. Update Status
         const { error } = await supabase.from('earnings').update({ status: newStatus }).eq('id', earningId);
-        if (error) return { success: false, error: error.message };
+        if (error) {
+            console.error('Earnings Status Update Error:', error);
+            return { success: false, error: error.message };
+        }
 
+        // 2. Update Financials
         if (newStatus === 'paid') {
-            const { data: partner } = await supabase.from('partners').select('earnings_paid, earnings_pending, earnings_total').eq('id', partnerId).single();
-            if (partner) {
-                const newPending = Math.max(0, (partner.earnings_pending || 0) - amount);
-                const newPaid = (partner.earnings_paid || 0) + amount;
-                const newTotal = (partner.earnings_total || 0) + amount;
-                await supabase.from('partners').update({ earnings_paid: newPaid, earnings_pending: newPending, earnings_total: newTotal }).eq('id', partnerId);
+            const { data: partner, error: fetchError } = await supabase.from('partners').select('earnings_paid, earnings_pending, earnings_total').eq('id', partnerId).single();
+
+            if (fetchError || !partner) {
+                console.error('Partner Fetch Error:', fetchError);
+                // Return success because status IS updated, but warn via console
+                return { success: true, warning: 'Status updated, but could not fetch partner stats.' };
+            }
+
+            const newPending = Math.max(0, (partner.earnings_pending || 0) - amount);
+            const newPaid = (partner.earnings_paid || 0) + amount;
+            const newTotal = (partner.earnings_total || 0) + amount;
+
+            const { error: updateError } = await supabase.from('partners').update({
+                earnings_paid: newPaid,
+                earnings_pending: newPending,
+                earnings_total: newTotal
+            }).eq('id', partnerId);
+
+            if (updateError) {
+                console.error('Partner Stats Update Error (RLS?):', updateError);
+                return { success: true, warning: 'Status updated, but Partner Totals failed to update: ' + updateError.message };
             }
         }
         return { success: true };
