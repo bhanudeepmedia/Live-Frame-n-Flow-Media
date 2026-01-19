@@ -77,9 +77,13 @@ const Overview = ({ partnerData, streak, user }: any) => {
     const instaPer = (instaLeads / totalForPie) * 100;
     const linkedInPer = (linkedInLeads / totalForPie) * 100;
 
-    // Monthly Earnings Goal
+    // Monthly Earnings Goal - Calculate from earningsHistory (source of truth)
     const monthlyGoal = 50000;
-    const currentEarnings = (partnerData.earnings.paid || 0) + (partnerData.earnings.pending || 0);
+    const earningsHistory = partnerData.earningsHistory || [];
+    const dynamicPaid = earningsHistory.filter((e: any) => e.status === 'paid').reduce((a: number, b: any) => a + Number(b.amount), 0);
+    const dynamicApproved = earningsHistory.filter((e: any) => e.status === 'approved').reduce((a: number, b: any) => a + Number(b.amount), 0);
+    const dynamicPending = earningsHistory.filter((e: any) => e.status === 'pending').reduce((a: number, b: any) => a + Number(b.amount), 0);
+    const currentEarnings = dynamicPaid + dynamicApproved + dynamicPending;
     const goalPer = Math.min(100, (currentEarnings / monthlyGoal) * 100);
 
     return (
