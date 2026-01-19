@@ -246,7 +246,8 @@ export const SupabaseBackend = {
             .from('partners')
             .select(`
                 *,
-                outreach_logs (*)
+                outreach_logs (*),
+                earnings_history (*)
             `);
 
         if (error || !partners) return [];
@@ -269,6 +270,12 @@ export const SupabaseBackend = {
                 paid: p.earnings_paid || 0,
                 pending: p.earnings_pending || 0
             },
+            earningsHistory: p.earnings_history ? p.earnings_history.map((e: any) => ({
+                id: e.id,
+                amount: e.amount,
+                date: e.date,
+                leadName: e.lead_name
+            })) : [],
             bankDetails: p.bank_details || {}
         }));
     },
@@ -291,11 +298,24 @@ export const SupabaseBackend = {
             .eq('partner_id', partnerId)
             .order('date', { ascending: false });
 
+        // Fetch Earnings History
+        const { data: earningsLogs } = await supabase
+            .from('earnings_history')
+            .select('*')
+            .eq('partner_id', partnerId)
+            .order('date', { ascending: false });
+
         return {
             id: partner.id,
             applicationId: partner.application_id,
             stage: partner.stage as any,
             outreachLogs: logs || [],
+            earningsHistory: earningsLogs ? earningsLogs.map((e: any) => ({
+                id: e.id,
+                amount: e.amount,
+                date: e.date,
+                leadName: e.lead_name
+            })) : [],
             earnings: {
                 total: partner.earnings_total || 0,
                 paid: partner.earnings_paid || 0,
@@ -303,6 +323,43 @@ export const SupabaseBackend = {
             },
             bankDetails: partner.bank_details || {}
         };
+    },
+
+    addEarning: async (partnerId: string, amount: number, date: string, leadName: string) => {
+        // 1. Insert History
+        const { error: logError } = await supabase
+            .from('earnings_history')
+            .insert({
+                partner_id: partnerId,
+                amount,
+                date,
+                lead_name: leadName
+            });
+
+        if (logError) return { success: false, error: logError.message };
+
+        // 2. Increment Partner Total Earnings AND Pending Earnings
+        // Use RPC or fetch-update. For now fetch-update.
+        const { data: partner } = await supabase
+            .from('partners')
+            .select('earnings_total, earnings_pending')
+            .eq('id', partnerId)
+            .single();
+
+        if (partner) {
+            const newTotal = (partner.earnings_total || 0) + Number(amount);
+            const newPending = (partner.earnings_pending || 0) + Number(amount);
+
+            await supabase
+                .from('partners')
+                .update({
+                    earnings_total: newTotal,
+                    earnings_pending: newPending
+                })
+                .eq('id', partnerId);
+        }
+
+        return { success: true };
     },
 
     updateProfile: async (userId: string, updates: { avatar_url?: string }) => {

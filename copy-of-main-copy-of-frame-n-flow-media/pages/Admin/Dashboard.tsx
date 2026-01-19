@@ -497,7 +497,8 @@ const AdminDashboard: React.FC = () => {
     const [selectedPartner, setSelectedPartner] = useState<any | null>(null); // For Partner Modal
     const [selectedApplicant, setSelectedApplicant] = useState<any | null>(null); // For Applicant Modal
     const [broadcastForm, setBroadcastForm] = useState({ title: '', message: '' });
-    const [broadcasts, setBroadcasts] = useState<any[]>([]); // New state
+    const [broadcasts, setBroadcasts] = useState<any[]>([]);
+    const [earningForm, setEarningForm] = useState({ leadName: '', amount: '', date: new Date().toISOString().split('T')[0] }); // New State
 
     useEffect(() => {
         const init = async () => {
@@ -543,6 +544,28 @@ const AdminDashboard: React.FC = () => {
         if (!confirm('Are you sure you want to PERMANENTLY DELETE this applicant? This cannot be undone.')) return;
         await SupabaseBackend.deleteApplication(appId);
         refreshData();
+    };
+
+    const handleAddEarning = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!selectedPartner) return;
+
+        await SupabaseBackend.addEarning(
+            selectedPartner.id,
+            parseFloat(earningForm.amount),
+            earningForm.date,
+            earningForm.leadName
+        );
+
+        alert('Earning added successfully!');
+        setEarningForm({ leadName: '', amount: '', date: new Date().toISOString().split('T')[0] });
+        refreshData();
+        // Close modal or refresh selected partner? 
+        // Need to refetch selected partner data to show new list instantly.
+        // For now refreshData updates lists, but selectedPartner is stale unless updated.
+        // I should re-select partner or just close modal. Re-selecting is hard without refetching logic here.
+        // I'll close logic later.
+        setSelectedPartner(null);
     };
 
     const handlePostBroadcast = async (e: React.FormEvent) => {
@@ -704,6 +727,55 @@ const AdminDashboard: React.FC = () => {
                                         <div className="text-xs text-muted">{selectedPartner.bankDetails?.bankName}</div>
                                     </div>
                                 </div>
+
+                                {/* EARNINGS MANAGEMENT */}
+                                <div className="bg-white/5 p-4 rounded-xl border border-white/5">
+                                    <h4 className="font-bold mb-4 flex items-center gap-2 text-green-400"><DollarSign size={16} /> Earnings Management</h4>
+
+                                    <form onSubmit={handleAddEarning} className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4">
+                                        <input
+                                            type="text"
+                                            placeholder="Lead Name"
+                                            className="bg-black/40 border border-white/10 rounded px-3 py-2 text-sm text-white"
+                                            value={earningForm.leadName}
+                                            onChange={e => setEarningForm({ ...earningForm, leadName: e.target.value })}
+                                            required
+                                        />
+                                        <input
+                                            type="number"
+                                            placeholder="Amount"
+                                            className="bg-black/40 border border-white/10 rounded px-3 py-2 text-sm text-white"
+                                            value={earningForm.amount}
+                                            onChange={e => setEarningForm({ ...earningForm, amount: e.target.value })}
+                                            required
+                                        />
+                                        <input
+                                            type="date"
+                                            className="bg-black/40 border border-white/10 rounded px-3 py-2 text-sm text-white"
+                                            value={earningForm.date}
+                                            onChange={e => setEarningForm({ ...earningForm, date: e.target.value })}
+                                            required
+                                        />
+                                        <button type="submit" className="bg-green-500 hover:bg-green-600 text-black font-bold rounded px-3 py-2 text-sm transition-colors">
+                                            Add
+                                        </button>
+                                    </form>
+
+                                    <div className="space-y-1 max-h-32 overflow-y-auto pr-1">
+                                        {selectedPartner.earningsHistory?.length > 0 ? (
+                                            selectedPartner.earningsHistory.map((e: any, i: number) => (
+                                                <div key={i} className="flex justify-between items-center text-xs p-2 bg-black/20 rounded border border-white/5">
+                                                    <span className="text-white/70">{e.leadName}</span>
+                                                    <div className="flex gap-3">
+                                                        <span className="text-muted">{new Date(e.date).toLocaleDateString()}</span>
+                                                        <span className="text-green-400 font-mono font-bold">₹{e.amount}</span>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : <div className="text-center text-xs text-muted py-2">No earnings recorded yet</div>}
+                                    </div>
+                                </div>
+
                                 <div>
                                     <h4 className="font-bold mb-2">Recent Logs</h4>
                                     <div className="space-y-2 max-h-40 overflow-y-auto border border-white/10 rounded-lg p-2">

@@ -41,11 +41,19 @@ export interface OutreachLog {
     notes?: string;
 }
 
+export interface EarningLog {
+    id: string;
+    amount: number;
+    date: string;
+    leadName: string;
+}
+
 export interface PartnerData {
     id: string; // matches User.partnerId
     applicationId: string;
     stage: 'Starter' | 'Connector' | 'Builder' | 'Closer' | 'Elite Partner';
     outreachLogs: OutreachLog[];
+    earningsHistory?: EarningLog[]; // New Field
     earnings: {
         total: number;
         paid: number;

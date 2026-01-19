@@ -623,6 +623,36 @@ const Dashboard: React.FC = () => {
                             <div className="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20 text-sm">
                                 ℹ️ Commissions are reviewed weekly. "Pending" amounts are estimates based on booked calls and may change upon final deal closure.
                             </div>
+
+                            <div className="mt-8">
+                                <h3 className="text-xl font-bold mb-4">Payout History</h3>
+                                <div className="bg-surface border border-white/5 rounded-xl overflow-hidden">
+                                    {partnerData.earningsHistory && partnerData.earningsHistory.length > 0 ? (
+                                        <table className="w-full text-left text-sm">
+                                            <thead className="bg-white/5 text-muted uppercase text-xs">
+                                                <tr>
+                                                    <th className="p-4">Date</th>
+                                                    <th className="p-4">Lead Name</th>
+                                                    <th className="p-4 text-right">Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-white/5">
+                                                {partnerData.earningsHistory.map((e: any) => (
+                                                    <tr key={e.id} className="hover:bg-white/5">
+                                                        <td className="p-4">{new Date(e.date).toLocaleDateString()}</td>
+                                                        <td className="p-4 font-bold">{e.leadName}</td>
+                                                        <td className="p-4 text-right font-mono text-green-400">
+                                                            {symbol}{e.amount}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    ) : (
+                                        <div className="p-8 text-center text-muted">No payout history available yet.</div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     )}
 
