@@ -212,8 +212,10 @@ const PartnersManager = ({
 const LeadsTable = ({ allLeads, getPartnerName, refreshData }: any) => {
     return (
         <div className="space-y-6 animate-fade-in">
-            <h2 className="text-3xl font-display font-bold">All Leads & Deals</h2>
-            <div className="bg-surface border border-white/10 rounded-xl overflow-hidden overflow-x-auto">
+            <h2 className="text-2xl md:text-3xl font-display font-bold">All Leads & Deals</h2>
+
+            {/* DESKTOP TABLE VIEW */}
+            <div className="hidden md:block bg-surface border border-white/10 rounded-xl overflow-hidden overflow-x-auto">
                 <table className="w-full text-left text-sm">
                     <thead className="bg-white/5 text-muted uppercase text-xs">
                         <tr>
@@ -254,6 +256,55 @@ const LeadsTable = ({ allLeads, getPartnerName, refreshData }: any) => {
                         ))}
                     </tbody>
                 </table>
+            </div>
+
+            {/* MOBILE CARD VIEW */}
+            <div className="md:hidden space-y-3">
+                {allLeads.length === 0 ? (
+                    <div className="bg-surface border border-white/10 rounded-xl p-8 text-center text-muted">No leads recorded.</div>
+                ) : allLeads.map((lead: any) => (
+                    <div key={lead.id} className="bg-surface border border-white/10 rounded-xl p-4 space-y-3">
+                        <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                                <div className="font-bold text-base">{lead.business_name}</div>
+                                <div className="text-xs text-muted mt-1">{lead.contact_person}</div>
+                            </div>
+                            <div className="flex flex-col items-end gap-1">
+                                <span className={`px-2 py-1 rounded text-xs whitespace-nowrap ${lead.status === 'Converted' ? 'bg-green-500/20 text-green-500' : 'bg-blue-500/10 text-blue-400'}`}>
+                                    {lead.status}
+                                </span>
+                                {lead.is_duplicate && <span className="bg-red-500/20 text-red-500 px-2 py-1 rounded text-xs">Duplicate</span>}
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                            <div>
+                                <div className="text-muted">Partner</div>
+                                <div className="font-semibold">{getPartnerName(lead.partner_id)}</div>
+                            </div>
+                            <div>
+                                <div className="text-muted">Source</div>
+                                <div className="font-semibold">{lead.source_platform}</div>
+                            </div>
+                            <div className="col-span-2">
+                                <div className="text-muted">Date</div>
+                                <div className="font-mono text-xs">{new Date(lead.created_at).toLocaleDateString()}</div>
+                            </div>
+                        </div>
+
+                        <div className="pt-2 border-t border-white/10">
+                            <button
+                                onClick={async () => {
+                                    await SupabaseBackend.updateLeadAdmin(lead.id, { is_duplicate: !lead.is_duplicate });
+                                    refreshData();
+                                }}
+                                className="w-full px-3 py-2 bg-white/5 rounded-lg hover:bg-white/10 text-xs font-bold transition-colors"
+                            >
+                                {lead.is_duplicate ? 'Un-Flag Duplicate' : 'Flag as Duplicate'}
+                            </button>
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     )
@@ -507,14 +558,14 @@ const ApplicationsManager = ({
     return (
         <div className="space-y-6 animate-fade-in">
             {/* HEADER & TABS */}
-            <div className="flex justify-between items-center">
-                <h2 className="text-3xl font-display font-bold">Applications</h2>
-                <div className="flex bg-white/5 rounded-lg p-1 gap-1">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+                <h2 className="text-2xl md:text-3xl font-display font-bold">Applications</h2>
+                <div className="flex bg-white/5 rounded-lg p-1 gap-1 overflow-x-auto">
                     {['pending', 'activation', 'rejected', 'all'].map(f => (
                         <button
                             key={f}
                             onClick={() => setFilter(f as any)}
-                            className={`px-4 py-2 rounded-md text-sm font-bold capitalize transition-all ${filter === f ? 'bg-accent text-black' : 'text-muted hover:text-white'}`}
+                            className={`px-3 md:px-4 py-2 rounded-md text-xs md:text-sm font-bold capitalize transition-all whitespace-nowrap ${filter === f ? 'bg-accent text-black' : 'text-muted hover:text-white'}`}
                         >
                             {f === 'activation' ? 'Onboarding' : f}
                             {(f === 'pending' && pendingApps.length > 0) && <span className="ml-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">{pendingApps.length}</span>}
@@ -524,8 +575,8 @@ const ApplicationsManager = ({
                 </div>
             </div>
 
-            {/* LIST */}
-            <div className="bg-surface border border-white/10 rounded-xl overflow-hidden overflow-x-auto">
+            {/* DESKTOP TABLE VIEW */}
+            <div className="hidden md:block bg-surface border border-white/10 rounded-xl overflow-hidden overflow-x-auto">
                 <table className="w-full text-left text-sm">
                     <thead className="bg-white/5 text-muted uppercase text-xs">
                         <tr>
@@ -560,14 +611,12 @@ const ApplicationsManager = ({
                                 <td className="p-4 text-right flex justify-end gap-2">
                                     <button onClick={() => setSelectedApplicant(app)} className="p-2 bg-white/5 rounded hover:bg-white/10 text-xs font-bold mr-2">View Profile</button>
 
-                                    {/* Action Buttons based on Status */}
                                     {app.status === 'pending' && (
                                         <>
                                             <button onClick={() => handleReviewApp(app.id, 'approved')} className="text-green-400 p-1 hover:bg-green-500/20 rounded"><CheckCircle size={16} /></button>
                                             <button onClick={() => handleReviewApp(app.id, 'rejected')} className="text-red-400 p-1 hover:bg-red-500/20 rounded"><XCircle size={16} /></button>
                                         </>
                                     )}
-                                    {/* Mail Button for Approved but not yet Partner (Active) */}
                                     {(app.status === 'approved') && (
                                         <>
                                             <button
@@ -585,8 +634,6 @@ const ApplicationsManager = ({
                                             <button onClick={() => handleDeleteApp(app.id)} className="text-red-400 p-1 hover:bg-red-500/20 rounded" title="Delete Applicant"><Trash2 size={16} /></button>
                                         </>
                                     )}
-
-                                    {/* STATUS: REJECTED */}
                                     {app.status === 'rejected' && (
                                         <>
                                             <button onClick={() => handleReviewApp(app.id, 'approved')} className="text-green-400 p-1 hover:bg-green-500/20 rounded" title="Re-Approve"><RotateCcw size={16} /></button>
@@ -600,10 +647,86 @@ const ApplicationsManager = ({
                 </table>
             </div>
 
+            {/* MOBILE CARD VIEW */}
+            <div className="md:hidden space-y-3">
+                {getList().length === 0 ? (
+                    <div className="bg-surface border border-white/10 rounded-xl p-8 text-center text-muted">No applications found in this category.</div>
+                ) : getList().map((app: any) => (
+                    <div key={app.id} className="bg-surface border border-white/10 rounded-xl p-4 space-y-3">
+                        <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                                <div className="font-bold text-base">{app.fullName}</div>
+                                <div className="text-xs text-muted mt-1">{app.email}</div>
+                                <div className="text-xs text-muted mt-1">{app.city} • {app.experience ? 'Experienced' : 'No Experience'}</div>
+                            </div>
+                            <span className={`px-2 py-1 rounded text-xs uppercase font-bold whitespace-nowrap ${app.status === 'approved' ? 'bg-green-500/20 text-green-500' :
+                                app.status === 'rejected' ? 'bg-red-500/20 text-red-500' :
+                                    'bg-yellow-500/20 text-yellow-500'
+                                }`}>
+                                {app.status}
+                            </span>
+                        </div>
+
+                        <div className="text-xs text-muted font-mono">
+                            Applied: {new Date(app.appliedAt).toLocaleDateString()}
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 pt-2 border-t border-white/10">
+                            <button onClick={() => setSelectedApplicant(app)} className="flex-1 min-w-[120px] px-3 py-2 bg-white/5 rounded-lg hover:bg-white/10 text-xs font-bold transition-colors">
+                                View Profile
+                            </button>
+
+                            {app.status === 'pending' && (
+                                <>
+                                    <button onClick={() => handleReviewApp(app.id, 'approved')} className="px-3 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 text-xs font-bold transition-colors flex items-center gap-1">
+                                        <CheckCircle size={14} /> Approve
+                                    </button>
+                                    <button onClick={() => handleReviewApp(app.id, 'rejected')} className="px-3 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 text-xs font-bold transition-colors flex items-center gap-1">
+                                        <XCircle size={14} /> Reject
+                                    </button>
+                                </>
+                            )}
+
+                            {app.status === 'approved' && (
+                                <>
+                                    <button
+                                        onClick={() => {
+                                            const subject = "Application Approved - Frame n Flow Media GPP";
+                                            const body = `Hello ${app.fullName.split(' ')[0]},\n\nWe are pleased to accept you into the Growth Partner Program.\n\nPlease activate your account by creating your credentials here:\n${window.location.origin}/#/growth-partner/signup\n\n(This link allows you to set your password)\n\nWelcome aboard,\nFrame n Flow Media Team`;
+                                            window.location.href = `mailto:${app.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                                        }}
+                                        className="px-3 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 text-xs font-bold transition-colors flex items-center gap-1"
+                                    >
+                                        <Mail size={14} /> Email
+                                    </button>
+                                    <button onClick={() => handleReviewApp(app.id, 'pending')} className="px-3 py-2 bg-yellow-500/20 text-yellow-400 rounded-lg hover:bg-yellow-500/30 text-xs font-bold transition-colors flex items-center gap-1">
+                                        <RotateCcw size={14} /> Revert
+                                    </button>
+                                    <button onClick={() => handleDeleteApp(app.id)} className="px-3 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 text-xs font-bold transition-colors flex items-center gap-1">
+                                        <Trash2 size={14} /> Delete
+                                    </button>
+                                </>
+                            )}
+
+                            {app.status === 'rejected' && (
+                                <>
+                                    <button onClick={() => handleReviewApp(app.id, 'approved')} className="px-3 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 text-xs font-bold transition-colors flex items-center gap-1">
+                                        <RotateCcw size={14} /> Re-Approve
+                                    </button>
+                                    <button onClick={() => handleDeleteApp(app.id)} className="px-3 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 text-xs font-bold transition-colors flex items-center gap-1">
+                                        <Trash2 size={14} /> Delete
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
             {/* DEFAULT MAIL TEMPLATE BOX */}
-            <div className="bg-surface border border-white/10 p-6 rounded-xl mt-8">
-                <h3 className="font-bold flex items-center gap-2 mb-4"><Mail size={18} /> Default Acceptance Template</h3>
-                <div className="bg-black/30 p-4 rounded-lg font-mono text-xs text-muted whitespace-pre-wrap select-all border border-white/5">
+            <div className="bg-surface border border-white/10 p-4 md:p-6 rounded-xl mt-8">
+                <h3 className="font-bold flex items-center gap-2 mb-4 text-sm md:text-base"><Mail size={18} /> Default Acceptance Template</h3>
+                <div className="bg-black/30 p-3 md:p-4 rounded-lg font-mono text-[10px] md:text-xs text-muted whitespace-pre-wrap select-all border border-white/5 overflow-x-auto">
                     {`Subject: Application Approved - Frame n Flow Media GPP
 
 Hello [Name],
