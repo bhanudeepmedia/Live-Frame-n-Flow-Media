@@ -86,7 +86,7 @@ const Apply: React.FC = () => {
 
     const nextStep = () => {
         // Simple Validation
-        if (step === 0 && (!formData.fullName || !formData.email || !formData.phone || !formData.linkedin || !formData.social)) return alert('Please fill all identity fields including social links.');
+        if (step === 0 && (!formData.fullName || !formData.email || !formData.phone)) return alert('Please fill all required identity fields.');
         if (step === 1 && (!formData.background)) return alert('Please select your background.');
         if (step === 2 && (!formData.city || !formData.country || formData.platforms.length === 0)) return alert('Please complete location and platforms.');
 
@@ -100,21 +100,32 @@ const Apply: React.FC = () => {
         if (!formData.reason) return alert('Please tell us why you want to join.');
 
         setStatus('submitting');
-        const { agreed, country, fullName, ...otherData } = formData;
+        const { agreed, country, fullName, linkedin, social, ...otherData } = formData;
 
         try {
-            await SupabaseBackend.submitApplication({
+            // Prepare submission data - only include social fields if they have values
+            const submissionData: any = {
                 ...otherData,
                 full_name: fullName,
-                city: `${formData.city}, ${formData.country}`,
-                linkedin_url: formData.linkedin,
-                social_url: formData.social
-            });
+                city: `${formData.city}, ${formData.country}`
+            };
+
+            // Only add social fields if provided (to handle cases where DB columns don't exist yet)
+            if (linkedin) submissionData.linkedin_url = linkedin;
+            if (social) submissionData.social_url = social;
+
+            await SupabaseBackend.submitApplication(submissionData);
             setStatus('success');
             setTimeout(() => navigate('/growth-partner/login'), 4000);
         } catch (err: any) {
-            console.error(err);
-            alert("Error: " + (err.message || "Submission failed. Ensure DB Schema is updated."));
+            console.error('Application submission error:', err);
+
+            // Check if error is due to missing columns
+            if (err.message?.includes('linkedin') || err.message?.includes('social')) {
+                alert("Database schema needs updating. Please contact admin to run: add_social_columns.sql");
+            } else {
+                alert("Error: " + (err.message || "Submission failed. Please try again."));
+            }
             setStatus('error');
         }
     };
