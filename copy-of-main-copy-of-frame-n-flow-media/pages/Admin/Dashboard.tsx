@@ -27,7 +27,9 @@ import {
     Linkedin,
     Globe,
     Trash2,
-    RotateCcw
+    RotateCcw,
+    Menu,
+    X
 } from 'lucide-react';
 
 // --- SUB-COMPONENTS DEFINED OUTSIDE TO PREVENT RE-RENDER FOCUS LOSS ---
@@ -170,7 +172,7 @@ const PartnersManager = ({
                 </div>
             </div>
 
-            <div className="bg-surface border border-white/10 rounded-xl overflow-hidden">
+            <div className="bg-surface border border-white/10 rounded-xl overflow-hidden overflow-x-auto">
                 <table className="w-full text-left text-sm">
                     <thead className="bg-white/5 text-muted uppercase text-xs">
                         <tr>
@@ -211,7 +213,7 @@ const LeadsTable = ({ allLeads, getPartnerName, refreshData }: any) => {
     return (
         <div className="space-y-6 animate-fade-in">
             <h2 className="text-3xl font-display font-bold">All Leads & Deals</h2>
-            <div className="bg-surface border border-white/10 rounded-xl overflow-hidden">
+            <div className="bg-surface border border-white/10 rounded-xl overflow-hidden overflow-x-auto">
                 <table className="w-full text-left text-sm">
                     <thead className="bg-white/5 text-muted uppercase text-xs">
                         <tr>
@@ -388,7 +390,7 @@ const CommissionsManager = ({ partners, getPartnerName, refreshData }: any) => {
             </AnimatePresence>
 
             {/* TABLE */}
-            <div className="bg-surface border border-white/10 rounded-xl overflow-hidden">
+            <div className="bg-surface border border-white/10 rounded-xl overflow-hidden overflow-x-auto">
                 <table className="w-full text-left text-sm">
                     <thead className="bg-white/5 text-muted uppercase text-xs">
                         <tr>
@@ -523,7 +525,7 @@ const ApplicationsManager = ({
             </div>
 
             {/* LIST */}
-            <div className="bg-surface border border-white/10 rounded-xl overflow-hidden">
+            <div className="bg-surface border border-white/10 rounded-xl overflow-hidden overflow-x-auto">
                 <table className="w-full text-left text-sm">
                     <thead className="bg-white/5 text-muted uppercase text-xs">
                         <tr>
@@ -639,7 +641,9 @@ const AdminDashboard: React.FC = () => {
     const [selectedApplicant, setSelectedApplicant] = useState<any | null>(null); // For Applicant Modal
     const [broadcastForm, setBroadcastForm] = useState({ title: '', message: '' });
     const [broadcasts, setBroadcasts] = useState<any[]>([]);
+
     const [earningForm, setEarningForm] = useState({ leadName: '', amount: '', date: new Date().toISOString().split('T')[0] }); // New State
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const init = async () => {
@@ -774,15 +778,15 @@ const AdminDashboard: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="h-10 w-px bg-indigo-500/20"></div>
-                            <div className="flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 border border-indigo-500/30 rounded-lg backdrop-blur-sm">
+                            <div className="h-10 w-px bg-indigo-500/20 hidden md:block"></div>
+                            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 border border-indigo-500/30 rounded-lg backdrop-blur-sm">
                                 <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-lg shadow-emerald-400/50"></div>
                                 <span className="text-xs font-semibold text-indigo-200">{user?.name}</span>
                             </div>
                         </div>
 
-                        {/* Navigation Tabs - Horizontal */}
-                        <div className="flex items-center gap-1.5">
+                        {/* Navigation Tabs - Horizontal (Desktop) */}
+                        <div className="hidden lg:flex items-center gap-1.5">
                             <button
                                 onClick={() => setActiveTab('overview')}
                                 className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'overview'
@@ -845,8 +849,8 @@ const AdminDashboard: React.FC = () => {
                             </button>
                         </div>
 
-                        {/* Right Actions */}
-                        <div className="flex items-center gap-3">
+                        {/* Right Actions (Desktop) */}
+                        <div className="hidden lg:flex items-center gap-3">
                             <button className="w-10 h-10 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 flex items-center justify-center text-slate-400 hover:text-indigo-300 transition-all border border-indigo-500/20">
                                 <Bell size={18} />
                             </button>
@@ -858,7 +862,68 @@ const AdminDashboard: React.FC = () => {
                                 Logout
                             </button>
                         </div>
+
+                        {/* Mobile Menu Toggle */}
+                        <button
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className="lg:hidden p-2 text-indigo-200 hover:bg-white/5 rounded-lg transition-colors"
+                        >
+                            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                        </button>
                     </div>
+
+                    {/* Mobile Menu Content */}
+                    <AnimatePresence>
+                        {isMobileMenuOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                className="lg:hidden absolute top-full left-0 w-full bg-slate-950/95 backdrop-blur-xl border-b border-indigo-500/20 shadow-2xl p-4 overflow-hidden z-50"
+                            >
+                                <div className="space-y-2">
+                                    <div className="flex items-center gap-2 px-3 py-3 bg-indigo-500/10 border border-indigo-500/20 rounded-lg mb-4">
+                                        <div className="w-2 h-2 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/50"></div>
+                                        <span className="text-sm font-semibold text-indigo-200">{user?.name} (Admin)</span>
+                                    </div>
+
+                                    {[
+                                        { id: 'overview', label: 'Command Center', icon: BarChart2 },
+                                        { id: 'partners', label: 'Partners', icon: Users },
+                                        { id: 'apps', label: 'Applications', icon: FileText },
+                                        { id: 'leads', label: 'Leads', icon: Briefcase },
+                                        { id: 'payouts', label: 'Commissions', icon: DollarSign },
+                                        { id: 'settings', label: 'Settings', icon: Settings }
+                                    ].map((item) => (
+                                        <button
+                                            key={item.id}
+                                            onClick={() => {
+                                                setActiveTab(item.id as any);
+                                                setIsMobileMenuOpen(false);
+                                            }}
+                                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all ${activeTab === item.id
+                                                ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/30'
+                                                : 'text-slate-400 hover:bg-white/5 hover:text-white border border-transparent'
+                                                }`}
+                                        >
+                                            <item.icon size={18} />
+                                            {item.label}
+                                        </button>
+                                    ))}
+
+                                    <div className="h-px bg-white/10 my-2"></div>
+
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all"
+                                    >
+                                        <LogOut size={18} />
+                                        Logout
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </nav>
 
