@@ -44,7 +44,16 @@ const Overview = ({
     handleDeleteBroadcast // New Prop
 }: any) => {
     const totalOutreach = partners.reduce((acc: any, p: any) => acc + p.outreachLogs.reduce((l: any, log: any) => l + log.count, 0), 0);
-    const totalRevenue = partners.reduce((acc: any, p: any) => acc + (p.earnings?.total || 0), 0);
+
+    // Calculate total revenue from earningsHistory (source of truth) instead of stale aggregate
+    const totalRevenue = partners.reduce((acc: any, p: any) => {
+        const earningsHistory = p.earningsHistory || [];
+        const partnerTotal = earningsHistory
+            .filter((e: any) => e.status === 'paid' || e.status === 'approved' || e.status === 'pending')
+            .reduce((sum: number, e: any) => sum + Number(e.amount), 0);
+        return acc + partnerTotal;
+    }, 0);
+
     const totalPendingPayout = allLeads.filter((l: any) => l.payout_status === 'pending' && l.status === 'Converted').reduce((acc: any, l: any) => acc + (l.potential_commission || 0), 0);
     const activePartners = partners.length;
 
