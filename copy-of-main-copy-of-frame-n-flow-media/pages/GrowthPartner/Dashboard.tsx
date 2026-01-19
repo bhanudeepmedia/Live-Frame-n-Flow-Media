@@ -262,23 +262,50 @@ const LeadsManager = ({ user }: any) => {
 
     const loadLeads = async () => {
         if (user?.partnerId) {
-            const data = await SupabaseBackend.getLeads(user.partnerId);
-            setLeads(data);
+            console.log('Loading leads for partner:', user.partnerId);
+            try {
+                const data = await SupabaseBackend.getLeads(user.partnerId);
+                console.log('Leads loaded:', data);
+                setLeads(data || []);
+            } catch (error) {
+                console.error('Error loading leads:', error);
+                setLeads([]);
+            }
+        } else {
+            console.error('No partnerId found:', user);
         }
     };
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!user?.partnerId) return;
+        if (!user?.partnerId) {
+            alert('Error: No partner ID found. Please log out and log back in.');
+            return;
+        }
 
-        await SupabaseBackend.addLead({
-            ...form,
-            partner_id: user.partnerId,
-            appointment_date: form.appointment_date ? new Date(form.appointment_date).toISOString() : null
-        });
-        setIsAdding(false);
-        setForm({ business_name: '', contact_person: '', source_platform: 'Instagram', status: 'Contacted', notes: '', appointment_date: '' });
-        loadLeads();
+        try {
+            console.log('Saving lead:', form);
+            const result = await SupabaseBackend.addLead({
+                ...form,
+                partner_id: user.partnerId,
+                appointment_date: form.appointment_date ? new Date(form.appointment_date).toISOString() : null
+            });
+
+            if (result.error) {
+                console.error('Error saving lead:', result.error);
+                alert('Failed to save lead: ' + result.error.message);
+                return;
+            }
+
+            console.log('Lead saved successfully:', result.data);
+            alert('Lead added successfully!');
+            setIsAdding(false);
+            setForm({ business_name: '', contact_person: '', source_platform: 'Instagram', status: 'Contacted', notes: '', appointment_date: '' });
+            loadLeads();
+        } catch (error: any) {
+            console.error('Exception saving lead:', error);
+            alert('Failed to save lead: ' + (error.message || 'Unknown error'));
+        }
     };
 
     const handleDelete = async (id: string) => {
@@ -520,9 +547,9 @@ const Dashboard: React.FC = () => {
     const handleSubmitLog = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user?.partnerId) return;
-        
+
         const result: any = await SupabaseBackend.logOutreach(user.partnerId, { ...logForm, date: new Date(logForm.date).toISOString() });
-        
+
         if (result && result.success) {
             alert('Daily log submitted successfully!');
             loadPartnerData(user.partnerId);
