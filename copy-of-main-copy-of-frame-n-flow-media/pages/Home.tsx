@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence } from 'framer-motion';
 import Button from '../components/Button';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { SERVICES, PROCESS_STEPS } from '../constants';
+// import { SERVICES, PROCESS_STEPS } from '../constants';
 import { CheckCircle2, FileSearch, Music, Sparkles, TrendingUp, ArrowRight, Laptop, Play, Camera, Aperture, PlayCircle, X, Search, Plus, Bot } from 'lucide-react';
 
 const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: string }> = ({ children, delay = 0, className = "" }) => (
