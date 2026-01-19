@@ -693,9 +693,9 @@ const Dashboard: React.FC = () => {
                                                 <span className="font-mono">{earningsList.filter((e: any) => e.status === 'paid').length}</span>
                                             </div>
                                             <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-                                                <span className="text-sm">Avg. Deal Value</span>
+                                                <span className="text-sm">Avg. Commission</span>
                                                 <span className="font-mono">{earningsList.length > 0 ? (
-                                                    symbol + Math.round(earningsList.reduce((a: number, b: any) => a + Number(b.dealValue), 0) / earningsList.length).toLocaleString()
+                                                    symbol + Math.round(earningsList.reduce((a: number, b: any) => a + Number(b.amount), 0) / earningsList.length).toLocaleString()
                                                 ) : '0'}</span>
                                             </div>
                                             <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
