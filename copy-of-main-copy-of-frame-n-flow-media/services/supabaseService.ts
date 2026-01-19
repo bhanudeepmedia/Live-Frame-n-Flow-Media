@@ -431,13 +431,57 @@ export const SupabaseBackend = {
     },
 
     updateLead: async (leadId: string, updates: any) => {
+        // Check if lead is within 1 hour
+        const { data: lead } = await supabase
+            .from('partner_leads')
+            .select('created_at')
+            .eq('id', leadId)
+            .single();
+
+        if (!lead) return { success: false, error: 'Lead not found' };
+
+        const createdAt = new Date(lead.created_at);
+        const now = new Date();
+        const hoursSinceCreation = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
+
+        if (hoursSinceCreation > 1) {
+            return { success: false, error: 'Cannot edit leads older than 1 hour' };
+        }
+
         const { error } = await supabase.from('partner_leads').update(updates).eq('id', leadId);
-        return { error };
+
+        if (error) {
+            return { success: false, error: error.message };
+        }
+
+        return { success: true };
     },
 
     deleteLead: async (leadId: string) => {
+        // Check if lead is within 1 hour
+        const { data: lead } = await supabase
+            .from('partner_leads')
+            .select('created_at')
+            .eq('id', leadId)
+            .single();
+
+        if (!lead) return { success: false, error: 'Lead not found' };
+
+        const createdAt = new Date(lead.created_at);
+        const now = new Date();
+        const hoursSinceCreation = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
+
+        if (hoursSinceCreation > 1) {
+            return { success: false, error: 'Cannot delete leads older than 1 hour' };
+        }
+
         const { error } = await supabase.from('partner_leads').delete().eq('id', leadId);
-        return { error };
+
+        if (error) {
+            return { success: false, error: error.message };
+        }
+
+        return { success: true };
     },
 
     // --- Partner Profile & Bank ---
@@ -497,6 +541,66 @@ export const SupabaseBackend = {
         await SupabaseBackend.updateStreak(partnerId);
 
         return { success: true, data };
+    },
+
+    updateOutreachLog: async (logId: string, updates: any) => {
+        // Check if log is within 1 hour
+        const { data: log } = await supabase
+            .from('outreach_logs')
+            .select('created_at')
+            .eq('id', logId)
+            .single();
+
+        if (!log) return { success: false, error: 'Log not found' };
+
+        const createdAt = new Date(log.created_at);
+        const now = new Date();
+        const hoursSinceCreation = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
+
+        if (hoursSinceCreation > 1) {
+            return { success: false, error: 'Cannot edit logs older than 1 hour' };
+        }
+
+        const { error } = await supabase
+            .from('outreach_logs')
+            .update(updates)
+            .eq('id', logId);
+
+        if (error) {
+            return { success: false, error: error.message };
+        }
+
+        return { success: true };
+    },
+
+    deleteOutreachLog: async (logId: string) => {
+        // Check if log is within 1 hour
+        const { data: log } = await supabase
+            .from('outreach_logs')
+            .select('created_at')
+            .eq('id', logId)
+            .single();
+
+        if (!log) return { success: false, error: 'Log not found' };
+
+        const createdAt = new Date(log.created_at);
+        const now = new Date();
+        const hoursSinceCreation = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
+
+        if (hoursSinceCreation > 1) {
+            return { success: false, error: 'Cannot delete logs older than 1 hour' };
+        }
+
+        const { error } = await supabase
+            .from('outreach_logs')
+            .delete()
+            .eq('id', logId);
+
+        if (error) {
+            return { success: false, error: error.message };
+        }
+
+        return { success: true };
     },
 
     // Streak Management

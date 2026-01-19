@@ -310,8 +310,13 @@ const LeadsManager = ({ user }: any) => {
 
     const handleDelete = async (id: string) => {
         if (!confirm('Delete this lead?')) return;
-        await SupabaseBackend.deleteLead(id);
-        loadLeads();
+        const result: any = await SupabaseBackend.deleteLead(id);
+        if (result.success) {
+            alert('Lead deleted successfully!');
+            loadLeads();
+        } else {
+            alert(result.error || 'Failed to delete lead');
+        }
     };
 
     return (
@@ -346,24 +351,42 @@ const LeadsManager = ({ user }: any) => {
                 </form>
             )}
 
-            <div className="grid gap-4">
-                {leads.length === 0 ? <div className="text-center text-muted py-10">No leads added yet.</div> : leads.map(lead => (
-                    <div key={lead.id} className="bg-surface border border-white/5 p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div>
-                            <div className="font-bold text-lg">{lead.business_name}</div>
-                            <div className="text-sm text-muted">{lead.contact_person} • {lead.source_platform}</div>
-                            {lead.notes && <div className="text-xs text-muted mt-1 italic">"{lead.notes}"</div>}
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${lead.status.toLowerCase().includes('converted') ? 'bg-green-500/20 text-green-500' :
-                                lead.status.toLowerCase().includes('lost') ? 'bg-red-500/20 text-red-500' : 'bg-blue-500/20 text-blue-500'
-                                }`}>
-                                {lead.status}
-                            </span>
-                            <button onClick={() => handleDelete(lead.id)} className="text-muted hover:text-red-500"><Trash2 size={16} /></button>
-                        </div>
-                    </div>
-                ))}
+            <div>
+                <p className="text-xs text-muted mb-4">💡 Leads can be deleted within 1 hour of entry</p>
+                <div className="grid gap-4">
+                    {leads.length === 0 ? <div className="text-center text-muted py-10">No leads added yet.</div> : leads.map(lead => {
+                        const createdAt = new Date(lead.created_at);
+                        const now = new Date();
+                        const hoursSinceCreation = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
+                        const canDelete = hoursSinceCreation <= 1;
+
+                        return (
+                            <div key={lead.id} className="bg-surface border border-white/5 p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div>
+                                    <div className="font-bold text-lg">{lead.business_name}</div>
+                                    <div className="text-sm text-muted">{lead.contact_person} • {lead.source_platform}</div>
+                                    {lead.notes && <div className="text-xs text-muted mt-1 italic">"{lead.notes}"</div>}
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${lead.status.toLowerCase().includes('converted') ? 'bg-green-500/20 text-green-500' :
+                                        lead.status.toLowerCase().includes('lost') ? 'bg-red-500/20 text-red-500' : 'bg-blue-500/20 text-blue-500'
+                                        }`}>
+                                        {lead.status}
+                                    </span>
+                                    {canDelete && (
+                                        <button
+                                            onClick={() => handleDelete(lead.id)}
+                                            className="p-2 bg-red-500/10 text-red-400 rounded hover:bg-red-500/20 transition-colors"
+                                            title="Delete lead"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );
@@ -843,27 +866,63 @@ const Dashboard: React.FC = () => {
                             </div>
 
                             <div className="space-y-4 pt-4 pb-20">
-                                <h3 className="font-bold text-xl">Recent Logs</h3>
+                                <div>
+                                    <h3 className="font-bold text-xl">Recent Logs</h3>
+                                    <p className="text-xs text-muted mt-1">💡 Logs can be edited or deleted within 1 hour of entry</p>
+                                </div>
                                 {partnerData.outreachLogs.length === 0 ? (
                                     <div className="text-center text-muted italic">No logs found.</div>
                                 ) : (
-                                    partnerData.outreachLogs.slice(0, 20).map((log: any) => (
-                                        <div key={log.id} className="bg-surface border border-white/5 p-4 rounded-xl flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-muted">
-                                                    {['Instagram', 'LinkedIn'].includes(log.medium) ? <Send size={18} /> : <Calendar size={18} />}
+                                    partnerData.outreachLogs.slice(0, 20).map((log: any) => {
+                                        const createdAt = new Date(log.created_at);
+                                        const now = new Date();
+                                        const hoursSinceCreation = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
+                                        const canEdit = hoursSinceCreation <= 1;
+
+                                        return (
+                                            <div key={log.id} className="bg-surface border border-white/5 p-4 rounded-xl flex items-center justify-between">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center text-muted">
+                                                        {['Instagram', 'LinkedIn'].includes(log.medium) ? <Send size={18} /> : <Calendar size={18} />}
+                                                    </div>
+                                                    <div>
+                                                        <div className="font-bold text-sm">{new Date(log.date).toLocaleDateString()}</div>
+                                                        <div className="text-xs text-muted">{log.medium} • {log.count} sent</div>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <div className="font-bold text-sm">{new Date(log.date).toLocaleDateString()}</div>
-                                                    <div className="text-xs text-muted">{log.medium} • {log.count} sent</div>
+                                                <div className="flex items-center gap-3">
+                                                    <div className="text-right">
+                                                        <div className="text-xs text-green-400 font-bold">{log.interested} Leads</div>
+                                                        <div className="text-[10px] text-muted">{log.appointments_booked || 0} Booked</div>
+                                                    </div>
+                                                    {canEdit && (
+                                                        <div className="flex gap-2">
+                                                            <button
+                                                                onClick={async () => {
+                                                                    if (confirm('Delete this log?')) {
+                                                                        const result: any = await SupabaseBackend.deleteOutreachLog(log.id);
+                                                                        if (result.success) {
+                                                                            alert('Log deleted successfully!');
+                                                                            if (user?.partnerId) {
+                                                                                await loadPartnerData(user.partnerId);
+                                                                                await checkStreak(user.partnerId);
+                                                                            }
+                                                                        } else {
+                                                                            alert(result.error || 'Failed to delete log');
+                                                                        }
+                                                                    }
+                                                                }}
+                                                                className="p-2 bg-red-500/10 text-red-400 rounded hover:bg-red-500/20 transition-colors"
+                                                                title="Delete log"
+                                                            >
+                                                                <Trash2 size={14} />
+                                                            </button>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <div className="text-xs text-green-400 font-bold">{log.interested} Leads</div>
-                                                <div className="text-[10px] text-muted">{log.appointments_booked || 0} Booked</div>
-                                            </div>
-                                        </div>
-                                    ))
+                                        );
+                                    })
                                 )}
                             </div>
                         </div>
