@@ -1,7 +1,12 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../components/Button';
-import { Target, Cpu, TrendingUp, Monitor, PenTool, Camera, ShieldCheck, Filter, Search, ShoppingCart, Code, PlayCircle, Users, MessageSquare } from 'lucide-react';
+import {
+  Target, Cpu, TrendingUp, Monitor, PenTool, Camera, ShieldCheck, Filter,
+  Search, ShoppingCart, Code, PlayCircle, Users, MessageSquare,
+  Bot, Calendar, Database, Mail, Star, Phone, DollarSign, Activity,
+  Layers, Zap, Globe, Lock, Workflow
+} from 'lucide-react';
 
 // --- ANIMATION COMPONENTS ---
 
@@ -23,7 +28,7 @@ const RevealText: React.FC<{ children: React.ReactNode, delay?: number, classNam
       initial={{ y: "100%" }}
       whileInView={{ y: 0 }}
       viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.8, delay, ease: [0.25, 1, 0.5, 1] }} // Cubic bezier for premium feel
+      transition={{ duration: 0.8, delay, ease: [0.25, 1, 0.5, 1] }}
     >
       {children}
     </motion.div>
@@ -44,13 +49,12 @@ const Highlight: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </span>
 );
 
-// --- ANIMATED VISUALS (MOBILE OPTIMIZED) ---
+// --- EXISTING VISUAL COMPONENTS (Marketing) ---
 
 const FunnelVisual = () => (
   <div className="relative w-full aspect-video bg-[#0a0a0a] rounded-xl border border-white/10 overflow-hidden shadow-2xl flex flex-col items-center justify-center p-4 md:p-8">
     <div className="absolute inset-0 bg-noise opacity-10" />
     <div className="relative z-10 flex flex-col items-center w-full max-w-xs">
-
       {/* Top Funnel */}
       <motion.div
         className="w-full h-12 md:h-16 bg-white/10 rounded-t-lg mb-1 flex items-center justify-center border border-white/5 relative overflow-hidden"
@@ -69,7 +73,6 @@ const FunnelVisual = () => (
         className="w-[85%] md:w-[80%] h-12 md:h-16 bg-white/10 mb-1 flex items-center justify-center border border-white/5 relative overflow-hidden clip-path-trapezoid"
       >
         <span className="text-[10px] md:text-xs text-white/50 uppercase tracking-widest relative z-10">Target Segment</span>
-        {/* Particles falling through */}
         {Array.from({ length: 5 }).map((_, i) => (
           <motion.div
             key={i}
@@ -86,7 +89,6 @@ const FunnelVisual = () => (
         <span className="text-[10px] md:text-xs text-accent font-bold uppercase tracking-widest">Qualified Leads</span>
       </div>
 
-      {/* Data Points - Stack on very small screens, row on others */}
       <div className="flex flex-wrap justify-center gap-2 mt-2">
         <motion.div className="px-2 py-1 rounded bg-[#0f172a] border border-white/10 text-[9px] md:text-[10px] text-white/40 font-mono" animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2, repeat: Infinity }}>
           Demographics
@@ -104,7 +106,6 @@ const FunnelVisual = () => (
 
 const ProductGenVisual = () => (
   <div className="relative w-full aspect-square md:aspect-video bg-[#0a0a0a] rounded-xl border border-white/10 overflow-hidden shadow-2xl flex flex-col md:flex-row">
-    {/* Left: Wireframe / Config - Hidden on very small mobile to save space or reduced */}
     <div className="w-full md:w-1/3 h-1/4 md:h-full border-b md:border-b-0 md:border-r border-white/10 p-4 flex flex-row md:flex-col space-x-4 md:space-x-0 md:space-y-4 bg-[#050505] items-center md:items-stretch">
       <div className="hidden md:block h-4 w-1/2 bg-white/10 rounded" />
       <div className="space-y-2 flex-1 md:flex-none">
@@ -119,19 +120,14 @@ const ProductGenVisual = () => (
         </motion.div>
       </div>
     </div>
-
-    {/* Right: The Product Image */}
     <div className="flex-1 h-3/4 md:h-full relative overflow-hidden group">
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
-        {/* Placeholder for Product - Luxury Jewelry */}
         <div className="relative w-full h-full">
           <img
             src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1000&auto=format&fit=crop"
             alt="Luxury Diamond Ring"
             className="w-full h-full object-cover shadow-2xl transition-all duration-1000 opacity-80"
           />
-
-          {/* AI Generation Effect: Scanning Line */}
           <motion.div
             className="absolute inset-0 bg-[#0a0a0a] z-10"
             animate={{ clipPath: ["inset(0 0 0 0)", "inset(0 0 0 100%)", "inset(0 0 0 0)"] }}
@@ -143,8 +139,6 @@ const ProductGenVisual = () => (
               ))}
             </div>
           </motion.div>
-
-          {/* Bright Scan Line */}
           <motion.div
             className="absolute inset-y-0 w-1 bg-accent shadow-[0_0_20px_rgba(34,211,238,0.8)] z-20"
             animate={{ left: ["0%", "100%", "0%"] }}
@@ -152,8 +146,6 @@ const ProductGenVisual = () => (
           />
         </div>
       </div>
-
-      {/* Floating Tag */}
       <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur border border-white/10 px-3 py-1 rounded text-[10px] md:text-xs text-white z-30">
         <span className="text-accent">AI_RENDERED</span>: Diamond_Ring_V2
       </div>
@@ -163,8 +155,6 @@ const ProductGenVisual = () => (
 
 const GuaranteeVisual = () => (
   <div className="relative w-full aspect-video bg-[#0a0a0a] rounded-xl border border-white/10 overflow-hidden shadow-2xl flex flex-col items-center justify-center bg-gradient-to-br from-green-900/10 to-transparent">
-
-    {/* Background Chart */}
     <div className="absolute inset-0 flex items-end justify-between px-4 md:px-8 pb-0 opacity-20 pointer-events-none">
       {[20, 40, 30, 50, 45, 70, 60, 90, 80, 100].map((h, i) => (
         <motion.div
@@ -176,8 +166,6 @@ const GuaranteeVisual = () => (
         />
       ))}
     </div>
-
-    {/* Central Badge */}
     <motion.div
       className="relative z-10 flex flex-col items-center"
       initial={{ scale: 0.8, opacity: 0 }}
@@ -191,7 +179,6 @@ const GuaranteeVisual = () => (
       <h3 className="text-xl md:text-2xl font-display font-bold text-white mb-1">100% REFUND</h3>
       <p className="text-[10px] md:text-sm text-accent tracking-widest uppercase font-bold">Guarantee</p>
     </motion.div>
-
     <motion.div
       className="mt-6 bg-white/5 border border-white/10 px-4 py-2 rounded-full text-[10px] md:text-xs text-white/60 text-center"
       animate={{ y: [0, 5, 0] }}
@@ -204,7 +191,6 @@ const GuaranteeVisual = () => (
 
 const WebDevVisual = () => (
   <div className="relative w-full aspect-square md:aspect-video bg-[#0a0a0a] rounded-xl border border-white/10 overflow-hidden shadow-2xl flex flex-col md:flex-row">
-    {/* Code Editor Side - STRICT BRAND COLORS */}
     <div className="w-full md:w-1/2 h-1/2 md:h-full bg-[#050505] p-4 font-mono text-[9px] md:text-[10px] text-white/70 leading-relaxed border-b md:border-b-0 md:border-r border-white/10 flex flex-col order-2 md:order-1">
       <div className="flex space-x-1.5 mb-2 md:mb-4">
         <div className="w-2 h-2 rounded-full bg-white/20" />
@@ -229,14 +215,10 @@ const WebDevVisual = () => (
         Deploying to Edge...
       </motion.div>
     </div>
-
-    {/* Preview Side - Dark Mode UI */}
     <div className="w-full md:w-1/2 h-1/2 md:h-full bg-[#0f172a] relative overflow-hidden flex flex-col order-1 md:order-2">
-      {/* Mock Browser Header */}
       <div className="w-full h-6 md:h-8 bg-[#1e293b] flex items-center px-4 border-b border-white/5">
         <div className="h-1.5 md:h-2 w-12 md:w-16 bg-white/10 rounded-full" />
       </div>
-      {/* Mock Content */}
       <div className="p-4 grid grid-cols-2 gap-3">
         <div className="aspect-square bg-white/5 rounded border border-white/5" />
         <div className="aspect-square bg-white/5 rounded border border-white/5" />
@@ -245,8 +227,6 @@ const WebDevVisual = () => (
           <span className="text-[8px] text-accent font-bold tracking-wider">CHECKOUT</span>
         </div>
       </div>
-
-      {/* Floating Success Indicator */}
       <motion.div
         className="absolute bottom-4 right-4 bg-accent text-black px-2 md:px-3 py-1 rounded shadow-[0_0_15px_rgba(34,211,238,0.3)] text-[10px] md:text-xs font-bold"
         initial={{ scale: 0 }}
@@ -262,9 +242,7 @@ const WebDevVisual = () => (
 const StorytellingVisual = () => (
   <div className="relative w-full aspect-square md:aspect-video bg-[#0a0a0a] rounded-xl border border-white/10 overflow-hidden shadow-2xl flex flex-col items-center justify-center p-4 md:p-8">
     <div className="absolute inset-0 bg-noise opacity-10" />
-
     <div className="relative z-10 w-full max-w-md flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
-      {/* Storyteller Node */}
       <motion.div
         className="relative z-20 flex flex-col items-center"
         animate={{ scale: [1, 1.05, 1] }}
@@ -275,23 +253,15 @@ const StorytellingVisual = () => (
         </div>
         <div className="px-2 md:px-3 py-1 bg-white/5 rounded-full text-[8px] md:text-[10px] text-white/50 uppercase tracking-widest border border-white/5">Brand Narrative</div>
       </motion.div>
-
-      {/* Connection Lines - Vertical on Mobile, Horizontal on Desktop */}
       <div className="relative w-px h-12 md:w-auto md:h-px md:absolute md:top-8 md:left-16 md:right-16 bg-white/10 flex-shrink-0">
         <motion.div
           className="w-full h-full bg-accent shadow-[0_0_10px_rgba(34,211,238,0.5)]"
-          animate={{
-            scaleY: [0, 1, 0], // Mobile
-            scaleX: [0, 1, 0] // Desktop override handled below
-          }}
+          animate={{ scaleY: [0, 1, 0], scaleX: [0, 1, 0] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           style={{ transformOrigin: "top" }}
         />
-        {/* Desktop specific animation override via style/class is tricky in strict TSX logic without media query hooks, but let's approximate with a responsive utility div */}
         <div className="hidden md:block absolute inset-0 bg-accent shadow-[0_0_10px_rgba(34,211,238,0.5)] animate-pulse" />
       </div>
-
-      {/* Audience Nodes */}
       <div className="flex flex-row md:flex-col gap-4">
         {[1, 2, 3].map((i) => (
           <motion.div
@@ -316,8 +286,6 @@ const StorytellingVisual = () => (
         ))}
       </div>
     </div>
-
-    {/* Message Bubbles Floating */}
     <motion.div
       className="absolute top-4 right-4 md:top-10 md:left-1/3 bg-white/5 border border-white/10 px-2 py-1 rounded text-[8px] md:text-[10px] text-white/40"
       animate={{ y: [-5, 0, -5], opacity: [0, 1, 0] }}
@@ -330,9 +298,7 @@ const StorytellingVisual = () => (
 
 const OnsiteVisual = () => (
   <div className="relative w-full aspect-video bg-[#0a0a0a] rounded-xl border border-white/10 overflow-hidden shadow-2xl flex items-center justify-center relative group">
-    {/* Viewfinder Overlay */}
     <div className="absolute inset-0 z-20 pointer-events-none p-4 md:p-6 flex flex-col justify-between">
-      {/* Top Bar */}
       <div className="flex justify-between items-start">
         <div className="flex flex-col space-y-1">
           <div className="text-red-500 font-bold animate-pulse text-[10px] md:text-xs tracking-widest flex items-center">
@@ -345,16 +311,12 @@ const OnsiteVisual = () => (
           <div className="px-1.5 py-0.5 border border-white/30 text-[9px] md:text-[10px] text-white/70 rounded">RAW</div>
         </div>
       </div>
-
-      {/* Crosshairs */}
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-4 h-4 border border-white/30 opacity-50 relative">
           <div className="absolute top-1/2 -left-2 w-8 h-px bg-white/30" />
           <div className="absolute left-1/2 -top-2 h-8 w-px bg-white/30" />
         </div>
       </div>
-
-      {/* Bottom Bar */}
       <div className="flex justify-between items-end">
         <div className="flex space-x-2 md:space-x-4 text-[9px] md:text-[10px] font-mono text-white/50">
           <span>ISO 800</span>
@@ -366,17 +328,12 @@ const OnsiteVisual = () => (
         </div>
       </div>
     </div>
-
-    {/* Moving Background Image */}
     <motion.div
       className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524230572899-a752b3835840?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-60 grayscale group-hover:grayscale-0 transition-all duration-700"
       animate={{ scale: [1, 1.1, 1] }}
       transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
     />
-
-    {/* Dark overlay for text readability */}
     <div className="absolute inset-0 bg-black/40 z-10" />
-
     <div className="relative z-30 text-center border border-white/20 bg-black/60 backdrop-blur-md p-4 md:p-6 rounded-2xl mx-4 md:mx-0">
       <Camera size={24} className="text-accent mx-auto mb-2 md:w-8 md:h-8" />
       <h3 className="text-lg md:text-xl font-bold text-white mb-1">ONSITE PRODUCTION</h3>
@@ -385,210 +342,427 @@ const OnsiteVisual = () => (
   </div>
 );
 
-const Services: React.FC = () => {
-  return (
-    <div className="pt-24 md:pt-32 min-h-screen bg-background overflow-x-hidden pb-20">
+// --- NEW VISUAL COMPONENTS (Automation) ---
 
-      {/* HEADER */}
-      <div className="container mx-auto px-6 mb-16 md:mb-24 relative">
-        <motion.div
-          className="max-w-4xl"
-        >
+const ChatbotVisual = () => (
+  <div className="relative w-full aspect-square md:aspect-video bg-[#0a0a0a] rounded-xl border border-white/10 overflow-hidden shadow-2xl flex flex-col">
+    <div className="bg-[#1e1e1e] px-4 py-2 border-b border-white/5 flex items-center justify-between">
+      <div className="flex items-center space-x-2">
+        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+        <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+      </div>
+      <div className="text-[10px] text-white/40 font-mono">AI_Assistant_Active</div>
+    </div>
+    <div className="p-4 flex-1 space-y-3 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a0a0a]/50 pointer-events-none z-10"></div>
+
+      <motion.div initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="flex justify-start">
+        <div className="bg-white/10 px-3 py-2 rounded-t-lg rounded-br-lg rounded-bl-none max-w-[80%] text-xs text-white/80">
+          Hi! How can I help you scale your business today?
+        </div>
+      </motion.div>
+      <motion.div initial={{ opacity: 0, x: 10 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 1.0 }} className="flex justify-end">
+        <div className="bg-accent/20 border border-accent/20 px-3 py-2 rounded-t-lg rounded-bl-lg rounded-br-none max-w-[80%] text-xs text-white">
+          I need automated booking for my dental clinic.
+        </div>
+      </motion.div>
+      <motion.div initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 1.8 }} className="flex justify-start">
+        <div className="bg-white/10 px-3 py-2 rounded-t-lg rounded-br-lg rounded-bl-none max-w-[80%] text-xs text-white/80">
+          Understood. I can set up a 24/7 scheduler linked to your calendar. Ready to see a demo?
+        </div>
+      </motion.div>
+
+      <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 2.5 }} className="flex justify-center mt-4">
+        <div className="px-3 py-1 bg-accent rounded text-[10px] text-black font-bold animate-pulse">
+          Lead Captured
+        </div>
+      </motion.div>
+    </div>
+  </div>
+)
+
+const Services: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'marketing' | 'automation'>('marketing');
+
+  return (
+    <div className="pt-24 md:pt-32 min-h-screen bg-background overflow-x-hidden pb-20 font-sans">
+
+      {/* HEADER WITH TABS */}
+      <div className="container mx-auto px-6 mb-12 md:mb-16 relative z-10">
+        <div className="flex flex-col items-center justify-center text-center">
           <RevealText>
             <span className="text-accent uppercase tracking-widest text-xs font-bold mb-4 block">Our Expertise</span>
           </RevealText>
           <RevealText delay={0.1}>
             <h1 className="text-4xl md:text-7xl font-display font-bold mb-8 leading-tight">
-              Complete Marketing <br /> Infrastructure.
+              {activeTab === 'marketing' ? 'Complete Marketing Infrastructure' : 'AI Automations for Growth'}
             </h1>
           </RevealText>
-          <RevealText delay={0.2}>
-            <p className="text-lg md:text-xl text-white/60 max-w-2xl font-light leading-relaxed">
-              We don't offer disparate services. We offer a cohesive ecosystem designed to move your business from obscurity to authority.
-            </p>
-          </RevealText>
-        </motion.div>
-      </div>
 
-      {/* SERVICE SECTIONS */}
-      <div className="space-y-24 md:space-y-32 container mx-auto px-6">
-
-        {/* 1. BUSINESS INTELLIGENCE */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          <FadeIn>
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6 border border-white/10">
-              <Filter size={24} className="md:w-7 md:h-7" />
-            </div>
-            <RevealText>
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Business Intelligence & Research</h2>
-            </RevealText>
-            <div className="space-y-6 text-lg text-white/60 font-light">
-              <RevealText delay={0.1}>
-                <p>
-                  Before we write a single headline, we map the territory. We use proprietary AI tools to analyze your competitors' ad spend, keyword strategies, and funnel leaks.
-                </p>
-              </RevealText>
-              <RevealText delay={0.2}>
-                <p>
-                  We build detailed <strong className="text-white">customer avatars</strong> based on real behavioral data, not assumptions. This ensures every dollar spent targets a high-intent buyer.
-                </p>
-              </RevealText>
-            </div>
-          </FadeIn>
-          <FadeIn delay={0.2} className="relative">
-            <FunnelVisual />
-          </FadeIn>
-        </div>
-
-        {/* 3. AI PRODUCT VISUALS */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center lg:flex-row-reverse">
-          <FadeIn delay={0.2} className="lg:order-2">
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6 border border-white/10">
-              <Cpu size={24} className="md:w-7 md:h-7" />
-            </div>
-            <RevealText>
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">AI Product Visuals</h2>
-            </RevealText>
-            <div className="space-y-6 text-lg text-white/60 font-light">
-              <RevealText delay={0.1}>
-                <p className="font-medium text-white">Jewelry. Furniture. Cosmetics. Tech.</p>
-              </RevealText>
-              <RevealText delay={0.2}>
-                <p>
-                  Stop spending <Highlight>$10,000+ on physical photoshoots</Highlight>. We train AI models on your specific product SKUs to generate infinite high-fidelity lifestyle imagery.
-                </p>
-              </RevealText>
-              <RevealText delay={0.3}>
-                <p>
-                  Need your diamond ring on a model's hand or floating in a zero-gravity void? Done. Instantly and photorealistically.
-                </p>
-              </RevealText>
-            </div>
-          </FadeIn>
-          <FadeIn className="lg:order-1">
-            <ProductGenVisual />
-          </FadeIn>
-        </div>
-
-        {/* 4. GROWTH & GUARANTEE */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          <FadeIn>
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6 border border-white/10">
-              <TrendingUp size={24} className="md:w-7 md:h-7" />
-            </div>
-            <RevealText>
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Growth & Lead Systems</h2>
-            </RevealText>
-            <div className="space-y-6 text-lg text-white/60 font-light">
-              <RevealText delay={0.1}>
-                <p>
-                  We build automated acquisition systems that run 24/7. From cold outreach to warm retargeting, we manage the entire lifecycle.
-                </p>
-              </RevealText>
-              <FadeIn delay={0.3}>
-                <div className="p-6 bg-accent/5 border border-accent/20 rounded-xl mt-4">
-                  <h4 className="text-accent font-bold text-lg mb-2">Our Performance Promise</h4>
-                  <p className="text-white">
-                    We are so confident in our systems that we offer a <Highlight>100% Refund Guarantee</Highlight>. If we don't generate qualified leads for your business, we refund our service fee. No questions asked.
-                  </p>
-                </div>
-              </FadeIn>
-            </div>
-          </FadeIn>
-          <FadeIn delay={0.2}>
-            <GuaranteeVisual />
-          </FadeIn>
-        </div>
-
-        {/* 5. WEB DEVELOPMENT */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center lg:flex-row-reverse">
-          <FadeIn delay={0.2} className="lg:order-2">
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6 border border-white/10">
-              <Code size={24} className="md:w-7 md:h-7" />
-            </div>
-            <RevealText>
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Web Design & Development</h2>
-            </RevealText>
-            <div className="space-y-6 text-lg text-white/60 font-light">
-              <RevealText delay={0.1}>
-                <p>
-                  Your website is your 24/7 salesperson. We build lightning-fast, conversion-optimized sites using modern <Highlight>dark-mode aesthetics</Highlight> and fluid interactions.
-                </p>
-              </RevealText>
-              <RevealText delay={0.2}>
-                <ul className="space-y-2">
-                  <li className="flex items-center space-x-2 text-white">
-                    <div className="w-1.5 h-1.5 bg-accent rounded-full" /> <span><strong>E-Commerce Brands</strong> (Shopify, Custom)</span>
-                  </li>
-                  <li className="flex items-center space-x-2 text-white">
-                    <div className="w-1.5 h-1.5 bg-accent rounded-full" /> <span><strong>Service Providers</strong> (Consultants, Agencies, SaaS)</span>
-                  </li>
-                </ul>
-              </RevealText>
-            </div>
-          </FadeIn>
-          <FadeIn className="lg:order-1">
-            <WebDevVisual />
-          </FadeIn>
-        </div>
-
-        {/* 6. BRAND STRATEGY */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          <FadeIn>
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6 border border-white/10">
-              <PenTool size={24} className="md:w-7 md:h-7" />
-            </div>
-            <RevealText>
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Brand Strategy & Narrative</h2>
-            </RevealText>
-            <div className="space-y-6 text-lg text-white/60 font-light">
-              <RevealText delay={0.1}>
-                <p>
-                  A logo is not a brand. A brand is a story that your audience tells themselves about you. We craft that narrative.
-                </p>
-              </RevealText>
-              <RevealText delay={0.2}>
-                <p>
-                  We move beyond static documents to create a living brand strategy that resonates emotionally. We map the journey from stranger to loyal advocate through the power of <Highlight>storytelling</Highlight>.
-                </p>
-              </RevealText>
-            </div>
-          </FadeIn>
-          <FadeIn delay={0.2}>
-            <StorytellingVisual />
-          </FadeIn>
-        </div>
-
-        {/* 7. ONSITE SHOOTS */}
-        <div className="bg-surfaceHighlight rounded-3xl p-8 md:p-12 border border-white/5 relative overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <RevealText>
-                <h2 className="text-2xl md:text-3xl font-display font-bold mb-4">Onsite Production</h2>
-              </RevealText>
-              <RevealText delay={0.1}>
-                <p className="text-white/60 mb-6">
-                  For brands requiring physical presence, we offer premium onsite videography and photography teams. We handle scripting, directing, shooting, and editing.
-                </p>
-              </RevealText>
-              <FadeIn delay={0.3}>
-                <div className="inline-block bg-white/10 px-4 py-2 rounded text-sm text-white font-bold border border-white/10">
-                  📍 Available exclusively in India
-                </div>
-              </FadeIn>
-            </div>
-            <OnsiteVisual />
+          {/* TABS */}
+          <div className="inline-flex items-center p-1 bg-white/5 border border-white/10 rounded-full relative">
+            <div
+              className={`absolute inset-y-1 rounded-full transition-all duration-500 ease-out ${activeTab === 'marketing' ? 'left-1 w-[calc(50%-4px)] bg-accent/20 border border-accent/30' : 'left-[50%] w-[calc(50%-4px)] bg-accent/20 border border-accent/30'}`}
+            ></div>
+            <button
+              onClick={() => setActiveTab('marketing')}
+              className={`relative z-10 px-6 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'marketing' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
+            >
+              Marketing
+            </button>
+            <button
+              onClick={() => setActiveTab('automation')}
+              className={`relative z-10 px-6 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'automation' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
+            >
+              Automation
+            </button>
           </div>
         </div>
-
       </div>
 
-      <div className="mt-32 text-center">
-        <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>Start Your Project</Button>
-      </div>
+      {/* CONTENT SWITCHER */}
+      <AnimatePresence mode='wait'>
+        {activeTab === 'marketing' && (
+          <motion.div
+            key="marketing"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-24 md:space-y-32 container mx-auto px-6"
+          >
+            {/* EXISTING MARKETING CONTENT */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+              <FadeIn>
+                <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6 border border-white/10">
+                  <Filter size={24} className="md:w-7 md:h-7" />
+                </div>
+                <RevealText>
+                  <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Business Intelligence & Research</h2>
+                </RevealText>
+                <div className="space-y-6 text-lg text-white/60 font-light">
+                  <RevealText delay={0.1}>
+                    <p>
+                      Before we write a single headline, we map the territory. We use proprietary AI tools to analyze your competitors' ad spend, keyword strategies, and funnel leaks.
+                    </p>
+                  </RevealText>
+                  <RevealText delay={0.2}>
+                    <p>
+                      We build detailed <strong className="text-white">customer avatars</strong> based on real behavioral data, not assumptions. This ensures every dollar spent targets a high-intent buyer.
+                    </p>
+                  </RevealText>
+                </div>
+              </FadeIn>
+              <FadeIn delay={0.2} className="relative">
+                <FunnelVisual />
+              </FadeIn>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center lg:flex-row-reverse">
+              <FadeIn delay={0.2} className="lg:order-2">
+                <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6 border border-white/10">
+                  <Cpu size={24} className="md:w-7 md:h-7" />
+                </div>
+                <RevealText>
+                  <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">AI Product Visuals</h2>
+                </RevealText>
+                <div className="space-y-6 text-lg text-white/60 font-light">
+                  <RevealText delay={0.1}>
+                    <p className="font-medium text-white">Jewelry. Furniture. Cosmetics. Tech.</p>
+                  </RevealText>
+                  <RevealText delay={0.2}>
+                    <p>
+                      Stop spending <Highlight>$10,000+ on physical photoshoots</Highlight>. We train AI models on your specific product SKUs to generate infinite high-fidelity lifestyle imagery.
+                    </p>
+                  </RevealText>
+                  <RevealText delay={0.3}>
+                    <p>
+                      Need your diamond ring on a model's hand or floating in a zero-gravity void? Done. Instantly and photorealistically.
+                    </p>
+                  </RevealText>
+                </div>
+              </FadeIn>
+              <FadeIn className="lg:order-1">
+                <ProductGenVisual />
+              </FadeIn>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+              <FadeIn>
+                <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6 border border-white/10">
+                  <TrendingUp size={24} className="md:w-7 md:h-7" />
+                </div>
+                <RevealText>
+                  <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Growth & Lead Systems</h2>
+                </RevealText>
+                <div className="space-y-6 text-lg text-white/60 font-light">
+                  <RevealText delay={0.1}>
+                    <p>
+                      We build automated acquisition systems that run 24/7. From cold outreach to warm retargeting, we manage the entire lifecycle.
+                    </p>
+                  </RevealText>
+                  <FadeIn delay={0.3}>
+                    <div className="p-6 bg-accent/5 border border-accent/20 rounded-xl mt-4">
+                      <h4 className="text-accent font-bold text-lg mb-2">Our Performance Promise</h4>
+                      <p className="text-white">
+                        We are so confident in our systems that we offer a <Highlight>100% Refund Guarantee</Highlight>. If we don't generate qualified leads for your business, we refund our service fee. No questions asked.
+                      </p>
+                    </div>
+                  </FadeIn>
+                </div>
+              </FadeIn>
+              <FadeIn delay={0.2}>
+                <GuaranteeVisual />
+              </FadeIn>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center lg:flex-row-reverse">
+              <FadeIn delay={0.2} className="lg:order-2">
+                <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6 border border-white/10">
+                  <Code size={24} className="md:w-7 md:h-7" />
+                </div>
+                <RevealText>
+                  <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Web Design & Development</h2>
+                </RevealText>
+                <div className="space-y-6 text-lg text-white/60 font-light">
+                  <RevealText delay={0.1}>
+                    <p>
+                      Your website is your 24/7 salesperson. We build lightning-fast, conversion-optimized sites using modern <Highlight>dark-mode aesthetics</Highlight> and fluid interactions.
+                    </p>
+                  </RevealText>
+                  <RevealText delay={0.2}>
+                    <ul className="space-y-2">
+                      <li className="flex items-center space-x-2 text-white">
+                        <div className="w-1.5 h-1.5 bg-accent rounded-full" /> <span><strong>E-Commerce Brands</strong> (Shopify, Custom)</span>
+                      </li>
+                      <li className="flex items-center space-x-2 text-white">
+                        <div className="w-1.5 h-1.5 bg-accent rounded-full" /> <span><strong>Service Providers</strong> (Consultants, Agencies, SaaS)</span>
+                      </li>
+                    </ul>
+                  </RevealText>
+                </div>
+              </FadeIn>
+              <FadeIn className="lg:order-1">
+                <WebDevVisual />
+              </FadeIn>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+              <FadeIn>
+                <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6 border border-white/10">
+                  <PenTool size={24} className="md:w-7 md:h-7" />
+                </div>
+                <RevealText>
+                  <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Brand Strategy & Narrative</h2>
+                </RevealText>
+                <div className="space-y-6 text-lg text-white/60 font-light">
+                  <RevealText delay={0.1}>
+                    <p>
+                      A logo is not a brand. A brand is a story that your audience tells themselves about you. We craft that narrative.
+                    </p>
+                  </RevealText>
+                  <RevealText delay={0.2}>
+                    <p>
+                      We move beyond static documents to create a living brand strategy that resonates emotionally. We map the journey from stranger to loyal advocate through the power of <Highlight>storytelling</Highlight>.
+                    </p>
+                  </RevealText>
+                </div>
+              </FadeIn>
+              <FadeIn delay={0.2}>
+                <StorytellingVisual />
+              </FadeIn>
+            </div>
+
+            <div className="bg-surfaceHighlight rounded-3xl p-8 md:p-12 border border-white/5 relative overflow-hidden">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                  <RevealText>
+                    <h2 className="text-2xl md:text-3xl font-display font-bold mb-4">Onsite Production</h2>
+                  </RevealText>
+                  <RevealText delay={0.1}>
+                    <p className="text-white/60 mb-6">
+                      For brands requiring physical presence, we offer premium onsite videography and photography teams. We handle scripting, directing, shooting, and editing.
+                    </p>
+                  </RevealText>
+                  <FadeIn delay={0.3}>
+                    <div className="inline-block bg-white/10 px-4 py-2 rounded text-sm text-white font-bold border border-white/10">
+                      📍 Available exclusively in India
+                    </div>
+                  </FadeIn>
+                </div>
+                <OnsiteVisual />
+              </div>
+            </div>
+
+            <div className="text-center mt-20">
+              <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>Start Your Project</Button>
+            </div>
+          </motion.div>
+        )}
+
+        {activeTab === 'automation' && (
+          <motion.div
+            key="automation"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-32 container mx-auto px-6"
+          >
+            {/* HERO SUBTEXT & CTA */}
+            <div className="text-center max-w-3xl mx-auto -mt-16">
+              <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed mb-8">
+                Automate conversations, bookings, reviews, follow-ups, and lead management using intelligent AI systems designed to scale your business operations 24/7.
+              </p>
+              <div className="flex flex-col md:flex-row gap-4 justify-center">
+                <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>👉 Book Free Automation Audit</Button>
+                <button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'} className="px-6 py-3 border border-white/20 hover:bg-white/5 rounded-full font-bold transition-all text-white">
+                  Talk to AI Specialist
+                </button>
+              </div>
+            </div>
+
+            {/* WHAT IS AI AUTOMATION */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <FadeIn>
+                <h2 className="text-3xl font-display font-bold mb-6">What Is Business AI Automation?</h2>
+                <p className="text-white/60 text-lg leading-relaxed mb-6">
+                  AI automation replaces manual customer interactions, follow-ups, appointment scheduling, and lead management with intelligent systems that work 24/7.
+                </p>
+                <ul className="space-y-4">
+                  {[
+                    "Respond instantly to inquiries",
+                    "Book appointments automatically",
+                    "Capture leads from all platforms",
+                    "Follow up without human intervention",
+                    "Scale without increasing staff"
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3 text-white/80">
+                      <div className="w-1.5 h-1.5 bg-accent rounded-full"></div>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </FadeIn>
+              <FadeIn delay={0.2}>
+                <ChatbotVisual />
+              </FadeIn>
+            </div>
+
+            {/* CORE FEATURE GRID */}
+            <div>
+              <h2 className="text-3xl font-display font-bold mb-12 text-center">Core Automation Services</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                  { icon: MessageSquare, title: "AI Chatbots (Social)", desc: "Auto-reply to DMs on Instagram, FB, WhatsApp & Website. Qualify leads & book meetings." },
+                  { icon: Bot, title: "AI Voice Agents", desc: "Voice-based assistants that handle calls, answer FAQs, and book appointments 24/7." },
+                  { icon: Calendar, title: "Auto-Booking System", desc: "Syncs with calendars, prevents double bookings, and sends automated reminders." },
+                  { icon: Database, title: "Lead Capture & CRM", desc: "Centralizes leads from forms, chats, and calls into one organized dashboard." },
+                  { icon: Activity, title: "Multi-Channel Follow-up", desc: "Automated SMS, Email, and WhatsApp sequences to nurture leads instantly." },
+                  { icon: Star, title: "Google Review System", desc: "Automatically requests reviews post-service to boost your reputation." },
+                  { icon: Layers, title: "AI Review Replies", desc: "Smart AI responses to positive & negative reviews to maintain brand image." },
+                  { icon: Phone, title: "Missed Call Text-Back", desc: "Instantly texts callers when you miss a call, capturing potential lost revenue." },
+                  { icon: Mail, title: "AI Email Marketing", desc: "Personalized cold outreach and nurturing campaigns that feel human." },
+                  { icon: Filter, title: "Funnel Automation", desc: "Seamless lead flows from landing pages to thank-you pages and CRM sync." },
+                  { icon: DollarSign, title: "Payment Automation", desc: "Auto-generate invoices and payment links after bookings or services." },
+                  { icon: Workflow, title: "Internal Workflows", desc: "Slack/WhatsApp alerts for your team when high-value leads arrive." },
+                  { icon: Zap, title: "Analytics & ROI", desc: "Track where every lead comes from and measure real dollar returns." }
+                ].map((feature, i) => {
+                  const Icon = feature.icon;
+                  return (
+                    <FadeIn key={i} delay={i * 0.05} className="bg-surface border border-white/5 p-6 rounded-2xl hover:border-accent/30 transition-colors group">
+                      <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center mb-4 text-accent group-hover:bg-accent group-hover:text-black transition-colors">
+                        <Icon size={20} />
+                      </div>
+                      <h3 className="text-lg font-bold mb-2">{feature.title}</h3>
+                      <p className="text-sm text-white/50">{feature.desc}</p>
+                    </FadeIn>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* INDUSTRY USE CASES */}
+            <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 md:p-16">
+              <h2 className="text-3xl font-display font-bold mb-10 text-center">Industry Applications</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="p-3 bg-accent/10 rounded-xl text-accent"><Target size={24} /></div>
+                    <h3 className="text-2xl font-bold">Service Businesses</h3>
+                  </div>
+                  <p className="text-white/60">Perfect for Roofers, Dentists, Salons, and Consultants.</p>
+                  <ul className="space-y-3">
+                    <li className="flex items-center gap-3 text-sm text-white/80"><CheckBullet /> Auto-book appointments</li>
+                    <li className="flex items-center gap-3 text-sm text-white/80"><CheckBullet /> Missed call text-back</li>
+                    <li className="flex items-center gap-3 text-sm text-white/80"><CheckBullet /> Review generation</li>
+                  </ul>
+                </div>
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="p-3 bg-purple-500/10 rounded-xl text-purple-400"><ShoppingCart size={24} /></div>
+                    <h3 className="text-2xl font-bold">E-Commerce</h3>
+                  </div>
+                  <p className="text-white/60">For Shopify stores and D2C brands.</p>
+                  <ul className="space-y-3">
+                    <li className="flex items-center gap-3 text-sm text-white/80"><CheckBullet /> Order status chatbots</li>
+                    <li className="flex items-center gap-3 text-sm text-white/80"><CheckBullet /> Abandoned cart recovery</li>
+                    <li className="flex items-center gap-3 text-sm text-white/80"><CheckBullet /> Customer support automation</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* PROCESS */}
+            <div>
+              <h2 className="text-3xl font-display font-bold mb-12 text-center">Implementation Process</h2>
+              <div className="relative">
+                {/* Connecting Line */}
+                <div className="hidden md:block absolute top-1/2 left-0 w-full h-px bg-white/10 -translate-y-1/2 z-0"></div>
+
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-6 relative z-10">
+                  {[
+                    { step: "01", title: "Audit", desc: "We analyze your manual bottlenecks." },
+                    { step: "02", title: "Design", desc: "We map out the perfect workflow." },
+                    { step: "03", title: "Train", desc: "We teach the AI your business logic." },
+                    { step: "04", title: "Deploy", desc: "We launch the system live." },
+                    { step: "05", title: "Scale", desc: "We optimize for maximum ROI." }
+                  ].map((s, i) => (
+                    <div key={i} className="bg-background border border-white/10 p-6 rounded-xl text-center">
+                      <div className="text-3xl font-bold text-accent/20 mb-2">{s.step}</div>
+                      <h3 className="font-bold text-lg mb-1">{s.title}</h3>
+                      <p className="text-xs text-white/50">{s.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* FINAL CTA */}
+            <div className="text-center bg-gradient-to-b from-accent/5 to-transparent p-12 rounded-3xl border border-accent/10">
+              <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">Ready to Automate?</h2>
+              <p className="text-white/60 max-w-xl mx-auto mb-8">
+                Frame n Flow Media is not just a chatbot provider. We are your business automation partner.
+              </p>
+              <div className="flex flex-col md:flex-row gap-4 justify-center">
+                <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>👉 Book Free Audit</Button>
+              </div>
+            </div>
+
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );
 };
+
+// Helper for checkmarks
+const CheckBullet = () => (
+  <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+    <div className="w-1.5 h-1.5 bg-accent rounded-full"></div>
+  </div>
+)
 
 export default Services;
