@@ -676,14 +676,14 @@ const Services: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
-            className="space-y-32 container mx-auto px-6"
+            className="space-y-16 md:space-y-32 container mx-auto px-6"
           >
             {/* HERO SUBTEXT & CTA */}
-            <div className="text-center max-w-3xl mx-auto -mt-16 relative z-10">
-              <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed mb-8">
+            <div className="text-center max-w-3xl mx-auto mt-4 md:-mt-16 relative z-10">
+              <p className="text-base md:text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed mb-6 md:mb-8 px-4">
                 Automate conversations, bookings, reviews, follow-ups, and lead management using intelligent AI systems designed to scale your business operations 24/7.
               </p>
-              <div className="flex flex-col md:flex-row gap-4 justify-center">
+              <div className="flex flex-col md:flex-row gap-4 justify-center px-4">
                 <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>👉 Book Free Automation Audit</Button>
                 <button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'} className="px-6 py-3 border border-white/20 hover:bg-white/5 rounded-full font-bold transition-all text-white">
                   Talk to AI Specialist
@@ -691,10 +691,6 @@ const Services: React.FC = () => {
               </div>
             </div>
 
-            {/* HIGH END HERO VISUAL */}
-            <FadeIn delay={0.2}>
-              <AutomationHeroVisual />
-            </FadeIn>
 
             {/* WHAT IS AI AUTOMATION */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
