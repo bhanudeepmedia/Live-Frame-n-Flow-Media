@@ -878,510 +878,672 @@ const AdminDashboard: React.FC = () => {
             `Do you want to download a backup of their activity first?`
         );
 
-    if (!confirmDelete) return;
+        if (!confirmDelete) return;
 
-    // Step 2: Offer to download backup
-    const downloadBackup = confirm('Download activity backup (JSON) before deleting?');
+        // Step 2: Offer to download backup
+        const downloadBackup = confirm('Download activity backup (JSON) before deleting?');
 
-    if (downloadBackup) {
-        try {
-            const activityData = await SupabaseBackend.getUserActivityData(partnerId);
+        if (downloadBackup) {
+            try {
+                const activityData = await SupabaseBackend.getUserActivityData(partnerId);
 
-            if (!activityData) {
-                alert('Failed to fetch user activity data. Deletion cancelled.');
-                return;
+                if (!activityData) {
+                    alert('Failed to fetch user activity data. Deletion cancelled.');
+                    return;
+                }
+
+                // Generate and download JSON backup
+                const dataStr = JSON.stringify(activityData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${partnerName.replace(/\s+/g, '_')}_Activity_Backup_${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                alert('Backup downloaded successfully!');
+            } catch (error) {
+                console.error('Error downloading backup:', error);
+                const continueAnyway = confirm('Failed to download backup. Continue with deletion anyway?');
+                if (!continueAnyway) return;
             }
-
-            // Generate and download JSON backup
-            const dataStr = JSON.stringify(activityData, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `${partnerName.replace(/\s+/g, '_')}_Activity_Backup_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-
-            alert('Backup downloaded successfully!');
-        } catch (error) {
-            console.error('Error downloading backup:', error);
-            const continueAnyway = confirm('Failed to download backup. Continue with deletion anyway?');
-            if (!continueAnyway) return;
         }
-    }
 
-    // Step 3: Final confirmation
-    const finalConfirm = confirm(
-        `FINAL CONFIRMATION:\n\n` +
-        `Are you absolutely sure you want to delete ${partnerName}?\n\n` +
-        `This will permanently remove all their data.`
-    );
+        // Step 3: Final confirmation
+        const finalConfirm = confirm(
+            `FINAL CONFIRMATION:\n\n` +
+            `Are you absolutely sure you want to delete ${partnerName}?\n\n` +
+            `This will permanently remove all their data.`
+        );
 
-    if (!finalConfirm) return;
+        if (!finalConfirm) return;
 
-    // Step 4: Delete partner
-    const result = await SupabaseBackend.deletePartner(partnerId);
+        // Step 4: Delete partner
+        const result = await SupabaseBackend.deletePartner(partnerId);
 
-    if (result.success) {
-        alert(`${partnerName} has been permanently deleted.`);
-        setSelectedPartner(null); // Close modal if open
-        refreshData();
-    } else {
-        alert(`Failed to delete partner: ${result.error}`);
-    }
-};
+        if (result.success) {
+            alert(`${partnerName} has been permanently deleted.`);
+            setSelectedPartner(null); // Close modal if open
+            refreshData();
+        } else {
+            alert(`Failed to delete partner: ${result.error}`);
+        }
+    };
 
 
-const getPartnerName = (pid: string) => {
-    const p = partners.find(ptr => ptr.id === pid);
-    if (!p) return 'Unknown';
-    const app = applications.find(a => a.id === p.applicationId);
-    return app?.fullName || 'Unknown';
-};
+    const getPartnerName = (pid: string) => {
+        const p = partners.find(ptr => ptr.id === pid);
+        if (!p) return 'Unknown';
+        const app = applications.find(a => a.id === p.applicationId);
+        return app?.fullName || 'Unknown';
+    };
 
-if (loading) {
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 flex flex-col items-center justify-center text-white space-y-4">
-            <div className="text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 animate-pulse">
-                Frame n Flow Media
-            </div>
-            <div className="flex items-center gap-2 text-indigo-300 text-sm font-mono tracking-widest uppercase animate-pulse">
-                <Shield size={16} className="animate-spin" />
-                Admin Portal Loading...
-            </div>
-        </div>
-    )
-}
-
-return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 font-sans text-white">
-        {/* TOP NAVIGATION BAR - ADMIN SPECIFIC */}
-        <nav className="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-xl border-b border-indigo-500/20 shadow-xl shadow-indigo-500/5">
-            <div className="max-w-[1920px] mx-auto px-6 py-3.5">
-                <div className="flex items-center justify-between">
-                    {/* Logo & Admin Badge */}
-                    <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-3">
-                            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                                <Shield size={22} className="text-white" />
-                            </div>
-                            <div>
-                                <div className="text-lg font-bold font-display bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent">Frame n Flow Media</div>
-                                <div className="text-[10px] text-indigo-400 font-mono uppercase tracking-widest flex items-center gap-1.5">
-                                    <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-pulse"></div>
-                                    Admin Portal
-                                </div>
-                            </div>
-                        </div>
-                        <div className="h-10 w-px bg-indigo-500/20 hidden md:block"></div>
-                        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 border border-indigo-500/30 rounded-lg backdrop-blur-sm">
-                            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-lg shadow-emerald-400/50"></div>
-                            <span className="text-xs font-semibold text-indigo-200">{user?.name}</span>
-                        </div>
-                    </div>
-
-                    {/* Navigation Tabs - Horizontal (Desktop) */}
-                    <div className="hidden lg:flex items-center gap-1.5">
-                        <button
-                            onClick={() => setActiveTab('overview')}
-                            className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'overview'
-                                ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
-                                : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
-                                }`}
-                        >
-                            <BarChart2 size={16} />
-                            Command Center
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('partners')}
-                            className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'partners'
-                                ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
-                                : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
-                                }`}
-                        >
-                            <Users size={16} />
-                            Partners
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('apps')}
-                            className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'apps'
-                                ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
-                                : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
-                                }`}
-                        >
-                            <FileText size={16} />
-                            Applications
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('leads')}
-                            className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'leads'
-                                ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
-                                : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
-                                }`}
-                        >
-                            <Briefcase size={16} />
-                            Leads
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('payouts')}
-                            className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'payouts'
-                                ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
-                                : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
-                                }`}
-                        >
-                            <DollarSign size={16} />
-                            Commissions
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('settings')}
-                            className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'settings'
-                                ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
-                                : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
-                                }`}
-                        >
-                            <Settings size={16} />
-                            Settings
-                        </button>
-                    </div>
-
-                    {/* Right Actions (Desktop) */}
-                    <div className="hidden lg:flex items-center gap-3">
-                        <button className="w-10 h-10 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 flex items-center justify-center text-slate-400 hover:text-indigo-300 transition-all border border-indigo-500/20">
-                            <Bell size={18} />
-                        </button>
-                        <button
-                            onClick={handleLogout}
-                            className="px-4 py-2.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 font-semibold text-sm flex items-center gap-2 transition-all border border-red-500/30"
-                        >
-                            <LogOut size={16} />
-                            Logout
-                        </button>
-                    </div>
-
-                    {/* Mobile Menu Toggle */}
-                    <button
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="lg:hidden p-2 text-indigo-200 hover:bg-white/5 rounded-lg transition-colors"
-                    >
-                        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 flex flex-col items-center justify-center text-white space-y-4">
+                <div className="text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 animate-pulse">
+                    Frame n Flow Media
                 </div>
-
-                {/* Mobile Menu Content */}
-                <AnimatePresence>
-                    {isMobileMenuOpen && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            className="lg:hidden absolute top-full left-0 w-full bg-slate-950/95 backdrop-blur-xl border-b border-indigo-500/20 shadow-2xl p-4 overflow-hidden z-50"
-                        >
-                            <div className="space-y-2">
-                                <div className="flex items-center gap-2 px-3 py-3 bg-indigo-500/10 border border-indigo-500/20 rounded-lg mb-4">
-                                    <div className="w-2 h-2 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/50"></div>
-                                    <span className="text-sm font-semibold text-indigo-200">{user?.name} (Admin)</span>
-                                </div>
-
-                                {[
-                                    { id: 'overview', label: 'Command Center', icon: BarChart2 },
-                                    { id: 'partners', label: 'Partners', icon: Users },
-                                    { id: 'apps', label: 'Applications', icon: FileText },
-                                    { id: 'leads', label: 'Leads', icon: Briefcase },
-                                    { id: 'payouts', label: 'Commissions', icon: DollarSign },
-                                    { id: 'settings', label: 'Settings', icon: Settings }
-                                ].map((item) => (
-                                    <button
-                                        key={item.id}
-                                        onClick={() => {
-                                            setActiveTab(item.id as any);
-                                            setIsMobileMenuOpen(false);
-                                        }}
-                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all ${activeTab === item.id
-                                            ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/30'
-                                            : 'text-slate-400 hover:bg-white/5 hover:text-white border border-transparent'
-                                            }`}
-                                    >
-                                        <item.icon size={18} />
-                                        {item.label}
-                                    </button>
-                                ))}
-
-                                <div className="h-px bg-white/10 my-2"></div>
-
-                                <button
-                                    onClick={handleLogout}
-                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all"
-                                >
-                                    <LogOut size={18} />
-                                    Logout
-                                </button>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                <div className="flex items-center gap-2 text-indigo-300 text-sm font-mono tracking-widest uppercase animate-pulse">
+                    <Shield size={16} className="animate-spin" />
+                    Admin Portal Loading...
+                </div>
             </div>
-        </nav>
+        )
+    }
 
-        {/* MAIN CONTENT - NO SIDEBAR, FULL WIDTH */}
-        <main className="max-w-[1920px] mx-auto px-6 py-8">
-            {activeTab === 'overview' && <Overview
-                partners={partners}
-                allLeads={allLeads}
-                applications={applications}
-                broadcastForm={broadcastForm}
-                setBroadcastForm={setBroadcastForm}
-                handlePostBroadcast={handlePostBroadcast}
-                handleReviewApp={handleReviewApp}
-                broadcasts={broadcasts}
-                handleDeleteBroadcast={handleDeleteBroadcast}
-            />}
-            {activeTab === 'partners' && <PartnersManager
-                partners={partners}
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                applications={applications}
-                allLeads={allLeads}
-                getPartnerName={getPartnerName}
-                setSelectedPartner={setSelectedPartner}
-                handleDeletePartner={handleDeletePartner}
-            />}
-            {activeTab === 'apps' && <ApplicationsManager
-                applications={applications}
-                partners={partners}
-                handleReviewApp={handleReviewApp}
-                handleDeleteApp={handleDeleteApp}
-                setSelectedApplicant={setSelectedApplicant}
-            />}
-            {activeTab === 'leads' && <LeadsTable
-                allLeads={allLeads}
-                getPartnerName={getPartnerName}
-                refreshData={refreshData}
-            />}
-            {activeTab === 'payouts' && <CommissionsManager
-                partners={partners}
-                getPartnerName={getPartnerName}
-                refreshData={refreshData}
-            />}
-            {activeTab === 'settings' && <Configuration
-                adminSettings={adminSettings}
-                setAdminSettings={setAdminSettings}
-                handleSaveSettings={handleSaveSettings}
-            />}
-        </main>
-
-        {/* PARTNER PROFILE MODAL */}
-        <AnimatePresence>
-            {selectedPartner && (
-                <motion.div
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm"
-                    onClick={() => setSelectedPartner(null)}
-                >
-                    <motion.div
-                        initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }}
-                        className="bg-surface border border-white/10 w-full max-w-2xl rounded-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
-                        onClick={e => e.stopPropagation()}
-                    >
-                        <div className="p-8 border-b border-white/10 flex justify-between items-start">
-                            <div>
-                                <h2 className="text-2xl font-bold font-display">{getPartnerName(selectedPartner.id)}</h2>
-                                <p className="text-sm text-accent">{selectedPartner.stage} Partner</p>
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 font-sans text-white">
+            {/* TOP NAVIGATION BAR - ADMIN SPECIFIC */}
+            <nav className="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-xl border-b border-indigo-500/20 shadow-xl shadow-indigo-500/5">
+                <div className="max-w-[1920px] mx-auto px-6 py-3.5">
+                    <div className="flex items-center justify-between">
+                        {/* Logo & Admin Badge */}
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                                    <Shield size={22} className="text-white" />
+                                </div>
+                                <div>
+                                    <div className="text-lg font-bold font-display bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent">Frame n Flow Media</div>
+                                    <div className="text-[10px] text-indigo-400 font-mono uppercase tracking-widest flex items-center gap-1.5">
+                                        <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-pulse"></div>
+                                        Admin Portal
+                                    </div>
+                                </div>
                             </div>
-                            <button onClick={() => setSelectedPartner(null)} className="text-muted hover:text-white"><XCircle size={24} /></button>
+                            <div className="h-10 w-px bg-indigo-500/20 hidden md:block"></div>
+                            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 border border-indigo-500/30 rounded-lg backdrop-blur-sm">
+                                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-lg shadow-emerald-400/50"></div>
+                                <span className="text-xs font-semibold text-indigo-200">{user?.name}</span>
+                            </div>
                         </div>
-                        <div className="p-8 space-y-6">
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="bg-white/5 p-4 rounded-xl">
-                                    <h4 className="text-xs text-muted uppercase mb-2">Contact</h4>
-                                    <div className="text-sm font-bold">{selectedPartner.phone || 'N/A'}</div>
-                                    <div className="text-sm text-muted">{selectedPartner.timezone || 'IST'}</div>
+
+                        {/* Navigation Tabs - Horizontal (Desktop) */}
+                        <div className="hidden lg:flex items-center gap-1.5">
+                            <button
+                                onClick={() => setActiveTab('overview')}
+                                className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'overview'
+                                    ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                    }`}
+                            >
+                                <BarChart2 size={16} />
+                                Command Center
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('partners')}
+                                className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'partners'
+                                    ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                    }`}
+                            >
+                                <Users size={16} />
+                                Partners
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('apps')}
+                                className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'apps'
+                                    ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                    }`}
+                            >
+                                <FileText size={16} />
+                                Applications
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('leads')}
+                                className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'leads'
+                                    ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                    }`}
+                            >
+                                <Briefcase size={16} />
+                                Leads
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('payouts')}
+                                className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'payouts'
+                                    ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                    }`}
+                            >
+                                <DollarSign size={16} />
+                                Commissions
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('settings')}
+                                className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'settings'
+                                    ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                    }`}
+                            >
+                                <Settings size={16} />
+                                Settings
+                            </button>
+                        </div>
+
+                        {/* Right Actions (Desktop) */}
+                        <div className="hidden lg:flex items-center gap-3">
+                            <button className="w-10 h-10 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 flex items-center justify-center text-slate-400 hover:text-indigo-300 transition-all border border-indigo-500/20">
+                                <Bell size={18} />
+                            </button>
+                            <button
+                                onClick={handleLogout}
+                                className="px-4 py-2.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 font-semibold text-sm flex items-center gap-2 transition-all border border-red-500/30"
+                            >
+                                <LogOut size={16} />
+                                Logout
+                            </button>
+                        </div>
+
+                        {/* Mobile Menu Toggle */}
+                        <button
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className="lg:hidden p-2 text-indigo-200 hover:bg-white/5 rounded-lg transition-colors"
+                        >
+                            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                        </button>
+                    </div>
+
+                    {/* Mobile Menu Content */}
+                    <AnimatePresence>
+                        {isMobileMenuOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                className="lg:hidden absolute top-full left-0 w-full bg-slate-950/95 backdrop-blur-xl border-b border-indigo-500/20 shadow-2xl p-4 overflow-hidden z-50"
+                            >
+                                <div className="space-y-2">
+                                    <div className="flex items-center gap-2 px-3 py-3 bg-indigo-500/10 border border-indigo-500/20 rounded-lg mb-4">
+                                        <div className="w-2 h-2 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/50"></div>
+                                        <span className="text-sm font-semibold text-indigo-200">{user?.name} (Admin)</span>
+                                    </div>
+
+                                    {[
+                                        { id: 'overview', label: 'Command Center', icon: BarChart2 },
+                                        { id: 'partners', label: 'Partners', icon: Users },
+                                        { id: 'apps', label: 'Applications', icon: FileText },
+                                        { id: 'leads', label: 'Leads', icon: Briefcase },
+                                        { id: 'payouts', label: 'Commissions', icon: DollarSign },
+                                        { id: 'settings', label: 'Settings', icon: Settings }
+                                    ].map((item) => (
+                                        <button
+                                            key={item.id}
+                                            onClick={() => {
+                                                setActiveTab(item.id as any);
+                                                setIsMobileMenuOpen(false);
+                                            }}
+                                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all ${activeTab === item.id
+                                                ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/30'
+                                                : 'text-slate-400 hover:bg-white/5 hover:text-white border border-transparent'
+                                                }`}
+                                        >
+                                            <item.icon size={18} />
+                                            {item.label}
+                                        </button>
+                                    ))}
+
+                                    <div className="h-px bg-white/10 my-2"></div>
+
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all"
+                                    >
+                                        <LogOut size={18} />
+                                        Logout
+                                    </button>
                                 </div>
-                                <div className="bg-white/5 p-4 rounded-xl">
-                                    <h4 className="text-xs text-muted uppercase mb-2">Banking</h4>
-                                    <div className="text-sm">UPI: {selectedPartner.bankDetails?.upiId || 'N/A'}</div>
-                                    <div className="text-xs text-muted">{selectedPartner.bankDetails?.bankName}</div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            </nav>
+
+            {/* MAIN CONTENT - NO SIDEBAR, FULL WIDTH */}
+            <main className="max-w-[1920px] mx-auto px-6 py-8">
+                {activeTab === 'overview' && <Overview
+                    partners={partners}
+                    allLeads={allLeads}
+                    applications={applications}
+                    broadcastForm={broadcastForm}
+                    setBroadcastForm={setBroadcastForm}
+                    handlePostBroadcast={handlePostBroadcast}
+                    handleReviewApp={handleReviewApp}
+                    broadcasts={broadcasts}
+                    handleDeleteBroadcast={handleDeleteBroadcast}
+                />}
+                {activeTab === 'partners' && <PartnersManager
+                    partners={partners}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    applications={applications}
+                    allLeads={allLeads}
+                    getPartnerName={getPartnerName}
+                    setSelectedPartner={setSelectedPartner}
+                    handleDeletePartner={handleDeletePartner}
+                />}
+                {activeTab === 'apps' && <ApplicationsManager
+                    applications={applications}
+                    partners={partners}
+                    handleReviewApp={handleReviewApp}
+                    handleDeleteApp={handleDeleteApp}
+                    setSelectedApplicant={setSelectedApplicant}
+                />}
+                {activeTab === 'leads' && <LeadsTable
+                    allLeads={allLeads}
+                    getPartnerName={getPartnerName}
+                    refreshData={refreshData}
+                />}
+                {activeTab === 'payouts' && <CommissionsManager
+                    partners={partners}
+                    getPartnerName={getPartnerName}
+                    refreshData={refreshData}
+                />}
+                {activeTab === 'settings' && <Configuration
+                    adminSettings={adminSettings}
+                    setAdminSettings={setAdminSettings}
+                    handleSaveSettings={handleSaveSettings}
+                />}
+            </main>
+
+            {/* COMPREHENSIVE GP PROFILE MODAL */}
+            <AnimatePresence>
+                {selectedPartner && (() => {
+                    const partnerApp = applications.find((a: any) => a.id === selectedPartner.applicationId);
+                    const partnerLeads = allLeads.filter((l: any) => l.partner_id === selectedPartner.id);
+                    const [profileTab, setProfileTab] = React.useState('overview');
+
+                    return (
+                        <motion.div
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-2 md:p-4 backdrop-blur-sm overflow-y-auto"
+                            onClick={() => setSelectedPartner(null)}
+                        >
+                            <motion.div
+                                initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }}
+                                className="bg-gradient-to-br from-surface to-background border border-white/10 w-full max-w-6xl rounded-2xl overflow-hidden my-4"
+                                onClick={e => e.stopPropagation()}
+                            >
+                                {/* HEADER */}
+                                <div className="relative bg-gradient-to-r from-accent/20 via-purple-500/20 to-blue-500/20 p-6 md:p-8 border-b border-white/10">
+                                    <button
+                                        onClick={() => setSelectedPartner(null)}
+                                        className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors"
+                                    >
+                                        <XCircle size={28} />
+                                    </button>
+
+                                    <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
+                                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-accent to-purple-500 flex items-center justify-center text-3xl font-bold">
+                                            {getPartnerName(selectedPartner.id).charAt(0).toUpperCase()}
+                                        </div>
+                                        <div className="flex-1">
+                                            <h2 className="text-3xl md:text-4xl font-bold font-display mb-2">{getPartnerName(selectedPartner.id)}</h2>
+                                            <div className="flex flex-wrap gap-3 items-center">
+                                                <span className="px-3 py-1 bg-accent/20 text-accent rounded-full text-sm font-bold">{selectedPartner.stage} Partner</span>
+                                                <span className="text-sm text-white/60">ID: {selectedPartner.id.slice(0, 8)}</span>
+                                                {partnerApp?.email && <span className="text-sm text-white/80">📧 {partnerApp.email}</span>}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* EARNINGS MANAGEMENT */}
-                            {/* EARNINGS MANAGEMENT & ANALYTICS */}
-                            <div className="bg-white/5 p-4 rounded-xl border border-white/5">
-                                <h4 className="font-bold mb-4 flex items-center gap-2 text-green-400"><DollarSign size={16} /> Earnings & Performance</h4>
+                                {/* TABS */}
+                                <div className="border-b border-white/10 bg-black/20">
+                                    <div className="flex overflow-x-auto">
+                                        {['overview', 'activity', 'leads', 'earnings'].map(tab => (
+                                            <button
+                                                key={tab}
+                                                onClick={() => setProfileTab(tab)}
+                                                className={`px-6 py-4 font-bold text-sm uppercase tracking-wider transition-all whitespace-nowrap ${profileTab === tab
+                                                        ? 'text-accent border-b-2 border-accent bg-accent/5'
+                                                        : 'text-muted hover:text-white hover:bg-white/5'
+                                                    }`}
+                                            >
+                                                {tab}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
 
-                                {/* Analytics */}
-                                {(() => {
-                                    const earningsList = selectedPartner.earningsHistory || [];
-                                    const total = earningsList.reduce((acc: number, e: any) => acc + Number(e.amount), 0);
-                                    const months: any = {};
-                                    earningsList.forEach((e: any) => {
-                                        const m = new Date(e.date).toLocaleString('default', { month: 'short' });
-                                        months[m] = (months[m] || 0) + Number(e.amount);
-                                    });
-                                    // Fill last 6 months
-                                    const chartData = [];
-                                    for (let i = 5; i >= 0; i--) {
-                                        const d = new Date(); d.setMonth(d.getMonth() - i);
-                                        const m = d.toLocaleString('default', { month: 'short' });
-                                        chartData.push({ label: m, value: months[m] || 0 });
-                                    }
-
-                                    return (
-                                        <div className="space-y-6">
-                                            <div className="grid grid-cols-3 gap-2 text-center">
-                                                <div className="bg-black/20 p-2 rounded">
-                                                    <div className="text-[10px] text-muted uppercase">Total Earned</div>
-                                                    <div className="font-bold font-mono text-green-400">₹{total.toLocaleString()}</div>
+                                {/* CONTENT */}
+                                <div className="p-4 md:p-8 max-h-[60vh] overflow-y-auto">
+                                    {/* OVERVIEW TAB */}
+                                    {profileTab === 'overview' && (
+                                        <div className="space-y-6 animate-fade-in">
+                                            {/* Stats Grid */}
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                                <div className="bg-gradient-to-br from-green-500/10 to-green-500/5 border border-green-500/20 p-4 rounded-xl">
+                                                    <div className="text-xs text-green-400 uppercase mb-1">Total Earnings</div>
+                                                    <div className="text-2xl font-bold font-mono text-green-400">₹{(selectedPartner.earnings?.total || 0).toLocaleString()}</div>
                                                 </div>
-                                                <div className="bg-black/20 p-2 rounded">
-                                                    <div className="text-[10px] text-muted uppercase">Deals Closed</div>
-                                                    <div className="font-bold font-mono">{earningsList.length}</div>
+                                                <div className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20 p-4 rounded-xl">
+                                                    <div className="text-xs text-blue-400 uppercase mb-1">Outreach</div>
+                                                    <div className="text-2xl font-bold font-mono">{selectedPartner.outreachLogs.reduce((acc: number, l: any) => acc + l.count, 0)}</div>
                                                 </div>
-                                                <div className="bg-black/20 p-2 rounded">
-                                                    <div className="text-[10px] text-muted uppercase">Pending</div>
-                                                    <div className="font-bold font-mono text-yellow-400">
-                                                        ₹{earningsList.filter((e: any) => e.status === 'pending').reduce((a: number, b: any) => a + Number(b.amount), 0).toLocaleString()}
+                                                <div className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border border-purple-500/20 p-4 rounded-xl">
+                                                    <div className="text-xs text-purple-400 uppercase mb-1">Leads</div>
+                                                    <div className="text-2xl font-bold font-mono">{partnerLeads.length}</div>
+                                                </div>
+                                                <div className="bg-gradient-to-br from-yellow-500/10 to-yellow-500/5 border border-yellow-500/20 p-4 rounded-xl">
+                                                    <div className="text-xs text-yellow-400 uppercase mb-1">Pending</div>
+                                                    <div className="text-2xl font-bold font-mono text-yellow-400">₹{(selectedPartner.earnings?.pending || 0).toLocaleString()}</div>
+                                                </div>
+                                            </div>
+
+                                            {/* Account & Contact Info */}
+                                            <div className="grid md:grid-cols-2 gap-6">
+                                                <div className="bg-white/5 border border-white/10 p-6 rounded-xl space-y-4">
+                                                    <h3 className="font-bold text-lg flex items-center gap-2"><Users size={20} className="text-accent" /> Account Information</h3>
+                                                    <div className="space-y-3 text-sm">
+                                                        <div className="flex justify-between items-center py-2 border-b border-white/5">
+                                                            <span className="text-muted">Email</span>
+                                                            <span className="font-mono">{partnerApp?.email || 'N/A'}</span>
+                                                        </div>
+                                                        <div className="flex justify-between items-center py-2 border-b border-white/5">
+                                                            <span className="text-muted">Phone</span>
+                                                            <span className="font-mono">{partnerApp?.phone || 'N/A'}</span>
+                                                        </div>
+                                                        <div className="flex justify-between items-center py-2 border-b border-white/5">
+                                                            <span className="text-muted">City</span>
+                                                            <span>{partnerApp?.city || 'N/A'}</span>
+                                                        </div>
+                                                        <div className="flex justify-between items-center py-2">
+                                                            <span className="text-muted">Joined</span>
+                                                            <span>{partnerApp?.appliedAt ? new Date(partnerApp.appliedAt).toLocaleDateString() : 'N/A'}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="bg-white/5 border border-white/10 p-6 rounded-xl space-y-4">
+                                                    <h3 className="font-bold text-lg flex items-center gap-2"><DollarSign size={20} className="text-green-400" /> Banking Details</h3>
+                                                    <div className="space-y-3 text-sm">
+                                                        <div className="flex justify-between items-center py-2 border-b border-white/5">
+                                                            <span className="text-muted">UPI ID</span>
+                                                            <span className="font-mono">{selectedPartner.bankDetails?.upiId || 'Not Set'}</span>
+                                                        </div>
+                                                        <div className="flex justify-between items-center py-2 border-b border-white/5">
+                                                            <span className="text-muted">Bank Name</span>
+                                                            <span>{selectedPartner.bankDetails?.bankName || 'Not Set'}</span>
+                                                        </div>
+                                                        <div className="flex justify-between items-center py-2 border-b border-white/5">
+                                                            <span className="text-muted">Account Number</span>
+                                                            <span className="font-mono">{selectedPartner.bankDetails?.accountNumber ? '****' + selectedPartner.bankDetails.accountNumber.slice(-4) : 'Not Set'}</span>
+                                                        </div>
+                                                        <div className="flex justify-between items-center py-2">
+                                                            <span className="text-muted">IFSC</span>
+                                                            <span className="font-mono">{selectedPartner.bankDetails?.ifsc || 'Not Set'}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div className="bg-black/20 p-4 rounded-xl border border-white/5">
-                                                <h5 className="text-[10px] uppercase text-muted mb-2">6-Month Trend</h5>
-                                                <div className="flex items-end justify-between h-24 gap-2">
-                                                    {chartData.map((d: any, i: number) => {
-                                                        const max = Math.max(...chartData.map((s: any) => s.value), 1);
-                                                        const h = (d.value / max) * 100;
-                                                        return (
-                                                            <div key={i} className="flex flex-col items-center gap-1 flex-1 w-full group">
-                                                                <div
-                                                                    className="w-full rounded-t bg-green-500/50 group-hover:bg-green-400 transition-colors"
-                                                                    style={{ height: `${h}%`, minHeight: '2px' }}
-                                                                ></div>
-                                                                <div className="text-[8px] text-muted uppercase">{d.label}</div>
+                                            {/* Application Details */}
+                                            {partnerApp && (
+                                                <div className="bg-white/5 border border-white/10 p-6 rounded-xl">
+                                                    <h3 className="font-bold text-lg mb-4">Application Details</h3>
+                                                    <div className="grid md:grid-cols-2 gap-4 text-sm">
+                                                        <div>
+                                                            <span className="text-muted block mb-1">Background</span>
+                                                            <p className="text-white/90">{partnerApp.background || 'N/A'}</p>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-muted block mb-1">Reason for Joining</span>
+                                                            <p className="text-white/90">{partnerApp.reason || 'N/A'}</p>
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-muted block mb-1">Platforms</span>
+                                                            <div className="flex flex-wrap gap-2 mt-1">
+                                                                {partnerApp.platforms?.map((p: string, i: number) => (
+                                                                    <span key={i} className="px-2 py-1 bg-accent/20 text-accent rounded text-xs">{p}</span>
+                                                                ))}
                                                             </div>
-                                                        )
-                                                    })}
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-muted block mb-1">Experience</span>
+                                                            <p className="text-white/90">{partnerApp.experience ? 'Yes' : 'No'}</p>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* ACTIVITY TAB */}
+                                    {profileTab === 'activity' && (
+                                        <div className="space-y-6 animate-fade-in">
+                                            <h3 className="font-bold text-xl">Outreach Activity</h3>
+                                            <div className="space-y-3">
+                                                {selectedPartner.outreachLogs.length > 0 ? (
+                                                    selectedPartner.outreachLogs.map((log: any, i: number) => (
+                                                        <div key={i} className="bg-white/5 border border-white/10 p-4 rounded-xl hover:bg-white/10 transition-colors">
+                                                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                                                <div className="flex-1">
+                                                                    <div className="flex items-center gap-3 mb-2">
+                                                                        <span className="text-sm font-bold">{new Date(log.date).toLocaleDateString()}</span>
+                                                                        <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">{log.medium}</span>
+                                                                    </div>
+                                                                    {log.notes && <p className="text-sm text-muted italic">"{log.notes}"</p>}
+                                                                </div>
+                                                                <div className="flex gap-6 text-sm">
+                                                                    <div className="text-center">
+                                                                        <div className="text-2xl font-bold">{log.count}</div>
+                                                                        <div className="text-xs text-muted">Sent</div>
+                                                                    </div>
+                                                                    <div className="text-center">
+                                                                        <div className="text-2xl font-bold text-blue-400">{log.replies}</div>
+                                                                        <div className="text-xs text-muted">Replies</div>
+                                                                    </div>
+                                                                    <div className="text-center">
+                                                                        <div className="text-2xl font-bold text-green-400">{log.interested}</div>
+                                                                        <div className="text-xs text-muted">Interested</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <div className="text-center text-muted py-12">No activity logs yet</div>
+                                                )}
                                             </div>
                                         </div>
-                                    )
-                                })()}
+                                    )}
 
-                                <h5 className="text-xs font-bold text-muted mt-6 mb-2 uppercase">Recent History</h5>
-                                <div className="space-y-1 max-h-32 overflow-y-auto pr-1">
-                                    {selectedPartner.earningsHistory?.length > 0 ? (
-                                        selectedPartner.earningsHistory.map((e: any, i: number) => (
-                                            <div key={i} className="flex justify-between items-center text-xs p-2 bg-black/20 rounded border border-white/5 hover:bg-white/5 transition-colors">
-                                                <div>
-                                                    <span className="text-white/90 font-bold block">{e.clientName}</span>
-                                                    <span className="text-[10px] text-muted uppercase">{e.status}</span>
-                                                </div>
+                                    {/* LEADS TAB */}
+                                    {profileTab === 'leads' && (
+                                        <div className="space-y-6 animate-fade-in">
+                                            <h3 className="font-bold text-xl">Leads ({partnerLeads.length})</h3>
+                                            <div className="space-y-3">
+                                                {partnerLeads.length > 0 ? (
+                                                    partnerLeads.map((lead: any, i: number) => (
+                                                        <div key={i} className="bg-white/5 border border-white/10 p-4 rounded-xl hover:bg-white/10 transition-colors">
+                                                            <div className="flex flex-col md:flex-row justify-between gap-4">
+                                                                <div className="flex-1">
+                                                                    <h4 className="font-bold text-lg mb-1">{lead.business_name}</h4>
+                                                                    <div className="flex flex-wrap gap-2 text-sm text-muted mb-2">
+                                                                        {lead.contact_person && <span>👤 {lead.contact_person}</span>}
+                                                                        {lead.source_platform && <span>📱 {lead.source_platform}</span>}
+                                                                    </div>
+                                                                    {lead.notes && <p className="text-sm text-white/70 italic">"{lead.notes}"</p>}
+                                                                </div>
+                                                                <div className="flex flex-col items-end gap-2">
+                                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${lead.status === 'Converted' ? 'bg-green-500/20 text-green-400' :
+                                                                            lead.status === 'Lost' ? 'bg-red-500/20 text-red-400' :
+                                                                                'bg-blue-500/20 text-blue-400'
+                                                                        }`}>{lead.status}</span>
+                                                                    <span className="text-xs text-muted">{new Date(lead.created_at).toLocaleDateString()}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <div className="text-center text-muted py-12">No leads added yet</div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* EARNINGS TAB */}
+                                    {profileTab === 'earnings' && (
+                                        <div className="space-y-6 animate-fade-in">
+                                            <div className="flex justify-between items-center">
+                                                <h3 className="font-bold text-xl">Earnings History</h3>
                                                 <div className="text-right">
-                                                    <div className="text-green-400 font-mono font-bold">₹{Number(e.amount).toLocaleString()}</div>
-                                                    <span className="text-muted text-[10px]">{new Date(e.date).toLocaleDateString()}</span>
+                                                    <div className="text-sm text-muted">Total Earned</div>
+                                                    <div className="text-2xl font-bold text-green-400">₹{(selectedPartner.earnings?.total || 0).toLocaleString()}</div>
                                                 </div>
                                             </div>
-                                        ))
-                                    ) : <div className="text-center text-xs text-muted py-2">No earnings recorded yet</div>}
-                                </div>
-                            </div>
 
-                            <div>
-                                <h4 className="font-bold mb-2">Recent Logs</h4>
-                                <div className="space-y-2 max-h-40 overflow-y-auto border border-white/10 rounded-lg p-2">
-                                    {selectedPartner.outreachLogs.slice(0, 10).map((l: any, i: number) => (
-                                        <div key={i} className="flex justify-between text-xs p-2 bg-white/5 rounded">
-                                            <span>{new Date(l.date).toLocaleDateString()}</span>
-                                            <span>{l.count} Sent • {l.interested} Leads</span>
+                                            <div className="space-y-3">
+                                                {selectedPartner.earningsHistory?.length > 0 ? (
+                                                    selectedPartner.earningsHistory.map((earning: any, i: number) => (
+                                                        <div key={i} className="bg-white/5 border border-white/10 p-4 rounded-xl hover:bg-white/10 transition-colors">
+                                                            <div className="flex flex-col md:flex-row justify-between gap-4">
+                                                                <div className="flex-1">
+                                                                    <h4 className="font-bold text-lg mb-1">{earning.clientName}</h4>
+                                                                    <div className="flex flex-wrap gap-3 text-sm text-muted">
+                                                                        <span>🏢 {earning.serviceType}</span>
+                                                                        <span>💰 Deal: ₹{Number(earning.dealValue).toLocaleString()}</span>
+                                                                        <span>📊 {earning.commissionPerc}% commission</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex flex-col items-end gap-2">
+                                                                    <div className="text-2xl font-bold text-green-400">₹{Number(earning.amount).toLocaleString()}</div>
+                                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${earning.status === 'paid' ? 'bg-green-500/20 text-green-400' :
+                                                                            earning.status === 'approved' ? 'bg-blue-500/20 text-blue-400' :
+                                                                                earning.status === 'rejected' ? 'bg-red-500/20 text-red-400' :
+                                                                                    'bg-yellow-500/20 text-yellow-400'
+                                                                        }`}>{earning.status}</span>
+                                                                    <span className="text-xs text-muted">{new Date(earning.date).toLocaleDateString()}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <div className="text-center text-muted py-12">No earnings recorded yet</div>
+                                                )}
+                                            </div>
                                         </div>
-                                    ))}
+                                    )}
                                 </div>
-                            </div>
-                            <div className="flex gap-4 pt-4 border-t border-white/10">
-                                <button
-                                    onClick={() => handleDeletePartner(selectedPartner.id, getPartnerName(selectedPartner.id))}
-                                    className="flex-1 bg-red-500/20 text-red-500 py-3 rounded-xl font-bold hover:bg-red-500 hover:text-white transition-colors flex items-center justify-center gap-2">
-                                    <Trash2 size={18} /> Delete Partner
-                                </button>
-                                <button className="flex-1 bg-white/10 text-white py-3 rounded-xl font-bold hover:bg-white/20">Reset Password</button>
-                            </div>
-                        </div>
-                    </motion.div>
-                </motion.div>
-            )}
-            {selectedApplicant && (
-                <motion.div
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm"
-                    onClick={() => setSelectedApplicant(null)}
-                >
+
+                                {/* FOOTER ACTIONS */}
+                                <div className="border-t border-white/10 p-4 md:p-6 bg-black/20 flex flex-col md:flex-row gap-3">
+                                    <button
+                                        onClick={() => handleDeletePartner(selectedPartner.id, getPartnerName(selectedPartner.id))}
+                                        className="flex-1 bg-red-500/20 text-red-500 py-3 px-6 rounded-xl font-bold hover:bg-red-500 hover:text-white transition-all flex items-center justify-center gap-2">
+                                        <Trash2 size={18} /> Delete Partner
+                                    </button>
+                                    <button className="flex-1 bg-blue-500/20 text-blue-400 py-3 px-6 rounded-xl font-bold hover:bg-blue-500 hover:text-white transition-all">
+                                        Reset Password
+                                    </button>
+                                    <button
+                                        onClick={() => setSelectedPartner(null)}
+                                        className="flex-1 bg-white/10 text-white py-3 px-6 rounded-xl font-bold hover:bg-white/20 transition-all">
+                                        Close
+                                    </button>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    );
+                })()}
+                {selectedApplicant && (
                     <motion.div
-                        initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }}
-                        className="bg-surface border border-white/10 w-full max-w-2xl rounded-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
-                        onClick={e => e.stopPropagation()}
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm"
+                        onClick={() => setSelectedApplicant(null)}
                     >
-                        <div className="p-8 border-b border-white/10 flex justify-between items-start">
-                            <div>
-                                <h2 className="text-2xl font-bold font-display">{selectedApplicant.fullName}</h2>
-                                <p className="text-sm text-accent">{selectedApplicant.status} Applicant</p>
+                        <motion.div
+                            initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }}
+                            className="bg-surface border border-white/10 w-full max-w-2xl rounded-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <div className="p-8 border-b border-white/10 flex justify-between items-start">
+                                <div>
+                                    <h2 className="text-2xl font-bold font-display">{selectedApplicant.fullName}</h2>
+                                    <p className="text-sm text-accent">{selectedApplicant.status} Applicant</p>
+                                </div>
+                                <button onClick={() => setSelectedApplicant(null)} className="text-muted hover:text-white"><XCircle size={24} /></button>
                             </div>
-                            <button onClick={() => setSelectedApplicant(null)} className="text-muted hover:text-white"><XCircle size={24} /></button>
-                        </div>
-                        <div className="p-8 space-y-6">
-                            <div className="grid grid-cols-2 gap-6">
+                            <div className="p-8 space-y-6">
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div className="bg-white/5 p-4 rounded-xl">
+                                        <h4 className="text-xs text-muted uppercase mb-2">Contact Info</h4>
+                                        <div className="text-sm font-bold mb-1">{selectedApplicant.email}</div>
+                                        <div className="text-sm text-muted mb-1">{selectedApplicant.phone}</div>
+                                        <div className="text-sm text-accent">{selectedApplicant.city}</div>
+                                    </div>
+                                    <div className="bg-white/5 p-4 rounded-xl">
+                                        <h4 className="text-xs text-muted uppercase mb-2">Background</h4>
+                                        <div className="text-sm font-bold mb-1">{selectedApplicant.background}</div>
+                                        <div className="text-sm text-muted">{selectedApplicant.experience ? 'Prior Experience: Yes' : 'Prior Experience: No'}</div>
+                                    </div>
+                                </div>
+
                                 <div className="bg-white/5 p-4 rounded-xl">
-                                    <h4 className="text-xs text-muted uppercase mb-2">Contact Info</h4>
-                                    <div className="text-sm font-bold mb-1">{selectedApplicant.email}</div>
-                                    <div className="text-sm text-muted mb-1">{selectedApplicant.phone}</div>
-                                    <div className="text-sm text-accent">{selectedApplicant.city}</div>
+                                    <h4 className="text-xs text-muted uppercase mb-2">Digital Footprint</h4>
+                                    <div className="space-y-2">
+                                        {selectedApplicant.linkedin ? (
+                                            <a href={selectedApplicant.linkedin} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors">
+                                                <Linkedin size={16} /> {selectedApplicant.linkedin}
+                                            </a>
+                                        ) : <span className="text-muted italic text-sm">No LinkedIn provided</span>}
+
+                                        {selectedApplicant.social ? (
+                                            <a href={selectedApplicant.social} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-pink-400 hover:text-pink-300 transition-colors">
+                                                <Globe size={16} /> {selectedApplicant.social}
+                                            </a>
+                                        ) : <span className="text-muted italic text-sm">No Social provided</span>}
+                                    </div>
                                 </div>
+
+                                <div>
+                                    <h4 className="font-bold mb-2">Mission Reasoning</h4>
+                                    <div className="p-4 bg-white/5 rounded-xl text-sm italic border border-white/5 text-muted">
+                                        "{selectedApplicant.reason}"
+                                    </div>
+                                </div>
+
                                 <div className="bg-white/5 p-4 rounded-xl">
-                                    <h4 className="text-xs text-muted uppercase mb-2">Background</h4>
-                                    <div className="text-sm font-bold mb-1">{selectedApplicant.background}</div>
-                                    <div className="text-sm text-muted">{selectedApplicant.experience ? 'Prior Experience: Yes' : 'Prior Experience: No'}</div>
+                                    <h4 className="text-xs text-muted uppercase mb-2">Platforms</h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        {selectedApplicant.platforms?.map((p: string) => (
+                                            <span key={p} className="px-2 py-1 bg-white/10 rounded text-xs">{p}</span>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
-
-                            <div className="bg-white/5 p-4 rounded-xl">
-                                <h4 className="text-xs text-muted uppercase mb-2">Digital Footprint</h4>
-                                <div className="space-y-2">
-                                    {selectedApplicant.linkedin ? (
-                                        <a href={selectedApplicant.linkedin} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors">
-                                            <Linkedin size={16} /> {selectedApplicant.linkedin}
-                                        </a>
-                                    ) : <span className="text-muted italic text-sm">No LinkedIn provided</span>}
-
-                                    {selectedApplicant.social ? (
-                                        <a href={selectedApplicant.social} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-pink-400 hover:text-pink-300 transition-colors">
-                                            <Globe size={16} /> {selectedApplicant.social}
-                                        </a>
-                                    ) : <span className="text-muted italic text-sm">No Social provided</span>}
-                                </div>
-                            </div>
-
-                            <div>
-                                <h4 className="font-bold mb-2">Mission Reasoning</h4>
-                                <div className="p-4 bg-white/5 rounded-xl text-sm italic border border-white/5 text-muted">
-                                    "{selectedApplicant.reason}"
-                                </div>
-                            </div>
-
-                            <div className="bg-white/5 p-4 rounded-xl">
-                                <h4 className="text-xs text-muted uppercase mb-2">Platforms</h4>
-                                <div className="flex flex-wrap gap-2">
-                                    {selectedApplicant.platforms?.map((p: string) => (
-                                        <span key={p} className="px-2 py-1 bg-white/10 rounded text-xs">{p}</span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
+                        </motion.div>
                     </motion.div>
-                </motion.div>
-            )}
-        </AnimatePresence>
-    </div >
-);
+                )}
+            </AnimatePresence>
+        </div >
+    );
 };
 
 export default AdminDashboard;
