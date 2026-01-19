@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence } from 'framer-motion';
 import Button from '../components/Button';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { SERVICES, PROCESS_STEPS } from '../constants';
-import { CheckCircle2, FileSearch, Music, Sparkles, TrendingUp, ArrowRight, Laptop, Play, Camera, Aperture, PlayCircle, X, Search, Plus } from 'lucide-react';
+import { CheckCircle2, FileSearch, Music, Sparkles, TrendingUp, ArrowRight, Laptop, Play, Camera, Aperture, PlayCircle, X, Search, Plus, Bot } from 'lucide-react';
 
 const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: string }> = ({ children, delay = 0, className = "" }) => (
   <motion.div
@@ -429,6 +429,7 @@ const FAQSection = () => {
 
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
   const scrollRef = useRef(null);
   const [showAuditPopup, setShowAuditPopup] = useState(false);
 
@@ -893,59 +894,90 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* SERVICES SECTION - REDESIGNED LIST LAYOUT */}
-      <section className="py-12 md:py-20 px-6 relative overflow-hidden">
-        {/* Animated Background Elements for Services Section */}
+      {/* SERVICES SECTION - DUAL PATHWAYS */}
+      <section className="py-12 md:py-24 px-6 relative overflow-hidden bg-black">
+        {/* Background Effects */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-[20%] right-[10%] w-[300px] h-[300px] bg-accent/5 rounded-full blur-[80px]" />
-          <div className="absolute bottom-[20%] left-[10%] w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[80px]" />
-          <LightningDoodle className="absolute top-20 right-20 w-16 h-16 text-white/5 opacity-50" />
+          <div className="absolute top-[30%] left-[20%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px]" />
+          <div className="absolute bottom-[20%] right-[20%] w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]" />
         </div>
 
-        <div className="container mx-auto relative z-10 max-w-5xl">
-          <FadeIn className="mb-10 md:mb-12 text-center">
-            <h2 className="text-3xl md:text-5xl font-display font-semibold mb-6">Services</h2>
-            <div className="h-1 w-24 bg-accent/50 rounded-full mx-auto" />
+        <div className="container mx-auto relative z-10 max-w-6xl">
+          <FadeIn className="mb-14 text-center">
+            <span className="text-accent uppercase tracking-widest text-xs font-bold mb-4 block">Choose Your Path</span>
+            <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">How We Scale Brands</h2>
+            <p className="text-white/50 max-w-2xl mx-auto text-lg font-light">
+              We combine creative dominance with operational intelligence. Select your growth engine.
+            </p>
           </FadeIn>
 
-          <div className="flex flex-col gap-4">
-            {SERVICES.map((service, idx) => (
-              <FadeIn key={idx} delay={idx * 0.05}>
-                <div className="group flex flex-col md:flex-row items-center justify-between p-6 border-b border-white/10 hover:bg-white/5 transition-all duration-300 rounded-lg cursor-default">
-                  <div className="flex items-start md:items-center space-x-6 w-full md:w-auto mb-4 md:mb-0">
-                    <div className="w-10 h-10 rounded-lg bg-surfaceHighlight border border-white/5 flex items-center justify-center text-accent/80 group-hover:text-accent group-hover:scale-110 transition-all duration-300">
-                      <service.icon size={20} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white group-hover:text-accent transition-colors duration-300">{service.title}</h3>
-                      <p className="text-white/40 text-sm mt-1 max-w-xl">{service.description}</p>
-                    </div>
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
 
-                  {/* Animated Video Icon */}
-                  <div className="relative w-12 h-12 flex items-center justify-center flex-shrink-0">
-                    <motion.div
-                      className="absolute inset-0 bg-accent/10 rounded-full"
-                      animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                    <PlayCircle size={24} className="text-white group-hover:text-accent transition-colors duration-300 relative z-10" />
+            {/* PATH 1: MARKETING */}
+            <FadeIn className="group relative h-full">
+              <div
+                onClick={() => navigate('/services', { state: { activeTab: 'marketing' } })}
+                className="h-full bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden relative transition-all duration-500 hover:border-accent/40 hover:shadow-[0_0_30px_rgba(34,211,238,0.1)] cursor-pointer flex flex-col"
+              >
+                {/* Image/Visual Top */}
+                <div className="h-64 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700 mix-blend-luminosity group-hover:mix-blend-normal" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
+
+                  <div className="absolute top-6 left-6 bg-white/10 backdrop-blur border border-white/10 px-3 py-1 rounded-full text-xs text-white font-bold flex items-center gap-2">
+                    <Camera size={14} className="text-accent" />
+                    Creative Infrastructure
                   </div>
                 </div>
-              </FadeIn>
-            ))}
-          </div>
 
-          <div className="mt-10 text-center">
-            <NavLink to="/services">
-              <Button variant="outline" className="group">
-                Know more about this service
-                <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </NavLink>
+                {/* Content Bottom */}
+                <div className="p-8 flex-1 flex flex-col">
+                  <h3 className="text-3xl font-display font-bold text-white mb-3 group-hover:text-accent transition-colors">Marketing</h3>
+                  <p className="text-white/60 leading-relaxed mb-8 flex-1">
+                    Dominant visuals, high-converting websites, and data-driven ad campaigns. The "Frontend" of your success.
+                  </p>
+
+                  <div className="flex items-center gap-4 text-sm font-bold text-white group-hover:translate-x-2 transition-transform">
+                    Explore Services <ArrowRight size={16} className="text-accent" />
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+
+            {/* PATH 2: AUTOMATION */}
+            <FadeIn delay={0.2} className="group relative h-full">
+              <div
+                onClick={() => navigate('/services', { state: { activeTab: 'automation' } })}
+                className="h-full bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden relative transition-all duration-500 hover:border-purple-500/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] cursor-pointer flex flex-col"
+              >
+                {/* Image/Visual Top */}
+                <div className="h-64 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700 mix-blend-luminosity group-hover:mix-blend-normal" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
+
+                  <div className="absolute top-6 left-6 bg-purple-500/10 backdrop-blur border border-purple-500/20 px-3 py-1 rounded-full text-xs text-purple-300 font-bold flex items-center gap-2">
+                    <Bot size={14} />
+                    AI Systems
+                  </div>
+                </div>
+
+                {/* Content Bottom */}
+                <div className="p-8 flex-1 flex flex-col">
+                  <h3 className="text-3xl font-display font-bold text-white mb-3 group-hover:text-purple-400 transition-colors">Automation</h3>
+                  <p className="text-white/60 leading-relaxed mb-8 flex-1">
+                    Intelligent chatbots, CRM agents, and 24/7 lead nurturing. The "Backend" engine of your growth.
+                  </p>
+
+                  <div className="flex items-center gap-4 text-sm font-bold text-white group-hover:translate-x-2 transition-transform">
+                    Explore AI Tools <ArrowRight size={16} className="text-purple-400" />
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+
           </div>
         </div>
-      </section>
+      </section
 
       {/* FOUNDER SECTION */}
       <section className="py-12 md:py-20 bg-surfaceHighlight relative overflow-hidden">

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import Button from '../components/Button';
 import {
   Target, Cpu, TrendingUp, Monitor, PenTool, Camera, ShieldCheck, Filter,
@@ -342,7 +343,65 @@ const OnsiteVisual = () => (
   </div>
 );
 
-// --- NEW VISUAL COMPONENTS (Automation) ---
+// --- NEW VISUAL COMPONENTS (Automation) - ENHANCED ---
+
+const AutomationHeroVisual = () => (
+  <div className="relative w-full aspect-video bg-[#0a0a0a] rounded-2xl border border-white/10 overflow-hidden shadow-2xl flex items-center justify-center p-8 group">
+    {/* Background Grid & Scanlines */}
+    <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,136,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,136,0.03)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
+
+    {/* Central Interactive Node */}
+    <motion.div
+      className="relative z-10 w-24 h-24 md:w-32 md:h-32 bg-black border border-accent rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(34,211,238,0.3)]"
+      initial={{ scale: 0.9 }}
+      animate={{ scale: 1, boxShadow: ["0 0 20px rgba(34,211,238,0.3)", "0 0 50px rgba(34,211,238,0.6)", "0 0 20px rgba(34,211,238,0.3)"] }}
+      transition={{ duration: 3, repeat: Infinity }}
+    >
+      <Bot size={48} className="text-accent" />
+
+      {/* Orbiting Particles */}
+      {[0, 120, 240].map((deg, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-full h-full rounded-full border border-white/5"
+          style={{ rotate: deg, opacity: 0.5 }}
+          animate={{ rotate: deg + 360 }}
+          transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "linear" }}
+        >
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-accent rounded-full shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
+        </motion.div>
+      ))}
+    </motion.div>
+
+    {/* Floating Feature Cards */}
+    <motion.div
+      className="absolute top-[10%] left-[5%] md:left-[15%] bg-[#1a1a1a]/90 backdrop-blur border border-green-500/30 px-3 py-2 rounded-lg flex items-center gap-2"
+      animate={{ y: [-5, 5, -5] }}
+      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+    >
+      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+      <span className="text-[10px] md:text-xs font-mono text-green-400">Booking: Confirmed</span>
+    </motion.div>
+
+    <motion.div
+      className="absolute bottom-[20%] right-[5%] md:right-[15%] bg-[#1a1a1a]/90 backdrop-blur border border-purple-500/30 px-3 py-2 rounded-lg flex items-center gap-2"
+      animate={{ y: [5, -5, 5] }}
+      transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+    >
+      <MessageSquare size={12} className="text-purple-400" />
+      <span className="text-[10px] md:text-xs font-mono text-purple-400">Reply Sent</span>
+    </motion.div>
+
+    <motion.div
+      className="absolute top-[20%] right-[10%] bg-[#1a1a1a]/90 backdrop-blur border border-yellow-500/30 px-3 py-2 rounded-lg flex items-center gap-2"
+      animate={{ x: [-5, 5, -5] }}
+      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+    >
+      <Star size={12} className="text-yellow-400 fill-yellow-400" />
+      <span className="text-[10px] md:text-xs font-mono text-yellow-400">5-Star Review</span>
+    </motion.div>
+  </div>
+);
 
 const ChatbotVisual = () => (
   <div className="relative w-full aspect-square md:aspect-video bg-[#0a0a0a] rounded-xl border border-white/10 overflow-hidden shadow-2xl flex flex-col">
@@ -359,7 +418,7 @@ const ChatbotVisual = () => (
 
       <motion.div initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="flex justify-start">
         <div className="bg-white/10 px-3 py-2 rounded-t-lg rounded-br-lg rounded-bl-none max-w-[80%] text-xs text-white/80">
-          Hi! How can I help you scale your business today?
+          Hi! How can I help you scale your business?
         </div>
       </motion.div>
       <motion.div initial={{ opacity: 0, x: 10 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 1.0 }} className="flex justify-end">
@@ -383,7 +442,15 @@ const ChatbotVisual = () => (
 )
 
 const Services: React.FC = () => {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState<'marketing' | 'automation'>('marketing');
+
+  // React to Navigation State
+  useEffect(() => {
+    if (location.state && location.state.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location]);
 
   return (
     <div className="pt-24 md:pt-32 min-h-screen bg-background overflow-x-hidden pb-20 font-sans">
@@ -403,7 +470,7 @@ const Services: React.FC = () => {
           {/* TABS */}
           <div className="inline-flex items-center p-1 bg-white/5 border border-white/10 rounded-full relative">
             <div
-              className={`absolute inset-y-1 rounded-full transition-all duration-500 ease-out ${activeTab === 'marketing' ? 'left-1 w-[calc(50%-4px)] bg-accent/20 border border-accent/30' : 'left-[50%] w-[calc(50%-4px)] bg-accent/20 border border-accent/30'}`}
+              className={`absolute inset-y-1 rounded-full transition-all duration-500 ease-out ${activeTab === 'marketing' ? 'left-1 w-[calc(50%-4px)] bg-accent/20 border border-accent/30' : 'left-[50%] w-[calc(50%-4px)] bg-indigo-500/20 border border-indigo-500/30'}`}
             ></div>
             <button
               onClick={() => setActiveTab('marketing')}
@@ -611,7 +678,7 @@ const Services: React.FC = () => {
             className="space-y-32 container mx-auto px-6"
           >
             {/* HERO SUBTEXT & CTA */}
-            <div className="text-center max-w-3xl mx-auto -mt-16">
+            <div className="text-center max-w-3xl mx-auto -mt-16 relative z-10">
               <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed mb-8">
                 Automate conversations, bookings, reviews, follow-ups, and lead management using intelligent AI systems designed to scale your business operations 24/7.
               </p>
@@ -622,6 +689,11 @@ const Services: React.FC = () => {
                 </button>
               </div>
             </div>
+
+            {/* HIGH END HERO VISUAL */}
+            <FadeIn delay={0.2}>
+              <AutomationHeroVisual />
+            </FadeIn>
 
             {/* WHAT IS AI AUTOMATION */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -639,7 +711,7 @@ const Services: React.FC = () => {
                     "Scale without increasing staff"
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-white/80">
-                      <div className="w-1.5 h-1.5 bg-accent rounded-full"></div>
+                      <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full shadow-[0_0_10px_rgb(99,102,241)]"></div>
                       {item}
                     </li>
                   ))}
@@ -650,29 +722,31 @@ const Services: React.FC = () => {
               </FadeIn>
             </div>
 
-            {/* CORE FEATURE GRID */}
+            {/* CORE FEATURE GRID - TECH STYLE */}
             <div>
               <h2 className="text-3xl font-display font-bold mb-12 text-center">Core Automation Services</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[
-                  { icon: MessageSquare, title: "AI Chatbots (Social)", desc: "Auto-reply to DMs on Instagram, FB, WhatsApp & Website. Qualify leads & book meetings." },
-                  { icon: Bot, title: "AI Voice Agents", desc: "Voice-based assistants that handle calls, answer FAQs, and book appointments 24/7." },
-                  { icon: Calendar, title: "Auto-Booking System", desc: "Syncs with calendars, prevents double bookings, and sends automated reminders." },
-                  { icon: Database, title: "Lead Capture & CRM", desc: "Centralizes leads from forms, chats, and calls into one organized dashboard." },
-                  { icon: Activity, title: "Multi-Channel Follow-up", desc: "Automated SMS, Email, and WhatsApp sequences to nurture leads instantly." },
-                  { icon: Star, title: "Google Review System", desc: "Automatically requests reviews post-service to boost your reputation." },
-                  { icon: Layers, title: "AI Review Replies", desc: "Smart AI responses to positive & negative reviews to maintain brand image." },
-                  { icon: Phone, title: "Missed Call Text-Back", desc: "Instantly texts callers when you miss a call, capturing potential lost revenue." },
-                  { icon: Mail, title: "AI Email Marketing", desc: "Personalized cold outreach and nurturing campaigns that feel human." },
-                  { icon: Filter, title: "Funnel Automation", desc: "Seamless lead flows from landing pages to thank-you pages and CRM sync." },
-                  { icon: DollarSign, title: "Payment Automation", desc: "Auto-generate invoices and payment links after bookings or services." },
-                  { icon: Workflow, title: "Internal Workflows", desc: "Slack/WhatsApp alerts for your team when high-value leads arrive." },
-                  { icon: Zap, title: "Analytics & ROI", desc: "Track where every lead comes from and measure real dollar returns." }
+                  { icon: MessageSquare, title: "AI Chatbots (Social)", desc: "Auto-reply to DMs on Instagram, FB, WhatsApp & Website. Qualify leads & book meetings.", color: "text-blue-400" },
+                  { icon: Bot, title: "AI Voice Agents", desc: "Voice-based assistants that handle calls, answer FAQs, and book appointments 24/7.", color: "text-purple-400" },
+                  { icon: Calendar, title: "Auto-Booking System", desc: "Syncs with calendars, prevents double bookings, and sends automated reminders.", color: "text-pink-400" },
+                  { icon: Database, title: "Lead Capture & CRM", desc: "Centralizes leads from forms, chats, and calls into one organized dashboard.", color: "text-green-400" },
+                  { icon: Activity, title: "Multi-Channel Follow-up", desc: "Automated SMS, Email, and WhatsApp sequences to nurture leads instantly.", color: "text-yellow-400" },
+                  { icon: Star, title: "Google Review System", desc: "Automatically requests reviews post-service to boost your reputation.", color: "text-orange-400" },
+                  { icon: Layers, title: "AI Review Replies", desc: "Smart AI responses to positive & negative reviews to maintain brand image.", color: "text-red-400" },
+                  { icon: Phone, title: "Missed Call Text-Back", desc: "Instantly texts callers when you miss a call, capturing potential lost revenue.", color: "text-teal-400" },
+                  { icon: Mail, title: "AI Email Marketing", desc: "Personalized cold outreach and nurturing campaigns that feel human.", color: "text-indigo-400" },
+                  { icon: Filter, title: "Funnel Automation", desc: "Seamless lead flows from landing pages to thank-you pages and CRM sync.", color: "text-cyan-400" },
+                  { icon: DollarSign, title: "Payment Automation", desc: "Auto-generate invoices and payment links after bookings or services.", color: "text-emerald-400" },
+                  { icon: Workflow, title: "Internal Workflows", desc: "Slack/WhatsApp alerts for your team when high-value leads arrive.", color: "text-lime-400" },
+                  { icon: Zap, title: "Analytics & ROI", desc: "Track where every lead comes from and measure real dollar returns.", color: "text-amber-400" }
                 ].map((feature, i) => {
                   const Icon = feature.icon;
                   return (
-                    <FadeIn key={i} delay={i * 0.05} className="bg-surface border border-white/5 p-6 rounded-2xl hover:border-accent/30 transition-colors group">
-                      <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center mb-4 text-accent group-hover:bg-accent group-hover:text-black transition-colors">
+                    <FadeIn key={i} delay={i * 0.05} className="bg-surface/30 backdrop-blur-sm border border-white/5 p-6 rounded-2xl hover:border-white/20 transition-all hover:-translate-y-1 group relative overflow-hidden">
+                      <div className={`absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity ${feature.color}`} />
+
+                      <div className={`w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center mb-4 transition-colors ${feature.color}`}>
                         <Icon size={20} />
                       </div>
                       <h3 className="text-lg font-bold mb-2">{feature.title}</h3>
@@ -684,12 +758,16 @@ const Services: React.FC = () => {
             </div>
 
             {/* INDUSTRY USE CASES */}
-            <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 md:p-16">
-              <h2 className="text-3xl font-display font-bold mb-10 text-center">Industry Applications</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="bg-gradient-to-br from-[#1a1a1a] to-black border border-white/10 rounded-3xl p-8 md:p-16 relative overflow-hidden">
+              {/* Background Glow */}
+              <div className="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/10 rounded-full blur-[80px]" />
+              <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-purple-500/10 rounded-full blur-[80px]" />
+
+              <h2 className="text-3xl font-display font-bold mb-10 text-center relative z-10">Industry Applications</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
                 <div className="space-y-6">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="p-3 bg-accent/10 rounded-xl text-accent"><Target size={24} /></div>
+                    <div className="p-3 bg-blue-500/10 rounded-xl text-blue-400"><Target size={24} /></div>
                     <h3 className="text-2xl font-bold">Service Businesses</h3>
                   </div>
                   <p className="text-white/60">Perfect for Roofers, Dentists, Salons, and Consultants.</p>
@@ -701,7 +779,7 @@ const Services: React.FC = () => {
                 </div>
                 <div className="space-y-6">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="p-3 bg-purple-500/10 rounded-xl text-purple-400"><ShoppingCart size={24} /></div>
+                    <div className="p-3 bg-pink-500/10 rounded-xl text-pink-400"><ShoppingCart size={24} /></div>
                     <h3 className="text-2xl font-bold">E-Commerce</h3>
                   </div>
                   <p className="text-white/60">For Shopify stores and D2C brands.</p>
@@ -729,8 +807,8 @@ const Services: React.FC = () => {
                     { step: "04", title: "Deploy", desc: "We launch the system live." },
                     { step: "05", title: "Scale", desc: "We optimize for maximum ROI." }
                   ].map((s, i) => (
-                    <div key={i} className="bg-background border border-white/10 p-6 rounded-xl text-center">
-                      <div className="text-3xl font-bold text-accent/20 mb-2">{s.step}</div>
+                    <div key={i} className="bg-background border border-white/10 p-6 rounded-xl text-center group hover:border-accent/40 transition-colors">
+                      <div className="text-3xl font-bold text-white/10 group-hover:text-accent/20 transition-colors mb-2">{s.step}</div>
                       <h3 className="font-bold text-lg mb-1">{s.title}</h3>
                       <p className="text-xs text-white/50">{s.desc}</p>
                     </div>
@@ -740,7 +818,7 @@ const Services: React.FC = () => {
             </div>
 
             {/* FINAL CTA */}
-            <div className="text-center bg-gradient-to-b from-accent/5 to-transparent p-12 rounded-3xl border border-accent/10">
+            <div className="text-center bg-gradient-to-b from-indigo-500/10 to-transparent p-12 rounded-3xl border border-indigo-500/20">
               <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">Ready to Automate?</h2>
               <p className="text-white/60 max-w-xl mx-auto mb-8">
                 Frame n Flow Media is not just a chatbot provider. We are your business automation partner.
