@@ -33,7 +33,8 @@ import {
     PieChart,
     TrendingUp,
     Target,
-    Bell // Added
+    Bell,
+    Info // Added Info icon
 } from 'lucide-react';
 
 // --- SUB-COMPONENTS ---
@@ -604,6 +605,7 @@ const Dashboard: React.FC = () => {
                     {view === 'profile' && <ProfileSettings user={user} partnerData={partnerData} refresh={() => loadPartnerData(user?.partnerId!)} />}
 
                     {view === 'earnings' && (() => {
+                        const symbol = partnerData?.primary_currency === 'USD' ? '$' : '₹';
                         const earningsList = partnerData.earningsHistory || [];
                         const pendingAmt = earningsList.filter((e: any) => e.status === 'pending').reduce((acc: number, e: any) => acc + (Number(e.amount) || 0), 0);
                         const approvedAmt = earningsList.filter((e: any) => e.status === 'approved').reduce((acc: number, e: any) => acc + (Number(e.amount) || 0), 0);
@@ -734,9 +736,9 @@ const Dashboard: React.FC = () => {
                                                             </td>
                                                             <td className="p-4 text-center">
                                                                 <span className={`px-2 py-1 rounded text-[10px] uppercase font-bold border ${e.status === 'paid' ? 'bg-green-500/10 border-green-500/20 text-green-500' :
-                                                                        e.status === 'approved' ? 'bg-blue-500/10 border-blue-500/20 text-blue-500' :
-                                                                            e.status === 'rejected' ? 'bg-red-500/10 border-red-500/20 text-red-500' :
-                                                                                'bg-yellow-500/10 border-yellow-500/20 text-yellow-500'
+                                                                    e.status === 'approved' ? 'bg-blue-500/10 border-blue-500/20 text-blue-500' :
+                                                                        e.status === 'rejected' ? 'bg-red-500/10 border-red-500/20 text-red-500' :
+                                                                            'bg-yellow-500/10 border-yellow-500/20 text-yellow-500'
                                                                     }`}>
                                                                     {e.status}
                                                                 </span>
