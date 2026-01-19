@@ -520,9 +520,17 @@ const Dashboard: React.FC = () => {
     const handleSubmitLog = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user?.partnerId) return;
-        await SupabaseBackend.logOutreach(user.partnerId, { ...logForm, date: new Date(logForm.date).toISOString() });
-        loadPartnerData(user.partnerId);
-        setView('overview'); // Go back to overview after log
+        
+        const result: any = await SupabaseBackend.logOutreach(user.partnerId, { ...logForm, date: new Date(logForm.date).toISOString() });
+        
+        if (result && result.success) {
+            alert('Daily log submitted successfully!');
+            loadPartnerData(user.partnerId);
+            setView('overview'); // Go back to overview after log
+        } else {
+            alert('Failed to submit daily log: ' + (result?.error || 'Unknown error. Please try again.'));
+            console.error('Log submission error:', result);
+        }
     };
 
     // Currency Symbol Helper

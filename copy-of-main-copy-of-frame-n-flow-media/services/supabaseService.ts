@@ -488,7 +488,12 @@ export const SupabaseBackend = {
             .select()
             .single();
 
-        return data;
+        if (error) {
+            console.error('Log Outreach Error:', error);
+            return { success: false, error: error.message };
+        }
+
+        return { success: true, data };
     },
     // --- ADMIN EXTENSIONS ---
 
@@ -549,5 +554,122 @@ export const SupabaseBackend = {
             .update({ is_active: false })
             .eq('id', id);
         return { error };
+    },
+
+    // User/Partner Deletion with Data Export
+    getUserActivityData: async (partnerId: string) => {
+        try {
+            // Fetch all user data for PDF export
+            const { data: partner } = await supabase
+                .from('partners')
+                .select('*, profiles!inner(*)')
+                .eq('id', partnerId)
+                .single();
+
+            if (!partner) return null;
+
+            // Fetch all related data
+            const { data: logs } = await supabase
+                .from('outreach_logs')
+                .select('*')
+                .eq('partner_id', partnerId)
+                .order('date', { ascending: false });
+
+            const { data: earnings } = await supabase
+                .from('earnings')
+                .select('*')
+                .eq('partner_id', partnerId)
+                .order('deal_closed_date', { ascending: false });
+
+            const { data: leads } = await supabase
+                .from('partner_leads')
+                .select('*')
+                .eq('partner_id', partnerId)
+                .order('created_at', { ascending: false });
+
+            const { data: application } = await supabase
+                .from('applications')
+                .select('*')
+                .eq('id', partner.application_id)
+                .single();
+
+            return {
+                partner,
+                application,
+                outreachLogs: logs || [],
+                earnings: earnings || [],
+                leads: leads || [],
+                exportDate: new Date().toISOString()
+            };
+        } catch (error) {
+            console.error('Error fetching user activity data:', error);
+            return null;
+        }
+    },
+
+    deletePartner: async (partnerId: string) => {
+        try {
+            // Get partner to find user_id
+            const { data: partner } = await supabase
+                .from('partners')
+                .select('user_id, application_id')
+                .eq('id', partnerId)
+                .single();
+
+            if (!partner) {
+                return { success: false, error: 'Partner not found' };
+            }
+
+            // Delete in order (child tables first due to foreign keys)
+            // 1. Delete outreach logs
+            await supabase
+                .from('outreach_logs')
+                .delete()
+                .eq('partner_id', partnerId);
+
+            // 2. Delete earnings
+            await supabase
+                .from('earnings')
+                .delete()
+                .eq('partner_id', partnerId);
+
+            // 3. Delete leads
+            await supabase
+                .from('partner_leads')
+                .delete()
+                .eq('partner_id', partnerId);
+
+            // 4. Delete partner record
+            await supabase
+                .from('partners')
+                .delete()
+                .eq('id', partnerId);
+
+            // 5. Delete application if exists
+            if (partner.application_id) {
+                await supabase
+                    .from('applications')
+                    .delete()
+                    .eq('id', partner.application_id);
+            }
+
+            // 6. Delete profile (this will cascade to auth.users)
+            if (partner.user_id) {
+                await supabase
+                    .from('profiles')
+                    .delete()
+                    .eq('id', partner.user_id);
+
+                // 7. Delete from auth.users (requires admin privileges)
+                // Note: This requires service role key, not anon key
+                // For now, we'll just delete the profile and let admin manually delete auth user
+                // Or use Supabase Admin API
+            }
+
+            return { success: true };
+        } catch (error: any) {
+            console.error('Error deleting partner:', error);
+            return { success: false, error: error.message };
+        }
     }
 };
