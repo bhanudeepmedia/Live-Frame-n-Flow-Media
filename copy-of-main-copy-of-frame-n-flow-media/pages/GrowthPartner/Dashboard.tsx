@@ -603,75 +603,156 @@ const Dashboard: React.FC = () => {
                     {view === 'resources' && <Resources />}
                     {view === 'profile' && <ProfileSettings user={user} partnerData={partnerData} refresh={() => loadPartnerData(user?.partnerId!)} />}
 
-                    {view === 'earnings' && (
-                        <div className="space-y-6 animate-fade-in">
-                            <h2 className="text-3xl font-display font-bold">Earnings & Commissions</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="bg-surface p-6 rounded-xl border border-white/5">
-                                    <div className="text-sm text-muted mb-1">Total Lifetime Earnings</div>
-                                    <div className="text-3xl font-bold">{symbol}{partnerData.earnings.total}</div>
-                                </div>
-                                <div className="bg-surface p-6 rounded-xl border border-white/5">
-                                    <div className="text-sm text-muted mb-1">Approved & Paid</div>
-                                    <div className="text-3xl font-bold text-green-400">{symbol}{partnerData.earnings.paid}</div>
-                                </div>
-                                <div className="bg-surface p-6 rounded-xl border border-white/5">
-                                    <div className="text-sm text-muted mb-1">Pending Approval</div>
-                                    <div className="text-3xl font-bold text-yellow-400">{symbol}{partnerData.earnings.pending}</div>
-                                </div>
-                            </div>
-                            <div className="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20 text-sm">
-                                ℹ️ Commissions are reviewed weekly. "Pending" amounts are estimates based on booked calls and may change upon final deal closure.
-                            </div>
+                    {view === 'earnings' && (() => {
+                        const earningsList = partnerData.earningsHistory || [];
+                        const pendingAmt = earningsList.filter((e: any) => e.status === 'pending').reduce((acc: number, e: any) => acc + (Number(e.amount) || 0), 0);
+                        const approvedAmt = earningsList.filter((e: any) => e.status === 'approved').reduce((acc: number, e: any) => acc + (Number(e.amount) || 0), 0);
+                        const paidAmt = earningsList.filter((e: any) => e.status === 'paid').reduce((acc: number, e: any) => acc + (Number(e.amount) || 0), 0);
+                        const totalAmt = approvedAmt + paidAmt;
 
-                            <div className="mt-8">
-                                <h3 className="text-xl font-bold mb-4">Payout History</h3>
-                                <div className="bg-surface border border-white/5 rounded-xl overflow-hidden">
-                                    {partnerData.earningsHistory && partnerData.earningsHistory.length > 0 ? (
-                                        <table className="w-full text-left text-sm">
-                                            <thead className="bg-white/5 text-muted uppercase text-xs">
-                                                <tr>
-                                                    <th className="p-4">Date</th>
-                                                    <th className="p-4">Client / Deal</th>
-                                                    <th className="p-4">Val</th>
-                                                    <th className="p-4 text-center">%</th>
-                                                    <th className="p-4 text-right">Commission</th>
-                                                    <th className="p-4 text-center">Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody className="divide-y divide-white/5">
-                                                {partnerData.earningsHistory.map((e: any) => (
-                                                    <tr key={e.id} className="hover:bg-white/5 transition-colors">
-                                                        <td className="p-4 text-muted text-xs">{new Date(e.date).toLocaleDateString()}</td>
-                                                        <td className="p-4">
-                                                            <div className="font-bold">{e.clientName}</div>
-                                                            <div className="text-[10px] text-muted uppercase">{e.serviceType || 'Service'}</div>
-                                                        </td>
-                                                        <td className="p-4 text-xs font-mono opacity-70">₹{Number(e.dealValue).toLocaleString()}</td>
-                                                        <td className="p-4 text-xs text-center">{e.commissionPerc || 20}%</td>
-                                                        <td className="p-4 text-right font-mono font-bold text-green-400">
-                                                            {symbol}{Number(e.amount).toLocaleString()}
-                                                        </td>
-                                                        <td className="p-4 text-center">
-                                                            <span className={`px-2 py-1 rounded text-[10px] uppercase font-bold border ${e.status === 'paid' ? 'bg-green-500/10 border-green-500/20 text-green-500' :
-                                                                    e.status === 'approved' ? 'bg-blue-500/10 border-blue-500/20 text-blue-500' :
-                                                                        e.status === 'rejected' ? 'bg-red-500/10 border-red-500/20 text-red-500' :
-                                                                            'bg-yellow-500/10 border-yellow-500/20 text-yellow-500'
-                                                                }`}>
-                                                                {e.status}
-                                                            </span>
-                                                        </td>
+                        // Mock Weekly/Monthly Data (Aggregation Logic)
+                        const getMonthlyData = () => {
+                            const months: any = {};
+                            earningsList.forEach((e: any) => {
+                                const m = new Date(e.date).toLocaleString('default', { month: 'short' });
+                                months[m] = (months[m] || 0) + Number(e.amount);
+                            });
+                            // Fill last 6 months
+                            const required = [];
+                            for (let i = 5; i >= 0; i--) {
+                                const d = new Date(); d.setMonth(d.getMonth() - i);
+                                const m = d.toLocaleString('default', { month: 'short' });
+                                required.push({ label: m, value: months[m] || 0 });
+                            }
+                            return required;
+                        };
+
+                        const monthlyStats = getMonthlyData();
+
+                        return (
+                            <div className="space-y-8 animate-fade-in">
+                                <h2 className="text-3xl font-display font-bold">Earnings & Commissions</h2>
+
+                                {/* 4-Card Grid */}
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    <div className="bg-surface p-6 rounded-xl border border-white/5">
+                                        <div className="text-xs text-muted mb-1 uppercase tracking-wider">Total Earnings</div>
+                                        <div className="text-2xl font-bold font-mono">{symbol}{totalAmt.toLocaleString()}</div>
+                                    </div>
+                                    <div className="bg-surface p-6 rounded-xl border border-white/5">
+                                        <div className="text-xs text-green-500 mb-1 uppercase tracking-wider">Paid Out</div>
+                                        <div className="text-2xl font-bold font-mono text-green-400">{symbol}{paidAmt.toLocaleString()}</div>
+                                    </div>
+                                    <div className="bg-surface p-6 rounded-xl border border-white/5">
+                                        <div className="text-xs text-blue-500 mb-1 uppercase tracking-wider">Approved (Unpaid)</div>
+                                        <div className="text-2xl font-bold font-mono text-blue-400">{symbol}{approvedAmt.toLocaleString()}</div>
+                                    </div>
+                                    <div className="bg-surface p-6 rounded-xl border border-white/5">
+                                        <div className="text-xs text-yellow-500 mb-1 uppercase tracking-wider">Pending Approval</div>
+                                        <div className="text-2xl font-bold font-mono text-yellow-400">{symbol}{pendingAmt.toLocaleString()}</div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-blue-500/5 p-4 rounded-xl border border-blue-500/10 text-xs text-blue-200 flex items-center gap-2">
+                                    <Info size={16} /> Commissions are reviewed weekly. "Pending" amounts are estimates based on booked deals and may change upon final verification.
+                                </div>
+
+                                {/* Charts & Stats */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Monthly Performance */}
+                                    <div className="bg-surface border border-white/5 p-6 rounded-xl">
+                                        <h4 className="font-bold mb-6 text-xs uppercase text-muted tracking-wider">Monthly Performance</h4>
+                                        <div className="flex items-end justify-between h-40 gap-2">
+                                            {monthlyStats.map((d: any, i: number) => {
+                                                const max = Math.max(...monthlyStats.map((s: any) => s.value), 1);
+                                                const h = (d.value / max) * 100;
+                                                return (
+                                                    <div key={i} className="flex flex-col items-center gap-2 flex-1 group w-full">
+                                                        <div className="text-[10px] text-white/40 group-hover:text-white transition-colors mb-1">
+                                                            {d.value > 0 ? `${(d.value / 1000).toFixed(1)}k` : ''}
+                                                        </div>
+                                                        <div
+                                                            className="w-full max-w-[30px] rounded-t bg-gradient-to-t from-green-500/20 to-green-500/60 hover:to-green-400 transition-all relative"
+                                                            style={{ height: `${h}%`, minHeight: '4px' }}
+                                                        ></div>
+                                                        <div className="text-[10px] text-muted font-bold uppercase">{d.label}</div>
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    {/* Recent Activity / Mini Stats */}
+                                    <div className="bg-surface border border-white/5 p-6 rounded-xl">
+                                        <h4 className="font-bold mb-6 text-xs uppercase text-muted tracking-wider">Deal Composition</h4>
+                                        <div className="space-y-4">
+                                            <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                                                <span className="text-sm">Paid Deals</span>
+                                                <span className="font-mono">{earningsList.filter((e: any) => e.status === 'paid').length}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                                                <span className="text-sm">Avg. Deal Value</span>
+                                                <span className="font-mono">{earningsList.length > 0 ? (
+                                                    symbol + Math.round(earningsList.reduce((a: number, b: any) => a + Number(b.dealValue), 0) / earningsList.length).toLocaleString()
+                                                ) : '0'}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                                                <span className="text-sm">Pending Review</span>
+                                                <span className="font-mono text-yellow-400">{earningsList.filter((e: any) => e.status === 'pending').length}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="mt-8">
+                                    <h3 className="text-xl font-bold mb-4">Payout History</h3>
+                                    <div className="bg-surface border border-white/5 rounded-xl overflow-hidden">
+                                        {earningsList.length > 0 ? (
+                                            <table className="w-full text-left text-sm">
+                                                <thead className="bg-white/5 text-muted uppercase text-xs">
+                                                    <tr>
+                                                        <th className="p-4">Date</th>
+                                                        <th className="p-4">Client / Deal</th>
+                                                        <th className="p-4">Val</th>
+                                                        <th className="p-4 text-center">%</th>
+                                                        <th className="p-4 text-right">Commission</th>
+                                                        <th className="p-4 text-center">Status</th>
                                                     </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    ) : (
-                                        <div className="p-8 text-center text-muted">No payout history available yet.</div>
-                                    )}
+                                                </thead>
+                                                <tbody className="divide-y divide-white/5">
+                                                    {earningsList.map((e: any) => (
+                                                        <tr key={e.id} className="hover:bg-white/5 transition-colors">
+                                                            <td className="p-4 text-muted text-xs">{new Date(e.date).toLocaleDateString()}</td>
+                                                            <td className="p-4">
+                                                                <div className="font-bold">{e.clientName}</div>
+                                                                <div className="text-[10px] text-muted uppercase">{e.serviceType || 'Service'}</div>
+                                                            </td>
+                                                            <td className="p-4 text-xs font-mono opacity-70">₹{Number(e.dealValue).toLocaleString()}</td>
+                                                            <td className="p-4 text-xs text-center">{e.commissionPerc || 20}%</td>
+                                                            <td className="p-4 text-right font-mono font-bold text-green-400">
+                                                                {symbol}{Number(e.amount).toLocaleString()}
+                                                            </td>
+                                                            <td className="p-4 text-center">
+                                                                <span className={`px-2 py-1 rounded text-[10px] uppercase font-bold border ${e.status === 'paid' ? 'bg-green-500/10 border-green-500/20 text-green-500' :
+                                                                        e.status === 'approved' ? 'bg-blue-500/10 border-blue-500/20 text-blue-500' :
+                                                                            e.status === 'rejected' ? 'bg-red-500/10 border-red-500/20 text-red-500' :
+                                                                                'bg-yellow-500/10 border-yellow-500/20 text-yellow-500'
+                                                                    }`}>
+                                                                    {e.status}
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        ) : (
+                                            <div className="p-8 text-center text-muted">No payout history available yet.</div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        );
+                    })()}
 
                     {view === 'log' && (
                         <div className="max-w-2xl animate-fade-in space-y-6">

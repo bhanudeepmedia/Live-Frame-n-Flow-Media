@@ -293,7 +293,11 @@ const CommissionsManager = ({ partners, getPartnerName, refreshData }: any) => {
 
     const handleStatus = async (id: string, status: 'approved' | 'paid', pid: string, amt: number) => {
         if (!confirm(`Change status to ${status.toUpperCase()}? This handles financial logic.`)) return;
-        await SupabaseBackend.updateEarningStatus(id, status, pid, amt);
+        const res = await SupabaseBackend.updateEarningStatus(id, status, pid, amt);
+        if (!res.success) {
+            alert('Update failed: ' + res.error);
+            return;
+        }
         refreshData();
     };
 
@@ -381,7 +385,7 @@ const CommissionsManager = ({ partners, getPartnerName, refreshData }: any) => {
                             <th className="p-4">Client / Deal</th>
                             <th className="p-4">Commission</th>
                             <th className="p-4">Status</th>
-                            <th className="p-4 text-right">Actions</th>
+                            <th className="p-4 text-right w-[160px]">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
@@ -405,14 +409,22 @@ const CommissionsManager = ({ partners, getPartnerName, refreshData }: any) => {
                                             {e.status}
                                         </span>
                                     </td>
-                                    <td className="p-4 text-right space-x-2 opacity-100 group-hover:opacity-100 transition-opacity">
-                                        {e.status === 'pending' && (
-                                            <button onClick={() => handleStatus(e.id, 'approved', e.partnerId, Number(e.amount))} className="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded hover:bg-blue-500 hover:text-white">Approve</button>
-                                        )}
-                                        {e.status === 'approved' && (
-                                            <button onClick={() => handleStatus(e.id, 'paid', e.partnerId, Number(e.amount))} className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded hover:bg-green-500 hover:text-white">Mark Paid</button>
-                                        )}
-                                        <button className="text-muted hover:text-red-500"><Trash2 size={14} /></button>
+                                    <td className="p-4">
+                                        <div className="flex items-center justify-end gap-3">
+                                            {e.status === 'pending' && (
+                                                <button onClick={() => handleStatus(e.id, 'approved', e.partnerId, Number(e.amount))} className="text-xs font-bold bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded hover:bg-blue-500 hover:text-white transition-colors">
+                                                    Approve
+                                                </button>
+                                            )}
+                                            {e.status === 'approved' && (
+                                                <button onClick={() => handleStatus(e.id, 'paid', e.partnerId, Number(e.amount))} className="text-xs font-bold bg-green-500/20 text-green-400 px-3 py-1.5 rounded hover:bg-green-500 hover:text-white transition-colors">
+                                                    Mark Paid
+                                                </button>
+                                            )}
+                                            <button className="p-1.5 text-muted hover:text-red-500 hover:bg-white/5 rounded transition-colors" title="Delete Log">
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))
@@ -845,46 +857,80 @@ const AdminDashboard: React.FC = () => {
                                 </div>
 
                                 {/* EARNINGS MANAGEMENT */}
+                                {/* EARNINGS MANAGEMENT & ANALYTICS */}
                                 <div className="bg-white/5 p-4 rounded-xl border border-white/5">
-                                    <h4 className="font-bold mb-4 flex items-center gap-2 text-green-400"><DollarSign size={16} /> Earnings Management</h4>
+                                    <h4 className="font-bold mb-4 flex items-center gap-2 text-green-400"><DollarSign size={16} /> Earnings & Performance</h4>
 
-                                    <form onSubmit={handleAddEarning} className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4">
-                                        <input
-                                            type="text"
-                                            placeholder="Lead Name"
-                                            className="bg-black/40 border border-white/10 rounded px-3 py-2 text-sm text-white"
-                                            value={earningForm.leadName}
-                                            onChange={e => setEarningForm({ ...earningForm, leadName: e.target.value })}
-                                            required
-                                        />
-                                        <input
-                                            type="number"
-                                            placeholder="Amount"
-                                            className="bg-black/40 border border-white/10 rounded px-3 py-2 text-sm text-white"
-                                            value={earningForm.amount}
-                                            onChange={e => setEarningForm({ ...earningForm, amount: e.target.value })}
-                                            required
-                                        />
-                                        <input
-                                            type="date"
-                                            className="bg-black/40 border border-white/10 rounded px-3 py-2 text-sm text-white"
-                                            value={earningForm.date}
-                                            onChange={e => setEarningForm({ ...earningForm, date: e.target.value })}
-                                            required
-                                        />
-                                        <button type="submit" className="bg-green-500 hover:bg-green-600 text-black font-bold rounded px-3 py-2 text-sm transition-colors">
-                                            Add
-                                        </button>
-                                    </form>
+                                    {/* Analytics */}
+                                    {(() => {
+                                        const earningsList = selectedPartner.earningsHistory || [];
+                                        const total = earningsList.reduce((acc: number, e: any) => acc + Number(e.amount), 0);
+                                        const months: any = {};
+                                        earningsList.forEach((e: any) => {
+                                            const m = new Date(e.date).toLocaleString('default', { month: 'short' });
+                                            months[m] = (months[m] || 0) + Number(e.amount);
+                                        });
+                                        // Fill last 6 months
+                                        const chartData = [];
+                                        for (let i = 5; i >= 0; i--) {
+                                            const d = new Date(); d.setMonth(d.getMonth() - i);
+                                            const m = d.toLocaleString('default', { month: 'short' });
+                                            chartData.push({ label: m, value: months[m] || 0 });
+                                        }
 
+                                        return (
+                                            <div className="space-y-6">
+                                                <div className="grid grid-cols-3 gap-2 text-center">
+                                                    <div className="bg-black/20 p-2 rounded">
+                                                        <div className="text-[10px] text-muted uppercase">Total Earned</div>
+                                                        <div className="font-bold font-mono text-green-400">₹{total.toLocaleString()}</div>
+                                                    </div>
+                                                    <div className="bg-black/20 p-2 rounded">
+                                                        <div className="text-[10px] text-muted uppercase">Deals Closed</div>
+                                                        <div className="font-bold font-mono">{earningsList.length}</div>
+                                                    </div>
+                                                    <div className="bg-black/20 p-2 rounded">
+                                                        <div className="text-[10px] text-muted uppercase">Pending</div>
+                                                        <div className="font-bold font-mono text-yellow-400">
+                                                            ₹{earningsList.filter((e: any) => e.status === 'pending').reduce((a: number, b: any) => a + Number(b.amount), 0).toLocaleString()}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="bg-black/20 p-4 rounded-xl border border-white/5">
+                                                    <h5 className="text-[10px] uppercase text-muted mb-2">6-Month Trend</h5>
+                                                    <div className="flex items-end justify-between h-24 gap-2">
+                                                        {chartData.map((d: any, i: number) => {
+                                                            const max = Math.max(...chartData.map((s: any) => s.value), 1);
+                                                            const h = (d.value / max) * 100;
+                                                            return (
+                                                                <div key={i} className="flex flex-col items-center gap-1 flex-1 w-full group">
+                                                                    <div
+                                                                        className="w-full rounded-t bg-green-500/50 group-hover:bg-green-400 transition-colors"
+                                                                        style={{ height: `${h}%`, minHeight: '2px' }}
+                                                                    ></div>
+                                                                    <div className="text-[8px] text-muted uppercase">{d.label}</div>
+                                                                </div>
+                                                            )
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    })()}
+
+                                    <h5 className="text-xs font-bold text-muted mt-6 mb-2 uppercase">Recent History</h5>
                                     <div className="space-y-1 max-h-32 overflow-y-auto pr-1">
                                         {selectedPartner.earningsHistory?.length > 0 ? (
                                             selectedPartner.earningsHistory.map((e: any, i: number) => (
-                                                <div key={i} className="flex justify-between items-center text-xs p-2 bg-black/20 rounded border border-white/5">
-                                                    <span className="text-white/70">{e.leadName}</span>
-                                                    <div className="flex gap-3">
-                                                        <span className="text-muted">{new Date(e.date).toLocaleDateString()}</span>
-                                                        <span className="text-green-400 font-mono font-bold">₹{e.amount}</span>
+                                                <div key={i} className="flex justify-between items-center text-xs p-2 bg-black/20 rounded border border-white/5 hover:bg-white/5 transition-colors">
+                                                    <div>
+                                                        <span className="text-white/90 font-bold block">{e.clientName}</span>
+                                                        <span className="text-[10px] text-muted uppercase">{e.status}</span>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <div className="text-green-400 font-mono font-bold">₹{Number(e.amount).toLocaleString()}</div>
+                                                        <span className="text-muted text-[10px]">{new Date(e.date).toLocaleDateString()}</span>
                                                     </div>
                                                 </div>
                                             ))
