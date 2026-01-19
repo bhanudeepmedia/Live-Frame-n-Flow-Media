@@ -58,10 +58,23 @@ const Apply: React.FC = () => {
     const [hasApplied, setHasApplied] = useState(false);
 
     // Check if user already applied
+    // Check if user already applied or is logged in
     React.useEffect(() => {
-        if (localStorage.getItem('gpp_applied') === 'true') {
-            setHasApplied(true);
-        }
+        const checkStatus = async () => {
+            // 1. Local Storage Check
+            if (localStorage.getItem('gpp_applied') === 'true') {
+                setHasApplied(true);
+                return;
+            }
+
+            // 2. Server Session Check (If they already have an account, they applied)
+            const user = await SupabaseBackend.getCurrentUser();
+            if (user) {
+                setHasApplied(true);
+                localStorage.setItem('gpp_applied', 'true'); // Sync local storage
+            }
+        };
+        checkStatus();
     }, []);
     const [formData, setFormData] = useState({
         fullName: '',
