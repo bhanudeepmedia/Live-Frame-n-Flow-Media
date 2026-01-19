@@ -277,6 +277,7 @@ export const SupabaseBackend = {
                 clientName: e.client_name,
                 serviceType: e.service_type,
                 dealValue: e.deal_value,
+                commissionPerc: e.commission_percentage,
                 status: e.status
             })) : [],
             bankDetails: p.bank_details || {}

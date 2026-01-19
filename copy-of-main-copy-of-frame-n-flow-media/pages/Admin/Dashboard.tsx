@@ -271,7 +271,7 @@ const CommissionsManager = ({ partners, getPartnerName, refreshData }: any) => {
         e.preventDefault();
         if (!form.partnerId) { alert('Select a partner'); return; }
 
-        await SupabaseBackend.addEarning({
+        const res = await SupabaseBackend.addEarning({
             partnerId: form.partnerId,
             clientName: form.clientName,
             serviceType: form.serviceType,
@@ -279,6 +279,11 @@ const CommissionsManager = ({ partners, getPartnerName, refreshData }: any) => {
             commissionPerc: Number(form.commissionPerc),
             date: form.date
         });
+
+        if (!res.success) {
+            alert('Failed to log earning: ' + res.error);
+            return;
+        }
 
         alert('Earning Created!');
         setIsCreating(false);
