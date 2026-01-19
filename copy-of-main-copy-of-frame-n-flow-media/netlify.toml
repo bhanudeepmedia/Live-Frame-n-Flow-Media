@@ -1,5 +1,4 @@
 [build]
-  base = "copy-of-main-copy-of-frame-n-flow-media"
   command = "npm run build"
   publish = "dist"
 
