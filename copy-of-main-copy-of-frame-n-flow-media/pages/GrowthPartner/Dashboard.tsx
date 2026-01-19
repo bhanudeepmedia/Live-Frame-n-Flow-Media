@@ -355,7 +355,8 @@ const LeadsManager = ({ user }: any) => {
                 <p className="text-xs text-muted mb-4">💡 Leads can be deleted within 1 hour of entry</p>
                 <div className="grid gap-4">
                     {leads.length === 0 ? <div className="text-center text-muted py-10">No leads added yet.</div> : leads.map(lead => {
-                        const createdAt = new Date(lead.created_at);
+                        // Handle missing created_at field - if not present, assume it's new (within 1 hour)
+                        const createdAt = lead.created_at ? new Date(lead.created_at) : new Date();
                         const now = new Date();
                         const hoursSinceCreation = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
                         const canDelete = hoursSinceCreation <= 1;
@@ -874,10 +875,21 @@ const Dashboard: React.FC = () => {
                                     <div className="text-center text-muted italic">No logs found.</div>
                                 ) : (
                                     partnerData.outreachLogs.slice(0, 20).map((log: any) => {
-                                        const createdAt = new Date(log.created_at);
+                                        // Handle missing created_at field (for old logs)
+                                        const createdAt = log.created_at ? new Date(log.created_at) : new Date(log.date);
                                         const now = new Date();
                                         const hoursSinceCreation = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
                                         const canEdit = hoursSinceCreation <= 1;
+
+                                        // Debug logging
+                                        console.log('Log:', {
+                                            id: log.id,
+                                            date: log.date,
+                                            created_at: log.created_at,
+                                            createdAtParsed: createdAt,
+                                            hoursSinceCreation,
+                                            canEdit
+                                        });
 
                                         return (
                                             <div key={log.id} className="bg-surface border border-white/5 p-4 rounded-xl flex items-center justify-between">
