@@ -493,8 +493,130 @@ export const SupabaseBackend = {
             return { success: false, error: error.message };
         }
 
+        // Update streak after successful log submission
+        await SupabaseBackend.updateStreak(partnerId);
+
         return { success: true, data };
     },
+
+    // Streak Management
+    updateStreak: async (partnerId: string) => {
+        try {
+            const { data: partner } = await supabase
+                .from('partners')
+                .select('current_streak, longest_streak, last_activity_date')
+                .eq('id', partnerId)
+                .single();
+
+            if (!partner) return { success: false, error: 'Partner not found' };
+
+            const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+            const lastActivity = partner.last_activity_date;
+
+            let newStreak = partner.current_streak || 0;
+            let streakBroken = false;
+
+            if (!lastActivity) {
+                // First time logging
+                newStreak = 1;
+            } else {
+                const lastDate = new Date(lastActivity);
+                const todayDate = new Date(today);
+                const diffTime = todayDate.getTime() - lastDate.getTime();
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays === 0) {
+                    // Already logged today, no change
+                    return { success: true, streakBroken: false, currentStreak: newStreak };
+                } else if (diffDays === 1) {
+                    // Consecutive day
+                    newStreak++;
+                } else {
+                    // Streak broken
+                    streakBroken = true;
+                    newStreak = 1;
+                }
+            }
+
+            // Update longest streak if current is higher
+            const longestStreak = Math.max(partner.longest_streak || 0, newStreak);
+
+            const { error } = await supabase
+                .from('partners')
+                .update({
+                    current_streak: newStreak,
+                    longest_streak: longestStreak,
+                    last_activity_date: today
+                })
+                .eq('id', partnerId);
+
+            if (error) {
+                console.error('Error updating streak:', error);
+                return { success: false, error: error.message };
+            }
+
+            return {
+                success: true,
+                streakBroken,
+                currentStreak: newStreak,
+                longestStreak,
+                previousStreak: partner.current_streak || 0
+            };
+        } catch (error: any) {
+            console.error('Exception updating streak:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    checkStreakStatus: async (partnerId: string) => {
+        try {
+            const { data: partner } = await supabase
+                .from('partners')
+                .select('current_streak, longest_streak, last_activity_date')
+                .eq('id', partnerId)
+                .single();
+
+            if (!partner) return { currentStreak: 0, longestStreak: 0, streakBroken: false };
+
+            const today = new Date().toISOString().split('T')[0];
+            const lastActivity = partner.last_activity_date;
+
+            if (!lastActivity) {
+                return { currentStreak: 0, longestStreak: partner.longest_streak || 0, streakBroken: false };
+            }
+
+            const lastDate = new Date(lastActivity);
+            const todayDate = new Date(today);
+            const diffTime = todayDate.getTime() - lastDate.getTime();
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            // If more than 1 day has passed, streak is broken
+            if (diffDays > 1 && partner.current_streak > 0) {
+                // Reset streak in database
+                await supabase
+                    .from('partners')
+                    .update({ current_streak: 0 })
+                    .eq('id', partnerId);
+
+                return {
+                    currentStreak: 0,
+                    longestStreak: partner.longest_streak || 0,
+                    streakBroken: true,
+                    previousStreak: partner.current_streak
+                };
+            }
+
+            return {
+                currentStreak: partner.current_streak || 0,
+                longestStreak: partner.longest_streak || 0,
+                streakBroken: false
+            };
+        } catch (error) {
+            console.error('Error checking streak status:', error);
+            return { currentStreak: 0, longestStreak: 0, streakBroken: false };
+        }
+    },
+
     // --- ADMIN EXTENSIONS ---
 
     getAllLeads: async () => {

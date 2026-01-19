@@ -499,6 +499,8 @@ const Dashboard: React.FC = () => {
 
     // Re-use Logic from before
     const [logForm, setLogForm] = useState({ medium: 'Instagram', count: 0, replies: 0, interested: 0, appointments_booked: 0, notes: '', date: new Date().toISOString().split('T')[0], location: '', niche: '' });
+    const [streak, setStreak] = useState(0);
+    const [longestStreak, setLongestStreak] = useState(0);
 
     useEffect(() => {
         const init = async () => {
@@ -508,10 +510,26 @@ const Dashboard: React.FC = () => {
                 return;
             }
             setUser(currentUser);
-            if (currentUser.partnerId) loadPartnerData(currentUser.partnerId);
+            if (currentUser.partnerId) {
+                await loadPartnerData(currentUser.partnerId);
+                await checkStreak(currentUser.partnerId);
+            }
         };
         init();
     }, [navigate]);
+
+    const checkStreak = async (partnerId: string) => {
+        const streakStatus = await SupabaseBackend.checkStreakStatus(partnerId);
+        setStreak(streakStatus.currentStreak);
+        setLongestStreak(streakStatus.longestStreak);
+
+        if (streakStatus.streakBroken && streakStatus.previousStreak > 0) {
+            // Show streak broken notification
+            setTimeout(() => {
+                alert(`💔 Oh no! You broke your ${streakStatus.previousStreak}-day streak!\n\nDon't worry, you can start fresh today. Keep logging daily to build a new streak! 🔥`);
+            }, 1000);
+        }
+    };
 
     const loadPartnerData = async (id: string) => {
         const data = await SupabaseBackend.getPartnerData(id);
@@ -524,25 +542,6 @@ const Dashboard: React.FC = () => {
         navigate('/growth-partner/login');
     };
 
-    // Calculate Streak
-    const calculateStreak = () => {
-        if (!partnerData?.outreachLogs || partnerData.outreachLogs.length === 0) return 0;
-        const sortedLogs = [...partnerData.outreachLogs].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        const uniqueDates = Array.from(new Set(sortedLogs.map(l => new Date(l.date).toLocaleDateString())));
-        let streak = 0;
-        const today = new Date().toLocaleDateString();
-        const yesterday = new Date(Date.now() - 86400000).toLocaleDateString();
-        if (uniqueDates[0] === today || uniqueDates[0] === yesterday) {
-            streak = 1;
-            let checksDate = new Date(uniqueDates[0]);
-            for (let i = 1; i < uniqueDates.length; i++) {
-                const prevDate = new Date(checksDate);
-                prevDate.setDate(prevDate.getDate() - 1);
-                if (uniqueDates[i] === prevDate.toLocaleDateString()) { streak++; checksDate = prevDate; } else break;
-            }
-        }
-        return streak;
-    };
 
     const handleSubmitLog = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -552,7 +551,8 @@ const Dashboard: React.FC = () => {
 
         if (result && result.success) {
             alert('Daily log submitted successfully!');
-            loadPartnerData(user.partnerId);
+            await loadPartnerData(user.partnerId);
+            await checkStreak(user.partnerId); // Refresh streak after submission
             setView('overview'); // Go back to overview after log
         } else {
             alert('Failed to submit daily log: ' + (result?.error || 'Unknown error. Please try again.'));
@@ -575,8 +575,6 @@ const Dashboard: React.FC = () => {
             </div>
         )
     }
-
-    const streak = calculateStreak();
 
     // Navigation Items
     const navItems = [
