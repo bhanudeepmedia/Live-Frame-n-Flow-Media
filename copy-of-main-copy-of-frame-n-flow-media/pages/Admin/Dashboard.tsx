@@ -864,7 +864,7 @@ const AdminDashboard: React.FC = () => {
         alert('Configuration saved.');
     }
 
-    const handleDeletePartner = async (partnerId: string, partnerName: string) =\u003e {
+    const handleDeletePartner = async (partnerId: string, partnerName: string) => {
         // Step 1: Confirm deletion
         const confirmDelete = confirm(
             `⚠️ WARNING: You are about to PERMANENTLY DELETE ${partnerName} and ALL their data.\n\n` +
