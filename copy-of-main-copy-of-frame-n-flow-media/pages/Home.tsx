@@ -977,7 +977,7 @@ const Home: React.FC = () => {
 
           </div>
         </div>
-      </section
+      </section>
 
       {/* FOUNDER SECTION */}
       <section className="py-12 md:py-20 bg-surfaceHighlight relative overflow-hidden">
