@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import Button from '../components/Button';
 import {
-  Target, Cpu, TrendingUp, Monitor, PenTool, Camera, ShieldCheck, Filter,
-  Search, ShoppingCart, Code, PlayCircle, Users, MessageSquare,
+  Target, Cpu, TrendingUp, PenTool, Camera, ShieldCheck, Filter,
+  ShoppingCart, Code, PlayCircle, Users, MessageSquare,
   Bot, Calendar, Database, Mail, Star, Phone, DollarSign, Activity,
-  Layers, Zap, Globe, Lock, Workflow
+  Layers, Zap, Workflow
 } from 'lucide-react';
 
 // --- ANIMATION COMPONENTS ---
@@ -447,8 +447,9 @@ const Services: React.FC = () => {
 
   // React to Navigation State
   useEffect(() => {
-    if (location.state && location.state.activeTab) {
-      setActiveTab(location.state.activeTab);
+    const state = location.state as { activeTab?: 'marketing' | 'automation' } | null;
+    if (state?.activeTab) {
+      setActiveTab(state.activeTab);
     }
   }, [location]);
 
