@@ -733,54 +733,128 @@ const AdminDashboard: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white space-y-4">
-                <div className="text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50 animate-pulse">
+            <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 flex flex-col items-center justify-center text-white space-y-4">
+                <div className="text-4xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 animate-pulse">
                     Frame n Flow Media
                 </div>
-                <div className="text-accent text-sm font-mono tracking-widest uppercase animate-pulse">
-                    GPP Admin Portal Loading...
+                <div className="flex items-center gap-2 text-indigo-300 text-sm font-mono tracking-widest uppercase animate-pulse">
+                    <Shield size={16} className="animate-spin" />
+                    Admin Portal Loading...
                 </div>
             </div>
         )
     }
 
     return (
-        <div className="min-h-screen bg-background font-sans text-white flex">
-            {/* ADMIN SIDEBAR */}
-            <aside className="w-64 bg-[#0a0a0a] border-r border-white/5 flex flex-col fixed inset-y-0 z-40 bg-gradient-to-b from-black via-black to-accent/5">
-                <div className="p-6">
-                    <div className="font-bold text-xl font-display">Frame n Flow <span className="text-accent">Media</span></div>
-                    <div className="text-xs text-muted tracking-widest uppercase mt-1">GPP Admin</div>
-                </div>
-                <nav className="flex-1 px-4 space-y-1">
-                    <button onClick={() => setActiveTab('overview')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'overview' ? 'bg-accent text-background' : 'text-muted hover:text-white'}`}>
-                        <BarChart2 size={18} /> Command Center
-                    </button>
-                    <button onClick={() => setActiveTab('partners')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'partners' ? 'bg-accent text-background' : 'text-muted hover:text-white'}`}>
-                        <Users size={18} /> GP Management
-                    </button>
-                    <button onClick={() => setActiveTab('apps')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'apps' ? 'bg-accent text-background' : 'text-muted hover:text-white'}`}>
-                        <FileText size={18} /> Applications
-                    </button>
-                    <button onClick={() => setActiveTab('leads')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'leads' ? 'bg-accent text-background' : 'text-muted hover:text-white'}`}>
-                        <Briefcase size={18} /> Leads & Deals
-                    </button>
-                    <button onClick={() => setActiveTab('payouts')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'payouts' ? 'bg-accent text-background' : 'text-muted hover:text-white'}`}>
-                        <DollarSign size={18} /> Commissions
-                    </button>
-                    <button onClick={() => setActiveTab('settings')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === 'settings' ? 'bg-accent text-background' : 'text-muted hover:text-white'}`}>
-                        <Settings size={18} /> Configuration
-                    </button>
-                </nav>
-                <div className="p-4 border-t border-white/5">
-                    <button onClick={handleLogout} className="flex items-center gap-2 text-red-400 hover:text-white text-sm px-4 py-2 opacity-80 hover:opacity-100 transition-opacity">
-                        <LogOut size={16} /> Logout
-                    </button>
-                </div>
-            </aside>
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 font-sans text-white">
+            {/* TOP NAVIGATION BAR - ADMIN SPECIFIC */}
+            <nav className="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-xl border-b border-indigo-500/20 shadow-xl shadow-indigo-500/5">
+                <div className="max-w-[1920px] mx-auto px-6 py-3.5">
+                    <div className="flex items-center justify-between">
+                        {/* Logo & Admin Badge */}
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                                    <Shield size={22} className="text-white" />
+                                </div>
+                                <div>
+                                    <div className="text-lg font-bold font-display bg-gradient-to-r from-white to-indigo-200 bg-clip-text text-transparent">Frame n Flow Media</div>
+                                    <div className="text-[10px] text-indigo-400 font-mono uppercase tracking-widest flex items-center gap-1.5">
+                                        <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-pulse"></div>
+                                        Admin Portal
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="h-10 w-px bg-indigo-500/20"></div>
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-indigo-500/10 border border-indigo-500/30 rounded-lg backdrop-blur-sm">
+                                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-lg shadow-emerald-400/50"></div>
+                                <span className="text-xs font-semibold text-indigo-200">{user?.name}</span>
+                            </div>
+                        </div>
 
-            {/* MAIN CONTENT */}
-            <main className="flex-1 ml-64 p-8">
+                        {/* Navigation Tabs - Horizontal */}
+                        <div className="flex items-center gap-1.5">
+                            <button
+                                onClick={() => setActiveTab('overview')}
+                                className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'overview'
+                                    ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                    }`}
+                            >
+                                <BarChart2 size={16} />
+                                Command Center
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('partners')}
+                                className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'partners'
+                                    ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                    }`}
+                            >
+                                <Users size={16} />
+                                Partners
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('apps')}
+                                className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'apps'
+                                    ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                    }`}
+                            >
+                                <FileText size={16} />
+                                Applications
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('leads')}
+                                className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'leads'
+                                    ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                    }`}
+                            >
+                                <Briefcase size={16} />
+                                Leads
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('payouts')}
+                                className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'payouts'
+                                    ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                    }`}
+                            >
+                                <DollarSign size={16} />
+                                Commissions
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('settings')}
+                                className={`relative px-4 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 ${activeTab === 'settings'
+                                    ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 shadow-lg shadow-indigo-500/10'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                    }`}
+                            >
+                                <Settings size={16} />
+                                Settings
+                            </button>
+                        </div>
+
+                        {/* Right Actions */}
+                        <div className="flex items-center gap-3">
+                            <button className="w-10 h-10 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 flex items-center justify-center text-slate-400 hover:text-indigo-300 transition-all border border-indigo-500/20">
+                                <Bell size={18} />
+                            </button>
+                            <button
+                                onClick={handleLogout}
+                                className="px-4 py-2.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 font-semibold text-sm flex items-center gap-2 transition-all border border-red-500/30"
+                            >
+                                <LogOut size={16} />
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            {/* MAIN CONTENT - NO SIDEBAR, FULL WIDTH */}
+            <main className="max-w-[1920px] mx-auto px-6 py-8">
                 {activeTab === 'overview' && <Overview
                     partners={partners}
                     allLeads={allLeads}
