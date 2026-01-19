@@ -248,63 +248,175 @@ const LeadsTable = ({ allLeads, getPartnerName, refreshData }: any) => {
     )
 };
 
-const PayoutsManager = ({ allLeads, getPartnerName, refreshData, adminSettings }: any) => {
-    const payableLeads = allLeads.filter((l: any) => l.status === 'Converted');
+const CommissionsManager = ({ partners, getPartnerName, refreshData }: any) => {
+    const [isCreating, setIsCreating] = useState(false);
+    const [form, setForm] = useState({ partnerId: '', clientName: '', dealValue: '', commissionPerc: 20, serviceType: 'Standard Service', date: new Date().toISOString().split('T')[0] });
 
-    const handlePayoutUpdate = async (leadId: string, status: string) => {
-        await SupabaseBackend.updateLeadAdmin(leadId, { payout_status: status });
+    // Aggregate Earnings from all partners
+    const allEarnings = partners?.flatMap((p: any) =>
+        (p.earningsHistory || []).map((e: any) => ({
+            ...e,
+            partnerName: getPartnerName(p.id) || 'Unknown Partner',
+            partnerId: p.id
+        }))
+    ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()) || [];
+
+    // Stats Logic
+    const totalRev = allEarnings.reduce((acc: number, e: any) => acc + (Number(e.dealValue) || 0), 0);
+    const pendingComm = allEarnings.filter((e: any) => e.status === 'pending').reduce((acc: number, e: any) => acc + (Number(e.amount) || 0), 0);
+    const approvedComm = allEarnings.filter((e: any) => e.status === 'approved').reduce((acc: number, e: any) => acc + (Number(e.amount) || 0), 0);
+    const paidComm = allEarnings.filter((e: any) => e.status === 'paid').reduce((acc: number, e: any) => acc + (Number(e.amount) || 0), 0);
+
+    const handleCreate = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!form.partnerId) { alert('Select a partner'); return; }
+
+        await SupabaseBackend.addEarning({
+            partnerId: form.partnerId,
+            clientName: form.clientName,
+            serviceType: form.serviceType,
+            dealValue: parseFloat(form.dealValue),
+            commissionPerc: Number(form.commissionPerc),
+            date: form.date
+        });
+
+        alert('Earning Created!');
+        setIsCreating(false);
+        setForm({ partnerId: '', clientName: '', dealValue: '', commissionPerc: 20, serviceType: 'Standard Service', date: new Date().toISOString().split('T')[0] });
+        refreshData();
+    };
+
+    const handleStatus = async (id: string, status: 'approved' | 'paid', pid: string, amt: number) => {
+        if (!confirm(`Change status to ${status.toUpperCase()}? This handles financial logic.`)) return;
+        await SupabaseBackend.updateEarningStatus(id, status, pid, amt);
         refreshData();
     };
 
     return (
-        <div className="space-y-6 animate-fade-in">
-            <h2 className="text-3xl font-display font-bold">Commissions & Payouts</h2>
+        <div className="space-y-8 animate-fade-in text-white/90">
+            {/* Header / Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-surface border border-white/10 p-4 rounded-xl">
+                    <div className="text-xs text-muted uppercase">Total Revenue (Booked)</div>
+                    <div className="text-2xl font-bold font-mono">₹{totalRev.toLocaleString()}</div>
+                </div>
+                <div className="bg-surface border border-white/10 p-4 rounded-xl">
+                    <div className="text-xs text-yellow-500 uppercase">Pending Liability</div>
+                    <div className="text-2xl font-bold font-mono text-yellow-400">₹{pendingComm.toLocaleString()}</div>
+                </div>
+                <div className="bg-surface border border-white/10 p-4 rounded-xl">
+                    <div className="text-xs text-blue-500 uppercase">Approved (Unpaid)</div>
+                    <div className="text-2xl font-bold font-mono text-blue-400">₹{approvedComm.toLocaleString()}</div>
+                </div>
+                <div className="bg-surface border border-white/10 p-4 rounded-xl">
+                    <div className="text-xs text-green-500 uppercase">Total Paid Out</div>
+                    <div className="text-2xl font-bold font-mono text-green-400">₹{paidComm.toLocaleString()}</div>
+                </div>
+            </div>
+
+            <div className="flex justify-between items-center">
+                <h2 className="text-3xl font-display font-bold">Earnings Manager</h2>
+                <button onClick={() => setIsCreating(!isCreating)} className="bg-white text-black px-4 py-2 rounded-lg font-bold hover:bg-white/90 transition-colors">
+                    {isCreating ? 'Cancel' : '+ New Earning Entry'}
+                </button>
+            </div>
+
+            {/* CREATE FORM */}
+            <AnimatePresence>
+                {isCreating && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                        <form onSubmit={handleCreate} className="bg-surface border border-white/10 p-6 rounded-xl grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div className="md:col-span-1">
+                                <label className="text-xs text-muted uppercase">Growth Partner</label>
+                                <select
+                                    className="w-full bg-black/40 border border-white/10 rounded-lg p-3 mt-1"
+                                    value={form.partnerId}
+                                    onChange={e => setForm({ ...form, partnerId: e.target.value })}
+                                    required
+                                >
+                                    <option value="">Select Partner...</option>
+                                    {partners.map((p: any) => (
+                                        <option key={p.id} value={p.id}>{getPartnerName(p.id)} ({p.stage})</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="text-xs text-muted uppercase">Client / Deal Name</label>
+                                <input required className="w-full bg-black/40 border border-white/10 rounded-lg p-3 mt-1" value={form.clientName} onChange={e => setForm({ ...form, clientName: e.target.value })} placeholder="e.g. Acme Corp" />
+                            </div>
+                            <div>
+                                <label className="text-xs text-muted uppercase">Deal Value (₹)</label>
+                                <input required type="number" className="w-full bg-black/40 border border-white/10 rounded-lg p-3 mt-1" value={form.dealValue} onChange={e => setForm({ ...form, dealValue: e.target.value })} placeholder="0.00" />
+                            </div>
+                            <div>
+                                <label className="text-xs text-muted uppercase">Commission %</label>
+                                <input required type="number" className="w-full bg-black/40 border border-white/10 rounded-lg p-3 mt-1" value={form.commissionPerc} onChange={e => setForm({ ...form, commissionPerc: parseInt(e.target.value) })} placeholder="20" />
+                            </div>
+                            <div>
+                                <label className="text-xs text-muted uppercase">Date Closed</label>
+                                <input required type="date" className="w-full bg-black/40 border border-white/10 rounded-lg p-3 mt-1" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} />
+                            </div>
+                            <div className="flex items-end">
+                                <button type="submit" className="w-full bg-green-500 text-black font-bold py-3 rounded-lg hover:bg-green-400 transition-colors">
+                                    Log Commission
+                                </button>
+                            </div>
+                        </form>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* TABLE */}
             <div className="bg-surface border border-white/10 rounded-xl overflow-hidden">
                 <table className="w-full text-left text-sm">
                     <thead className="bg-white/5 text-muted uppercase text-xs">
                         <tr>
-                            <th className="p-4">GP Name</th>
-                            <th className="p-4">Deal</th>
-                            <th className="p-4">Deal Value</th>
-                            <th className="p-4">Commission (20%)</th>
+                            <th className="p-4">Date</th>
+                            <th className="p-4">Partner</th>
+                            <th className="p-4">Client / Deal</th>
+                            <th className="p-4">Commission</th>
                             <th className="p-4">Status</th>
-                            <th className="p-4 text-right">Action</th>
+                            <th className="p-4 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
-                        {payableLeads.length === 0 ? <tr><td colSpan={6} className="p-8 text-center text-muted">No converted deals ready for payout.</td></tr> : payableLeads.map((lead: any) => (
-                            <tr key={lead.id} className="hover:bg-white/5">
-                                <td className="p-4 font-bold">{getPartnerName(lead.partner_id)}</td>
-                                <td className="p-4 text-xs">{lead.business_name}</td>
-                                <td className="p-4">
-                                    <input
-                                        placeholder="Set Value"
-                                        className="bg-black/20 border border-white/10 rounded w-24 p-1 text-xs"
-                                        onBlur={async (e) => {
-                                            const val = parseFloat(e.target.value);
-                                            if (val) await SupabaseBackend.updateLeadAdmin(lead.id, { deal_value: val, potential_commission: val * (adminSettings.commission_percentage / 100 || 0.2) });
-                                            refreshData();
-                                        }}
-                                        defaultValue={lead.deal_value || ''}
-                                    />
-                                </td>
-                                <td className="p-4 font-bold text-green-400">
-                                    ₹{lead.potential_commission?.toLocaleString() || 0}
-                                </td>
-                                <td className="p-4 uppercase text-xs font-bold">{lead.payout_status || 'Pending'}</td>
-                                <td className="p-4 text-right space-x-2">
-                                    {lead.payout_status !== 'paid' && (
-                                        <button onClick={() => handlePayoutUpdate(lead.id, 'paid')} className="bg-green-500 text-black px-3 py-1 rounded text-xs font-bold hover:bg-green-400">Mark Paid</button>
-                                    )}
-                                    {lead.payout_status === 'paid' && <span className="text-muted text-xs"><CheckCircle size={14} className="inline mr-1" /> Paid</span>}
-                                </td>
-                            </tr>
-                        ))}
+                        {allEarnings.length === 0 ? (
+                            <tr><td colSpan={6} className="p-8 text-center text-muted">No earnings records found.</td></tr>
+                        ) : (
+                            allEarnings.map((e: any) => (
+                                <tr key={e.id} className="hover:bg-white/5 transition-colors group">
+                                    <td className="p-4 text-muted text-xs">{new Date(e.date).toLocaleDateString()}</td>
+                                    <td className="p-4 font-bold">{e.partnerName}</td>
+                                    <td className="p-4">
+                                        <div className="font-bold">{e.clientName}</div>
+                                        <div className="text-xs text-muted">Val: ₹{Number(e.dealValue).toLocaleString()}</div>
+                                    </td>
+                                    <td className="p-4 font-mono font-bold text-green-400">₹{Number(e.amount).toLocaleString()}</td>
+                                    <td className="p-4">
+                                        <span className={`px-2 py-1 rounded text-[10px] uppercase font-bold border ${e.status === 'paid' ? 'bg-green-500/10 border-green-500/20 text-green-500' :
+                                            e.status === 'approved' ? 'bg-blue-500/10 border-blue-500/20 text-blue-500' :
+                                                'bg-yellow-500/10 border-yellow-500/20 text-yellow-500'
+                                            }`}>
+                                            {e.status}
+                                        </span>
+                                    </td>
+                                    <td className="p-4 text-right space-x-2 opacity-100 group-hover:opacity-100 transition-opacity">
+                                        {e.status === 'pending' && (
+                                            <button onClick={() => handleStatus(e.id, 'approved', e.partnerId, Number(e.amount))} className="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded hover:bg-blue-500 hover:text-white">Approve</button>
+                                        )}
+                                        {e.status === 'approved' && (
+                                            <button onClick={() => handleStatus(e.id, 'paid', e.partnerId, Number(e.amount))} className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded hover:bg-green-500 hover:text-white">Mark Paid</button>
+                                        )}
+                                        <button className="text-muted hover:text-red-500"><Trash2 size={14} /></button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>
         </div>
-    )
+    );
 };
 
 const Configuration = ({ adminSettings, setAdminSettings, handleSaveSettings }: any) => (
@@ -681,11 +793,10 @@ const AdminDashboard: React.FC = () => {
                     getPartnerName={getPartnerName}
                     refreshData={refreshData}
                 />}
-                {activeTab === 'payouts' && <PayoutsManager
-                    allLeads={allLeads}
+                {activeTab === 'payouts' && <CommissionsManager
+                    partners={partners}
                     getPartnerName={getPartnerName}
                     refreshData={refreshData}
-                    adminSettings={adminSettings}
                 />}
                 {activeTab === 'settings' && <Configuration
                     adminSettings={adminSettings}

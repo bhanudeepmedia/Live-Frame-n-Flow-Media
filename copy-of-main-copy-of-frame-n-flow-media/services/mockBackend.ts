@@ -45,7 +45,10 @@ export interface EarningLog {
     id: string;
     amount: number;
     date: string;
-    leadName: string;
+    clientName: string;
+    serviceType: string;
+    dealValue: number;
+    status: 'pending' | 'approved' | 'paid' | 'rejected';
 }
 
 export interface PartnerData {

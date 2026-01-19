@@ -247,7 +247,7 @@ export const SupabaseBackend = {
             .select(`
                 *,
                 outreach_logs (*),
-                earnings_history (*)
+                earnings (*)
             `);
 
         if (error || !partners) return [];
@@ -270,11 +270,14 @@ export const SupabaseBackend = {
                 paid: p.earnings_paid || 0,
                 pending: p.earnings_pending || 0
             },
-            earningsHistory: p.earnings_history ? p.earnings_history.map((e: any) => ({
+            earningsHistory: p.earnings ? p.earnings.map((e: any) => ({
                 id: e.id,
                 amount: e.amount,
-                date: e.date,
-                leadName: e.lead_name
+                date: e.deal_closed_date,
+                clientName: e.client_name,
+                serviceType: e.service_type,
+                dealValue: e.deal_value,
+                status: e.status
             })) : [],
             bankDetails: p.bank_details || {}
         }));
@@ -300,10 +303,10 @@ export const SupabaseBackend = {
 
         // Fetch Earnings History
         const { data: earningsLogs } = await supabase
-            .from('earnings_history')
+            .from('earnings')
             .select('*')
             .eq('partner_id', partnerId)
-            .order('date', { ascending: false });
+            .order('deal_closed_date', { ascending: false });
 
         return {
             id: partner.id,
@@ -313,8 +316,12 @@ export const SupabaseBackend = {
             earningsHistory: earningsLogs ? earningsLogs.map((e: any) => ({
                 id: e.id,
                 amount: e.amount,
-                date: e.date,
-                leadName: e.lead_name
+                date: e.deal_closed_date,
+                clientName: e.client_name,
+                serviceType: e.service_type,
+                dealValue: e.deal_value,
+                commissionPerc: e.commission_percentage,
+                status: e.status
             })) : [],
             earnings: {
                 total: partner.earnings_total || 0,
@@ -325,40 +332,57 @@ export const SupabaseBackend = {
         };
     },
 
-    addEarning: async (partnerId: string, amount: number, date: string, leadName: string) => {
+    addEarning: async (data: { partnerId: string, clientName: string, serviceType: string, dealValue: number, commissionPerc: number, date: string }) => {
+        const amount = (data.dealValue * data.commissionPerc) / 100;
+
         // 1. Insert History
         const { error: logError } = await supabase
-            .from('earnings_history')
+            .from('earnings')
             .insert({
-                partner_id: partnerId,
-                amount,
-                date,
-                lead_name: leadName
+                partner_id: data.partnerId,
+                client_name: data.clientName,
+                service_type: data.serviceType,
+                deal_value: data.dealValue,
+                commission_percentage: data.commissionPerc,
+                amount: amount,
+                deal_closed_date: data.date,
+                status: 'pending'
             });
 
         if (logError) return { success: false, error: logError.message };
 
-        // 2. Increment Partner Total Earnings AND Pending Earnings
-        // Use RPC or fetch-update. For now fetch-update.
+        // 2. Increment Partner Pending Earnings
         const { data: partner } = await supabase
             .from('partners')
-            .select('earnings_total, earnings_pending')
-            .eq('id', partnerId)
+            .select('earnings_pending')
+            .eq('id', data.partnerId)
             .single();
 
         if (partner) {
-            const newTotal = (partner.earnings_total || 0) + Number(amount);
-            const newPending = (partner.earnings_pending || 0) + Number(amount);
-
             await supabase
                 .from('partners')
                 .update({
-                    earnings_total: newTotal,
-                    earnings_pending: newPending
+                    earnings_pending: (partner.earnings_pending || 0) + amount
                 })
-                .eq('id', partnerId);
+                .eq('id', data.partnerId);
         }
 
+        return { success: true };
+    },
+
+    updateEarningStatus: async (earningId: string, newStatus: 'approved' | 'paid', partnerId: string, amount: number) => {
+        const { error } = await supabase.from('earnings').update({ status: newStatus }).eq('id', earningId);
+        if (error) return { success: false, error: error.message };
+
+        if (newStatus === 'paid') {
+            const { data: partner } = await supabase.from('partners').select('earnings_paid, earnings_pending, earnings_total').eq('id', partnerId).single();
+            if (partner) {
+                const newPending = Math.max(0, (partner.earnings_pending || 0) - amount);
+                const newPaid = (partner.earnings_paid || 0) + amount;
+                const newTotal = (partner.earnings_total || 0) + amount;
+                await supabase.from('partners').update({ earnings_paid: newPaid, earnings_pending: newPending, earnings_total: newTotal }).eq('id', partnerId);
+            }
+        }
         return { success: true };
     },
 

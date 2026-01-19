@@ -632,17 +632,34 @@ const Dashboard: React.FC = () => {
                                             <thead className="bg-white/5 text-muted uppercase text-xs">
                                                 <tr>
                                                     <th className="p-4">Date</th>
-                                                    <th className="p-4">Lead Name</th>
-                                                    <th className="p-4 text-right">Amount</th>
+                                                    <th className="p-4">Client / Deal</th>
+                                                    <th className="p-4">Val</th>
+                                                    <th className="p-4 text-center">%</th>
+                                                    <th className="p-4 text-right">Commission</th>
+                                                    <th className="p-4 text-center">Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="divide-y divide-white/5">
                                                 {partnerData.earningsHistory.map((e: any) => (
-                                                    <tr key={e.id} className="hover:bg-white/5">
-                                                        <td className="p-4">{new Date(e.date).toLocaleDateString()}</td>
-                                                        <td className="p-4 font-bold">{e.leadName}</td>
-                                                        <td className="p-4 text-right font-mono text-green-400">
-                                                            {symbol}{e.amount}
+                                                    <tr key={e.id} className="hover:bg-white/5 transition-colors">
+                                                        <td className="p-4 text-muted text-xs">{new Date(e.date).toLocaleDateString()}</td>
+                                                        <td className="p-4">
+                                                            <div className="font-bold">{e.clientName}</div>
+                                                            <div className="text-[10px] text-muted uppercase">{e.serviceType || 'Service'}</div>
+                                                        </td>
+                                                        <td className="p-4 text-xs font-mono opacity-70">₹{Number(e.dealValue).toLocaleString()}</td>
+                                                        <td className="p-4 text-xs text-center">{e.commissionPerc || 20}%</td>
+                                                        <td className="p-4 text-right font-mono font-bold text-green-400">
+                                                            {symbol}{Number(e.amount).toLocaleString()}
+                                                        </td>
+                                                        <td className="p-4 text-center">
+                                                            <span className={`px-2 py-1 rounded text-[10px] uppercase font-bold border ${e.status === 'paid' ? 'bg-green-500/10 border-green-500/20 text-green-500' :
+                                                                    e.status === 'approved' ? 'bg-blue-500/10 border-blue-500/20 text-blue-500' :
+                                                                        e.status === 'rejected' ? 'bg-red-500/10 border-red-500/20 text-red-500' :
+                                                                            'bg-yellow-500/10 border-yellow-500/20 text-yellow-500'
+                                                                }`}>
+                                                                {e.status}
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                 ))}
