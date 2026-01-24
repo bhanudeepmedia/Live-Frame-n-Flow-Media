@@ -7,6 +7,7 @@ interface SEOProps {
     canonical?: string;
     image?: string;
     type?: string;
+    noindex?: boolean;
 }
 
 const SEO: React.FC<SEOProps> = ({
@@ -14,7 +15,8 @@ const SEO: React.FC<SEOProps> = ({
     description,
     canonical,
     image = '/og-image.jpg', // Default OG image
-    type = 'website'
+    type = 'website',
+    noindex = false
 }) => {
     const siteUrl = 'https://framenflow.media'; // Assuming this is the domain, or replace with actual
     const fullCanonical = canonical ? `${siteUrl}${canonical}` : siteUrl;
@@ -25,6 +27,7 @@ const SEO: React.FC<SEOProps> = ({
             {/* Standard Metadata */}
             <title>{title}</title>
             <meta name="description" content={description} />
+            {noindex && <meta name="robots" content="noindex, nofollow" />}
             <link rel="canonical" href={fullCanonical} />
 
             {/* Open Graph / Facebook */}
