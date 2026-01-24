@@ -1,7 +1,14 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /growth-partner/dashboard
-Disallow: /growth-partner/login
 
-Sitemap: https://framenflow.media/sitemap.xml
+# Sitemap
+Sitemap: https://framenflowmedia.in/sitemap.xml
+
+# Prerender for bots
+User-agent: ChatGPT-User
+User-agent: GPTBot
+User-agent: Google-Extended
+User-agent: anthropic-ai
+User-agent: Claude-Web
+User-agent: ClaudeBot
+Allow: /

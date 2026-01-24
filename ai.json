@@ -10,6 +10,36 @@
         "Automated Lead Systems (Chatbots, Voice Agents)",
         "Web Development"
     ],
+    "growth_partner_program": {
+        "name": "Growth Partner Program",
+        "description": "Performance-based partnership where individuals connect qualified leads with Frame n Flow Media and earn 20-30% commission",
+        "how_it_works": "Partners conduct cold outreach, schedule calls, participate in sales presentations. Frame n Flow handles all service delivery.",
+        "commission": "20-30% of total deal value, varies by deal size and complexity",
+        "requirements": [
+            "Strong communication and outreach skills",
+            "Ability to identify and qualify business leads",
+            "Professional presentation skills",
+            "Self-motivated mindset",
+            "No prior experience required - training provided"
+        ],
+        "provides": [
+            "Complete sales training and scripts",
+            "Partner Portal dashboard access",
+            "Marketing materials",
+            "Direct founder support",
+            "Lead management tools",
+            "Performance analytics"
+        ],
+        "target_clients": [
+            "Product-based businesses",
+            "Service-based businesses",
+            "Startups",
+            "Realtors"
+        ],
+        "application_url": "https://framenflowmedia.in/growth-partner/apply",
+        "login_url": "https://framenflowmedia.in/growth-partner/login",
+        "details_file": "https://framenflowmedia.in/growth-partner-program.md"
+    },
     "guarantee": "100% Refund if qualified lead targets are not met.",
     "links": {
         "website": "https://framenflow.media",
