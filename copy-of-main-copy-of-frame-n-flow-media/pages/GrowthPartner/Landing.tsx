@@ -118,6 +118,57 @@ const Landing: React.FC = () => {
                 canonical="/growth-partner"
             />
 
+            {/* SEO-Friendly Text Summary for AI Crawlers */}
+            <div className="sr-only" aria-label="Growth Partner Program Details">
+                <h1>Frame n Flow Media Growth Partner Program</h1>
+                <p>
+                    The Growth Partner Program is a performance-based partnership opportunity where individuals
+                    connect qualified business leads with Frame n Flow Media and earn commission on successful conversions.
+                </p>
+                <h2>How It Works</h2>
+                <p>
+                    Growth Partners conduct cold outreach to potential clients (product-based businesses, service-based
+                    businesses, startups, and realtors), schedule discovery calls, and participate in sales presentations.
+                    Frame n Flow Media handles all service delivery, client onboarding, and project execution.
+                </p>
+                <h2>Commission Structure</h2>
+                <p>
+                    Partners earn 20-30% commission on the total deal value of every successfully closed client.
+                    Commission rates vary based on deal size and complexity. There is no cap on earnings -
+                    the more qualified leads you bring, the more you earn.
+                </p>
+                <h2>Requirements</h2>
+                <ul>
+                    <li>Strong communication and outreach skills</li>
+                    <li>Ability to identify and qualify business leads</li>
+                    <li>Professional presentation skills for client calls</li>
+                    <li>Self-motivated and results-driven mindset</li>
+                    <li>No prior marketing experience required - full training provided</li>
+                </ul>
+                <h2>What Frame n Flow Media Provides</h2>
+                <ul>
+                    <li>Complete sales training and scripts</li>
+                    <li>Access to partner dashboard for tracking leads and earnings</li>
+                    <li>Marketing materials and presentation decks</li>
+                    <li>Direct support from the founder, Bhanu Deep</li>
+                    <li>Transparent commission tracking system</li>
+                </ul>
+                <h2>Application Process</h2>
+                <p>
+                    Interested candidates submit an application through the Mission Brief form, providing details
+                    about their background, outreach experience, and motivation. Applications are reviewed within
+                    48 hours. Approved partners receive access credentials to the Partner Portal and begin onboarding.
+                </p>
+                <h2>Partner Portal Features</h2>
+                <ul>
+                    <li>Lead tracking and management system</li>
+                    <li>Real-time commission calculator</li>
+                    <li>Daily activity logging</li>
+                    <li>Performance analytics and streak tracking</li>
+                    <li>Resource library with scripts and guides</li>
+                </ul>
+            </div>
+
             {/* ---------------- HERO SECTION (Interactive 3D Float) ---------------- */}
             <div className="container mx-auto px-6 mb-32">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
