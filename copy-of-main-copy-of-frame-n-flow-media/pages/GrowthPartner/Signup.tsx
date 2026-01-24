@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { SupabaseBackend } from '../../services/supabaseService';
 import { Lock, Mail, ArrowRight, Loader2, User as UserIcon, AlertCircle, Zap } from 'lucide-react';
+import SEO from '../../components/SEO';
 
 const Signup: React.FC = () => {
     const navigate = useNavigate();
@@ -58,6 +59,11 @@ const Signup: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-[#050505] flex items-center justify-center p-6 relative overflow-hidden font-sans">
+            <SEO
+                title="Activate Account | Growth Partner Program"
+                description="Activate your Growth Partner account. Secure access for approved partners."
+                noindex={true}
+            />
 
             {/* ---------------- ACTIVE BACKGROUND GRAPHICS ---------------- */}
 

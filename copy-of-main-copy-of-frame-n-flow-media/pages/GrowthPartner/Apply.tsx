@@ -18,6 +18,7 @@ import {
     Target,
     X // Added X icon
 } from 'lucide-react';
+import SEO from '../../components/SEO';
 
 // --- SUB-COMPONENTS ---
 const VerticalTape = ({ text, side = 'left', speed = 20 }: any) => (
@@ -366,6 +367,11 @@ const Apply: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-[#050505] flex items-center justify-center p-4 relative overflow-hidden font-sans">
+            <SEO
+                title="Apply - Growth Partner Program | Frame n Flow Media"
+                description="Apply to become a Growth Partner. Complete the mission briefing to join our performance-based ecosystem."
+                canonical="/growth-partner/apply"
+            />
             {/* BACKGROUND ELEMENTS */}
             <div className="fixed inset-0 pointer-events-none">
                 <VerticalTape text="CLASSIFIED • GROWTH PARTNER PROGRAM •" side="left" speed={30} />

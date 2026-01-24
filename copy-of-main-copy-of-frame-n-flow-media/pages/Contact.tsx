@@ -2,10 +2,16 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Button from '../components/Button';
 import { Mail, Calendar, ArrowRight, CheckCircle2 } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const Contact: React.FC = () => {
   return (
     <div className="pt-32 min-h-screen px-6 pb-20">
+      <SEO
+        title="Contact Us | Frame n Flow Media"
+        description="Schedule a free marketing audit with Frame n Flow Media. We analyze your funnel, identify leaks, and propose a roadmap for growth."
+        canonical="/contact"
+      />
       <div className="container mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
