@@ -1,19 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { ViteSSG } from 'vite-react-ssg';
 import App from './App';
+import { routes } from './routes';
 import './index.css';
-import { HelmetProvider } from 'react-helmet-async';
 
-const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
-}
-
-const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <HelmetProvider>
-      <App />
-    </HelmetProvider>
-  </React.StrictMode>
+export const createApp = ViteSSG(
+  App,
+  { routes }
 );
