@@ -15,9 +15,17 @@ const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: 
   </motion.div>
 );
 
+import SEO from '../components/SEO';
+
 const Founder: React.FC = () => {
   return (
     <div className="pt-24 md:pt-32 min-h-screen bg-background overflow-x-hidden">
+      <SEO
+        title="Bhanu Deep - Founder | Frame n Flow Media"
+        description="Meet Bhanu Deep, the visionary behind Frame n Flow Media. A strategist who combines Business Intelligence with Creative Excellence to drive market dominance."
+        canonical="/founder-bhanudeep"
+        image="/bhanudeep.png"
+      />
 
       {/* HEADER SECTION */}
       <div className="container mx-auto px-6 mb-20 md:mb-32">

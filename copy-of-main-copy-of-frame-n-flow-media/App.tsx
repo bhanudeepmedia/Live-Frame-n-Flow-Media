@@ -1,34 +1,43 @@
-import React, { Suspense } from 'react';
-import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import React, { useEffect, Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import ScrollToTop from './components/ScrollToTop';
-import Home from './pages/Home';
-import Services from './pages/Services';
-import Contact from './pages/Contact';
-import Approach from './pages/Approach';
-import Founder from './pages/Founder';
-import Work from './pages/Work';
-import Insights from './pages/Insights';
+
+// Lazy load pages for performance
+const Home = React.lazy(() => import('./pages/Home'));
+const Services = React.lazy(() => import('./pages/Services'));
+const Contact = React.lazy(() => import('./pages/Contact'));
+const Approach = React.lazy(() => import('./pages/Approach'));
+const Founder = React.lazy(() => import('./pages/Founder'));
+const Work = React.lazy(() => import('./pages/Work'));
+const Insights = React.lazy(() => import('./pages/Insights'));
 
 // Growth Partner Imports
-import GrowthPartnerLanding from './pages/GrowthPartner/Landing';
-import GrowthPartnerApply from './pages/GrowthPartner/Apply';
-import GrowthPartnerSignup from './pages/GrowthPartner/Signup';
-import GrowthPartnerLogin from './pages/GrowthPartner/Login';
-import GrowthPartnerDashboard from './pages/GrowthPartner/Dashboard';
-import AdminDashboard from './pages/Admin/Dashboard';
+const GrowthPartnerLanding = React.lazy(() => import('./pages/GrowthPartner/Landing'));
+const GrowthPartnerApply = React.lazy(() => import('./pages/GrowthPartner/Apply'));
+const GrowthPartnerSignup = React.lazy(() => import('./pages/GrowthPartner/Signup'));
+const GrowthPartnerLogin = React.lazy(() => import('./pages/GrowthPartner/Login'));
+const GrowthPartnerDashboard = React.lazy(() => import('./pages/GrowthPartner/Dashboard'));
+const AdminDashboard = React.lazy(() => import('./pages/Admin/Dashboard'));
 
-// Placeholder components for routes not fully implemented in this demo
-const PlaceholderPage = ({ title }: { title: string }) => (
-  <div className="min-h-screen flex items-center justify-center pt-20">
-    <div className="text-center">
-      <h1 className="text-4xl font-display font-bold mb-4">{title}</h1>
-      <p className="text-white/50">Content coming soon...</p>
-    </div>
-  </div>
-);
+const LoadingFallback = () => <div className="min-h-screen bg-black" />;
+
+const HashHandler = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    // Check for hash-based URL on mount (e.g. /#/services) and redirect to clean URL
+    if (window.location.hash) {
+      const path = window.location.hash.replace('#', '');
+      if (path && path !== '/') {
+        window.history.replaceState(null, '', path);
+        navigate(path, { replace: true });
+      }
+    }
+  }, [navigate]);
+  return null;
+};
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
@@ -42,6 +51,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-background text-white font-sans selection:bg-accent selection:text-background">
+      <HashHandler />
       <ScrollToTop />
       <CustomCursor />
       {!shouldHide && <Navbar />}
@@ -59,28 +69,30 @@ const App: React.FC = () => {
   return (
     <Router>
       <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/approach" element={<Approach />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/founder-bhanudeep" element={<Founder />} />
-          <Route path="/work" element={<Work />} />
-          <Route path="/insights" element={<Insights />} />
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/approach" element={<Approach />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/founder-bhanudeep" element={<Founder />} />
+            <Route path="/work" element={<Work />} />
+            <Route path="/insights" element={<Insights />} />
 
-          {/* Growth Partner Ecosystem Routes */}
-          <Route path="/growth-partner" element={<GrowthPartnerLanding />} />
-          <Route path="/growth-partner/apply" element={<GrowthPartnerApply />} />
-          <Route path="/growth-partner/signup" element={<GrowthPartnerSignup />} />
-          <Route path="/growth-partner/login" element={<GrowthPartnerLogin />} />
-          <Route path="/growth-partner/dashboard" element={<GrowthPartnerDashboard />} />
+            {/* Growth Partner Ecosystem Routes */}
+            <Route path="/growth-partner" element={<GrowthPartnerLanding />} />
+            <Route path="/growth-partner/apply" element={<GrowthPartnerApply />} />
+            <Route path="/growth-partner/signup" element={<GrowthPartnerSignup />} />
+            <Route path="/growth-partner/login" element={<GrowthPartnerLogin />} />
+            <Route path="/growth-partner/dashboard" element={<GrowthPartnerDashboard />} />
 
-          {/* Admin Routes */}
-          <Route path="/admin/login" element={<GrowthPartnerLogin />} />
-          <Route path="/admin/growth-partners-dashboard" element={<AdminDashboard />} />
+            {/* Admin Routes */}
+            <Route path="/admin/login" element={<GrowthPartnerLogin />} />
+            <Route path="/admin/growth-partners-dashboard" element={<AdminDashboard />} />
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </Layout>
     </Router>
   );

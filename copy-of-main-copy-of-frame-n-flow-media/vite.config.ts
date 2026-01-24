@@ -19,6 +19,9 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, '.'),
       }
     },
+    ssr: {
+      noExternal: ['react-router-dom'],
+    },
     // base removed for Netlify deployment
   };
 });

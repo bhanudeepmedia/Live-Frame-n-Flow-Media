@@ -441,6 +441,8 @@ const ChatbotVisual = () => (
   </div>
 )
 
+import SEO from '../components/SEO';
+
 const Services: React.FC = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState<'marketing' | 'automation'>('marketing');
@@ -455,6 +457,11 @@ const Services: React.FC = () => {
 
   return (
     <div className="pt-24 md:pt-32 min-h-screen bg-background overflow-x-hidden pb-20 font-sans">
+      <SEO
+        title="Services | Frame n Flow Media - Marketing & Automation"
+        description="Explore our core services: Business Intelligence, AI Product Visuals, Growth Systems (100% Refund Guarantee), Web Development, and 24/7 AI Automation Agencies."
+        canonical="/services"
+      />
 
       {/* HEADER WITH TABS */}
       <div className="container mx-auto px-6 mb-12 md:mb-16 relative z-10">

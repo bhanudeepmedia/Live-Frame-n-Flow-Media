@@ -428,6 +428,8 @@ const FAQSection = () => {
 };
 
 
+import SEO from '../components/SEO';
+
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
@@ -453,6 +455,10 @@ const Home: React.FC = () => {
 
   return (
     <div className="w-full overflow-hidden" ref={scrollRef}>
+      <SEO
+        title="Frame n Flow Media - AI-Integrated Marketing Agency"
+        description="We are an AI-powered multimedia marketing agency. We engineer market dominance through Business Intelligence, AI Visuals, and Automated Growth Systems. Get qualified leads or 100% refund."
+      />
 
       {/* POPUP MODAL */}
       <AnimatePresence>

@@ -1,0 +1,46 @@
+# Frame n Flow Media - AI-Integrated Marketing Agency
+https://framenflow.media
+
+> "Marketing without data is just art. Art without strategy is just noise."
+
+## Agency Overview
+Frame n Flow Media helps businesses dominate their market through AI-Integrated Marketing. We combine Business Intelligence, Studio-Quality AI Visuals, and Automated Growth Systems to generate qualified leads.
+
+**Key Value Proposition:**
+- 100% Refund Guarantee if qualified lead targets are not met.
+- Studio-quality visuals at 10% of traditional cost using Generative AI.
+- Full automation of booking, follow-up, and reviews.
+
+## Core Services
+
+### 1. Market Research & Intelligence
+- Competitor analysis and gap detection.
+- Customer avatar creation based on behavioral data.
+- Funnel leak identification.
+
+### 2. AI Visual Production
+- **Product Visuals:** Photorealistic AI generation for jewelry, furniture, and products.
+- **Onsite Production:** Available in India (Video/Photo).
+- **Sonic Branding:** AI-generated brand-specific audio identity.
+
+### 3. Growth Systems
+- Automated lead acquisition funnels.
+- Performance marketing (Meta/Google Ads).
+- AI Chatbots & Voice Agents for 24/7 lead capture.
+
+### 4. Web Development
+- High-performance, dark-mode aesthetic websites.
+- Optimized for conversion and SEO.
+
+## Key Pages
+- [/services](https://framenflow.media/services) - Full breakdown of Marketing and Automation services.
+- [/approach](https://framenflow.media/approach) - Our 4-step process (Audit, Sonic, Visuals, Revenue).
+- [/founder-bhanudeep](https://framenflow.media/founder-bhanudeep) - About Bhanu Deep and agency philosophy.
+
+## Contact
+- **Booking:** [Calendly Link](https://calendly.com/bhanudeep-workprofile/30min)
+- **Email:** contact@framenflow.media (Example)
+
+## Technical Notes for Bots
+- This site uses Static Site Generation (SSG) for fast loading.
+- All content is available in raw HTML.
