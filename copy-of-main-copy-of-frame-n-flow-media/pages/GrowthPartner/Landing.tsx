@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import Button from '../../components/Button';
 import { useNavigate } from 'react-router-dom';
+import SEO from '../../components/SEO';
 
 // ------------------- ANIMATED COMPONENTS -------------------
 
@@ -111,6 +112,11 @@ const Landing: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-background text-white pt-24 font-sans selection:bg-accent selection:text-black overflow-x-hidden">
+            <SEO
+                title="Growth Partner Program | Frame n Flow Media"
+                description="Join our Growth Partner ecosystem. Connect qualified leads, book appointments, and earn 20-30% recurring commission. Fully remote, performance-based."
+                canonical="/growth-partner"
+            />
 
             {/* ---------------- HERO SECTION (Interactive 3D Float) ---------------- */}
             <div className="container mx-auto px-6 mb-32">
