@@ -738,7 +738,7 @@ Hello [Name],
 We are pleased to accept you into the Growth Partner Program.
 
 Please activate your account by creating your credentials here:
-${window.location.origin}/#/growth-partner/signup
+${typeof window !== 'undefined' ? window.location.origin : 'https://framenflowmedia.in'}/#/growth-partner/signup
 
 (This link allows you to set your password)
 
