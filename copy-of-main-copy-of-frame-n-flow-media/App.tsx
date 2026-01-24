@@ -53,9 +53,7 @@ const App: React.FC = () => {
   const element = useRoutes(routes);
   return (
     <Layout>
-      <Suspense fallback={<LoadingFallback />}>
-        {element}
-      </Suspense>
+      {element}
     </Layout>
   );
 };

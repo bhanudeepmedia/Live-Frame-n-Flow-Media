@@ -1,24 +1,22 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import type { RouteObject } from 'react-router-dom';
 
-// Lazy load pages
-const Home = React.lazy(() => import('./pages/Home'));
-const Services = React.lazy(() => import('./pages/Services'));
-const Contact = React.lazy(() => import('./pages/Contact'));
-const Approach = React.lazy(() => import('./pages/Approach'));
-const Founder = React.lazy(() => import('./pages/Founder'));
-const Work = React.lazy(() => import('./pages/Work'));
-const Insights = React.lazy(() => import('./pages/Insights'));
+// Static imports for SSG SEO
+import Home from './pages/Home';
+import Services from './pages/Services';
+import Contact from './pages/Contact';
+import Approach from './pages/Approach';
+import Founder from './pages/Founder';
+import Work from './pages/Work';
+import Insights from './pages/Insights';
 
 // Growth Partner Imports
-const GrowthPartnerLanding = React.lazy(() => import('./pages/GrowthPartner/Landing'));
-const GrowthPartnerApply = React.lazy(() => import('./pages/GrowthPartner/Apply'));
-const GrowthPartnerSignup = React.lazy(() => import('./pages/GrowthPartner/Signup'));
-const GrowthPartnerLogin = React.lazy(() => import('./pages/GrowthPartner/Login'));
-const GrowthPartnerDashboard = React.lazy(() => import('./pages/GrowthPartner/Dashboard'));
-const AdminDashboard = React.lazy(() => import('./pages/Admin/Dashboard'));
-
-const LoadingFallback = () => <div className="min-h-screen bg-black" />;
+import GrowthPartnerLanding from './pages/GrowthPartner/Landing';
+import GrowthPartnerApply from './pages/GrowthPartner/Apply';
+import GrowthPartnerSignup from './pages/GrowthPartner/Signup';
+import GrowthPartnerLogin from './pages/GrowthPartner/Login';
+import GrowthPartnerDashboard from './pages/GrowthPartner/Dashboard';
+import AdminDashboard from './pages/Admin/Dashboard';
 
 export const routes: RouteObject[] = [
     { path: '/', element: <Home /> },
