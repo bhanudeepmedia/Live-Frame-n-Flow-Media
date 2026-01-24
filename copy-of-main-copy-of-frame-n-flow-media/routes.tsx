@@ -1,8 +1,7 @@
 import React, { Suspense } from 'react';
-import { RouteObject } from 'react-router-dom';
-import App from './App';
+import type { RouteObject } from 'react-router-dom';
 
-// Lazy load pages for performance
+// Lazy load pages
 const Home = React.lazy(() => import('./pages/Home'));
 const Services = React.lazy(() => import('./pages/Services'));
 const Contact = React.lazy(() => import('./pages/Contact'));
@@ -22,134 +21,22 @@ const AdminDashboard = React.lazy(() => import('./pages/Admin/Dashboard'));
 const LoadingFallback = () => <div className="min-h-screen bg-black" />;
 
 export const routes: RouteObject[] = [
-    {
-        path: '/',
-        element: <App />,
-        children: [
-            {
-                index: true,
-                element: (
-                    <Suspense fallback={<LoadingFallback />}>
-                        <Home />
-                    </Suspense>
-                ),
-            },
-            {
-                path: 'approach',
-                element: (
-                    <Suspense fallback={<LoadingFallback />}>
-                        <Approach />
-                    </Suspense>
-                ),
-            },
-            {
-                path: 'services',
-                element: (
-                    <Suspense fallback={<LoadingFallback />}>
-                        <Services />
-                    </Suspense>
-                ),
-            },
-            {
-                path: 'contact',
-                element: (
-                    <Suspense fallback={<LoadingFallback />}>
-                        <Contact />
-                    </Suspense>
-                ),
-            },
-            {
-                path: 'founder-bhanudeep',
-                element: (
-                    <Suspense fallback={<LoadingFallback />}>
-                        <Founder />
-                    </Suspense>
-                ),
-            },
-            {
-                path: 'work',
-                element: (
-                    <Suspense fallback={<LoadingFallback />}>
-                        <Work />
-                    </Suspense>
-                ),
-            },
-            {
-                path: 'insights',
-                element: (
-                    <Suspense fallback={<LoadingFallback />}>
-                        <Insights />
-                    </Suspense>
-                ),
-            },
-            // Growth Partner Ecosystem Routes
-            {
-                path: 'growth-partner',
-                children: [
-                    {
-                        index: true,
-                        element: (
-                            <Suspense fallback={<LoadingFallback />}>
-                                <GrowthPartnerLanding />
-                            </Suspense>
-                        ),
-                    },
-                    {
-                        path: 'apply',
-                        element: (
-                            <Suspense fallback={<LoadingFallback />}>
-                                <GrowthPartnerApply />
-                            </Suspense>
-                        ),
-                    },
-                    {
-                        path: 'signup',
-                        element: (
-                            <Suspense fallback={<LoadingFallback />}>
-                                <GrowthPartnerSignup />
-                            </Suspense>
-                        ),
-                    },
-                    {
-                        path: 'login',
-                        element: (
-                            <Suspense fallback={<LoadingFallback />}>
-                                <GrowthPartnerLogin />
-                            </Suspense>
-                        ),
-                    },
-                    {
-                        path: 'dashboard',
-                        element: (
-                            <Suspense fallback={<LoadingFallback />}>
-                                <GrowthPartnerDashboard />
-                            </Suspense>
-                        ),
-                    },
-                ]
-            },
-            // Admin Routes
-            {
-                path: 'admin',
-                children: [
-                    {
-                        path: 'login',
-                        element: (
-                            <Suspense fallback={<LoadingFallback />}>
-                                <GrowthPartnerLogin />
-                            </Suspense>
-                        ),
-                    },
-                    {
-                        path: 'growth-partners-dashboard',
-                        element: (
-                            <Suspense fallback={<LoadingFallback />}>
-                                <AdminDashboard />
-                            </Suspense>
-                        ),
-                    },
-                ]
-            }
-        ]
-    }
+    { path: '/', element: <Home /> },
+    { path: '/approach', element: <Approach /> },
+    { path: '/services', element: <Services /> },
+    { path: '/contact', element: <Contact /> },
+    { path: '/founder-bhanudeep', element: <Founder /> },
+    { path: '/work', element: <Work /> },
+    { path: '/insights', element: <Insights /> },
+
+    // Growth Partner Ecosystem
+    { path: '/growth-partner', element: <GrowthPartnerLanding /> },
+    { path: '/growth-partner/apply', element: <GrowthPartnerApply /> },
+    { path: '/growth-partner/signup', element: <GrowthPartnerSignup /> },
+    { path: '/growth-partner/login', element: <GrowthPartnerLogin /> },
+    { path: '/growth-partner/dashboard', element: <GrowthPartnerDashboard /> },
+
+    // Admin
+    { path: '/admin/login', element: <GrowthPartnerLogin /> },
+    { path: '/admin/growth-partners-dashboard', element: <AdminDashboard /> },
 ];
