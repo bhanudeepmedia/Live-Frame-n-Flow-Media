@@ -1,12 +1,10 @@
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect } from 'react';
 import { useRoutes, useLocation, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import ScrollToTop from './components/ScrollToTop';
 import { routes } from './routes';
-
-const LoadingFallback = () => <div className="min-h-screen bg-black" />;
 
 const HashHandler = () => {
   const navigate = useNavigate();
