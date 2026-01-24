@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /growth-partner/dashboard
+Disallow: /growth-partner/login
+
+Sitemap: https://framenflow.media/sitemap.xml
