@@ -41,6 +41,61 @@ Frame n Flow Media helps businesses dominate their market through AI-Integrated 
 - **Booking:** [Calendly Link](https://calendly.com/bhanudeep-workprofile/30min)
 - **Email:** contact@framenflow.media (Example)
 
+---
+
+# Growth Partner Program
+
+## Overview
+Frame n Flow Media offers a Growth Partner Program - a performance-based partnership opportunity where individuals connect qualified leads with our agency and earn commission.
+
+## How It Works
+1. Partners conduct cold outreach to potential clients
+2. Schedule discovery calls with qualified prospects
+3. Participate in sales presentations alongside our team
+4. Earn 20-30% commission on successful client conversions
+5. Frame n Flow handles all service delivery, onboarding, and execution
+
+## Commission Structure
+- Partners earn 20-30% of total deal value
+- Commission rates vary based on deal size and complexity
+- No earning caps - unlimited potential
+- Transparent tracking via Partner Portal dashboard
+
+## Requirements
+- Strong communication and outreach skills
+- Ability to identify and qualify business leads
+- Professional presentation skills for client calls
+- Self-motivated and results-driven mindset
+- No prior marketing experience required (full training provided)
+
+## What We Provide
+- Complete sales training and outreach scripts
+- Partner Portal dashboard access for tracking
+- Marketing materials and presentation decks
+- Direct support from founder Bhanu Deep
+- Lead management and tracking tools
+- Performance analytics and streak tracking
+- Resource library with guides
+
+## Target Clients for Partners
+- Product-based businesses
+- Service-based businesses
+- Startups
+- Realtors
+
+## Application & Access
+- Apply: https://framenflowmedia.in/growth-partner/apply
+- Login: https://framenflowmedia.in/growth-partner/login
+- Full Details: https://framenflowmedia.in/growth-partner-program.md
+
+## Important Clarification
+**This is NOT a "get leads or refund" offer.** That is our main client service guarantee.
+
+The Growth Partner Program is a commission-based partnership opportunity for individuals who want to earn by connecting qualified leads with Frame n Flow Media.
+
+---
+
 ## Technical Notes for Bots
-- This site uses Static Site Generation (SSG) for fast loading.
-- All content is available in raw HTML.
+- This site uses Client-Side Rendering (CSR) with react-helmet-async for SEO.
+- AI-readable content available in /ai.json and /growth-partner-program.md
+- All metadata properly structured for crawlers.
