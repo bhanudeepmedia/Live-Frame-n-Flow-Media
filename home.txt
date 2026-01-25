@@ -1,0 +1,12 @@
+Frame n Flow Media | Strategy-First Marketing
+=============================================
+
+Frame n Flow Media is a strategy-first marketing agency specializing in business intelligence, performance marketing, AI product visuals, and growth systems to scale enterprise partners.
+
+URL: https://framenflowmedia.in/
+
+Note: This is a client-side rendered React application. For full content, please visit the URL above or refer to the static documentation files:
+- /llms.txt
+- /ai.json
+- /growth-partner-program.md
+- /growth-partner-info.html
