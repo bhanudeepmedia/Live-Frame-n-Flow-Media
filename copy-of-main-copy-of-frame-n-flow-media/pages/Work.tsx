@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../components/Button';
-import { Zap, Layers, DollarSign, Play, CheckCircle2, Cpu, Aperture, Repeat, Music, Mic, Headphones, Radio, Volume2 } from 'lucide-react';
+import { Zap, Layers, DollarSign, Play, CheckCircle2, Cpu, Aperture, Repeat, Music, Mic, Headphones, Radio, Volume2, Globe, Database, Smartphone, Code } from 'lucide-react';
 import SEO from '../components/SEO';
 
 const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: string }> = ({ children, delay = 0, className = "" }) => (
@@ -30,7 +30,7 @@ const RevealText: React.FC<{ children: React.ReactNode, delay?: number, classNam
 );
 
 const Work: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'visuals' | 'sonic'>('visuals');
+  const [activeTab, setActiveTab] = useState<'visuals' | 'sonic' | 'dev'>('visuals');
   const [visualMode, setVisualMode] = useState<'kinetic' | 'static'>('kinetic');
 
   // KINETIC SEQUENCES (VIDEOS)
@@ -139,6 +139,24 @@ const Work: React.FC = () => {
     }
   ];
 
+  const devPortfolio = [
+    {
+      url: "https://www.thegraftonvault.com",
+      title: "The Grafton Vault",
+      description: "A premium digital vault experience. High-security backend architecture with a luxurious, motion-rich frontend interface."
+    },
+    {
+      url: "https://connvel.in",
+      title: "Connvel",
+      description: "Next-gen networking platform. Real-time data synchronization, AI-enhanced user matching, and a fluid, app-like web experience."
+    },
+    {
+      url: "https://framenflowmedia.in",
+      title: "Frame n Flow Media",
+      description: "Our own digital HQ. A testament to performance optimization, SEO dominance, and immersive storytelling."
+    }
+  ];
+
   return (
     <div className="pt-24 md:pt-32 min-h-screen bg-background overflow-x-hidden pb-20">
       <SEO
@@ -166,21 +184,27 @@ const Work: React.FC = () => {
             </h1>
           </RevealText>
 
-          {/* TAB TOGGLE - SONIC VS VISUALS */}
           <div className="flex flex-wrap justify-center gap-4 mt-4 bg-white/5 p-2 rounded-full border border-white/10 backdrop-blur-md">
             <button
               onClick={() => setActiveTab('visuals')}
-              className={`px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${activeTab === 'visuals' ? 'bg-accent text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+              className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${activeTab === 'visuals' ? 'bg-accent text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
             >
               <Aperture size={18} />
               AI Studio Visuals
             </button>
             <button
               onClick={() => setActiveTab('sonic')}
-              className={`px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${activeTab === 'sonic' ? 'bg-accent text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+              className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${activeTab === 'sonic' ? 'bg-accent text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
             >
               <Music size={18} />
               Sonic Branding
+            </button>
+            <button
+              onClick={() => setActiveTab('dev')}
+              className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${activeTab === 'dev' ? 'bg-accent text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+            >
+              <Code size={18} />
+              Web & App Dev
             </button>
           </div>
         </div>
@@ -464,6 +488,141 @@ const Work: React.FC = () => {
                         <h3 className="text-xl font-bold text-white mb-2">Cross-Platform Integration</h3>
                         <p className="text-white/50">We master the audio specifically for mobile devices (vertical video) and provide variations for Intros, Outros, and Background loops.</p>
                       </div>
+                    </div>
+                  </FadeIn>
+                </div>
+              </div>
+            </div>
+
+          </motion.div>
+        )}
+
+        {/* ==================== DEV SUBPAGE ==================== */}
+        {activeTab === 'dev' && (
+          <motion.div
+            key="dev"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* DEV HERO TEXT */}
+            <div className="container mx-auto px-6 mb-16 text-center">
+              <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed">
+                We engineer digital growth engines. By merging high-end aesthetics with potent AI backends, we create web experiences that convert.
+              </p>
+            </div>
+
+            {/* DEV GRID */}
+            <div className="container mx-auto px-6 mb-32 relative z-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {devPortfolio.map((item, index) => (
+                  <FadeIn key={index} delay={index * 0.1} className="flex flex-col h-full">
+                    <div className="bg-[#121212] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group h-full flex flex-col hover:border-accent/40 transition-all duration-300">
+                      <div className="relative w-full aspect-[4/3] bg-black overflow-hidden group-hover:shadow-[0_0_30px_rgba(34,211,238,0.2)] transition-shadow duration-500">
+                        {/* Browser Top Bar Mockup */}
+                        <div className="absolute top-0 left-0 right-0 h-6 bg-[#1a1a1a] border-b border-white/5 flex items-center px-3 gap-1.5 z-20">
+                          <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
+                          <div className="w-2 h-2 rounded-full bg-yellow-500/50"></div>
+                          <div className="w-2 h-2 rounded-full bg-green-500/50"></div>
+                        </div>
+
+                        {/* Website Preview */}
+                        <div className="absolute inset-0 pt-6">
+                          <iframe
+                            src={item.url}
+                            className="w-full h-[200%] border-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500 origin-top transform scale-50"
+                            style={{ pointerEvents: 'none', width: '200%', height: '200%', transform: 'scale(0.5)', transformOrigin: 'top left' }}
+                            title={item.title}
+                          />
+                        </div>
+
+                        {/* Visit Overlay */}
+                        <div
+                          className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer z-30 backsplash-blur-sm"
+                          onClick={() => window.open(item.url, '_blank')}
+                        >
+                          <div className="flex items-center gap-2 bg-accent text-black px-6 py-3 rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <Globe size={18} />
+                            Visit Live Site
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-6 border-t border-white/5 bg-surfaceHighlight flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-accent">
+                            <Code size={14} />
+                          </div>
+                          <h3 className="text-xl font-bold text-white">{item.title}</h3>
+                        </div>
+                        <p className="text-sm text-white/50 leading-relaxed">{item.description}</p>
+                      </div>
+                    </div>
+                  </FadeIn>
+                ))}
+              </div>
+            </div>
+
+            {/* DEV FEATURES: MAGICAL TECHY SPECS */}
+            <div className="bg-[#050505] border-y border-white/5 py-24 relative overflow-hidden">
+              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 pointer-events-none"></div>
+              <div className="container mx-auto px-6">
+                <div className="max-w-3xl mb-16">
+                  <FadeIn>
+                    <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">The Full Stack Advantage.</h2>
+                    <p className="text-xl text-white/60 font-light leading-relaxed">
+                      Beauty is nothing without brains. We build systems that are as intelligent as they are beautiful.
+                    </p>
+                  </FadeIn>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <FadeIn delay={0.1}>
+                    <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-8 hover:bg-[#0f0f0f] transition-colors group">
+                      <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <Cpu size={24} />
+                      </div>
+                      <h3 className="text-2xl font-bold text-white mb-4">AI-Native Integration</h3>
+                      <p className="text-white/50 leading-relaxed">
+                        We don't just bolt on AI; we weave it into the core. From LLM-powered search to predictive user flows and personalized content generation, your site thinks for itself.
+                      </p>
+                    </div>
+                  </FadeIn>
+
+                  <FadeIn delay={0.2}>
+                    <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-8 hover:bg-[#0f0f0f] transition-colors group">
+                      <div className="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center text-yellow-400 mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <Zap size={24} />
+                      </div>
+                      <h3 className="text-2xl font-bold text-white mb-4">Hyper-Automation</h3>
+                      <p className="text-white/50 leading-relaxed">
+                        Your website should work while you sleep. We automate lead qualification, CRM entry, and follow-up sequences, turning traffic into revenue without manual input.
+                      </p>
+                    </div>
+                  </FadeIn>
+
+                  <FadeIn delay={0.3}>
+                    <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-8 hover:bg-[#0f0f0f] transition-colors group">
+                      <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <Database size={24} />
+                      </div>
+                      <h3 className="text-2xl font-bold text-white mb-4">Robust Data Architecture</h3>
+                      <p className="text-white/50 leading-relaxed">
+                        Built on scalable cloud infrastructure with Supabase or Firebase. We ensure zero-downtime, sub-second latency, and bank-grade security for your users' data.
+                      </p>
+                    </div>
+                  </FadeIn>
+
+                  <FadeIn delay={0.4}>
+                    <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-8 hover:bg-[#0f0f0f] transition-colors group">
+                      <div className="w-12 h-12 bg-pink-500/10 rounded-lg flex items-center justify-center text-pink-400 mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <Layers size={24} />
+                      </div>
+                      <h3 className="text-2xl font-bold text-white mb-4">Killer Aesthetics</h3>
+                      <p className="text-white/50 leading-relaxed">
+                        First impressions are visual. We deploy Framer Motion, WebGL, and custom GSAP animations to create a "wow" factor that establishes immediate authority.
+                      </p>
                     </div>
                   </FadeIn>
                 </div>
