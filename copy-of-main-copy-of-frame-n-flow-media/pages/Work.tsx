@@ -198,33 +198,24 @@ const Work: React.FC = () => {
                 Studio quality without the studio. Our generative workflows create visuals that are indistinguishable from reality, yet impossible to film.
               </p>
 
-              {/* MODE SWITCHER (SCROLLER STYLE) */}
-              <div className="relative inline-flex bg-white/5 border border-white/10 rounded-full p-2 items-center w-full max-w-[300px]">
-                <div className="absolute inset-2 bg-gradient-to-r from-accent/20 to-purple-500/20 rounded-full blur-md opacity-50" />
-
-                {/* The Sliding Background */}
-                <motion.div
-                  className="absolute top-1 bottom-1 bg-accent rounded-full shadow-[0_0_15px_rgba(34,211,238,0.6)] z-0"
-                  initial={false}
-                  animate={{
-                    left: visualMode === 'kinetic' ? '4px' : '50%',
-                    width: 'calc(50% - 4px)' // slightly adjusted for padding
-                  }}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-
-                <button
-                  onClick={() => setVisualMode('kinetic')}
-                  className={`relative z-10 w-1/2 py-2 text-sm font-bold uppercase tracking-wider transition-colors duration-200 ${visualMode === 'kinetic' ? 'text-black' : 'text-white/50 hover:text-white'}`}
-                >
-                  Kinetic
-                </button>
-                <button
-                  onClick={() => setVisualMode('static')}
-                  className={`relative z-10 w-1/2 py-2 text-sm font-bold uppercase tracking-wider transition-colors duration-200 ${visualMode === 'static' ? 'text-black' : 'text-white/50 hover:text-white'}`}
-                >
-                  Static
-                </button>
+              {/* MODE SWITCHER (Minimalist Glow Style) */}
+              <div className="flex items-center justify-center gap-1 mb-8">
+                <div className="inline-flex items-center bg-black/40 backdrop-blur-md border border-white/10 rounded-full p-1.5 relative shadow-inner">
+                  <button
+                    onClick={() => setVisualMode('kinetic')}
+                    className={`relative z-10 px-8 py-2.5 rounded-full text-sm font-bold tracking-widest uppercase transition-all duration-300 flex items-center gap-2 ${visualMode === 'kinetic' ? 'text-black bg-accent shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
+                  >
+                    <Play size={14} className={visualMode === 'kinetic' ? 'fill-current' : ''} />
+                    Motion
+                  </button>
+                  <button
+                    onClick={() => setVisualMode('static')}
+                    className={`relative z-10 px-8 py-2.5 rounded-full text-sm font-bold tracking-widest uppercase transition-all duration-300 flex items-center gap-2 ${visualMode === 'static' ? 'text-black bg-accent shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
+                  >
+                    <Aperture size={14} />
+                    Stills
+                  </button>
+                </div>
               </div>
             </div>
 
