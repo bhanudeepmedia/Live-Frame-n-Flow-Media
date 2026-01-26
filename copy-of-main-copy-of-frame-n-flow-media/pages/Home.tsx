@@ -493,7 +493,7 @@ const Home: React.FC = () => {
                   animate={{ x: ["0%", "-50%"] }}
                   transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
                 >
-                  {Array(10).fill("QUALIFIED • ").join("")}
+                  {Array(10).fill("MARKETING • ").join("")}
                 </motion.div>
               </motion.div>
 
@@ -505,7 +505,7 @@ const Home: React.FC = () => {
                 className="relative z-10 flex justify-center w-full px-4"
               >
                 <h2 className="text-black text-[8.5vw] font-display font-black whitespace-nowrap tracking-tighter uppercase leading-none">
-                  Get qualified leads
+                  AI-powered marketing
                 </h2>
               </motion.div>
             </div>
@@ -521,7 +521,7 @@ const Home: React.FC = () => {
                   animate={{ x: ["-50%", "0%"] }}
                   transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
                 >
-                  {Array(10).fill("REFUND • ").join("")}
+                  {Array(10).fill("SALES • ").join("")}
                 </motion.div>
               </motion.div>
 
@@ -533,7 +533,7 @@ const Home: React.FC = () => {
                 className="relative z-10 flex justify-center w-full px-4"
               >
                 <h3 className="text-white text-[7vw] font-display font-black transform rotate-1 whitespace-nowrap tracking-tight uppercase leading-none">
-                  or 100% refund.
+                  built to drive real sales.
                 </h3>
               </motion.div>
             </div>
@@ -596,9 +596,9 @@ const Home: React.FC = () => {
                   }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   onHoverStart={playHoverCue}
-                  className="relative inline-block bg-accent/80 text-black text-7xl lg:text-9xl font-display font-bold px-10 py-4 whitespace-nowrap border border-accent/20 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.3)] cursor-pointer"
+                  className="relative inline-block bg-accent/80 text-black text-5xl md:text-7xl lg:text-8xl font-display font-bold px-10 py-4 whitespace-nowrap border border-accent/20 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.3)] cursor-pointer"
                 >
-                  Get qualified leads
+                  AI-powered marketing
                 </motion.span>
               </motion.div>
 
@@ -618,9 +618,9 @@ const Home: React.FC = () => {
                   }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   onHoverStart={playHoverCue}
-                  className="relative inline-block bg-white/5 text-white text-6xl lg:text-8xl font-display font-bold px-10 py-4 whitespace-nowrap border border-white/10 backdrop-blur-md rounded-2xl cursor-pointer"
+                  className="relative inline-block bg-white/5 text-white text-3xl md:text-5xl lg:text-7xl font-display font-bold px-8 py-4 whitespace-nowrap border border-white/10 backdrop-blur-md rounded-2xl cursor-pointer"
                 >
-                  or 100% refund.
+                  built to drive real sales.
                 </motion.span>
               </motion.div>
             </div>
