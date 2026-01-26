@@ -58,6 +58,21 @@ const Work: React.FC = () => {
       title: "Commercial Spot",
       description: "Full AI video workflow from script to final render."
     },
+    {
+      url: "https://www.instagram.com/reel/DT9gDAEEys1/embed",
+      title: "Advanced Texture Synthesis",
+      description: "Photorealistic material rendering with AI-enhanced light interaction."
+    },
+    {
+      url: "https://www.instagram.com/reel/DTvUUoUDAtO/embed",
+      title: "Future-Forward Motion",
+      description: "Seamless transition effects and high-energy visual pacing for brand impact."
+    },
+    {
+      url: "https://www.instagram.com/reel/DTTJ9Krkg3-/embed",
+      title: "Concept Visualization",
+      description: "Bringing abstract brand concepts to life through generative video."
+    },
   ];
 
   const sonicPortfolio = [
