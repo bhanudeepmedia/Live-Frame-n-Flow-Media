@@ -31,47 +31,93 @@ const RevealText: React.FC<{ children: React.ReactNode, delay?: number, classNam
 
 const Work: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'visuals' | 'sonic'>('visuals');
+  const [visualMode, setVisualMode] = useState<'kinetic' | 'static'>('kinetic');
 
-  const visualPortfolio = [
+  // KINETIC SEQUENCES (VIDEOS)
+  const kineticPortfolio = [
     {
       url: "https://www.instagram.com/reel/DN2Gtyy6lQb/embed",
-      title: "Luxury Product Reveal",
-      description: "Hyper-realistic lighting and texture simulation for jewelry."
+      title: "Radiance Field Rendering",
+      description: "Ethereal luminescence: Ray-traced elegance meets generated matter."
     },
     {
       url: "https://www.instagram.com/reel/DSkyKTyE-mM/embed",
-      title: "Dynamic Fashion Motion",
-      description: "AI-driven fabric physics and model animation."
-    },
-    {
-      url: "https://www.instagram.com/p/DSSO7zKDTgN/embed",
-      title: "Visual Brand Narrative",
-      description: "Static to motion transformation for high-impact social posts."
+      title: "Digital Couture",
+      description: "Fabric Fluidity: AI simulation of textile physics in hyper-motion for high-end fashion."
     },
     {
       url: "https://www.instagram.com/reel/DSZ07pqErV7/embed",
-      title: "Cinematic Environment",
-      description: "Generative backgrounds with seamless product integration."
+      title: "World Building",
+      description: "Procedural environment generation for immersive brand storytelling."
     },
     {
       url: "https://www.instagram.com/reel/DNuYV9KQlac/embed",
-      title: "Commercial Spot",
-      description: "Full AI video workflow from script to final render."
+      title: "Generative Cinema",
+      description: "Text-to-Video workflows that redefine commercial production speed."
     },
     {
       url: "https://www.instagram.com/reel/DT9gDAEEys1/embed",
-      title: "Advanced Texture Synthesis",
-      description: "Photorealistic material rendering with AI-enhanced light interaction."
+      title: "Material Synthesis",
+      description: "Haptic Dreaming: Digital textures indistinguishable from organic reality."
     },
     {
       url: "https://www.instagram.com/reel/DTvUUoUDAtO/embed",
-      title: "Future-Forward Motion",
-      description: "Seamless transition effects and high-energy visual pacing for brand impact."
+      title: "Velocity Mapping",
+      description: "Temporal Glitch: High-framerate AI interpolation for impossible camera moves."
     },
     {
       url: "https://www.instagram.com/reel/DTTJ9Krkg3-/embed",
-      title: "Concept Visualization",
-      description: "Bringing abstract brand concepts to life through generative video."
+      title: "Abstract Ideation",
+      description: "Visualizing the subconscious architecture of the brand identity."
+    },
+  ];
+
+  // STATIC ARTIFACTS (IMAGES)
+  const staticPortfolio = [
+    {
+      url: "https://www.instagram.com/p/DT3F0HKFAR_/embed",
+      title: "Cybernetic Portraiture",
+      description: "Exploring the intersection of humanity and synthetic evolution."
+    },
+    {
+      url: "https://www.instagram.com/p/DSSR-htjbNd/embed",
+      title: "Neon Noir",
+      description: "Atmospheric lighting studies in a post-digital cityscape."
+    },
+    {
+      url: "https://www.instagram.com/p/DTOA45oEgWC/embed",
+      title: "Architectural Dreams",
+      description: "Impossible geometry rendered with photorealistic precision."
+    },
+    {
+      url: "https://www.instagram.com/p/DT2tw6fiS27/embed",
+      title: "Organic Glitch",
+      description: "Nature merging with digital distortion artifacts."
+    },
+    {
+      url: "https://www.instagram.com/p/DSkx0HICCeh/embed",
+      title: "Surreal Touch",
+      description: "Haptic visuality in a two-dimensional medium."
+    },
+    {
+      url: "https://www.instagram.com/p/DT2Z2CDEsmu/embed",
+      title: "Chromatic Flux",
+      description: "Color grading experiments powered by deep learning aesthetics."
+    },
+    {
+      url: "https://www.instagram.com/p/DSrpBZjiKG1/embed",
+      title: "Data Moshing",
+      description: "Visualizing raw data streams as aesthetic textures."
+    },
+    {
+      url: "https://www.instagram.com/p/DT74ht3FBA9/embed",
+      title: "Void Aesthetics",
+      description: "Minimalist composition using negative space and AI generation."
+    },
+    {
+      url: "https://www.instagram.com/p/DSSO7zKDTgN/embed",
+      title: "The Frozen Narrative",
+      description: "Single-frame storytelling with high-dynamic-range composition."
     },
   ];
 
@@ -115,7 +161,7 @@ const Work: React.FC = () => {
             </h1>
           </RevealText>
 
-          {/* TAB TOGGLE */}
+          {/* TAB TOGGLE - SONIC VS VISUALS */}
           <div className="flex flex-wrap justify-center gap-4 mt-4 bg-white/5 p-2 rounded-full border border-white/10 backdrop-blur-md">
             <button
               onClick={() => setActiveTab('visuals')}
@@ -147,36 +193,112 @@ const Work: React.FC = () => {
             transition={{ duration: 0.5 }}
           >
             {/* VISUALS HERO TEXT */}
-            <div className="container mx-auto px-6 mb-16 text-center">
-              <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed">
-                Studio quality without the studio. We use proprietary generative AI workflows to create commercials and assets indistinguishable from million-dollar productions.
+            <div className="container mx-auto px-6 mb-12 text-center">
+              <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed mb-10">
+                Studio quality without the studio. Our generative workflows create visuals that are indistinguishable from reality, yet impossible to film.
               </p>
+
+              {/* MODE SWITCHER (SCROLLER STYLE) */}
+              <div className="relative inline-flex bg-white/5 border border-white/10 rounded-full p-2 items-center w-full max-w-[300px]">
+                <div className="absolute inset-2 bg-gradient-to-r from-accent/20 to-purple-500/20 rounded-full blur-md opacity-50" />
+
+                {/* The Sliding Background */}
+                <motion.div
+                  className="absolute top-1 bottom-1 bg-accent rounded-full shadow-[0_0_15px_rgba(34,211,238,0.6)] z-0"
+                  initial={false}
+                  animate={{
+                    left: visualMode === 'kinetic' ? '4px' : '50%',
+                    width: 'calc(50% - 4px)' // slightly adjusted for padding
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
+
+                <button
+                  onClick={() => setVisualMode('kinetic')}
+                  className={`relative z-10 w-1/2 py-2 text-sm font-bold uppercase tracking-wider transition-colors duration-200 ${visualMode === 'kinetic' ? 'text-black' : 'text-white/50 hover:text-white'}`}
+                >
+                  Kinetic
+                </button>
+                <button
+                  onClick={() => setVisualMode('static')}
+                  className={`relative z-10 w-1/2 py-2 text-sm font-bold uppercase tracking-wider transition-colors duration-200 ${visualMode === 'static' ? 'text-black' : 'text-white/50 hover:text-white'}`}
+                >
+                  Static
+                </button>
+              </div>
             </div>
 
-            {/* VISUALS GRID */}
+            {/* VISUALS CONTENT GRID */}
             <div className="container mx-auto px-6 mb-32 relative z-10">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {visualPortfolio.map((item, index) => (
-                  <FadeIn key={index} delay={index * 0.1} className="flex flex-col h-full">
-                    <div className="bg-[#121212] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group h-full flex flex-col">
-                      <div className="relative w-full aspect-[9/16] md:aspect-[4/5] bg-black">
-                        <iframe
-                          src={`${item.url}/captioned/`}
-                          className="absolute inset-0 w-full h-full object-cover"
-                          frameBorder="0"
-                          scrolling="no"
-                          allowTransparency={true}
-                          title={item.title}
-                        ></iframe>
-                      </div>
-                      <div className="p-6 border-t border-white/5 bg-surfaceHighlight flex-1">
-                        <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-                        <p className="text-sm text-white/50">{item.description}</p>
-                      </div>
-                    </div>
-                  </FadeIn>
-                ))}
-              </div>
+              <AnimatePresence mode="wait">
+                {visualMode === 'kinetic' ? (
+                  <motion.div
+                    key="kinetic-grid"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.4 }}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                  >
+                    {kineticPortfolio.map((item, index) => (
+                      <FadeIn key={`vid-${index}`} delay={index * 0.1} className="flex flex-col h-full">
+                        <div className="bg-[#121212] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group h-full flex flex-col hover:border-accent/40 transition-all duration-300">
+                          <div className="relative w-full aspect-[9/16] md:aspect-[4/5] bg-black">
+                            <iframe
+                              src={`${item.url}/captioned/`}
+                              className="absolute inset-0 w-full h-full object-cover"
+                              frameBorder="0"
+                              scrolling="no"
+                              allowTransparency={true}
+                              title={item.title}
+                            ></iframe>
+                          </div>
+                          <div className="p-6 border-t border-white/5 bg-surfaceHighlight flex-1 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-100 transition-opacity duration-300">
+                              <Play size={24} className="text-accent" />
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
+                            <p className="text-sm text-white/50">{item.description}</p>
+                          </div>
+                        </div>
+                      </FadeIn>
+                    ))}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="static-grid"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.4 }}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                  >
+                    {staticPortfolio.map((item, index) => (
+                      <FadeIn key={`img-${index}`} delay={index * 0.1} className="flex flex-col h-full">
+                        <div className="bg-[#121212] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group h-full flex flex-col hover:border-accent/40 transition-all duration-300">
+                          <div className="relative w-full aspect-[4/5] bg-black">
+                            <iframe
+                              src={`${item.url}/captioned/`}
+                              className="absolute inset-0 w-full h-full object-cover"
+                              frameBorder="0"
+                              scrolling="no"
+                              allowTransparency={true}
+                              title={item.title}
+                            ></iframe>
+                          </div>
+                          <div className="p-6 border-t border-white/5 bg-surfaceHighlight flex-1 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-100 transition-opacity duration-300">
+                              <Aperture size={24} className="text-accent" />
+                            </div>
+                            <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
+                            <p className="text-sm text-white/50">{item.description}</p>
+                          </div>
+                        </div>
+                      </FadeIn>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* VISUALS CONTENT: THE AI ADVANTAGE */}
