@@ -521,6 +521,19 @@ const Services: React.FC = () => {
             className="space-y-24 md:space-y-32 container mx-auto px-6"
           >
             {/* EXISTING MARKETING CONTENT */}
+            {/* HERO SUBTEXT & CTA */}
+            <div className="text-center max-w-3xl mx-auto mt-12 relative z-10">
+              <p className="text-base md:text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed mb-6 md:mb-8 px-4">
+                We build data-driven marketing ecosystems. From high-fidelity AI visuals to automated acquisition systems, we ensure your brand dominates the market.
+              </p>
+              <div className="flex flex-col md:flex-row gap-4 justify-center px-4 mb-12">
+                <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>👉 Book Free Audit</Button>
+                <button onClick={() => window.open('https://wa.me/917702251899', '_blank')} className="px-6 py-3 border border-white/20 hover:bg-white/5 rounded-full font-bold transition-all text-white">
+                  Talk to Strategist
+                </button>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               <FadeIn>
                 <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6 border border-white/10">
@@ -668,7 +681,7 @@ const Services: React.FC = () => {
             className="space-y-24 md:space-y-32 container mx-auto px-6"
           >
             {/* HERO SUBTEXT & CTA */}
-            <div className="text-center max-w-3xl mx-auto mt-4 md:-mt-16 relative z-10">
+            <div className="text-center max-w-3xl mx-auto mt-12 relative z-10">
               <p className="text-base md:text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed mb-6 md:mb-8 px-4">
                 We engineer digital experiences that convert. From lightning-fast e-commerce stores to AI-powered SaaS platforms, we build the infrastructure of tomorrow.
               </p>
@@ -797,7 +810,7 @@ const Services: React.FC = () => {
             className="space-y-16 md:space-y-32 container mx-auto px-6"
           >
             {/* HERO SUBTEXT & CTA */}
-            <div className="text-center max-w-3xl mx-auto mt-4 md:-mt-16 relative z-10">
+            <div className="text-center max-w-3xl mx-auto mt-12 relative z-10">
               <p className="text-base md:text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed mb-6 md:mb-8 px-4">
                 Automate conversations, bookings, reviews, follow-ups, and lead management using intelligent AI systems designed to scale your business operations 24/7.
               </p>
