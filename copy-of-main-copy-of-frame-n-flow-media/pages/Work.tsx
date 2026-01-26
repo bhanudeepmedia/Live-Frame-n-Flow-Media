@@ -81,48 +81,48 @@ const Work: React.FC = () => {
   const staticPortfolio = [
     {
       url: "https://www.instagram.com/p/DT3F0HKFAR_/embed",
-      title: "Cybernetic Portraiture",
-      description: "Exploring the intersection of humanity and synthetic evolution."
+      title: "Editorial Portraiture",
+      description: "Striking, high-fidelity character generation for campaigns."
     },
     {
       url: "https://www.instagram.com/p/DSSR-htjbNd/embed",
-      title: "Neon Noir",
-      description: "Atmospheric lighting studies in a post-digital cityscape."
+      title: "Atmospheric Settings",
+      description: "Mood-driven environments perfect for immersive brand backdrops."
     },
     {
       url: "https://www.instagram.com/p/DTOA45oEgWC/embed",
-      title: "Architectural Dreams",
-      description: "Impossible geometry rendered with photorealistic precision."
+      title: "Virtual Architecture",
+      description: "Design concepts and spatial visualization beyond physical limitations."
     },
     {
       url: "https://www.instagram.com/p/DT2tw6fiS27/embed",
-      title: "Organic Glitch",
-      description: "Nature merging with digital distortion artifacts."
+      title: "Visual Effects Art",
+      description: "Eye-catching textures and artistic distortions for social feeds."
     },
     {
       url: "https://www.instagram.com/p/DSkx0HICCeh/embed",
-      title: "Surreal Touch",
-      description: "Haptic visuality in a two-dimensional medium."
+      title: "Surreal Product Staging",
+      description: "Placing products in imaginative, attention-grabbing contexts."
     },
     {
       url: "https://www.instagram.com/p/DT2Z2CDEsmu/embed",
-      title: "Chromatic Flux",
-      description: "Color grading experiments powered by deep learning aesthetics."
+      title: "Color Exploration",
+      description: "Defining unique brand palettes through AI-generated mood boards."
     },
     {
       url: "https://www.instagram.com/p/DSrpBZjiKG1/embed",
-      title: "Data Moshing",
-      description: "Visualizing raw data streams as aesthetic textures."
+      title: "Graphic Textures",
+      description: "Unique background elements and patterns for web and digital design."
     },
     {
       url: "https://www.instagram.com/p/DT74ht3FBA9/embed",
-      title: "Void Aesthetics",
-      description: "Minimalist composition using negative space and AI generation."
+      title: "Minimalist Design",
+      description: "Clean, focused visuals that utilize negative space effectively."
     },
     {
       url: "https://www.instagram.com/p/DSSO7zKDTgN/embed",
-      title: "The Frozen Narrative",
-      description: "Single-frame storytelling with high-dynamic-range composition."
+      title: "Cinematic Stills",
+      description: "Keyframes involving high-dynamic-range composition to tell a story."
     },
   ];
 
