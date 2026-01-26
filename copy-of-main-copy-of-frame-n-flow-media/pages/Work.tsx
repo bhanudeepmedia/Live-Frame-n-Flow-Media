@@ -37,43 +37,43 @@ const Work: React.FC = () => {
   const kineticPortfolio = [
     {
       url: "https://www.instagram.com/reel/DN2Gtyy6lQb/embed",
-      title: "Radiance Field Rendering",
-      description: "Ethereal luminescence: Ray-traced elegance meets generated matter."
+      title: "Luxury Product Showcase",
+      description: "Highlighting exquisite details with photorealistic light and physics simulations."
     },
     {
       url: "https://www.instagram.com/reel/DSkyKTyE-mM/embed",
-      title: "Digital Couture",
-      description: "Fabric Fluidity: AI simulation of textile physics in hyper-motion for high-end fashion."
+      title: "Digital Fashion",
+      description: "Dynamic fabric simulation and model animation for high-end editorial campaigns."
     },
     {
       url: "https://www.instagram.com/reel/DS9jkQuEodb/embed",
-      title: "Neural Upscaling",
-      description: "Enhancing low-resolution footage into crystalline 4K brilliance using generative AI."
+      title: "Brand Anthem",
+      description: "Evocative visual storytelling designed to build emotional resonance."
     },
     {
       url: "https://www.instagram.com/reel/DSZ07pqErV7/embed",
-      title: "World Building",
-      description: "Procedural environment generation for immersive brand storytelling."
+      title: "Immersive Environments",
+      description: "Transporting audiences to brand-aligned worlds through generative set design."
     },
     {
       url: "https://www.instagram.com/reel/DNuYV9KQlac/embed",
-      title: "Generative Cinema",
-      description: "Text-to-Video workflows that redefine commercial production speed."
+      title: "AI Production",
+      description: "End-to-end commercial generation reducing production time from weeks to days."
     },
     {
       url: "https://www.instagram.com/reel/DT9gDAEEys1/embed",
-      title: "Material Synthesis",
-      description: "Haptic Dreaming: Digital textures indistinguishable from organic reality."
+      title: "Social Engagement",
+      description: "Hyper-visual loops engineered to stop the scroll and maximize retention."
     },
     {
       url: "https://www.instagram.com/reel/DTvUUoUDAtO/embed",
-      title: "Velocity Mapping",
-      description: "Temporal Glitch: High-framerate AI interpolation for impossible camera moves."
+      title: "High-Velocity Edit",
+      description: "Seamless transitions and pacing for impactful promotional content."
     },
     {
       url: "https://www.instagram.com/reel/DTTJ9Krkg3-/embed",
-      title: "Abstract Ideation",
-      description: "Visualizing the subconscious architecture of the brand identity."
+      title: "Concept Visualization",
+      description: "Bringing abstract creative concepts to life with stunning clarity."
     },
   ];
 
