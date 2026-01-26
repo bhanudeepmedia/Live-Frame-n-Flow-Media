@@ -785,6 +785,8 @@ const Services: React.FC = () => {
           </motion.div>
 
 
+        )}
+
         {activeTab === 'automation' && (
           <motion.div
             key="automation"
