@@ -46,6 +46,11 @@ const Work: React.FC = () => {
       description: "Fabric Fluidity: AI simulation of textile physics in hyper-motion for high-end fashion."
     },
     {
+      url: "https://www.instagram.com/reel/DS9jkQuEodb/embed",
+      title: "Neural Upscaling",
+      description: "Enhancing low-resolution footage into crystalline 4K brilliance using generative AI."
+    },
+    {
       url: "https://www.instagram.com/reel/DSZ07pqErV7/embed",
       title: "World Building",
       description: "Procedural environment generation for immersive brand storytelling."
@@ -69,11 +74,6 @@ const Work: React.FC = () => {
       url: "https://www.instagram.com/reel/DTTJ9Krkg3-/embed",
       title: "Abstract Ideation",
       description: "Visualizing the subconscious architecture of the brand identity."
-    },
-    {
-      url: "https://www.instagram.com/reel/DS9jkQuEodb/embed",
-      title: "Neural Upscaling",
-      description: "Enhancing low-resolution footage into crystalline 4K brilliance using generative AI."
     },
   ];
 
