@@ -66,12 +66,11 @@ const Work: React.FC = () => {
       title: "Frame n Flow Signature",
       description: "Original sonic identity composed for brand authority and recall."
     },
-    // Placeholder to show grid layout capability if more are added later
-    /* { 
-       url: "", 
-       title: "Coming Soon", 
-       description: "More sonic identities in production." 
-    } */
+    {
+      url: "https://www.instagram.com/reel/DTp2jKbk1k6/embed",
+      title: "Sonic Brand integration",
+      description: "Seamless audio integration designed to amplify brand presence across social platforms."
+    }
   ];
 
   return (
