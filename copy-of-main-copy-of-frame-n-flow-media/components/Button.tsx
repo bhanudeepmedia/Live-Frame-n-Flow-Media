@@ -7,12 +7,12 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
   fullWidth?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ 
-  children, 
-  variant = 'primary', 
+const Button: React.FC<ButtonProps> = ({
+  children,
+  variant = 'primary',
   fullWidth = false,
   className = '',
-  ...props 
+  ...props
 }) => {
   const ref = useRef<HTMLButtonElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -20,10 +20,10 @@ const Button: React.FC<ButtonProps> = ({
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     const { clientX, clientY } = e;
     const { left, top, width, height } = ref.current?.getBoundingClientRect() || { left: 0, top: 0, width: 0, height: 0 };
-    
+
     const x = clientX - (left + width / 2);
     const y = clientY - (top + height / 2);
-    
+
     setPosition({ x, y });
   };
 
@@ -31,8 +31,8 @@ const Button: React.FC<ButtonProps> = ({
     setPosition({ x: 0, y: 0 });
   };
 
-  const baseStyles = "relative px-8 py-4 rounded-full font-medium transition-all duration-300 flex items-center justify-center overflow-hidden group magnetic-target";
-  
+  const baseStyles = "relative px-8 py-4 rounded-full font-medium transition-all duration-300 inline-flex items-center justify-center overflow-hidden group magnetic-target";
+
   const variants = {
     primary: "bg-transparent border border-white/20 hover:border-accent text-white hover:text-background",
     outline: "border border-white/20 text-white hover:border-white",
