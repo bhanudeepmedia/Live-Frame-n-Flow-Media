@@ -70,6 +70,11 @@ const Work: React.FC = () => {
       title: "Abstract Ideation",
       description: "Visualizing the subconscious architecture of the brand identity."
     },
+    {
+      url: "https://www.instagram.com/reel/DS9jkQuEodb/embed",
+      title: "Neural Upscaling",
+      description: "Enhancing low-resolution footage into crystalline 4K brilliance using generative AI."
+    },
   ];
 
   // STATIC ARTIFACTS (IMAGES)
