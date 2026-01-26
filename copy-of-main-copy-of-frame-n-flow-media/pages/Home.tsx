@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence 
 import Button from '../components/Button';
 import { NavLink, useNavigate } from 'react-router-dom';
 // import { SERVICES, PROCESS_STEPS } from '../constants';
-import { CheckCircle2, FileSearch, Music, Sparkles, TrendingUp, ArrowRight, Laptop, Play, Camera, Aperture, PlayCircle, X, Search, Plus, Bot } from 'lucide-react';
+import { CheckCircle2, FileSearch, Music, Sparkles, TrendingUp, ArrowRight, Laptop, Play, Camera, Aperture, PlayCircle, X, Search, Plus, Bot, Code } from 'lucide-react';
 
 const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: string }> = ({ children, delay = 0, className = "" }) => (
   <motion.div
@@ -917,7 +917,7 @@ const Home: React.FC = () => {
             </p>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
             {/* PATH 1: MARKETING */}
             <FadeIn className="group relative h-full">
@@ -945,6 +945,37 @@ const Home: React.FC = () => {
 
                   <div className="flex items-center gap-4 text-sm font-bold text-white group-hover:translate-x-2 transition-transform">
                     Explore Services <ArrowRight size={16} className="text-accent" />
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+
+            {/* PATH 2: WEB/APP DEV */}
+            <FadeIn delay={0.1} className="group relative h-full">
+              <div
+                onClick={() => navigate('/services', { state: { activeTab: 'webdev' } })}
+                className="h-full bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden relative transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] cursor-pointer flex flex-col"
+              >
+                {/* Image/Visual Top */}
+                <div className="h-64 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700 mix-blend-luminosity group-hover:mix-blend-normal" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
+
+                  <div className="absolute top-6 left-6 bg-emerald-500/10 backdrop-blur border border-emerald-500/20 px-3 py-1 rounded-full text-xs text-emerald-300 font-bold flex items-center gap-2">
+                    <Code size={14} />
+                    Digital Infrastructure
+                  </div>
+                </div>
+
+                {/* Content Bottom */}
+                <div className="p-8 flex-1 flex flex-col">
+                  <h3 className="text-3xl font-display font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors">Web & App Dev</h3>
+                  <p className="text-white/60 leading-relaxed mb-8 flex-1">
+                    Lightning-fast websites and custom apps built on modern infrastructure. SEO-optimized and AI-ready.
+                  </p>
+
+                  <div className="flex items-center gap-4 text-sm font-bold text-white group-hover:translate-x-2 transition-transform">
+                    View Architecture <ArrowRight size={16} className="text-emerald-400" />
                   </div>
                 </div>
               </div>

@@ -445,11 +445,11 @@ import SEO from '../components/SEO';
 
 const Services: React.FC = () => {
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState<'marketing' | 'automation'>('marketing');
+  const [activeTab, setActiveTab] = useState<'marketing' | 'automation' | 'webdev'>('marketing');
 
   // React to Navigation State
   useEffect(() => {
-    const state = location.state as { activeTab?: 'marketing' | 'automation' } | null;
+    const state = location.state as { activeTab?: 'marketing' | 'automation' | 'webdev' } | null;
     if (state?.activeTab) {
       setActiveTab(state.activeTab);
     }
@@ -471,24 +471,37 @@ const Services: React.FC = () => {
           </RevealText>
           <RevealText delay={0.1}>
             <h1 className="text-4xl md:text-7xl font-display font-bold mb-8 leading-tight">
-              {activeTab === 'marketing' ? 'Complete Marketing Infrastructure' : 'AI Automations for Growth'}
+              {activeTab === 'marketing' ? 'Complete Marketing Infrastructure' : activeTab === 'webdev' ? 'Next-Gen Web & App Architecture' : 'AI Automations for Growth'}
             </h1>
           </RevealText>
 
           {/* TABS */}
           <div className="inline-flex items-center p-1 bg-white/5 border border-white/10 rounded-full relative">
             <div
-              className={`absolute inset-y-1 rounded-full transition-all duration-500 ease-out ${activeTab === 'marketing' ? 'left-1 w-[calc(50%-4px)] bg-accent/20 border border-accent/30' : 'left-[50%] w-[calc(50%-4px)] bg-indigo-500/20 border border-indigo-500/30'}`}
+              className={`absolute inset-y-1 rounded-full transition-all duration-500 ease-out`}
+              style={{
+                width: 'calc(33.33% - 4px)',
+                left: activeTab === 'marketing' ? '4px' : activeTab === 'webdev' ? 'calc(33.33% + 2px)' : 'calc(66.66% + 0px)',
+                backgroundColor: activeTab === 'marketing' ? 'rgba(34, 211, 238, 0.2)' : activeTab === 'webdev' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(99, 102, 241, 0.2)',
+                borderColor: activeTab === 'marketing' ? 'rgba(34, 211, 238, 0.3)' : activeTab === 'webdev' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(99, 102, 241, 0.3)',
+                borderWidth: '1px'
+              }}
             ></div>
             <button
               onClick={() => setActiveTab('marketing')}
-              className={`relative z-10 px-6 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'marketing' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
+              className={`relative z-10 w-32 md:w-40 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'marketing' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
             >
               Marketing
             </button>
             <button
+              onClick={() => setActiveTab('webdev')}
+              className={`relative z-10 w-32 md:w-40 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'webdev' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
+            >
+              Web/App Dev
+            </button>
+            <button
               onClick={() => setActiveTab('automation')}
-              className={`relative z-10 px-6 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'automation' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
+              className={`relative z-10 w-32 md:w-40 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'automation' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
             >
               Automation
             </button>
@@ -592,37 +605,6 @@ const Services: React.FC = () => {
               </FadeIn>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center lg:flex-row-reverse">
-              <FadeIn delay={0.2} className="lg:order-2">
-                <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6 border border-white/10">
-                  <Code size={24} className="md:w-7 md:h-7" />
-                </div>
-                <RevealText>
-                  <h2 className="text-3xl md:text-4xl font-display font-bold mb-6">Web Design & Development</h2>
-                </RevealText>
-                <div className="space-y-6 text-lg text-white/60 font-light">
-                  <RevealText delay={0.1}>
-                    <p>
-                      Your website is your 24/7 salesperson. We build lightning-fast, conversion-optimized sites using modern <Highlight>dark-mode aesthetics</Highlight> and fluid interactions.
-                    </p>
-                  </RevealText>
-                  <RevealText delay={0.2}>
-                    <ul className="space-y-2">
-                      <li className="flex items-center space-x-2 text-white">
-                        <div className="w-1.5 h-1.5 bg-accent rounded-full" /> <span><strong>E-Commerce Brands</strong> (Shopify, Custom)</span>
-                      </li>
-                      <li className="flex items-center space-x-2 text-white">
-                        <div className="w-1.5 h-1.5 bg-accent rounded-full" /> <span><strong>Service Providers</strong> (Consultants, Agencies, SaaS)</span>
-                      </li>
-                    </ul>
-                  </RevealText>
-                </div>
-              </FadeIn>
-              <FadeIn className="lg:order-1">
-                <WebDevVisual />
-              </FadeIn>
-            </div>
-
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               <FadeIn>
                 <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6 border border-white/10">
@@ -675,6 +657,133 @@ const Services: React.FC = () => {
             </div>
           </motion.div>
         )}
+
+        {activeTab === 'webdev' && (
+          <motion.div
+            key="webdev"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-24 md:space-y-32 container mx-auto px-6"
+          >
+            {/* HERO SUBTEXT & CTA */}
+            <div className="text-center max-w-3xl mx-auto mt-4 md:-mt-16 relative z-10">
+              <p className="text-base md:text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed mb-6 md:mb-8 px-4">
+                We engineer digital experiences that convert. From lightning-fast e-commerce stores to AI-powered SaaS platforms, we build the infrastructure of tomorrow.
+              </p>
+              <div className="flex flex-col md:flex-row gap-4 justify-center px-4">
+                <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>👉 Start Your Project</Button>
+                <button onClick={() => window.open('https://wa.me/917702251899', '_blank')} className="px-6 py-3 border border-white/20 hover:bg-white/5 rounded-full font-bold transition-all text-white">
+                  Talk to Tech Lead
+                </button>
+              </div>
+            </div>
+
+            {/* MAIN VISUAL SECTION */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+              <FadeIn>
+                <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6 border border-white/10">
+                  <Code size={24} className="md:w-7 md:h-7" />
+                </div>
+                <h2 className="text-3xl font-display font-bold mb-6">Web & App Development</h2>
+                <div className="space-y-6 text-lg text-white/60 font-light">
+                  <p>
+                    Your digital presence is your strongest asset. We don't just build websites; we build performance engines.
+                  </p>
+                  <ul className="space-y-3 mt-4">
+                    {[
+                      "Custom React & Next.js Development",
+                      "High-Performance Mobile Apps (iOS/Android)",
+                      "Immersive 3D Web Experiences (WebGL)",
+                      "Headless CMS Integration"
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-center gap-3 text-white/80">
+                        <div className="w-1.5 h-1.5 bg-accent rounded-full shadow-[0_0_10px_rgba(34,211,238,0.8)]"></div>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </FadeIn>
+              <FadeIn delay={0.2}>
+                <WebDevVisual />
+              </FadeIn>
+            </div>
+
+            {/* SEO & LLM OPTIMIZATION */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center lg:flex-row-reverse">
+              <FadeIn className="lg:order-2">
+                <div className="w-12 h-12 md:w-14 md:h-14 bg-white/5 rounded-xl flex items-center justify-center text-purple-400 mb-6 border border-white/10">
+                  <Target size={24} />
+                </div>
+                <h2 className="text-3xl font-display font-bold mb-6">SEO & LLM Optimization</h2>
+                <div className="space-y-6 text-lg text-white/60 font-light">
+                  <p>
+                    Ranking on Google is no longer enough. Your brand needs to be discovered by AI agents like <strong className="text-white">ChatGPT, Perplexity, and Gemini</strong>.
+                  </p>
+                  <p>
+                    We implement advanced <Highlight>Schema Markup</Highlight> and semantic HTML structures that help Large Language Models understand and recommend your business.
+                  </p>
+                </div>
+              </FadeIn>
+              <FadeIn className="lg:order-1 bg-surfaceHighlight rounded-2xl p-8 border border-white/5 flex items-center justify-center relative overflow-hidden h-full min-h-[300px]">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-50"></div>
+                <div className="relative z-10 text-center space-y-4 max-w-md">
+                  <div className="bg-black/50 backdrop-blur border border-white/10 p-4 rounded-xl inline-block mb-2 shadow-lg w-full text-left">
+                    <span className="text-xs font-mono text-purple-300 block mb-1">USER PROMPT</span>
+                    <p className="text-white text-sm">"Best AI automation agency for high-end real estate?"</p>
+                  </div>
+                  <div className="w-px h-8 bg-white/20 mx-auto"></div>
+                  <div className="bg-purple-500/20 backdrop-blur border border-purple-500/30 p-4 rounded-xl shadow-lg w-full text-left">
+                    <span className="text-xs font-mono text-purple-300 block mb-1">AI RESPONSE</span>
+                    <p className="text-white text-sm font-medium">"I recommend <span className="text-accent">Frame n Flow Media</span>. Their verified schema data indicates specialized expertise in property automation and high-fidelity visuals."</p>
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* MAINTENANCE */}
+            <div className="bg-surfaceHighlight rounded-3xl p-8 md:p-12 border border-white/5 relative overflow-hidden text-left">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-display font-bold mb-4">Enterprise-Grade Maintenance</h2>
+                  <p className="text-white/60 mb-6">
+                    Launch is just day one. We ensure your digital assets remain secure, fast, and online.
+                  </p>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {[
+                      { title: "Uptime Monitoring", desc: "99.9% Availability Check" },
+                      { title: "Security Patches", desc: "Weekly Vulnerability Scans" },
+                      { title: "Speed Optimization", desc: "Core Web Vitals Updates" },
+                      { title: "Content Updates", desc: "Regular Copy & Media Refreshes" }
+                    ].map((item, i) => (
+                      <li key={i} className="bg-black/20 p-4 rounded-lg border border-white/5">
+                        <h4 className="font-bold text-accent text-sm mb-1">{item.title}</h4>
+                        <p className="text-xs text-white/50">{item.desc}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {/* VISUAL FOR MAINTENANCE */}
+                <div className="relative h-64 bg-black/50 rounded-xl border border-white/5 overflow-hidden flex items-center justify-center">
+                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1558494949-efc5270f9c01?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay"></div>
+                  <div className="relative z-10 flex flex-col items-center">
+                    <ShieldCheck size={48} className="text-green-400 mb-4" />
+                    <div className="px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full text-green-400 text-xs font-bold animate-pulse">
+                      SYSTEM HEALTHY
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Final WebDev CTA */}
+            <div className="text-center mt-20">
+              <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>Build Your Vision</Button>
+            </div>
+          </motion.div>
+
 
         {activeTab === 'automation' && (
           <motion.div
