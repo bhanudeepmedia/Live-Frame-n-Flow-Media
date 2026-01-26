@@ -692,7 +692,7 @@ const Services: React.FC = () => {
               </p>
               <div className="flex flex-col md:flex-row gap-4 justify-center px-4">
                 <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>👉 Book Free Automation Audit</Button>
-                <button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'} className="px-6 py-3 border border-white/20 hover:bg-white/5 rounded-full font-bold transition-all text-white">
+                <button onClick={() => window.open('https://wa.me/917702251899', '_blank')} className="px-6 py-3 border border-white/20 hover:bg-white/5 rounded-full font-bold transition-all text-white">
                   Talk to AI Specialist
                 </button>
               </div>
