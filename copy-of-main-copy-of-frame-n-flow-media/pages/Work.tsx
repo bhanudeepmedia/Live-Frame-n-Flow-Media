@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../components/Button';
 import { Zap, Layers, DollarSign, Play, CheckCircle2, Cpu, Aperture, Repeat, Music, Mic, Headphones, Radio, Volume2 } from 'lucide-react';
@@ -29,9 +29,129 @@ const RevealText: React.FC<{ children: React.ReactNode, delay?: number, classNam
   </div>
 );
 
+const VisualsSlider: React.FC<{
+  kineticPortfolio: any[];
+  staticPortfolio: any[];
+}> = ({ kineticPortfolio, staticPortfolio }) => {
+  const [sliderPosition, setSliderPosition] = useState(50);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    isDragging.current = true;
+    if (containerRef.current) {
+      containerRef.current.setPointerCapture(e.pointerId);
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    isDragging.current = false;
+    if (containerRef.current) {
+      containerRef.current.releasePointerCapture(e.pointerId);
+    }
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging.current || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+    const percentage = (x / rect.width) * 100;
+    setSliderPosition(percentage);
+  };
+
+  return (
+    <div className="w-full flex flex-col gap-8">
+
+      {/* SLIDER CONTAINER */}
+      <div
+        ref={containerRef}
+        className="relative w-full h-[70vh] min-h-[600px] select-none touch-none overflow-hidden rounded-3xl border border-white/10 bg-black group"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+      >
+
+        {/* RIGHT SIDE (STATIC / BOTTOM LAYER) */}
+        {/* We place Static content here. It occupies the full space but is revealed when slider moves left. */}
+        <div className="absolute inset-0 w-full h-full overflow-y-auto overflow-x-hidden pt-8 pb-20 px-8 scrollbar-hide">
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-display font-bold text-white/40 mb-2 tracking-widest uppercase">Static Artifacts</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20 pointer-events-none md:pointer-events-auto">
+            {staticPortfolio.map((item, index) => (
+              <div key={`static-${index}`} className="bg-[#121212] border border-white/5 rounded-xl overflow-hidden shadow-xl opacity-60 hover:opacity-100 transition-opacity">
+                <div className="relative w-full aspect-[4/5] bg-black">
+                  <div className="absolute inset-0 w-full h-full bg-gray-900 animate-pulse" />
+                  {/* Note: Iframes often block pointer events. We use a cover for drag interaction if needed. */}
+                  <iframe
+                    src={`${item.url}/embed/`}
+                    className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                    title={item.title}
+                  />
+                </div>
+                <div className="p-4 border-t border-white/5 bg-surfaceHighlight">
+                  <h3 className="font-bold text-white text-sm">{item.title}</h3>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* LEFT SIDE (KINETIC / TOP LAYER) - CLIPPED */}
+        <div
+          className="absolute inset-0 w-full h-full bg-black border-r border-accent/20 overflow-y-auto overflow-x-hidden pt-8 pb-20 px-8 scrollbar-hide"
+          style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
+        >
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-display font-bold text-accent mb-2 tracking-widest uppercase shadow-accent mx-auto">Kinetic Sequences</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
+            {kineticPortfolio.map((item, index) => (
+              <div key={`kinetic-${index}`} className="bg-[#121212] border border-white/10 rounded-xl overflow-hidden shadow-xl hover:shadow-[0_0_20px_rgba(34,211,238,0.2)] transition-shadow border-accent/20">
+                <div className="relative w-full aspect-[9/16] md:aspect-[4/5] bg-black">
+                  <div className="absolute inset-0 w-full h-full bg-gray-900 animate-pulse" />
+                  <iframe
+                    src={`${item.url}/embed/`}
+                    className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                    title={item.title}
+                  />
+                </div>
+                <div className="p-4 border-t border-white/5 bg-surfaceHighlight">
+                  <h3 className="font-bold text-white text-sm">{item.title}</h3>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* DRAG HANDLE */}
+        <div
+          className="absolute top-0 bottom-0 w-1 bg-accent cursor-ew-resize z-50 flex items-center justify-center hover:shadow-[0_0_15px_rgba(34,211,238,0.8)] transition-shadow"
+          style={{ left: `${sliderPosition}%` }}
+        >
+          <div className="w-12 h-12 rounded-full bg-black border-2 border-accent flex items-center justify-center shadow-[0_0_20px_rgba(34,211,238,0.3)] backdrop-blur-md">
+            <div className="flex gap-1">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-accent">
+                <path d="M18 8L22 12L18 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M6 8L2 12L6 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        {/* INSTRUCTION HINT */}
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 pointer-events-none opacity-50 bg-black/80 px-4 py-2 rounded-full text-xs text-white border border-white/10">
+          Drag to Compare
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
 const Work: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'visuals' | 'sonic'>('visuals');
-  const [visualMode, setVisualMode] = useState<'kinetic' | 'static'>('kinetic');
 
   // KINETIC SEQUENCES (VIDEOS)
   const kineticPortfolio = [
@@ -183,126 +303,24 @@ const Work: React.FC = () => {
 
       <AnimatePresence mode="wait">
 
-        {/* ==================== VISUALS SUBPAGE ==================== */}
+        {/* ==================== VISUALS SUBPAGE (SLIDER MODE) ==================== */}
         {activeTab === 'visuals' && (
           <motion.div
             key="visuals"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
+            className="w-full relative"
           >
-            {/* VISUALS HERO TEXT */}
-            <div className="container mx-auto px-6 mb-12 text-center">
-              <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed mb-10">
-                Studio quality without the studio. Our generative workflows create visuals that are indistinguishable from reality, yet impossible to film.
-              </p>
-
-              {/* MODE SWITCHER (SCROLLER STYLE) */}
-              <div className="relative inline-flex bg-white/5 border border-white/10 rounded-full p-2 items-center w-full max-w-[300px]">
-                <div className="absolute inset-2 bg-gradient-to-r from-accent/20 to-purple-500/20 rounded-full blur-md opacity-50" />
-
-                {/* The Sliding Background */}
-                <motion.div
-                  className="absolute top-1 bottom-1 bg-accent rounded-full shadow-[0_0_15px_rgba(34,211,238,0.6)] z-0"
-                  initial={false}
-                  animate={{
-                    left: visualMode === 'kinetic' ? '4px' : '50%',
-                    width: 'calc(50% - 4px)' // slightly adjusted for padding
-                  }}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-
-                <button
-                  onClick={() => setVisualMode('kinetic')}
-                  className={`relative z-10 w-1/2 py-2 text-sm font-bold uppercase tracking-wider transition-colors duration-200 ${visualMode === 'kinetic' ? 'text-black' : 'text-white/50 hover:text-white'}`}
-                >
-                  Kinetic
-                </button>
-                <button
-                  onClick={() => setVisualMode('static')}
-                  className={`relative z-10 w-1/2 py-2 text-sm font-bold uppercase tracking-wider transition-colors duration-200 ${visualMode === 'static' ? 'text-black' : 'text-white/50 hover:text-white'}`}
-                >
-                  Static
-                </button>
-              </div>
-            </div>
-
-            {/* VISUALS CONTENT GRID */}
-            <div className="container mx-auto px-6 mb-32 relative z-10">
-              <AnimatePresence mode="wait">
-                {visualMode === 'kinetic' ? (
-                  <motion.div
-                    key="kinetic-grid"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.4 }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                  >
-                    {kineticPortfolio.map((item, index) => (
-                      <FadeIn key={`vid-${index}`} delay={index * 0.1} className="flex flex-col h-full">
-                        <div className="bg-[#121212] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group h-full flex flex-col hover:border-accent/40 transition-all duration-300">
-                          <div className="relative w-full aspect-[9/16] md:aspect-[4/5] bg-black">
-                            <iframe
-                              src={`${item.url}/captioned/`}
-                              className="absolute inset-0 w-full h-full object-cover"
-                              frameBorder="0"
-                              scrolling="no"
-                              allowTransparency={true}
-                              title={item.title}
-                            ></iframe>
-                          </div>
-                          <div className="p-6 border-t border-white/5 bg-surfaceHighlight flex-1 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-100 transition-opacity duration-300">
-                              <Play size={24} className="text-accent" />
-                            </div>
-                            <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-                            <p className="text-sm text-white/50">{item.description}</p>
-                          </div>
-                        </div>
-                      </FadeIn>
-                    ))}
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="static-grid"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.4 }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                  >
-                    {staticPortfolio.map((item, index) => (
-                      <FadeIn key={`img-${index}`} delay={index * 0.1} className="flex flex-col h-full">
-                        <div className="bg-[#121212] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group h-full flex flex-col hover:border-accent/40 transition-all duration-300">
-                          <div className="relative w-full aspect-[4/5] bg-black">
-                            <iframe
-                              src={`${item.url}/captioned/`}
-                              className="absolute inset-0 w-full h-full object-cover"
-                              frameBorder="0"
-                              scrolling="no"
-                              allowTransparency={true}
-                              title={item.title}
-                            ></iframe>
-                          </div>
-                          <div className="p-6 border-t border-white/5 bg-surfaceHighlight flex-1 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-100 transition-opacity duration-300">
-                              <Aperture size={24} className="text-accent" />
-                            </div>
-                            <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-                            <p className="text-sm text-white/50">{item.description}</p>
-                          </div>
-                        </div>
-                      </FadeIn>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+            {/* DRAG HANDLER STATE */}
+            <VisualsSlider
+              kineticPortfolio={kineticPortfolio}
+              staticPortfolio={staticPortfolio}
+            />
 
             {/* VISUALS CONTENT: THE AI ADVANTAGE */}
-            <div className="bg-surfaceHighlight border-y border-white/5 py-24 relative overflow-hidden">
+            <div className="bg-surfaceHighlight border-y border-white/5 py-24 relative overflow-hidden mt-20">
               <div className="absolute inset-0 bg-noise opacity-5 pointer-events-none" />
               <div className="container mx-auto px-6">
                 <div className="max-w-3xl mb-16">
