@@ -110,31 +110,7 @@ const Contact: React.FC = () => {
               </div>
             </motion.div>
 
-            {/* LeadConnector Form */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="w-full bg-white rounded-lg overflow-hidden" // Added bg-white because iframes often assume light bg
-            >
-              <iframe
-                src="https://api.leadconnectorhq.com/widget/form/yvyIgjYCipZNwlThBQEM"
-                style={{ width: '100%', height: '100%', border: 'none', borderRadius: '4px', minHeight: '621px' }}
-                id="inline-yvyIgjYCipZNwlThBQEM"
-                data-layout="{'id':'INLINE'}"
-                data-trigger-type="alwaysShow"
-                data-trigger-value=""
-                data-activation-type="alwaysActivated"
-                data-activation-value=""
-                data-deactivation-type="neverDeactivate"
-                data-deactivation-value=""
-                data-form-name="Marketing Form - Claim Offer"
-                data-height="621"
-                data-layout-iframe-id="inline-yvyIgjYCipZNwlThBQEM"
-                data-form-id="yvyIgjYCipZNwlThBQEM"
-                title="Marketing Form - Claim Offer"
-              />
-            </motion.div>
+
           </div>
 
         </div>
