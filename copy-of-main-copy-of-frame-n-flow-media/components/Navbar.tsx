@@ -30,15 +30,11 @@ const Navbar: React.FC = () => {
   return (
     <>
       <header
-        className="fixed top-0 left-0 w-full z-50 px-4 md:px-0 pt-4 md:pt-6 transition-all duration-500 pointer-events-none"
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-background/80 backdrop-blur-md py-3' : 'bg-transparent py-4 md:py-6'
+          }`}
       >
-        <div
-          className={`pointer-events-auto w-full max-w-7xl mx-auto rounded-full border transition-all duration-500 flex items-center shadow-2xl ${isScrolled
-            ? 'bg-[#0a0a0a]/80 backdrop-blur-xl border-white/10 py-3 px-6 md:px-8'
-            : 'bg-black/20 backdrop-blur-lg border-white/5 py-3 px-6 md:px-8'
-            }`}
-        >
-          <div className="grid grid-cols-2 md:grid-cols-3 items-center w-full">
+        <div className="w-full max-w-[1800px] mx-auto px-4 md:px-12">
+          <div className="grid grid-cols-2 lg:grid-cols-3 items-center w-full">
 
             {/* LEFT SLOT: LOGO */}
             <div className="flex justify-start items-center">
@@ -46,43 +42,37 @@ const Navbar: React.FC = () => {
                 <img
                   src="/logo.png"
                   alt="Frame n Flow Logo"
-                  className="h-14 md:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                  className="h-12 md:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                 />
               </NavLink>
             </div>
 
-            {/* MIDDLE SLOT: NAV LINKS (Centered) */}
-            <nav className="hidden md:flex items-center justify-center space-x-8 lg:space-x-10">
-              {NAV_ITEMS.map((item) => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  className={({ isActive }) =>
-                    `text-[10px] lg:text-[11px] tracking-[0.15em] uppercase font-bold transition-all duration-300 relative hover:text-white whitespace-nowrap ${isActive ? 'text-white' : 'text-white/60 hover:text-white/90'
-                    }`
-                  }
-                >
-                  {({ isActive }) => (
-                    <>
-                      {item.label}
-                      {isActive && (
-                        <motion.div
-                          layoutId="nav-underline"
-                          className="absolute -bottom-1 left-0 right-0 h-[2px] bg-accent shadow-[0_0_10px_rgba(34,211,238,0.5)] rounded-full"
-                        />
-                      )}
-                    </>
-                  )}
-                </NavLink>
-              ))}
-            </nav>
+            {/* MIDDLE SLOT: NAV LINKS (Centered Glass Pill) */}
+            <div className="hidden lg:flex items-center justify-center">
+              <nav className="inline-flex items-center justify-center space-x-1 px-2 py-1.5 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full shadow-lg hover:border-white/20 transition-all duration-300">
+                {NAV_ITEMS.map((item) => (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    className={({ isActive }) =>
+                      `px-5 py-2.5 rounded-full text-[10px] tracking-[0.15em] uppercase font-bold transition-all duration-300 relative whitespace-nowrap overflow-hidden ${isActive
+                        ? 'text-black bg-white shadow-[0_0_20px_rgba(255,255,255,0.3)]'
+                        : 'text-white/70 hover:text-white hover:bg-white/10'
+                      }`
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                ))}
+              </nav>
+            </div>
 
             {/* RIGHT SLOT: CTA BUTTON + MOBILE TOGGLE */}
             <div className="flex justify-end items-center gap-4">
               <div className="hidden md:block">
                 <Button
                   variant="primary"
-                  className="py-2.5 px-6 text-[10px] uppercase tracking-widest font-bold h-auto rounded-full bg-white text-black hover:bg-white/90 border-0 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+                  className="!py-3 !px-8 text-[11px] uppercase tracking-widest font-bold h-auto border-white/20 hover:border-white/40"
                   onClick={handleBookCall}
                 >
                   Book a Call
@@ -91,7 +81,7 @@ const Navbar: React.FC = () => {
 
               {/* Mobile Toggle */}
               <button
-                className="md:hidden z-[70] text-white relative w-10 h-10 flex items-center justify-center bg-white/5 rounded-full border border-white/10 active:scale-95 transition-all"
+                className="lg:hidden z-[70] text-white relative w-10 h-10 flex items-center justify-center bg-white/5 rounded-full border border-white/10 active:scale-95 transition-all hover:bg-white/10"
                 onClick={() => setIsMobileOpen(!isMobileOpen)}
               >
                 {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
