@@ -30,10 +30,14 @@ const Navbar: React.FC = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-background/90 backdrop-blur-md py-2' : 'bg-transparent py-3'
-          }`}
+        className="fixed top-0 left-0 w-full z-50 px-4 md:px-0 pt-4 md:pt-6 transition-all duration-500 pointer-events-none"
       >
-        <div className="w-full max-w-[1800px] mx-auto px-4 md:px-12">
+        <div
+          className={`pointer-events-auto w-full max-w-7xl mx-auto rounded-full border transition-all duration-500 flex items-center shadow-2xl ${isScrolled
+            ? 'bg-[#0a0a0a]/80 backdrop-blur-xl border-white/10 py-3 px-6 md:px-8'
+            : 'bg-black/20 backdrop-blur-lg border-white/5 py-3 px-6 md:px-8'
+            }`}
+        >
           <div className="grid grid-cols-2 md:grid-cols-3 items-center w-full">
 
             {/* LEFT SLOT: LOGO */}
@@ -42,19 +46,19 @@ const Navbar: React.FC = () => {
                 <img
                   src="/logo.png"
                   alt="Frame n Flow Logo"
-                  className="h-20 md:h-24 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                  className="h-14 md:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
                 />
               </NavLink>
             </div>
 
             {/* MIDDLE SLOT: NAV LINKS (Centered) */}
-            <nav className="hidden md:flex items-center justify-center space-x-8 lg:space-x-12">
+            <nav className="hidden md:flex items-center justify-center space-x-8 lg:space-x-10">
               {NAV_ITEMS.map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}
                   className={({ isActive }) =>
-                    `text-[9px] lg:text-[10px] tracking-[0.2em] uppercase font-bold transition-colors relative hover:text-white whitespace-nowrap ${isActive ? 'text-white' : 'text-white/40'
+                    `text-[10px] lg:text-[11px] tracking-[0.15em] uppercase font-bold transition-all duration-300 relative hover:text-white whitespace-nowrap ${isActive ? 'text-white' : 'text-white/60 hover:text-white/90'
                     }`
                   }
                 >
@@ -64,7 +68,7 @@ const Navbar: React.FC = () => {
                       {isActive && (
                         <motion.div
                           layoutId="nav-underline"
-                          className="absolute -bottom-2 left-0 right-0 h-px bg-accent"
+                          className="absolute -bottom-1 left-0 right-0 h-[2px] bg-accent shadow-[0_0_10px_rgba(34,211,238,0.5)] rounded-full"
                         />
                       )}
                     </>
@@ -74,11 +78,11 @@ const Navbar: React.FC = () => {
             </nav>
 
             {/* RIGHT SLOT: CTA BUTTON + MOBILE TOGGLE */}
-            <div className="flex justify-end items-center gap-4 md:gap-6">
+            <div className="flex justify-end items-center gap-4">
               <div className="hidden md:block">
                 <Button
                   variant="primary"
-                  className="py-2 px-5 lg:px-6 text-[9px] lg:text-[10px] uppercase tracking-widest font-bold h-auto border-white/10"
+                  className="py-2.5 px-6 text-[10px] uppercase tracking-widest font-bold h-auto rounded-full bg-white text-black hover:bg-white/90 border-0 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
                   onClick={handleBookCall}
                 >
                   Book a Call
@@ -87,7 +91,7 @@ const Navbar: React.FC = () => {
 
               {/* Mobile Toggle */}
               <button
-                className="md:hidden z-[70] text-white relative w-10 h-10 flex items-center justify-center"
+                className="md:hidden z-[70] text-white relative w-10 h-10 flex items-center justify-center bg-white/5 rounded-full border border-white/10 active:scale-95 transition-all"
                 onClick={() => setIsMobileOpen(!isMobileOpen)}
               >
                 {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
