@@ -45,12 +45,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         {children}
       </main>
 
-      {!shouldHide && (
-        <>
-          <Footer />
-          <WhatsAppWidget />
-        </>
-      )}
+      {!shouldHide && <Footer />}
+
+      {location.pathname === '/' && <WhatsAppWidget />}
     </div>
   );
 };

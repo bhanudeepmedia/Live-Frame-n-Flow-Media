@@ -2,140 +2,149 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
-    const [textIndex, setTextIndex] = useState(0);
-
-    const loadingTexts = [
-        "Refining Your Strategy...",
-        "Engineering Growth...",
-        "Unlocking Potential...",
-        "Preparing Your Launchpad..."
-    ];
+    const [stage, setStage] = useState<'counting' | 'launching' | 'complete'>('counting');
 
     useEffect(() => {
-        // Text rotation logic
-        const textInterval = setInterval(() => {
-            setTextIndex((prev) => (prev + 1) % loadingTexts.length);
-        }, 800);
+        // Phase 1: Counting down/preparing (0-2s)
+        const timer1 = setTimeout(() => {
+            setStage('launching');
+        }, 2000);
 
-        // Completion logic matching the animation duration
-        const timeout = setTimeout(() => {
+        // Phase 2: Launch and Reveal (2.0s - 3.5s)
+        const timer2 = setTimeout(() => {
+            setStage('complete');
             onComplete();
         }, 3500);
 
         return () => {
-            clearInterval(textInterval);
-            clearTimeout(timeout);
+            clearTimeout(timer1);
+            clearTimeout(timer2);
         };
-    }, [onComplete, loadingTexts.length]);
+    }, [onComplete]);
 
     return (
         <motion.div
-            className="fixed inset-0 z-[100] bg-background flex flex-col items-center justify-center font-sans overflow-hidden"
+            className="fixed inset-0 z-[100] bg-[#050505] flex flex-col items-center justify-center font-sans overflow-hidden"
             exit={{
                 y: "-100%",
-                transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } // Custom easing for premium feel
+                transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] }
             }}
         >
-            {/* Background Ambient Glow */}
-            <motion.div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/20 rounded-full blur-[120px] opacity-10"
-                animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.1, 0.2, 0.1]
+            {/* Premium Graph Paper Background */}
+            <div className="absolute inset-0 z-0 opacity-20 pointer-events-none"
+                style={{
+                    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+             linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px)`,
+                    backgroundSize: '40px 40px'
                 }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
+            <div className="absolute inset-0 z-0 bg-gradient-to-t from-background to-transparent pointer-events-none" />
 
-            <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-4xl px-4">
+            {/* Main Container */}
+            <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
 
-                {/* Animated Frame Borders */}
-                <div className="absolute inset-0 pointer-events-none">
-                    {/* Top Left */}
-                    <motion.div
-                        className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-accent/30"
-                        initial={{ opacity: 0, x: -20, y: -20 }}
-                        animate={{ opacity: 1, x: 0, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                    />
-                    {/* Bottom Right */}
-                    <motion.div
-                        className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-accent/30"
-                        initial={{ opacity: 0, x: 20, y: 20 }}
-                        animate={{ opacity: 1, x: 0, y: 0 }}
-                        transition={{ duration: 0.5 }}
-                    />
-                </div>
-
-                {/* Main Content */}
-                <div className="py-12 md:py-16 text-center">
-                    {/* Smooth Counter using purely visual update */}
-                    <Counter
-                        from={0}
-                        to={100}
-                        duration={3}
-                        className="text-8xl md:text-9xl font-bold font-display tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/20"
-                    />
-
-                    {/* Dynamic Inspiring Text */}
-                    <div className="h-8 mt-6 relative overflow-hidden w-full flex justify-center items-center">
-                        <AnimatePresence mode="wait">
-                            <motion.p
-                                key={textIndex}
-                                className="text-accent/80 text-sm md:text-base font-medium tracking-[0.2em] uppercase absolute"
-                                initial={{ y: 20, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                exit={{ y: -20, opacity: 0 }}
-                                transition={{ duration: 0.4 }}
-                            >
-                                {loadingTexts[textIndex]}
-                            </motion.p>
-                        </AnimatePresence>
-                    </div>
-                </div>
-
-                {/* Minimal Progress Line */}
+                {/* The Rocket Container */}
                 <motion.div
-                    className="w-48 h-[2px] bg-white/10 mt-8 relative overflow-hidden rounded-full"
+                    className="relative will-change-transform"
+                    initial={{ y: 200, opacity: 0 }}
+                    animate={
+                        stage === 'counting' ? { y: 0, opacity: 1 } :
+                            stage === 'launching' ? { y: -1000, scale: 0.8 } :
+                                {}
+                    }
+                    transition={
+                        stage === 'counting' ? { duration: 0.8, ease: "easeOut" } :
+                            stage === 'launching' ? { duration: 1.5, ease: "easeIn" } : // Slower start, then zoom
+                                {}
+                    }
                 >
-                    <motion.div
-                        className="absolute inset-0 bg-accent"
-                        initial={{ x: "-100%" }}
-                        animate={{ x: "0%" }}
-                        transition={{ duration: 3, ease: "easeInOut" }}
-                    />
+                    {/* Rocket SVG - Custom Designed for "Premium 3D" look using CSS gradients within SVG */}
+                    <div className="relative w-24 h-40 md:w-32 md:h-52">
+                        {/* Exhaust Fire - Visible on Launch */}
+                        <AnimatePresence>
+                            {(stage === 'launching' || stage === 'counting') && (
+                                <motion.div
+                                    className="absolute top-full left-1/2 -translate-x-1/2 w-8 h-24 origin-top"
+                                    initial={{ scaleY: 0.2, opacity: 0 }}
+                                    animate={
+                                        stage === 'counting' ? { scaleY: [0.2, 0.3, 0.2], opacity: 0.5 } : // Idling
+                                            stage === 'launching' ? { scaleY: 2.5, scaleX: 1.5, opacity: 1 } : // Blast off
+                                                {}
+                                    }
+                                    transition={{ repeat: stage === 'counting' ? Infinity : 0, duration: 0.1 }}
+                                >
+                                    <div className="w-full h-full bg-gradient-to-b from-orange-400 via-red-500 to-transparent blur-md rounded-b-full" />
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-16 bg-white blur-sm rounded-b-full" />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* The Rocket Body */}
+                        <svg viewBox="0 0 100 200" className="w-full h-full drop-shadow-2xl filter">
+                            <defs>
+                                <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stopColor="#e2e8f0" /> {/* Light Grey Left */}
+                                    <stop offset="50%" stopColor="#ffffff" /> {/* Highlight Center (3D effect) */}
+                                    <stop offset="100%" stopColor="#94a3b8" /> {/* Shadow Right */}
+                                </linearGradient>
+                                <linearGradient id="finGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stopColor="#cbd5e1" />
+                                    <stop offset="100%" stopColor="#64748b" />
+                                </linearGradient>
+                                <linearGradient id="windowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stopColor="#38bdf8" /> {/* Cyan */}
+                                    <stop offset="100%" stopColor="#0ea5e9" /> {/* Blue */}
+                                </linearGradient>
+                            </defs>
+
+                            {/* Left Fin */}
+                            <path d="M25 150 L0 190 L25 180 Z" fill="url(#finGrad)" />
+
+                            {/* Right Fin */}
+                            <path d="M75 150 L100 190 L75 180 Z" fill="url(#finGrad)" />
+
+                            {/* Main Body */}
+                            <path d="M50 0 Q90 60 75 180 L25 180 Q10 60 50 0 Z" fill="url(#bodyGrad)" />
+
+                            {/* Center Fin (Vertical) for 3D depth */}
+                            <path d="M50 140 L50 190 L50 180 Z" stroke="#64748b" strokeWidth="1" />
+
+                            {/* Window/Por ring */}
+                            <circle cx="50" cy="60" r="14" fill="#1e293b" />
+                            {/* Window Glass */}
+                            <circle cx="50" cy="60" r="10" fill="url(#windowGrad)" />
+                            {/* Window Reflection */}
+                            <circle cx="47" cy="57" r="3" fill="white" opacity="0.6" />
+                        </svg>
+                    </div>
+                </motion.div>
+
+                {/* Text Container - Fades out on launch */}
+                <motion.div
+                    className="mt-12 text-center"
+                    animate={stage === 'launching' ? { opacity: 0, y: 50 } : { opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <h2 className="text-2xl md:text-3xl font-display font-bold text-white tracking-widest uppercase mb-2">
+                        Prepare for Liftoff
+                    </h2>
+                    <p className="text-white/50 text-sm font-mono">
+                        Initializing Launch Sequence...
+                    </p>
                 </motion.div>
 
             </div>
+
+            {/* Loading Progress Bar at Bottom */}
+            <motion.div
+                className="absolute bottom-0 left-0 h-1 bg-accent z-50"
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ duration: 3.5, ease: "linear" }}
+            />
+
         </motion.div>
     );
-};
-
-// Separated Counter component for performance and smoothness using purely Framer Motion
-const Counter: React.FC<{ from: number; to: number; duration: number; className?: string }> = ({ from, to, duration, className }) => {
-    const [count, setCount] = useState(from);
-
-    useEffect(() => {
-        let startTime: number;
-        let animationFrame: number;
-
-        const animate = (time: number) => {
-            if (!startTime) startTime = time;
-            const progress = (time - startTime) / (duration * 1000);
-
-            if (progress < 1) {
-                setCount(Math.floor(from + (to - from) * progress));
-                animationFrame = requestAnimationFrame(animate);
-            } else {
-                setCount(to);
-            }
-        };
-
-        animationFrame = requestAnimationFrame(animate);
-
-        return () => cancelAnimationFrame(animationFrame);
-    }, [from, to, duration]);
-
-    return <span className={className}>{count}</span>;
 };
 
 export default LoadingScreen;
