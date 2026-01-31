@@ -27,24 +27,35 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
 
     return (
         <motion.div
-            className="fixed inset-0 z-[100] bg-zinc-950 flex flex-col items-center justify-center font-sans overflow-hidden"
+            className="fixed inset-0 z-[100] bg-[#050505] flex flex-col items-center justify-center font-sans overflow-hidden"
             exit={{ opacity: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } }} // Custom easeOutQuint
         >
-            {/* Dynamic Gradient Background - Subtle & Elegant */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-800/20 via-zinc-950 to-zinc-950 opacity-60" />
+            {/* Dynamic Gradient Background */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-800/10 via-[#050505] to-[#050505]" />
+
+            {/* Grid Pattern */}
+            <div
+                className="absolute inset-0 opacity-[0.08]"
+                style={{
+                    backgroundImage: `linear-gradient(to right, #ffffff 1px, transparent 1px),
+                                      linear-gradient(to bottom, #ffffff 1px, transparent 1px)`,
+                    backgroundSize: '40px 40px',
+                    maskImage: 'radial-gradient(circle at center, black 40%, transparent 80%)'
+                }}
+            />
 
             {/* Content Container */}
             <div className="relative z-10 flex flex-col items-center">
 
-                {/* Logo with sophisticated reveal */}
+                {/* Logo with sophisticated reveal - INCREASED SIZE */}
                 <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="relative w-32 md:w-40 mb-10"
+                    className="relative w-48 md:w-64 mb-12"
                 >
                     {/* Soft ambient glow behind logo */}
-                    <div className="absolute inset-0 bg-white/5 blur-3xl rounded-full scale-150" />
+                    <div className="absolute inset-0 bg-white/5 blur-3xl rounded-full scale-125" />
 
                     <img
                         src="/logo.png"
@@ -53,26 +64,26 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
                     />
                 </motion.div>
 
-                {/* Minimalist Progress Line */}
-                <div className="w-64 h-[2px] bg-zinc-800 rounded-full overflow-hidden relative">
+                {/* Minimalist Progress Line - Refined UI */}
+                <div className="w-64 md:w-80 h-[1px] bg-zinc-800 relative">
                     <motion.div
-                        className="absolute top-0 left-0 h-full bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+                        className="absolute top-0 left-0 h-full bg-white shadow-[0_0_15px_rgba(255,255,255,0.8)]"
                         style={{ width: `${progress}%` }}
                         layoutId="progress-bar"
                     />
                 </div>
 
                 {/* Tracking Text */}
-                <div className="mt-4 flex justify-between w-64 text-[10px] uppercase font-medium tracking-[0.2em] text-zinc-500">
+                <div className="mt-4 flex justify-between w-64 md:w-80 text-[10px] uppercase font-medium tracking-[0.3em] text-zinc-600">
                     <motion.span
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.2 }}
                     >
-                        Loading Experience
+                        Loading Assets
                     </motion.span>
-                    <span className="text-zinc-400 tabular-nums">
-                        {Math.round(progress)}%
+                    <span className="text-zinc-400 tabular-nums font-mono">
+                        {Math.round(progress)}
                     </span>
                 </div>
             </div>
