@@ -1,9 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRoutes, useLocation, useNavigate } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import ScrollToTop from './components/ScrollToTop';
+import WhatsAppWidget from './components/WhatsAppWidget';
+import LoadingScreen from './components/LoadingScreen';
 import { routes } from './routes';
 
 const HashHandler = () => {
@@ -42,17 +45,34 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         {children}
       </main>
 
-      {!shouldHide && <Footer />}
+      {!shouldHide && (
+        <>
+          <Footer />
+          <WhatsAppWidget />
+        </>
+      )}
     </div>
   );
 };
 
 const App: React.FC = () => {
   const element = useRoutes(routes);
+  const [loading, setLoading] = useState(true);
+
   return (
-    <Layout>
-      {element}
-    </Layout>
+    <>
+      <AnimatePresence mode='wait'>
+        {loading && (
+          <LoadingScreen key="loading" onComplete={() => setLoading(false)} />
+        )}
+      </AnimatePresence>
+
+      {!loading && (
+        <Layout>
+          {element}
+        </Layout>
+      )}
+    </>
   );
 };
 
