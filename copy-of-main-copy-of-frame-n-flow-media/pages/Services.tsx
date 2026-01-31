@@ -461,6 +461,41 @@ const Services: React.FC = () => {
         title="Services | Frame n Flow Media - Marketing & Automation"
         description="Explore our core services: Business Intelligence, AI Product Visuals, Growth Systems (100% Refund Guarantee), Web Development, and 24/7 AI Automation Agencies."
         canonical="/services"
+        schema={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "AI-Integrated Marketing",
+            "provider": {
+              "@type": "Organization",
+              "name": "Frame n Flow Media"
+            },
+            "description": "Comprehensive marketing strategy including Business Intelligence, Competitor Analysis, and Funnel Optimization.",
+            "areaServed": ["United States", "United Kingdom", "India", "Europe"]
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "AI Product Visuals",
+            "provider": {
+              "@type": "Organization",
+              "name": "Frame n Flow Media"
+            },
+            "description": "Photorealistic AI generation for jewelry, furniture, and products, reducing production costs by 90%.",
+            "serviceType": "content creation"
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "Growth Automation Systems",
+            "provider": {
+              "@type": "Organization",
+              "name": "Frame n Flow Media"
+            },
+            "description": "Automated lead acquisition funnels and AI chatbots with 100% Refund Guarantee.",
+            "serviceType": "lead generation"
+          }
+        ]}
       />
 
       {/* HEADER WITH TABS */}

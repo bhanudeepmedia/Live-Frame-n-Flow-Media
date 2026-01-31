@@ -160,9 +160,39 @@ const Work: React.FC = () => {
   return (
     <div className="pt-24 md:pt-32 min-h-screen bg-background overflow-x-hidden pb-20">
       <SEO
-        title="Our Work | Frame n Flow Media"
-        description="Explore our portfolio of AI product visuals, sonic branding, and high-performance marketing campaigns."
+        title="Our Work | Frame n Flow Media - AI Visuals & Strategy Portfolio"
+        description="Explore our portfolio of AI product visuals, sonic branding, and high-performance marketing campaigns. See how we help brands dominate."
         canonical="/work"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Frame n Flow Media Portfolio",
+          "description": "A collection of AI visuals, sonic branding, and web development projects.",
+          "url": "https://framenflowmedia.in/work",
+          "mainEntity": {
+            "@type": "ItemList",
+            "itemListElement": [
+              {
+                "@type": "CreativeWork",
+                "position": 1,
+                "name": "Luxury Product Showcase",
+                "description": "Photorealistic light and physics simulations for luxury products."
+              },
+              {
+                "@type": "CreativeWork",
+                "position": 2,
+                "name": "Digital Fashion",
+                "description": "Dynamic fabric simulation and model animation."
+              },
+              {
+                "@type": "CreativeWork",
+                "position": 3,
+                "name": "Sonic Branding Signature",
+                "description": "Original sonic identity composed for brand authority."
+              }
+            ]
+          }
+        }}
       />
 
       {/* BACKGROUND ELEMENTS */}

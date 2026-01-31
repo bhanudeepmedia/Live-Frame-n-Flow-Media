@@ -456,8 +456,42 @@ const Home: React.FC = () => {
   return (
     <div className="w-full overflow-hidden" ref={scrollRef}>
       <SEO
-        title="Frame n Flow Media - AI-Integrated Marketing Agency"
-        description="We are an AI-powered multimedia marketing agency. We engineer market dominance through Business Intelligence, AI Visuals, and Automated Growth Systems. Get qualified leads or 100% refund."
+        title="Frame n Flow Media | Best Marketing Agency in USA, UK, India & Europe"
+        description="Frame n Flow Media is a Strategy-First AI Marketing Agency serving USA, UK, India & Europe. We combine Business Intelligence & AI Visuals to drive qualified leads. 100% Refund Guarantee."
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "ProfessionalService",
+          "name": "Frame n Flow Media",
+          "url": "https://framenflowmedia.in",
+          "logo": "https://framenflowmedia.in/logo.png",
+          "image": "https://framenflowmedia.in/og-image.jpg",
+          "description": "AI-Integrated Marketing Agency specializing in Business Intelligence, Generative AI Visuals, and Automated Growth Systems.",
+          "founder": {
+            "@type": "Person",
+            "name": "Bhanu Deep"
+          },
+          "areaServed": [
+            { "@type": "Country", "name": "United States" },
+            { "@type": "Country", "name": "United Kingdom" },
+            { "@type": "Country", "name": "India" },
+            { "@type": "Continent", "name": "Europe" }
+          ],
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Marketing Services",
+            "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Market Research & Intelligence" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI Visual Production" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Automated Growth Systems" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Web & App Development" } }
+            ]
+          },
+          "priceRange": "$$$",
+          "sameAs": [
+            "https://twitter.com/framenflow",
+            "https://linkedin.com/company/framenflow"
+          ]
+        }}
       />
 
       {/* POPUP MODAL */}
@@ -587,7 +621,7 @@ const Home: React.FC = () => {
                 transition={{ duration: 0.8, ease: "backOut" }}
                 className="mb-4"
               >
-                <motion.span
+                <motion.h1
                   initial={{ rotate: 0 }}
                   whileHover={{
                     scale: 1.02,
@@ -599,7 +633,7 @@ const Home: React.FC = () => {
                   className="relative inline-block bg-accent/80 text-black text-5xl md:text-7xl lg:text-8xl font-display font-bold px-10 py-4 whitespace-nowrap border border-accent/20 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.3)] cursor-pointer"
                 >
                   AI-powered marketing
-                </motion.span>
+                </motion.h1>
               </motion.div>
 
               {/* Line 2 - Interactive */}

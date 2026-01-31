@@ -8,9 +8,27 @@ const Contact: React.FC = () => {
   return (
     <div className="pt-32 min-h-screen px-6 pb-20">
       <SEO
-        title="Contact Us | Frame n Flow Media"
-        description="Schedule a free marketing audit with Frame n Flow Media. We analyze your funnel, identify leaks, and propose a roadmap for growth."
+        title="Contact Us | Frame n Flow Media - Book Your Strategy Call"
+        description="Schedule a free marketing audit with Frame n Flow Media. We analyze your funnel, identify leaks, and propose a roadmap for growth. Book now."
         canonical="/contact"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          "name": "Contact Frame n Flow Media",
+          "description": "Get in touch for a free marketing audit or strategy session.",
+          "url": "https://framenflowmedia.in/contact",
+          "mainEntity": {
+            "@type": "Organization",
+            "name": "Frame n Flow Media",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "contactType": "customer service",
+              "email": "heyframenflowmedia@gmail.com",
+              "areaServed": ["US", "UK", "IN", "EU"],
+              "availableLanguage": ["English"]
+            }
+          }
+        }}
       />
       <div className="container mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
