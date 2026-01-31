@@ -3,180 +3,204 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
     const [stage, setStage] = useState<'counting' | 'launching' | 'complete'>('counting');
+    const [statusText, setStatusText] = useState("Initializing System...");
 
     useEffect(() => {
-        // Phase 1: Counting down/preparing (0-2s)
-        const timer1 = setTimeout(() => {
-            setStage('launching');
-        }, 2500); // Extended slightly for detail appreciation
+        // Text Cycling Logic to match user request context
+        const texts = [
+            "Calibrating AI Agents...",
+            "Building Web Infrastructure...",
+            "Optimizing Marketing Funnels...",
+            "Syncing Growth Automations..."
+        ];
 
-        // Phase 2: Launch and Reveal (2.5s - 4s)
-        const timer2 = setTimeout(() => {
+        let textIndex = 0;
+        const textInterval = setInterval(() => {
+            textIndex = (textIndex + 1) % texts.length;
+            setStatusText(texts[textIndex]);
+        }, 800);
+
+        // Sequence Logic
+        const launchTimer = setTimeout(() => {
+            setStage('launching');
+            clearInterval(textInterval);
+            setStatusText("LAUNCHING SYSTEMS");
+        }, 3200);
+
+        const completeTimer = setTimeout(() => {
             setStage('complete');
             onComplete();
-        }, 4000);
+        }, 4500);
 
         return () => {
-            clearTimeout(timer1);
-            clearTimeout(timer2);
+            clearInterval(textInterval);
+            clearTimeout(launchTimer);
+            clearTimeout(completeTimer);
         };
     }, [onComplete]);
 
     return (
         <motion.div
-            className="fixed inset-0 z-[100] bg-[#000000] flex flex-col items-center justify-center font-sans overflow-hidden"
+            className="fixed inset-0 z-[100] bg-[#000000] flex flex-col items-center justify-center font-sans overflow-hidden perspective-1000"
             exit={{
                 y: "-100%",
                 transition: { duration: 1.0, ease: [0.76, 0, 0.24, 1] }
             }}
         >
-            {/* Premium Graph Paper Background (Matching Home) */}
-            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-black">
-                {/* Subtle Radial Gradient to focus center */}
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.05)_0%,transparent_70%)]" />
-
-                {/* Exact Grid from Home Page */}
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:40px_40px]" />
+            {/* Optimized Background Grid - Perfornamce: Static class instead of inline styles calculation if possible */}
+            <div className="absolute inset-0 z-0 pointer-events-none bg-black">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.08)_0%,transparent_60%)]" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px]" />
             </div>
 
-            {/* Main Container */}
+            {/* Main Stage */}
             <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
 
-                {/* The Rocket Container */}
+                {/* 3D ROCKET CONTAINER */}
                 <motion.div
-                    className="relative will-change-transform"
-                    initial={{ y: 200, opacity: 0 }}
+                    className="relative w-48 h-96 [transform-style:preserve-3d]"
+                    initial={{ y: 0, rotateY: 0 }}
                     animate={
-                        stage === 'counting' ? { y: 0, opacity: 1 } :
-                            stage === 'launching' ? { y: -1200, scale: 0.9 } :
-                                {}
+                        stage === 'counting' ? {
+                            y: [0, -10, 0],
+                            rotateY: [0, 15, -15, 0], // Gentle 3D idling
+                            rotateX: [0, 5, 0]
+                        } :
+                            stage === 'launching' ? {
+                                y: -1500,
+                                scale: 0.8,
+                                rotateX: 10
+                            } : {}
                     }
                     transition={
-                        stage === 'counting' ? { duration: 0.8, ease: "easeOut" } :
-                            stage === 'launching' ? { duration: 1.8, ease: "anticipate" } : // 'anticipate' gives a nice pullback before launch
-                                {}
+                        stage === 'counting' ? {
+                            y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                            rotateY: { duration: 6, repeat: Infinity, ease: "easeInOut" },
+                            rotateX: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+                        } :
+                            stage === 'launching' ? { duration: 1.2, ease: "backIn" } : {}
                     }
                 >
-                    {/* Rocket SVG - High Fidelity "Starship" Style */}
-                    <div className="relative w-32 h-64 md:w-40 md:h-80 drop-shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+                    {/* --- LAYER 1: BACK (Fins & Engine Depth) --- */}
+                    <div className="absolute inset-0 flex items-center justify-center [transform:translateZ(-30px)] grayscale brightness-75">
+                        <RocketSilhouette color="#1e293b" />
+                    </div>
 
-                        {/* Engine Glow / Exhaust - Dynamic */}
+                    {/* --- LAYER 2: MID (Main Housing & Engine Glow) --- */}
+                    <div className="absolute inset-0 flex items-center justify-center [transform:translateZ(0px)] drop-shadow-2xl">
+                        {/* Dynamic Engine Plume (Only optimized gradient, no heavy blur) */}
                         <AnimatePresence>
                             {(stage === 'launching' || stage === 'counting') && (
                                 <motion.div
-                                    className="absolute top-[90%] left-1/2 -translate-x-1/2 w-16 h-32 origin-top opacity-0 z-0"
-                                    initial={{ scaleY: 0.2, opacity: 0 }}
+                                    className="absolute top-[80%] w-12 h-32 bg-gradient-to-b from-cyan-400 via-blue-600 to-transparent rounded-b-full opacity-80"
+                                    initial={{ scaleY: 0.5, opacity: 0 }}
                                     animate={
-                                        stage === 'counting' ? { scaleY: [0.4, 0.5, 0.4], opacity: 0.3 } :
-                                            stage === 'launching' ? { scaleY: 3.5, scaleX: 1.2, opacity: 1 } :
-                                                {}
+                                        stage === 'counting' ? { scaleY: [0.5, 0.7, 0.5], opacity: 0.6 } : // Idling
+                                            stage === 'launching' ? { scaleY: 3, opacity: 1 } : {}
                                     }
-                                    transition={{ repeat: stage === 'counting' ? Infinity : 0, duration: 0.1 }}
-                                >
-                                    {/* Core White Plasma */}
-                                    <div className="absolute inset-0 bg-white blur-md rounded-b-full w-[60%] left-[20%] h-full" />
-                                    {/* Blue/Cyan Electric Edge */}
-                                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400 to-blue-600 blur-lg rounded-b-full opacity-80" />
-                                    {/* Outer Heat Haze */}
-                                    <div className="absolute -inset-4 bg-orange-500/10 blur-xl rounded-full" />
-                                </motion.div>
+                                    transition={{ duration: 0.1, repeat: stage === 'counting' ? Infinity : 0 }}
+                                />
                             )}
                         </AnimatePresence>
+                        <RocketBody />
+                    </div>
 
-                        {/* Rocket Body */}
-                        <svg viewBox="0 0 200 400" className="w-full h-full z-10 relative">
-                            <defs>
-                                {/* Metallic Hull Gradient */}
-                                <linearGradient id="hullChrome" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stopColor="#334155" /> {/* Dark Slate */}
-                                    <stop offset="20%" stopColor="#94a3b8" /> {/* Highlight */}
-                                    <stop offset="50%" stopColor="#f8fafc" /> {/* Shine */}
-                                    <stop offset="80%" stopColor="#64748b" /> {/* Shadow */}
-                                    <stop offset="100%" stopColor="#1e293b" /> {/* Darkest Edge */}
-                                </linearGradient>
-
-                                {/* Dark Glass Gradient */}
-                                <linearGradient id="glassDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stopColor="#0f172a" />
-                                    <stop offset="100%" stopColor="#000000" />
-                                </linearGradient>
-
-                                {/* Gold Foil / Heat Shield Gradient */}
-                                <linearGradient id="heatShield" x1="0%" y1="100%" x2="0%" y2="0%">
-                                    <stop offset="0%" stopColor="#1e1e1e" />
-                                    <stop offset="100%" stopColor="#3f3f46" />
-                                </linearGradient>
-                            </defs>
-
-                            {/* --- REAR FINS (Background) --- */}
-                            {/* Left Fin */}
-                            <path d="M40 320 L10 380 L60 360 Z" fill="#334155" stroke="#1e293b" strokeWidth="1" />
-                            {/* Right Fin */}
-                            <path d="M160 320 L190 380 L140 360 Z" fill="#334155" stroke="#1e293b" strokeWidth="1" />
-
-                            {/* --- MAIN HULL --- */}
-                            {/* Body Construction */}
-                            <path d="M100 20 Q140 80 140 350 L60 350 Q60 80 100 20 Z" fill="url(#hullChrome)" />
-
-                            {/* --- DETAILS & PANELS --- */}
-                            {/* Nose Cone Seam */}
-                            <path d="M82 80 Q100 85 118 80" fill="none" stroke="#64748b" strokeWidth="1" opacity="0.5" />
-                            {/* Mid Body Seam */}
-                            <path d="M65 200 Q100 205 135 200" fill="none" stroke="#64748b" strokeWidth="1" opacity="0.3" />
-
-                            {/* Cockpit Window (Vertical Slit style) */}
-                            <path d="M95 100 L105 100 L105 140 L95 140 Z" fill="url(#glassDark)" stroke="#475569" strokeWidth="0.5" />
-                            {/* Window Glint */}
-                            <rect x="97" y="105" width="2" height="15" fill="cyan" opacity="0.4" />
-
-                            {/* Front Vertical Fin / Aerodynamic ridge */}
-                            <path d="M100 150 L100 340" stroke="#cbd5e1" strokeWidth="1" opacity="0.3" />
-
-                            {/* --- LOWER SECTION (Engines/Legs) --- */}
-                            {/* Landing Leg - Center */}
-                            <path d="M90 350 L100 390 L110 350" fill="#1e293b" />
-
-                            {/* Brand Logo / Markings */}
-                            <text x="100" y="180" textAnchor="middle" fontSize="60" fill="rgba(0,0,0,0.1)" transform="rotate(-90 100 180)" fontWeight="bold" style={{ fontFamily: 'Arial' }}>F/F</text>
-
-                            {/* Blue Accent Ring */}
-                            <path d="M62 300 Q100 305 138 300" fill="none" stroke="cyan" strokeWidth="1.5" opacity="0.6" filter="drop-shadow(0 0 2px cyan)" />
-
-                        </svg>
+                    {/* --- LAYER 3: FRONT (Cockpit, Shine, Details) --- */}
+                    <div className="absolute inset-0 flex items-center justify-center [transform:translateZ(30px)]">
+                        <RocketHighlights />
                     </div>
                 </motion.div>
 
-                {/* Text Container - Fades out on launch */}
+                {/* STATUS TEXT */}
                 <motion.div
-                    className="mt-16 text-center"
+                    className="mt-12 flex flex-col items-center"
                     animate={stage === 'launching' ? { opacity: 0, y: 50 } : { opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.3 }}
                 >
-                    <h2 className="text-2xl md:text-4xl font-display font-black text-white tracking-tighter uppercase mb-3">
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">Launch Imminent</span>
-                    </h2>
+                    {/* Animated Text Switcher */}
+                    <div className="h-8 relative w-full flex justify-center overflow-hidden">
+                        <AnimatePresence mode='wait'>
+                            <motion.span
+                                key={statusText}
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                exit={{ y: -20, opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="text-accent font-mono text-sm tracking-[0.2em] font-bold uppercase truncate"
+                            >
+                                {statusText}
+                            </motion.span>
+                        </AnimatePresence>
+                    </div>
 
-                    {/* Retro Terminal Text */}
-                    <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-lg inline-flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                        <p className="text-accent text-xs font-mono tracking-widest uppercase">
-                            Systems Nominal
-                        </p>
+                    {/* Loading Bar */}
+                    <div className="w-64 h-1 bg-white/10 mt-6 rounded-full overflow-hidden">
+                        <motion.div
+                            className="h-full bg-white shadow-[0_0_10px_white]"
+                            initial={{ width: "0%" }}
+                            animate={{ width: "100%" }}
+                            transition={{ duration: 4.5, ease: "linear" }}
+                        />
                     </div>
                 </motion.div>
 
             </div>
-
-            {/* Loading Progress Bar at Bottom */}
-            <motion.div
-                className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent z-50 shadow-[0_0_20px_cyan]"
-                initial={{ width: "0%" }}
-                animate={{ width: "100%" }}
-                transition={{ duration: 4.0, ease: "linear" }}
-            />
-
         </motion.div>
     );
 };
+
+// --- SUB-COMPONENTS FOR 3D LAYERING (Clean & Sharp SVGs) ---
+
+const RocketSilhouette = ({ color }: { color: string }) => (
+    <svg viewBox="0 0 200 400" className="w-full h-full opacity-50">
+        <path d="M40 300 L10 380 L70 360 Z" fill={color} /> {/* Left Fin Back */}
+        <path d="M160 300 L190 380 L130 360 Z" fill={color} /> {/* Right Fin Back */}
+    </svg>
+);
+
+const RocketBody = () => (
+    <svg viewBox="0 0 200 400" className="w-full h-full">
+        <defs>
+            <linearGradient id="mainBodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#334155" />
+                <stop offset="30%" stopColor="#64748b" />
+                <stop offset="50%" stopColor="#94a3b8" /> {/* Highlight Center */}
+                <stop offset="70%" stopColor="#64748b" />
+                <stop offset="100%" stopColor="#334155" />
+            </linearGradient>
+        </defs>
+
+        {/* Main Fuselage */}
+        <path d="M100 20 Q150 80 150 350 L50 350 Q50 80 100 20 Z" fill="url(#mainBodyGrad)" />
+
+        {/* Engine Nozzle Area */}
+        <path d="M70 350 L75 370 L125 370 L130 350 Z" fill="#1e293b" />
+    </svg>
+);
+
+const RocketHighlights = () => (
+    <svg viewBox="0 0 200 400" className="w-full h-full">
+        <defs>
+            <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#0ea5e9" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#2563eb" stopOpacity="0.4" />
+            </linearGradient>
+        </defs>
+
+        {/* Cockpit Window (Floating above) */}
+        <path d="M90 90 L110 90 L110 130 L90 130 Z" fill="url(#glassGrad)" stroke="white" strokeWidth="1" strokeOpacity="0.5" />
+
+        {/* Specular Highlight on Body */}
+        <path d="M95 40 Q98 100 95 300" stroke="white" strokeWidth="2" strokeOpacity="0.1" fill="none" />
+
+        {/* Tech Markings 'F/F' */}
+        <text x="100" y="200" textAnchor="middle" fill="white" fillOpacity="0.2" fontSize="24" fontFamily="monospace" transform="rotate(-90 100 200)">
+            SYSTEMS::GO
+        </text>
+
+        {/* Front Fin / Aerodynamic Slat */}
+        <rect x="98" y="240" width="4" height="80" fill="#cbd5e1" opacity="0.8" />
+    </svg>
+);
 
 export default LoadingScreen;
