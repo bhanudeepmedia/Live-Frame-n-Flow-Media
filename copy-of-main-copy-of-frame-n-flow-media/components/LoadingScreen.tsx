@@ -59,14 +59,14 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
 
     useEffect(() => {
         const textSequence = [
-            { text: "Tracking Signals...", time: 0 },
-            { text: "Acquiring Target...", time: 1000 },
-            { text: "Locked.", time: 2000 },
+            { text: "Initializing Core...", time: 0 },
+            { text: "Loading Experience...", time: 1000 },
+            { text: "Ready.", time: 2000 },
         ];
         const timers = textSequence.map(({ text, time }) => setTimeout(() => setStatusText(text), time));
         const roarTimer = setTimeout(() => {
             setIsRoaring(true);
-            setStatusText("APEX STATUS ACTIVE");
+            setStatusText("WELCOME TO FRAME N FLOW");
             playCyberRoar();
         }, 2800);
         const completeTimer = setTimeout(onComplete, 4000);
@@ -127,98 +127,31 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
             {/* --- CENTRAL STAGE --- */}
             <div className="relative z-10 [perspective:1000px] w-full flex flex-col items-center justify-center">
 
-                {/* THE TITANIUM PANTHER */}
+                {/* THE LOGO */}
                 <div
                     ref={containerRef}
-                    className="relative w-64 h-64 md:w-80 md:h-80 transition-transform duration-200 ease-out [transform-style:preserve-3d] will-change-transform"
+                    className="relative w-48 h-48 md:w-64 md:h-64 transition-transform duration-200 ease-out [transform-style:preserve-3d] will-change-transform"
                 >
-                    <motion.svg
-                        viewBox="0 0 100 100"
-                        className="w-full h-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
-                        animate={isRoaring ? {
-                            scale: [1, 1.05, 1],
-                            filter: ["brightness(1)", "brightness(2.5)", "brightness(1)"]
-                        } : {}}
-                        transition={{ duration: 0.15, repeat: isRoaring ? 3 : 0 }}
-                        preserveAspectRatio="xMidYMid meet"
+                    <motion.div
+                        className="w-full h-full relative"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 1.5, ease: "easeOut" }}
                     >
-                        <defs>
-                            <linearGradient id="metalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="#f1f5f9" /> {/* Lighter top */}
-                                <stop offset="50%" stopColor="#94a3b8" />
-                                <stop offset="100%" stopColor="#475569" /> {/* Darker bottom */}
-                            </linearGradient>
-                        </defs>
+                        {/* Glow Effect behind logo */}
+                        <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full scale-150 animate-pulse" />
 
-                        {/* HEAD CONSTRUCTION */}
-                        <g>
-                            {/* Back Glow for Detail */}
-                            <path
-                                d="M20 15 L40 25 L60 25 L80 15 L85 50 L60 90 L40 90 L15 50 Z"
-                                fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="4"
-                            />
-
-                            {/* MAIN WIREFRAME */}
-                            <motion.path
-                                d="M20 15 L40 25 L60 25 L80 15 L85 50 L60 90 L40 90 L15 50 Z"
-                                fill="rgba(23, 23, 23, 0.4)" /* Subtle Fill for Solidity */
-                                stroke="url(#metalGrad)"
-                                strokeWidth="0.6"
-                                strokeLinejoin="round"
-                                initial={{ pathLength: 0, opacity: 0 }}
-                                animate={{ pathLength: 1, opacity: 1 }}
-                                transition={{ duration: 1.5 }}
-                            />
-
-                            {/* Inner Details */}
-                            <motion.path
-                                d="M40 25 L50 70 L60 25 M50 70 L25 50 M50 70 L75 50 M50 70 L50 85"
-                                stroke="url(#metalGrad)"
-                                strokeWidth="0.4"
-                                strokeOpacity={0.6}
-                                initial={{ pathLength: 0 }}
-                                animate={{ pathLength: 1 }}
-                                transition={{ duration: 1.5, delay: 0.4 }}
-                            />
-
-                            {/* Eyes */}
-                            <g className="mix-blend-screen">
-                                <path d="M30 40 L42 43 L32 46 Z" fill="#fff" />
-                                <path d="M70 40 L58 43 L68 46 Z" fill="#fff" />
-
-                                <motion.path
-                                    d="M30 40 L42 43 L32 46 Z"
-                                    fill="#22d3ee"
-                                    filter="blur(3px)"
-                                    animate={{ opacity: isRoaring ? [0.6, 1, 0.6] : 0.6 }}
-                                    transition={{ duration: 0.1, repeat: Infinity }}
-                                />
-                                <motion.path
-                                    d="M70 40 L58 43 L68 46 Z"
-                                    fill="#22d3ee"
-                                    filter="blur(3px)"
-                                    animate={{ opacity: isRoaring ? [0.6, 1, 0.6] : 0.6 }}
-                                    transition={{ duration: 0.1, repeat: Infinity }}
-                                />
-                            </g>
-
-                            {/* Tech Nodes */}
-                            {[
-                                [20, 15], [80, 15], [40, 25], [60, 25],
-                                [15, 50], [85, 50], [40, 90], [60, 90], [50, 70]
-                            ].map(([cx, cy], i) => (
-                                <motion.circle
-                                    key={i}
-                                    cx={cx} cy={cy} r={0.6}
-                                    fill="white"
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    transition={{ delay: 1.2 + i * 0.05 }}
-                                />
-                            ))}
-                        </g>
-
-                    </motion.svg>
+                        <motion.img
+                            src="/logo.png"
+                            alt="Frame n Flow Media"
+                            className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]"
+                            animate={isRoaring ? {
+                                scale: [1, 1.1, 1],
+                                filter: ["brightness(1) drop-shadow(0 0 15px rgba(255,255,255,0.5))", "brightness(1.5) drop-shadow(0 0 30px rgba(255,255,255,0.9))", "brightness(1) drop-shadow(0 0 15px rgba(255,255,255,0.5))"]
+                            } : {}}
+                            transition={{ duration: 0.3, repeat: isRoaring ? 2 : 0 }}
+                        />
+                    </motion.div>
                 </div>
 
                 {/* STATUS with HUD Elements */}
