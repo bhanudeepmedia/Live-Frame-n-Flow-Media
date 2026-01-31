@@ -1,29 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
-    const [statusText, setStatusText] = useState("Initializing Hunter Protocol...");
+    const [statusText, setStatusText] = useState("Initializing System...");
+    const [isRoaring, setIsRoaring] = useState(false);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
         const textSequence = [
             { text: "Tracking Market Signals...", time: 0 },
             { text: "Stalking Competitor Data...", time: 1000 },
-            { text: "Calculated Precision...", time: 2000 },
-            { text: "Market Dominance: Active.", time: 3000 }
+            { text: "Locked on Target...", time: 2000 },
+            { text: "DOMINANCE ACHIEVED.", time: 3000 }
         ];
 
-        // Schedule text updates
+        // Text Updates
         const timers = textSequence.map(({ text, time }) =>
             setTimeout(() => setStatusText(text), time)
         );
 
-        // Completion trigger
+        // Sequence: Roar Trigger
+        const roarTimer = setTimeout(() => {
+            setIsRoaring(true);
+            // Attempt to play sound
+            if (audioRef.current) {
+                audioRef.current.volume = 0.5;
+                audioRef.current.play().catch(e => console.log("Audio play failed (user interaction needed first):", e));
+            }
+        }, 3000);
+
+        // Completion
         const completeTimer = setTimeout(() => {
             onComplete();
-        }, 3800);
+        }, 4500); // Allow time for roar
 
         return () => {
             timers.forEach(clearTimeout);
+            clearTimeout(roarTimer);
             clearTimeout(completeTimer);
         };
     }, [onComplete]);
@@ -32,136 +45,99 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
         <motion.div
             className="fixed inset-0 z-[100] bg-[#020202] flex flex-col items-center justify-center font-sans overflow-hidden"
             exit={{
-                y: "-100%",
-                transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] }
+                opacity: 0,
+                scale: 1.1,
+                filter: "blur(10px)",
+                transition: { duration: 0.8, ease: "easeInOut" }
             }}
         >
-            {/* Dark Jungle Ambient Background */}
+            {/* Audio Element */}
+            <audio ref={audioRef} src="/roar.mp3" preload="auto" />
+
+            {/* Background Ambience */}
             <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,255,136,0.03)_0%,transparent_60%)]" />
-                {/* Hex Grid for Cyber Feel */}
-                <div className="absolute inset-0 bg-[linear-gradient(30deg,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(150deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20" />
+                {/* Flash Effect on Roar */}
+                <motion.div
+                    className="absolute inset-0 bg-white"
+                    initial={{ opacity: 0 }}
+                    animate={isRoaring ? { opacity: [0, 0.2, 0, 0.2, 0] } : { opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.05)_0%,transparent_60%)]" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] opacity-20" />
             </div>
 
-            {/* DIGITAL PANTHER CONTAINER */}
-            <div className="relative z-10 flex flex-col items-center justify-center">
+            {/* MAIN CONTENT */}
+            <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-lg">
 
-                {/* The Panther Head SVG */}
+                {/* 3D PANTHER IMAGE CONTAINER */}
                 <motion.div
-                    className="relative w-48 h-48 md:w-64 md:h-64 filter drop-shadow-[0_0_15px_rgba(34,211,238,0.3)]"
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.5 }}
+                    className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px]"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={
+                        isRoaring
+                            ? { scale: 1.2, x: [0, -10, 10, -10, 10, 0], filter: "brightness(1.5) contrast(1.2)" }
+                            : { scale: 1, opacity: 1, y: [0, -10, 0] }
+                    }
+                    transition={
+                        isRoaring
+                            ? { duration: 0.5, type: "spring", stiffness: 300 }
+                            : { opacity: { duration: 0.5 }, y: { duration: 4, repeat: Infinity, ease: "easeInOut" } }
+                    }
                 >
-                    <svg viewBox="0 0 100 100" className="w-full h-full">
-                        <defs>
-                            <linearGradient id="cyberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stopColor="#22d3ee" /> {/* Cyan */}
-                                <stop offset="100%" stopColor="#3b82f6" /> {/* Blue */}
-                            </linearGradient>
-                        </defs>
+                    {/* The Generated 3D Asset */}
+                    <img
+                        src="/panther.png"
+                        alt="Digital Panther"
+                        className="w-full h-full object-contain filter drop-shadow-[0_0_30px_rgba(34,211,238,0.2)]"
+                    />
 
-                        {/* --- WIREFRAME CONSTRUCTION ANIMATION --- */}
-
-                        {/* Main Head Outline */}
-                        <motion.path
-                            d="M20 15 L35 30 L65 30 L80 15 L85 45 L60 85 L40 85 L15 45 Z"
-                            fill="none"
-                            stroke="url(#cyberGrad)"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            initial={{ pathLength: 0 }}
-                            animate={{ pathLength: 1 }}
-                            transition={{ duration: 2, ease: "easeInOut" }}
-                        />
-
-                        {/* Inner Detail Lines (Nose Bridge) */}
-                        <motion.path
-                            d="M35 30 L50 70 L65 30"
-                            fill="none"
-                            stroke="url(#cyberGrad)"
-                            strokeWidth="1"
-                            strokeOpacity="0.5"
-                            initial={{ pathLength: 0 }}
-                            animate={{ pathLength: 1 }}
-                            transition={{ duration: 2, ease: "easeInOut", delay: 0.5 }}
-                        />
-
-                        {/* Nose Triangle */}
-                        <motion.path
-                            d="M45 70 L55 70 L50 80 Z"
-                            fill="#22d3ee"
-                            fillOpacity="0.8"
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: 1.5, type: "spring" }}
-                        />
-
-                        {/* GLOWING EYES (The Soul) */}
-                        <motion.g
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 1.0, duration: 0.5 }}
-                        >
-                            {/* Left Eye */}
-                            <path d="M30 45 L42 48 L32 52 Z" fill="#fff" />
-                            {/* Right Eye */}
-                            <path d="M70 45 L58 48 L68 52 Z" fill="#fff" />
-
-                            {/* Eye Glow Pulse */}
-                            <motion.path
-                                d="M30 45 L42 48 L32 52 Z"
-                                fill="#22d3ee"
-                                filter="blur(3px)"
-                                animate={{ opacity: [0.5, 1, 0.5] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                            />
-                            <motion.path
-                                d="M70 45 L58 48 L68 52 Z"
-                                fill="#22d3ee"
-                                filter="blur(3px)"
-                                animate={{ opacity: [0.5, 1, 0.5] }}
-                                transition={{ duration: 2, repeat: Infinity }}
-                            />
-                        </motion.g>
-
-                        {/* Scanning Effect Overlay */}
-                        <motion.rect
-                            x="0" y="0" width="100" height="2" fill="#fff" fillOpacity="0.1"
-                            animate={{ y: [0, 100, 0] }}
+                    {/* Scanning Laser Effect (Idle) */}
+                    {!isRoaring && (
+                        <motion.div
+                            className="absolute top-0 left-0 w-full h-[2px] bg-accent shadow-[0_0_15px_#22d3ee] z-20 opacity-50"
+                            animate={{ top: ["0%", "100%", "0%"] }}
                             transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                         />
+                    )}
 
-                    </svg>
+                    {/* Roar Shockwave (Active) */}
+                    {isRoaring && (
+                        <motion.div
+                            className="absolute inset-0 rounded-full border-2 border-white opacity-0"
+                            animate={{ scale: [1, 2], opacity: [0.5, 0] }}
+                            transition={{ duration: 0.4, repeat: 3 }}
+                        />
+                    )}
                 </motion.div>
 
-                {/* 3. CONTEXT DATA */}
+                {/* STATUS TEXT */}
                 <motion.div
-                    className="mt-8 flex flex-col items-center space-y-3"
+                    className="mt-4 flex flex-col items-center space-y-3"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
                 >
-                    <div className="flex items-center space-x-3 bg-white/5 border border-white/10 px-6 py-3 rounded-xl backdrop-blur-md">
+                    <div className="flex items-center space-x-3 bg-black/40 border border-white/10 px-6 py-3 rounded-full backdrop-blur-md">
                         <motion.div
-                            className="w-2 h-2 bg-emerald-500 rounded-full"
-                            animate={{ opacity: [0.2, 1, 0.2] }}
-                            transition={{ duration: 0.8, repeat: Infinity }}
+                            className={`w-2 h-2 rounded-full ${isRoaring ? 'bg-red-500' : 'bg-emerald-500'}`}
+                            animate={{ opacity: [0.2, 1, 0.2], scale: isRoaring ? [1, 1.5, 1] : 1 }}
+                            transition={{ duration: isRoaring ? 0.2 : 0.8, repeat: Infinity }}
                         />
-                        <span className="font-mono text-sm text-emerald-400 tracking-widest uppercase min-w-[220px] text-center font-bold">
+                        <span className="font-mono text-xs md:text-sm text-white/80 tracking-widest uppercase min-w-[220px] text-center font-bold">
                             {statusText}
                         </span>
                     </div>
                 </motion.div>
+
             </div>
 
-            {/* Loading Bar at Ultra Bottom */}
+            {/* Loading Bar */}
             <motion.div
-                className="absolute bottom-0 left-0 h-[3px] bg-gradient-to-r from-transparent via-[#22d3ee] to-transparent w-full shadow-[0_0_20px_#22d3ee]"
+                className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-transparent via-[#22d3ee] to-transparent w-full"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
-                transition={{ duration: 3.8, ease: "linear" }}
+                transition={{ duration: 4.0, ease: "linear" }}
             />
         </motion.div>
     );
