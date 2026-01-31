@@ -85,43 +85,111 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
         >
             {/* --- PREMIUM DEPTH BACKGROUND --- */}
 
-            {/* 1. Deep Space Gradient */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#1a1a1a_0%,#000000_100%)] pointer-events-none" />
-
-            {/* 2. 3D Perspective Grid Floor */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none perspective-500">
-                <div
-                    className="absolute inset-[-100%] top-[50%] bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px] transform rotate-x-[60deg] origin-top"
-                    style={{ maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 60%)" }}
+            {/* 1. Dynamic Aurora Gradient Base */}
+            <div className="absolute inset-0 bg-[#030303] overflow-hidden">
+                <motion.div
+                    className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] opacity-30 blur-[100px]"
+                    animate={{
+                        rotate: [0, 360],
+                    }}
+                    transition={{
+                        duration: 30,
+                        repeat: Infinity,
+                        ease: "linear"
+                    }}
+                    style={{
+                        background: "conic-gradient(from 0deg, #1e1b4b, #000000, #1e293b, #030303, #1e1b4b)"
+                    }}
                 />
             </div>
 
-            {/* 3. Floating Data Particles (Depth Layers) */}
-            <div className="absolute inset-0 pointer-events-none">
-                {[...Array(15)].map((_, i) => (
+            {/* 2. Floating "Fun" Gradient Orbs */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                {/* Purple Orb */}
+                <motion.div
+                    className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] mix-blend-screen"
+                    animate={{
+                        x: [0, 100, 0],
+                        y: [0, -50, 0],
+                        scale: [1, 1.2, 1]
+                    }}
+                    transition={{
+                        duration: 10,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    }}
+                />
+
+                {/* Cyan Orb (Brand Accent) */}
+                <motion.div
+                    className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent/20 rounded-full blur-[100px] mix-blend-screen"
+                    animate={{
+                        x: [0, -70, 0],
+                        y: [0, 50, 0],
+                        scale: [1, 1.3, 1]
+                    }}
+                    transition={{
+                        duration: 12,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 1
+                    }}
+                />
+
+                {/* Blue/Pink Pop Orb */}
+                <motion.div
+                    className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-[80px] mix-blend-screen"
+                    animate={{
+                        x: [-150, 150, -150],
+                        y: [-100, 100, -100],
+                        opacity: [0.3, 0.6, 0.3]
+                    }}
+                    transition={{
+                        duration: 15,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    }}
+                />
+            </div>
+
+            {/* 3. Subtle Hexagonal Mesh Grid instead of standard floor */}
+            <div
+                className="absolute inset-0 opacity-[0.07]"
+                style={{
+                    backgroundImage: "radial-gradient(circle at center, #ffffff 1px, transparent 1px)",
+                    backgroundSize: "40px 40px"
+                }}
+            />
+
+            {/* 4. Shooting Star Particles */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                {[...Array(8)].map((_, i) => (
                     <motion.div
                         key={i}
-                        className="absolute w-[1px] h-[1px] bg-white/40 rounded-full"
+                        className="absolute w-[100px] h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent"
                         style={{
                             top: `${Math.random() * 100}%`,
                             left: `${Math.random() * 100}%`,
+                            rotate: -45
                         }}
                         animate={{
-                            y: [0, -100, 0],
-                            opacity: [0, 0.5, 0]
+                            x: [-500, 500],
+                            y: [500, -500],
+                            opacity: [0, 1, 0]
                         }}
                         transition={{
-                            duration: Math.random() * 5 + 10,
+                            duration: Math.random() * 3 + 4,
                             repeat: Infinity,
-                            ease: "linear"
+                            delay: Math.random() * 5,
+                            ease: "easeInOut"
                         }}
                     />
                 ))}
             </div>
 
-            {/* 4. Vignette & Scanlines */}
-            <div className="absolute inset-0 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
-            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]" />
+            {/* 5. Vignette & Grain */}
+            <div className="absolute inset-0 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05] mix-blend-overlay" />
+            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.6)_100%)]" />
 
 
             {/* --- CENTRAL STAGE --- */}
