@@ -353,6 +353,7 @@ const Work: React.FC = () => {
 
             {/* VISUALS CONTENT: THE AI ADVANTAGE */}
             <div className="bg-surfaceHighlight border-y border-white/5 py-24 relative overflow-hidden">
+
               <div className="absolute inset-0 bg-noise opacity-5 pointer-events-none" />
               <div className="container mx-auto px-6">
                 <div className="max-w-3xl mb-16">
