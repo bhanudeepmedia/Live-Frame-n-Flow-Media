@@ -9,14 +9,15 @@ import WhatsAppWidget from './components/WhatsAppWidget';
 import LoadingScreen from './components/LoadingScreen';
 import { routes } from './routes';
 
-// Declare dataLayer for TypeScript
+// Declare dataLayer and gtag for TypeScript
 declare global {
   interface Window {
     dataLayer: any[];
+    gtag: (...args: any[]) => void;
   }
 }
 
-// GTM Page View Tracker for SPA navigation
+// GTM + GA4 Page View Tracker for SPA navigation
 const useGTMPageTracking = () => {
   const location = useLocation();
 
@@ -24,7 +25,16 @@ const useGTMPageTracking = () => {
     // Initialize dataLayer if it doesn't exist
     window.dataLayer = window.dataLayer || [];
 
-    // Push virtual page view to dataLayer
+    // Send page_view to GA4 directly via gtag
+    if (typeof window.gtag === 'function') {
+      window.gtag('config', 'G-MGKYJ45STW', {
+        page_path: location.pathname + location.search,
+        page_title: document.title,
+        page_location: window.location.href
+      });
+    }
+
+    // Also push to dataLayer for GTM
     window.dataLayer.push({
       event: 'virtualPageview',
       page: {
