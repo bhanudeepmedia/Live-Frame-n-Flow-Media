@@ -9,6 +9,35 @@ import WhatsAppWidget from './components/WhatsAppWidget';
 import LoadingScreen from './components/LoadingScreen';
 import { routes } from './routes';
 
+// Declare dataLayer for TypeScript
+declare global {
+  interface Window {
+    dataLayer: any[];
+  }
+}
+
+// GTM Page View Tracker for SPA navigation
+const useGTMPageTracking = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Initialize dataLayer if it doesn't exist
+    window.dataLayer = window.dataLayer || [];
+
+    // Push virtual page view to dataLayer
+    window.dataLayer.push({
+      event: 'virtualPageview',
+      page: {
+        path: location.pathname,
+        title: document.title,
+        url: window.location.href,
+        search: location.search,
+        hash: location.hash
+      }
+    });
+  }, [location.pathname, location.search, location.hash]);
+};
+
 const HashHandler = () => {
   const navigate = useNavigate();
   useEffect(() => {
@@ -26,6 +55,10 @@ const HashHandler = () => {
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
+
+  // Track page views for GTM on route changes
+  useGTMPageTracking();
+
   const hideNavFooterSteps = [
     '/growth-partner/dashboard',
     '/admin/growth-partners-dashboard',
