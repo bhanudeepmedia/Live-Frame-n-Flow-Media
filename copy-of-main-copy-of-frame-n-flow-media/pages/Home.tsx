@@ -471,7 +471,7 @@ const Home: React.FC = () => {
             "width": "512",
             "height": "512"
           },
-          "image": "https://framenflowmedia.in/og-image.jpg",
+          "image": "https://framenflowmedia.in/logo.png",
           "description": "AI-Integrated Marketing Agency specializing in Business Intelligence, Generative AI Visuals, and Automated Growth Systems.",
           "foundingDate": "2025",
           "founder": {
