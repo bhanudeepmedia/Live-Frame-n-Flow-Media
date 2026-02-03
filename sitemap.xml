@@ -1,106 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
-  <!-- Main Pages -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://framenflowmedia.in/</loc>
-    <lastmod>2026-01-25</lastmod>
+    <loc>https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/</loc>
+    <lastmod>2026-02-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  
   <url>
-    <loc>https://framenflowmedia.in/services</loc>
-    <lastmod>2026-01-25</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/about</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
-  
   <url>
-    <loc>https://framenflowmedia.in/approach</loc>
-    <lastmod>2026-01-25</lastmod>
+    <loc>https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/founder-bhanudeep</loc>
+    <lastmod>2026-02-03</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://framenflowmedia.in/work</loc>
-    <lastmod>2026-01-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://framenflowmedia.in/insights</loc>
-    <lastmod>2026-01-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://framenflowmedia.in/founder-bhanudeep</loc>
-    <lastmod>2026-01-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://framenflowmedia.in/contact</loc>
-    <lastmod>2026-01-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- Growth Partner Pages -->
-  <url>
-    <loc>https://framenflowmedia.in/growth-partner</loc>
-    <lastmod>2026-01-25</lastmod>
-    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-  
   <url>
-    <loc>https://framenflowmedia.in/growth-partner/apply</loc>
-    <lastmod>2026-01-25</lastmod>
+    <loc>https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/approach</loc>
+    <lastmod>2026-02-03</lastmod>
     <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/services</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/work</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-  
   <url>
-    <loc>https://framenflowmedia.in/growth-partner/login</loc>
-    <lastmod>2026-01-25</lastmod>
+    <loc>https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/insights</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/contact</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/privacy-policy</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/terms-of-service</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/growth-partner</loc>
+    <lastmod>2026-02-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-  
-  <!-- Static Documentation Pages -->
-  <url>
-    <loc>https://framenflowmedia.in/growth-partner-info.html</loc>
-    <lastmod>2026-01-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://framenflowmedia.in/growth-partner-program.md</loc>
-    <lastmod>2026-01-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>https://framenflowmedia.in/llms.txt</loc>
-    <lastmod>2026-01-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://framenflowmedia.in/ai.json</loc>
-    <lastmod>2026-01-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
 </urlset>
