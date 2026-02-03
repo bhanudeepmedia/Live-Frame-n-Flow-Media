@@ -503,6 +503,7 @@ const Home: React.FC = () => {
           },
           "priceRange": "$$$",
           "sameAs": [
+            "https://www.wikidata.org/wiki/Q137999055",
             "https://www.instagram.com/framenflowmedia/",
             "https://www.linkedin.com/company/frame-n-flow-media/?viewAsMember=true",
             "https://www.youtube.com/@framenflowmedia",
