@@ -48,7 +48,8 @@ const SEO: React.FC<SEOProps> = ({
         },
         "address": {
             "@type": "PostalAddress",
-            "addressCountry": "IN"
+            "addressCountry": "IN",
+            "addressRegion": "India"
         },
         "areaServed": {
             "@type": "GeoCircle",

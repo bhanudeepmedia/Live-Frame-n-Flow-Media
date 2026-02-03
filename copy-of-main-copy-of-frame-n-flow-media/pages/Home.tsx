@@ -460,15 +460,30 @@ const Home: React.FC = () => {
         description="Frame n Flow Media is a Strategy-First AI Marketing Agency serving USA, UK, India & Europe. We combine Business Intelligence & AI Visuals to drive qualified leads. 100% Refund Guarantee."
         schema={{
           "@context": "https://schema.org",
-          "@type": "ProfessionalService",
+          "@type": ["Organization", "Corporation"],
           "name": "Frame n Flow Media",
+          "alternateName": "Frame n Flow",
+          "legalName": "Frame n Flow Media",
           "url": "https://framenflowmedia.in",
-          "logo": "https://framenflowmedia.in/logo.png",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://framenflowmedia.in/logo.png",
+            "width": "512",
+            "height": "512"
+          },
           "image": "https://framenflowmedia.in/og-image.jpg",
           "description": "AI-Integrated Marketing Agency specializing in Business Intelligence, Generative AI Visuals, and Automated Growth Systems.",
+          "foundingDate": "2025",
           "founder": {
             "@type": "Person",
-            "name": "Bhanu Deep"
+            "name": "Bhanu Deep",
+            "jobTitle": "Founder & Chief Strategist",
+            "url": "https://framenflowmedia.in/founder-bhanudeep"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "IN",
+            "addressRegion": "India"
           },
           "areaServed": [
             { "@type": "Country", "name": "United States" },
@@ -488,8 +503,22 @@ const Home: React.FC = () => {
           },
           "priceRange": "$$$",
           "sameAs": [
-            "https://twitter.com/framenflow",
-            "https://linkedin.com/company/framenflow"
+            "https://www.instagram.com/framenflowmedia/",
+            "https://www.linkedin.com/company/frame-n-flow-media/?viewAsMember=true",
+            "https://www.youtube.com/@framenflowmedia",
+            "https://www.facebook.com/profile.php?id=61585218869613"
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "Customer Service",
+            "availableLanguage": ["English"]
+          },
+          "knowsAbout": [
+            "Marketing Strategy",
+            "Business Intelligence",
+            "Performance Marketing",
+            "AI Product Visuals",
+            "Growth Systems"
           ]
         }}
       />
