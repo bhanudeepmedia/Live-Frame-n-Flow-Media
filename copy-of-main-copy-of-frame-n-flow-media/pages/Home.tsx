@@ -548,7 +548,7 @@ const Home: React.FC = () => {
             <div className="w-screen relative py-6 mt-4 overflow-hidden px-6">
               {/* Background Scroller Tape (Opposite direction) - Breathing space on edges */}
               <motion.div
-                className="absolute inset-y-0 left-4 right-4 bg-white/10 transform rotate-1 flex items-center backdrop-blur-md border border-white/5 rounded-2xl overflow-hidden"
+                className="absolute inset-y-0 left-4 right-4 bg-white/10 flex items-center backdrop-blur-md border border-white/5 rounded-2xl overflow-hidden"
               >
                 <motion.div
                   className="flex whitespace-nowrap text-white font-black text-[70px] opacity-[0.05] pointer-events-none select-none"
@@ -566,7 +566,7 @@ const Home: React.FC = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="relative z-10 flex justify-center w-full px-4"
               >
-                <h3 className="text-white text-[7vw] font-display font-black transform rotate-1 whitespace-nowrap tracking-tight uppercase leading-none">
+                <h3 className="text-white text-[7vw] font-display font-black whitespace-nowrap tracking-tight uppercase leading-none">
                   built to drive real sales.
                 </h3>
               </motion.div>
