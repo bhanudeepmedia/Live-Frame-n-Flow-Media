@@ -27,19 +27,53 @@ const SEO: React.FC<SEOProps> = ({
 
     const defaultSchema = {
         "@context": "https://schema.org",
-        "@type": "Organization",
+        "@type": ["Organization", "Corporation"],
         "name": "Frame n Flow Media",
+        "alternateName": "Frame n Flow",
+        "legalName": "Frame n Flow Media",
         "url": siteUrl,
-        "logo": `${siteUrl}/logo.png`,
+        "logo": {
+            "@type": "ImageObject",
+            "url": `${siteUrl}/logo.png`,
+            "width": "512",
+            "height": "512"
+        },
         "description": description,
-        "areaServed": ["United States", "United Kingdom", "India", "Europe"],
+        "foundingDate": "2025",
         "founder": {
             "@type": "Person",
-            "name": "Bhanu Deep"
+            "name": "Bhanu Deep",
+            "jobTitle": "Founder & Chief Strategist",
+            "url": `${siteUrl}/founder-bhanudeep`
+        },
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "IN"
+        },
+        "areaServed": {
+            "@type": "GeoCircle",
+            "geoMidpoint": {
+                "@type": "GeoCoordinates",
+                "addressCountry": "IN"
+            }
         },
         "sameAs": [
-            "https://twitter.com/framenflow",
-            "https://linkedin.com/company/framenflow"
+            "https://www.instagram.com/framenflowmedia/",
+            "https://www.linkedin.com/company/frame-n-flow-media/?viewAsMember=true",
+            "https://www.youtube.com/@framenflowmedia",
+            "https://www.facebook.com/profile.php?id=61585218869613"
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "Customer Service",
+            "availableLanguage": ["English"]
+        },
+        "knowsAbout": [
+            "Marketing Strategy",
+            "Business Intelligence",
+            "Performance Marketing",
+            "AI Product Visuals",
+            "Growth Systems"
         ]
     };
 

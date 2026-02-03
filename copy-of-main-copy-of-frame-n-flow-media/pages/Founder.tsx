@@ -18,6 +18,29 @@ const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: 
 import SEO from '../components/SEO';
 
 const Founder: React.FC = () => {
+  const founderSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Bhanu Deep",
+    "jobTitle": "Founder & Chief Strategist",
+    "worksFor": {
+      "@type": ["Organization", "Corporation"],
+      "name": "Frame n Flow Media",
+      "url": "https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media",
+      "foundingDate": "2025"
+    },
+    "url": "https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/founder-bhanudeep",
+    "image": "https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/bhanudeep.png",
+    "description": "Founder of Frame n Flow Media, a strategist who combines Business Intelligence with Creative Excellence to drive market dominance.",
+    "knowsAbout": [
+      "Marketing Strategy",
+      "Business Intelligence",
+      "Performance Marketing",
+      "Creative Strategy",
+      "Growth Systems"
+    ]
+  };
+
   return (
     <div className="pt-24 md:pt-32 min-h-screen bg-background overflow-x-hidden">
       <SEO
@@ -25,6 +48,7 @@ const Founder: React.FC = () => {
         description="Meet Bhanu Deep, the visionary behind Frame n Flow Media. A strategist who combines Business Intelligence with Creative Excellence to drive market dominance."
         canonical="/founder-bhanudeep"
         image="/bhanudeep.png"
+        schema={founderSchema}
       />
 
       {/* HEADER SECTION */}
