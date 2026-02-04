@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, Rocket, Terminal, Bot, X, ChevronRight } from 'lucide-react';
+import { useWhatsApp } from '../contexts/WhatsAppContext';
 
 const WhatsAppWidget: React.FC = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isOpen, close, toggle } = useWhatsApp();
 
     const PHONE_NUMBER = "917995533838";
 
@@ -41,7 +42,7 @@ const WhatsAppWidget: React.FC = () => {
     const handleOptionClick = (message: string) => {
         const url = `https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
         window.open(url, '_blank');
-        setIsOpen(false);
+        close();
     };
 
     return (
@@ -93,7 +94,7 @@ const WhatsAppWidget: React.FC = () => {
 
             {/* Main Toggle Button */}
             <motion.button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={toggle}
                 className={`group flex items-center justify-center w-14 h-14 rounded-full shadow-lg transition-all duration-300 relative overflow-hidden ${isOpen ? 'bg-[#1a1a1a] text-white border border-white/20' : 'bg-accent text-background border border-accent'}`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

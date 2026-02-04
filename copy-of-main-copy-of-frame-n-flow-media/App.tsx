@@ -8,6 +8,7 @@ import ScrollToTop from './components/ScrollToTop';
 import WhatsAppWidget from './components/WhatsAppWidget';
 import LoadingScreen from './components/LoadingScreen';
 import { routes } from './routes';
+import { WhatsAppProvider } from './contexts/WhatsAppContext';
 
 // Declare dataLayer and gtag for TypeScript
 declare global {
@@ -101,17 +102,19 @@ const App: React.FC = () => {
 
   return (
     <>
-      <AnimatePresence mode='wait'>
-        {loading && (
-          <LoadingScreen key="loading" onComplete={() => setLoading(false)} />
-        )}
-      </AnimatePresence>
+      <WhatsAppProvider>
+        <AnimatePresence mode='wait'>
+          {loading && (
+            <LoadingScreen key="loading" onComplete={() => setLoading(false)} />
+          )}
+        </AnimatePresence>
 
-      {!loading && (
-        <Layout>
-          {element}
-        </Layout>
-      )}
+        {!loading && (
+          <Layout>
+            {element}
+          </Layout>
+        )}
+      </WhatsAppProvider>
     </>
   );
 };

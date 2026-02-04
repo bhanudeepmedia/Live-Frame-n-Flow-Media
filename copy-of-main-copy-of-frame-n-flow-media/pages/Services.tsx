@@ -443,7 +443,10 @@ const ChatbotVisual = () => (
 
 import SEO from '../components/SEO';
 
+import { useWhatsApp } from '../contexts/WhatsAppContext';
+
 const Services: React.FC = () => {
+  const { open } = useWhatsApp();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState<'marketing' | 'automation' | 'webdev' | 'selection'>('selection');
 
@@ -671,7 +674,7 @@ const Services: React.FC = () => {
               </p>
               <div className="flex flex-col md:flex-row gap-4 justify-center px-4 mb-12">
                 <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>👉 Book Free Audit</Button>
-                <button onClick={() => window.open('https://wa.me/917995533838', '_blank')} className="px-6 py-3 border border-white/20 hover:bg-white/5 rounded-full font-bold transition-all text-white">
+                <button onClick={open} className="px-6 py-3 border border-white/20 hover:bg-white/5 rounded-full font-bold transition-all text-white">
                   Talk to Strategist
                 </button>
               </div>
@@ -830,7 +833,7 @@ const Services: React.FC = () => {
               </p>
               <div className="flex flex-col md:flex-row gap-4 justify-center px-4">
                 <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>👉 Start Your Project</Button>
-                <button onClick={() => window.open('https://wa.me/917995533838', '_blank')} className="px-6 py-3 border border-white/20 hover:bg-white/5 rounded-full font-bold transition-all text-white">
+                <button onClick={open} className="px-6 py-3 border border-white/20 hover:bg-white/5 rounded-full font-bold transition-all text-white">
                   Talk to Tech Lead
                 </button>
               </div>
@@ -960,7 +963,7 @@ const Services: React.FC = () => {
               </p>
               <div className="flex flex-col md:flex-row gap-4 justify-center px-4">
                 <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>👉 Book Free Automation Audit</Button>
-                <button onClick={() => window.open('https://wa.me/917995533838', '_blank')} className="px-6 py-3 border border-white/20 hover:bg-white/5 rounded-full font-bold transition-all text-white">
+                <button onClick={open} className="px-6 py-3 border border-white/20 hover:bg-white/10 rounded-full font-bold transition-all text-white flex items-center gap-2 justify-center group text-lg">
                   Talk to AI Specialist
                 </button>
               </div>

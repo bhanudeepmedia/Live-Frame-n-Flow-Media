@@ -16,7 +16,10 @@ const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: 
     </motion.div>
 );
 
+import { useWhatsApp } from '../contexts/WhatsAppContext';
+
 const RealtorMarketing: React.FC = () => {
+    const { open } = useWhatsApp();
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -54,7 +57,7 @@ const RealtorMarketing: React.FC = () => {
                         <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'} className="px-10 py-5 text-lg">
                             Book Strategy Call
                         </Button>
-                        <button onClick={() => window.open('https://wa.me/917995533838', '_blank')} className="px-8 py-5 border border-white/20 hover:bg-white/10 rounded-full font-bold transition-all text-white flex items-center gap-2 justify-center group">
+                        <button onClick={open} className="px-8 py-5 border border-white/20 hover:bg-white/10 rounded-full font-bold transition-all text-white flex items-center gap-2 justify-center group">
                             <MessageCircle size={20} className="group-hover:text-[#25D366] transition-colors" />
                             WhatsApp Us
                         </button>
@@ -147,7 +150,7 @@ const RealtorMarketing: React.FC = () => {
                     <h2 className="text-3xl md:text-5xl font-display font-bold mb-8">Ready to be #1?</h2>
                     <div className="flex flex-col md:flex-row gap-4 justify-center">
                         <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'} className="px-12 py-4 text-lg">Book Marketing Audit</Button>
-                        <button onClick={() => window.open('https://wa.me/917995533838', '_blank')} className="px-12 py-4 border border-white/20 hover:bg-white/10 rounded-full font-bold transition-all text-white flex items-center gap-2 justify-center group text-lg">
+                        <button onClick={open} className="px-12 py-4 border border-white/20 hover:bg-white/10 rounded-full font-bold transition-all text-white flex items-center gap-2 justify-center group text-lg">
                             <MessageCircle size={24} className="group-hover:text-[#25D366] transition-colors" />
                             WhatsApp Now
                         </button>

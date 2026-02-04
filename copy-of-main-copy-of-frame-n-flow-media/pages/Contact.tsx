@@ -3,8 +3,10 @@ import { motion } from 'framer-motion';
 import Button from '../components/Button';
 import { Mail, Calendar, ArrowRight, CheckCircle2 } from 'lucide-react';
 import SEO from '../components/SEO';
+import { useWhatsApp } from '../contexts/WhatsAppContext';
 
 const Contact: React.FC = () => {
+  const { open } = useWhatsApp();
   return (
     <div className="pt-32 min-h-screen px-6 pb-20">
       <SEO
@@ -55,11 +57,9 @@ const Contact: React.FC = () => {
                 </div>
               </div>
 
-              <a
-                href="https://wa.me/917995533838"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start space-x-4 group hover:bg-white/5 p-2 -ml-2 rounded-xl transition-colors cursor-pointer"
+              <button
+                onClick={open}
+                className="flex items-start space-x-4 group hover:bg-white/5 p-2 -ml-2 rounded-xl transition-colors cursor-pointer text-left w-full"
               >
                 <div className="w-12 h-12 bg-surface rounded-full flex items-center justify-center flex-shrink-0 text-[#25D366] border border-white/5 group-hover:scale-110 transition-transform">
                   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
@@ -70,7 +70,7 @@ const Contact: React.FC = () => {
                   <h4 className="text-lg font-bold mb-1">WhatsApp Us</h4>
                   <p className="text-white/50 group-hover:text-white transition-colors">Directly DM on WhatsApp</p>
                 </div>
-              </a>
+              </button>
             </div>
           </motion.div>
 
