@@ -91,7 +91,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
       {!shouldHide && <Footer />}
 
-      {location.pathname === '/' && <WhatsAppWidget />}
+      {!shouldHide && <WhatsAppWidget />}
     </div>
   );
 };
