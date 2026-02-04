@@ -56,7 +56,7 @@ const Contact: React.FC = () => {
               </div>
 
               <a
-                href="https://wa.me/917702251899"
+                href="https://wa.me/917995533838"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-start space-x-4 group hover:bg-white/5 p-2 -ml-2 rounded-xl transition-colors cursor-pointer"

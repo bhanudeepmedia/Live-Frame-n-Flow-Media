@@ -5,7 +5,7 @@ import { MessageCircle, Rocket, Terminal, Bot, X, ChevronRight } from 'lucide-re
 const WhatsAppWidget: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const PHONE_NUMBER = "917702251899";
+    const PHONE_NUMBER = "917995533838";
 
     const SUPPORT_OPTIONS = [
         {
