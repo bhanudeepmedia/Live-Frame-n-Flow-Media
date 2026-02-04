@@ -11,6 +11,14 @@ import {
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', path: '/' },
+  { label: 'Approach', path: '/approach' },
+  { label: 'Services', path: '/services' },
+  { label: 'Work', path: '/work' },
+  { label: 'Contact', path: '/contact' },
+];
+
+export const FOOTER_ITEMS: NavItem[] = [
+  { label: 'Home', path: '/' },
   { label: 'About', path: '/about' },
   { label: 'Approach', path: '/approach' },
   { label: 'Services', path: '/services' },

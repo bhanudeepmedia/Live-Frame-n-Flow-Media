@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { NAV_ITEMS } from '../constants';
+import { FOOTER_ITEMS } from '../constants';
 import { Instagram, Linkedin, Youtube, ArrowUpRight, Facebook } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -77,7 +77,7 @@ const Footer: React.FC = () => {
           {/* Right Side: Navigation Links */}
           <div className="w-full md:w-auto">
             <nav className="flex flex-wrap gap-x-8 gap-y-6 justify-start md:justify-end max-w-3xl">
-              {NAV_ITEMS.map((item) => (
+              {FOOTER_ITEMS.map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}
