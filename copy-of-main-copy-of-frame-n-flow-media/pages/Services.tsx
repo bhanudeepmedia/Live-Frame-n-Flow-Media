@@ -445,13 +445,15 @@ import SEO from '../components/SEO';
 
 const Services: React.FC = () => {
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState<'marketing' | 'automation' | 'webdev'>('marketing');
+  const [activeTab, setActiveTab] = useState<'marketing' | 'automation' | 'webdev' | 'selection'>('selection');
 
   // React to Navigation State
   useEffect(() => {
     const state = location.state as { activeTab?: 'marketing' | 'automation' | 'webdev' } | null;
     if (state?.activeTab) {
       setActiveTab(state.activeTab);
+    } else {
+      setActiveTab('selection');
     }
   }, [location]);
 
@@ -498,54 +500,160 @@ const Services: React.FC = () => {
         ]}
       />
 
-      {/* HEADER WITH TABS */}
-      <div className="container mx-auto px-6 mb-12 md:mb-16 relative z-10">
-        <div className="flex flex-col items-center justify-center text-center">
-          <RevealText>
-            <span className="text-accent uppercase tracking-widest text-xs font-bold mb-4 block">Our Expertise</span>
-          </RevealText>
-          <RevealText delay={0.1}>
-            <h1 className="text-4xl md:text-7xl font-display font-bold mb-8 leading-tight">
-              {activeTab === 'marketing' ? 'Complete Marketing Infrastructure' : activeTab === 'webdev' ? 'Next-Gen Web & App Architecture' : 'AI Automations for Growth'}
-            </h1>
-          </RevealText>
+      {/* HEADER WITH TABS - HIDDEN ON SELECTION SCREEN */}
+      {activeTab !== 'selection' && (
+        <div className="container mx-auto px-6 mb-12 md:mb-16 relative z-10">
+          <div className="flex flex-col items-center justify-center text-center">
+            <RevealText>
+              <span className="text-accent uppercase tracking-widest text-xs font-bold mb-4 block">Our Expertise</span>
+            </RevealText>
+            <RevealText delay={0.1}>
+              <h1 className="text-4xl md:text-7xl font-display font-bold mb-8 leading-tight">
+                {activeTab === 'marketing' ? 'Complete Marketing Infrastructure' : activeTab === 'webdev' ? 'Next-Gen Web & App Architecture' : 'AI Automations for Growth'}
+              </h1>
+            </RevealText>
 
-          {/* TABS */}
-          <div className="inline-flex items-center p-1 bg-white/5 border border-white/10 rounded-full relative">
-            <div
-              className={`absolute inset-y-1 rounded-full transition-all duration-500 ease-out`}
-              style={{
-                width: 'calc(33.33% - 4px)',
-                left: activeTab === 'marketing' ? '4px' : activeTab === 'webdev' ? 'calc(33.33% + 2px)' : 'calc(66.66% + 0px)',
-                backgroundColor: activeTab === 'marketing' ? 'rgba(34, 211, 238, 0.2)' : activeTab === 'webdev' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(99, 102, 241, 0.2)',
-                borderColor: activeTab === 'marketing' ? 'rgba(34, 211, 238, 0.3)' : activeTab === 'webdev' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(99, 102, 241, 0.3)',
-                borderWidth: '1px'
-              }}
-            ></div>
-            <button
-              onClick={() => setActiveTab('marketing')}
-              className={`relative z-10 w-32 md:w-40 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'marketing' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
-            >
-              Marketing
-            </button>
-            <button
-              onClick={() => setActiveTab('webdev')}
-              className={`relative z-10 w-32 md:w-40 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'webdev' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
-            >
-              Web/App Dev
-            </button>
-            <button
-              onClick={() => setActiveTab('automation')}
-              className={`relative z-10 w-32 md:w-40 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'automation' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
-            >
-              Automation
-            </button>
+            {/* TABS */}
+            <div className="inline-flex items-center p-1 bg-white/5 border border-white/10 rounded-full relative">
+              <div
+                className={`absolute inset-y-1 rounded-full transition-all duration-500 ease-out`}
+                style={{
+                  width: 'calc(33.33% - 4px)',
+                  left: activeTab === 'marketing' ? '4px' : activeTab === 'webdev' ? 'calc(33.33% + 2px)' : 'calc(66.66% + 0px)',
+                  backgroundColor: activeTab === 'marketing' ? 'rgba(34, 211, 238, 0.2)' : activeTab === 'webdev' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(99, 102, 241, 0.2)',
+                  borderColor: activeTab === 'marketing' ? 'rgba(34, 211, 238, 0.3)' : activeTab === 'webdev' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(99, 102, 241, 0.3)',
+                  borderWidth: '1px'
+                }}
+              ></div>
+              <button
+                onClick={() => setActiveTab('marketing')}
+                className={`relative z-10 w-32 md:w-40 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'marketing' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
+              >
+                Marketing
+              </button>
+              <button
+                onClick={() => setActiveTab('webdev')}
+                className={`relative z-10 w-32 md:w-40 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'webdev' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
+              >
+                Web/App Dev
+              </button>
+              <button
+                onClick={() => setActiveTab('automation')}
+                className={`relative z-10 w-32 md:w-40 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'automation' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
+              >
+                Automation
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* CONTENT SWITCHER */}
       <AnimatePresence mode='wait'>
+        {activeTab === 'selection' && (
+          <motion.div
+            key="selection"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.05 }}
+            transition={{ duration: 0.5 }}
+            className="container mx-auto px-6 py-10 min-h-[60vh] flex flex-col items-center justify-center relative z-20"
+          >
+            <div className="absolute inset-x-0 -top-40 h-[500px] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
+
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-4xl md:text-6xl font-display font-bold text-center mb-16 leading-tight max-w-4xl"
+            >
+              What services are you <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">looking for?</span>
+            </motion.h1>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl">
+
+              {/* MARKETING CARD */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                onClick={() => setActiveTab('marketing')}
+                className="group relative bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col"
+                whileHover={{ y: -10 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50" />
+                <div className="absolute -right-10 -top-10 w-40 h-40 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-colors" />
+
+                <div className="relative z-10 flex-1">
+                  <div className="w-14 h-14 bg-black border border-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <TrendingUp size={28} className="text-accent" />
+                  </div>
+                  <h3 className="text-2xl font-display font-bold text-white mb-4">Marketing for your Business</h3>
+                  <p className="text-white/60 leading-relaxed text-sm">
+                    Data-driven strategies including Business Intelligence, Performance Marketing, and AI Product Visuals to dominate your market.
+                  </p>
+                </div>
+                <div className="relative z-10 mt-8 flex items-center text-accent font-bold text-sm tracking-widest uppercase group-hover:translate-x-2 transition-transform">
+                  Explore <span className="ml-2">→</span>
+                </div>
+              </motion.div>
+
+              {/* WEB DEV CARD */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                onClick={() => setActiveTab('webdev')}
+                className="group relative bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col"
+                whileHover={{ y: -10 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50" />
+                <div className="absolute -right-10 -top-10 w-40 h-40 bg-green-500/10 rounded-full blur-3xl group-hover:bg-green-500/20 transition-colors" />
+
+                <div className="relative z-10 flex-1">
+                  <div className="w-14 h-14 bg-black border border-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <Code size={28} className="text-green-400" />
+                  </div>
+                  <h3 className="text-2xl font-display font-bold text-white mb-4">Web & App Development</h3>
+                  <p className="text-white/60 leading-relaxed text-sm">
+                    Next-generation digital infrastructure. From high-performance websites to complex mobile applications built for scale.
+                  </p>
+                </div>
+                <div className="relative z-10 mt-8 flex items-center text-green-400 font-bold text-sm tracking-widest uppercase group-hover:translate-x-2 transition-transform">
+                  Explore <span className="ml-2">→</span>
+                </div>
+              </motion.div>
+
+              {/* AUTOMATION CARD */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                onClick={() => setActiveTab('automation')}
+                className="group relative bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col"
+                whileHover={{ y: -10 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50" />
+                <div className="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl group-hover:bg-indigo-500/20 transition-colors" />
+
+                <div className="relative z-10 flex-1">
+                  <div className="w-14 h-14 bg-black border border-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <Bot size={28} className="text-indigo-400" />
+                  </div>
+                  <h3 className="text-2xl font-display font-bold text-white mb-4">AI Automations</h3>
+                  <p className="text-white/60 leading-relaxed text-sm">
+                    24/7 intelligent systems. Chatbots, voice agents, and lead capture automations that work while you sleep.
+                  </p>
+                </div>
+                <div className="relative z-10 mt-8 flex items-center text-indigo-400 font-bold text-sm tracking-widest uppercase group-hover:translate-x-2 transition-transform">
+                  Explore <span className="ml-2">→</span>
+                </div>
+              </motion.div>
+
+            </div>
+          </motion.div>
+        )}
+
         {activeTab === 'marketing' && (
           <motion.div
             key="marketing"
@@ -835,6 +943,7 @@ const Services: React.FC = () => {
 
         )}
 
+        {/* --- AUTOMATION TAB CONTENT --- */}
         {activeTab === 'automation' && (
           <motion.div
             key="automation"
@@ -993,6 +1102,7 @@ const Services: React.FC = () => {
 
           </motion.div>
         )}
+
       </AnimatePresence>
 
     </div>
