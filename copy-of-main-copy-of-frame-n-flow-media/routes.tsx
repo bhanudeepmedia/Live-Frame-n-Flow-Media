@@ -12,6 +12,10 @@ import Insights from './pages/Insights';
 import About from './pages/About';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import ProductMarketing from './pages/ProductMarketing';
+import ServiceMarketing from './pages/ServiceMarketing';
+import StartupMarketing from './pages/StartupMarketing';
+import RealtorMarketing from './pages/RealtorMarketing';
 
 // Growth Partner Imports
 import GrowthPartnerLanding from './pages/GrowthPartner/Landing';
@@ -43,4 +47,10 @@ export const routes: RouteObject[] = [
     // Admin
     { path: '/admin/login', element: <GrowthPartnerLogin /> },
     { path: '/admin/growth-partners-dashboard', element: <AdminDashboard /> },
+
+    // Industry Specific Pages
+    { path: '/product-marketing', element: <ProductMarketing /> },
+    { path: '/service-marketing', element: <ServiceMarketing /> },
+    { path: '/startup-marketing', element: <StartupMarketing /> },
+    { path: '/realtor-marketing', element: <RealtorMarketing /> },
 ];

@@ -552,7 +552,7 @@ const Home: React.FC = () => {
                 className="absolute inset-y-0 left-4 right-4 bg-accent flex items-center shadow-[0_0_35px_rgba(34,211,238,0.4)] rounded-2xl overflow-hidden"
               >
                 <motion.div
-                  className="flex whitespace-nowrap text-black font-black text-[100px] opacity-[0.1] pointer-events-none select-none"
+                  className="flex whitespace-nowrap text-black font-black text-[100px] opacity-[0.1] pointer-events-none select-none will-change-transform"
                   animate={{ x: ["0%", "-50%"] }}
                   transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
                 >
@@ -580,7 +580,7 @@ const Home: React.FC = () => {
                 className="absolute inset-y-0 left-4 right-4 bg-white/10 flex items-center backdrop-blur-md border border-white/5 rounded-2xl overflow-hidden"
               >
                 <motion.div
-                  className="flex whitespace-nowrap text-white font-black text-[70px] opacity-[0.05] pointer-events-none select-none"
+                  className="flex whitespace-nowrap text-white font-black text-[70px] opacity-[0.05] pointer-events-none select-none will-change-transform"
                   animate={{ x: ["-50%", "0%"] }}
                   transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
                 >
@@ -616,25 +616,25 @@ const Home: React.FC = () => {
               }}
               className="grid grid-cols-2 gap-3 w-full max-w-[340px] px-6 mt-14"
             >
-              {/* Product Based - Static */}
-              <div className="relative bg-white text-black text-xs font-bold py-3 px-2 rounded-xl flex items-center justify-center border border-white/20 z-30">
+              {/* Product Based */}
+              <NavLink to="/product-marketing" className="relative bg-white text-black text-xs font-bold py-3 px-2 rounded-xl flex items-center justify-center border border-white/20 z-30">
                 📦 Product-Based
-              </div>
+              </NavLink>
 
-              {/* Service Based - Static */}
-              <div className="relative bg-white/20 border border-white/10 text-white text-xs font-bold py-3 px-2 rounded-xl flex items-center justify-center z-20">
+              {/* Service Based */}
+              <NavLink to="/service-marketing" className="relative bg-white/20 border border-white/10 text-white text-xs font-bold py-3 px-2 rounded-xl flex items-center justify-center z-20">
                 🤝 Service-Based
-              </div>
+              </NavLink>
 
-              {/* Startups - Static */}
-              <div className="relative bg-white/20 border border-white/30 text-white text-xs font-bold py-3 px-2 rounded-xl flex items-center justify-center z-20">
+              {/* Startups */}
+              <NavLink to="/startup-marketing" className="relative bg-white/20 border border-white/30 text-white text-xs font-bold py-3 px-2 rounded-xl flex items-center justify-center z-20">
                 🚀 Startups
-              </div>
+              </NavLink>
 
-              {/* Realtors - Static */}
-              <div className="relative bg-white text-black text-xs font-bold py-3 px-2 rounded-xl flex items-center justify-center z-20">
+              {/* Realtors */}
+              <NavLink to="/realtor-marketing" className="relative bg-white text-black text-xs font-bold py-3 px-2 rounded-xl flex items-center justify-center z-20">
                 🏠 Realtors
-              </div>
+              </NavLink>
             </motion.div>
           </div>
 
@@ -673,10 +673,10 @@ const Home: React.FC = () => {
                 className="mt-6"
               >
                 <motion.span
-                  initial={{ rotate: 1 }}
+                  initial={{ rotate: 0 }}
                   whileHover={{
                     scale: 1.02,
-                    rotate: [1, 1.5, 0.5, 1],
+                    rotate: 0,
                     backgroundColor: "rgba(255,255,255,0.08)"
                   }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
@@ -696,7 +696,7 @@ const Home: React.FC = () => {
               transition={{ delay: 0.5, duration: 0.6 }}
             >
               {/* Product Based Button - Interactive */}
-              <div className="relative group">
+              <NavLink to="/product-marketing" className="relative group">
                 <motion.div
                   whileHover={{ scale: 1.02, x: [0, 2, -2, 0] }}
                   transition={{ duration: 0.3 }}
@@ -705,10 +705,10 @@ const Home: React.FC = () => {
                 >
                   📦 Product-Based
                 </motion.div>
-              </div>
+              </NavLink>
 
               {/* Service Based Button - Interactive */}
-              <div className="relative group">
+              <NavLink to="/service-marketing" className="relative group">
                 <motion.div
                   whileHover={{ scale: 1.02, x: [0, 2, -2, 0] }}
                   transition={{ duration: 0.3 }}
@@ -717,10 +717,10 @@ const Home: React.FC = () => {
                 >
                   🤝 Service-Based
                 </motion.div>
-              </div>
+              </NavLink>
 
               {/* Startups Button - Interactive */}
-              <div className="relative group">
+              <NavLink to="/startup-marketing" className="relative group">
                 <motion.div
                   whileHover={{ scale: 1.02, x: [0, 2, -2, 0] }}
                   transition={{ duration: 0.3 }}
@@ -729,10 +729,10 @@ const Home: React.FC = () => {
                 >
                   🚀 Startups
                 </motion.div>
-              </div>
+              </NavLink>
 
               {/* Realtors Button - Interactive */}
-              <div className="relative group">
+              <NavLink to="/realtor-marketing" className="relative group">
                 <motion.div
                   whileHover={{ scale: 1.02, x: [0, 2, -2, 0] }}
                   transition={{ duration: 0.3 }}
@@ -741,7 +741,7 @@ const Home: React.FC = () => {
                 >
                   🏠 Realtors
                 </motion.div>
-              </div>
+              </NavLink>
             </motion.div>
 
           </div>
