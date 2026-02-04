@@ -536,8 +536,8 @@ const Home: React.FC = () => {
 
         {/* Floating Doodles - Kept as content elements, but removed background noise/blobs */}
         <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-          <StarDoodle className="absolute bottom-[20%] right-[5%] md:bottom-[15%] md:right-[5%] w-4 h-4 md:w-6 md:h-6 text-white/30" delay={1.5} />
-          <LightningDoodle className="absolute top-[25%] right-[10%] md:top-[15%] md:right-[5%] w-8 h-8 md:w-12 md:h-12 text-white/10" delay={1} />
+          <StarDoodle className="hidden md:block absolute bottom-[20%] right-[5%] md:bottom-[15%] md:right-[5%] w-4 h-4 md:w-6 md:h-6 text-white/30" delay={1.5} />
+          <LightningDoodle className="hidden md:block absolute top-[25%] right-[10%] md:top-[15%] md:right-[5%] w-8 h-8 md:w-12 md:h-12 text-white/10" delay={1} />
         </div>
 
         <div className="container mx-auto relative z-10 flex flex-col items-center mix-blend-difference">
