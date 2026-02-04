@@ -145,8 +145,5 @@ const WhatsAppWidget: React.FC = () => {
     );
 };
 
-        </div >
-    );
-};
 
 export default WhatsAppWidget;
