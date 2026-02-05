@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Button from '../components/Button';
 import SEO from '../components/SEO';
-import { Home, Camera, Star, Users, MessageCircle, Key, CheckCircle } from 'lucide-react';
+import { Home, Camera, Star, Users, MessageCircle, Key, CheckCircle, Cpu, Globe, Zap } from 'lucide-react';
 
 const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: string }> = ({ children, delay = 0, className = "" }) => (
     <motion.div
@@ -28,7 +28,7 @@ const RealtorMarketing: React.FC = () => {
         <div className="pt-24 md:pt-32 min-h-screen bg-black overflow-x-hidden font-sans text-white">
             <SEO
                 title="Real Estate Marketing | Frame n Flow Media"
-                description="Luxury Real Estate Marketing. Cinematic Property Tours, Lead Qualification, and Personal Branding for Top Agents."
+                description="Luxury Real Estate Marketing. AI Visuals, Qualified Lead Gen, and Premium Web Design for Top Agents."
                 canonical="/realtor-marketing"
             />
 
@@ -50,7 +50,8 @@ const RealtorMarketing: React.FC = () => {
                     </FadeIn>
                     <FadeIn delay={0.2}>
                         <p className="text-xl text-white/60 font-light mb-10 max-w-2xl mx-auto leading-relaxed">
-                            We turn listings into cinematic experiences and agents into local celebrities. High-end production meets automated lead qualification.
+                            Maximize your reach with AI-Driven Visuals, Qualified Lead Gen, and Premium Web Design. We build the digital infrastructure that top agents rely on.
+                            <br /><span className="text-sm opacity-50 mt-2 block font-normal text-white/40">*Physical production services available exclusively for India-based clients.</span>
                         </p>
                     </FadeIn>
                     <FadeIn delay={0.3} className="flex flex-col md:flex-row gap-4 justify-center w-full">
@@ -70,31 +71,31 @@ const RealtorMarketing: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <FadeIn delay={0.1} className="bg-white/5 border border-white/10 p-8 rounded-3xl hover:border-yellow-500/40 transition-colors group">
                         <div className="w-14 h-14 bg-black border border-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                            <Camera size={28} className="text-yellow-400" />
+                            <Zap size={28} className="text-yellow-400" />
                         </div>
-                        <h3 className="text-2xl font-bold text-white mb-4">Cinematic Tours</h3>
+                        <h3 className="text-2xl font-bold text-white mb-4">Qualified Lead Gen</h3>
                         <p className="text-white/60 leading-relaxed">
-                            iPhone walkthroughs don't sell luxury. We produce 4K cinematic property films, drone shots, and vertical reels that stop the scroll.
+                            Performance marketing that delivers ROI. Our systems filter leads by budget and intent, ensuring you only talk to serious buyers and sellers.
                         </p>
                     </FadeIn>
 
                     <FadeIn delay={0.2} className="bg-white/5 border border-white/10 p-8 rounded-3xl hover:border-yellow-500/40 transition-colors group">
                         <div className="w-14 h-14 bg-black border border-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                            <Users size={28} className="text-blue-400" />
+                            <Cpu size={28} className="text-blue-400" />
                         </div>
-                        <h3 className="text-2xl font-bold text-white mb-4">Lead Qualification</h3>
+                        <h3 className="text-2xl font-bold text-white mb-4">AI Visuals & Automation</h3>
                         <p className="text-white/60 leading-relaxed">
-                            Stop wasting time on looky-loos. Our ad systems filter leads by budget and intent before they ever reach your phone.
+                            Leverage AI to create stunning visuals and automate your client nurturing. Stay ahead of the curve with cutting-edge tech.
                         </p>
                     </FadeIn>
 
                     <FadeIn delay={0.3} className="bg-white/5 border border-white/10 p-8 rounded-3xl hover:border-yellow-500/40 transition-colors group">
                         <div className="w-14 h-14 bg-black border border-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                            <Star size={28} className="text-accent" />
+                            <Globe size={28} className="text-accent" />
                         </div>
-                        <h3 className="text-2xl font-bold text-white mb-4">Personal Brand</h3>
+                        <h3 className="text-2xl font-bold text-white mb-4">Premium Web Design</h3>
                         <p className="text-white/60 leading-relaxed">
-                            We position you as the #1 Authority in your zip code through content strategy, podcast appearances, and social proof management.
+                            Custom-coded, high-performance websites that set you apart. No templates. Just a digital presence as premium as your listings.
                         </p>
                     </FadeIn>
                 </div>
@@ -128,10 +129,10 @@ const RealtorMarketing: React.FC = () => {
 
                             <ul className="space-y-4">
                                 {[
-                                    "Property Teaser Reels (Instagram/TikTok)",
-                                    "Targeted YouTube Ads for High Net Worth Individuals",
-                                    "Automated Open House Follow-ups",
-                                    "Seller Lead Generation Campaigns"
+                                    "High-Intent Lead Generation",
+                                    "AI-Enhanced Property Visuals",
+                                    "Premium Custom Website Development",
+                                    "Automated Follow-up Systems"
                                 ].map((item, i) => (
                                     <li key={i} className="flex items-center gap-3 text-white/80">
                                         <CheckCircle size={20} className="text-accent" />
