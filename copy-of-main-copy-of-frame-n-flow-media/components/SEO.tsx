@@ -7,6 +7,7 @@ interface SEOProps {
     canonical?: string;
     image?: string;
     type?: string;
+    noindex?: boolean;
     schema?: Record<string, any> | Record<string, any>[];
 }
 
