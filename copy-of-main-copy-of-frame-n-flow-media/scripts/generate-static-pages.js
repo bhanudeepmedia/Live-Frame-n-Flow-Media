@@ -141,8 +141,8 @@ try {
         if (twDesc) twDesc.setAttribute('content', routeConfig.description);
       }
 
-      // Add canonical URL
-      const canonicalUrl = `https://framenflowmedia.in${route === '/' ? '' : route}`;
+      // Add canonical URL with trailing slash (to match directory structure behavior)
+      const canonicalUrl = `https://framenflowmedia.in${route === '/' ? '/' : (route.endsWith('/') ? route : route + '/')}`;
       // Remove existing canonical to avoid duplicates if present in base
       const existingCanonical = root.querySelector('link[rel="canonical"]');
       if (existingCanonical) {
