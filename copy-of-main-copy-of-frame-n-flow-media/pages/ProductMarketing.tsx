@@ -66,24 +66,7 @@ const ProductMarketing: React.FC = () => {
                 </div>
             </div>
 
-            {/* STATS STRIP */}
-            <div className="border-y border-white/10 bg-white/5 backdrop-blur-sm relative z-10 mb-24">
-                <div className="container mx-auto px-6 py-8">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                        {[
-                            { label: "Ad Spend Managed", value: "$2M+" },
-                            { label: "Avg. ROAS", value: "4.5x" },
-                            { label: "Creative Assets", value: "10k+" },
-                            { label: "Client Revenue", value: "$50M+" }
-                        ].map((stat, i) => (
-                            <div key={i}>
-                                <div className="text-2xl md:text-3xl font-display font-bold text-white mb-1">{stat.value}</div>
-                                <div className="text-xs text-white/40 uppercase tracking-widest">{stat.label}</div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
+
 
             {/* CORE FEATURES */}
             <div className="container mx-auto px-6 mb-24 md:mb-32 relative z-10">
@@ -170,10 +153,10 @@ const ProductMarketing: React.FC = () => {
                             <div className="absolute inset-4 border border-white/5 rounded-xl p-6 flex flex-col justify-between">
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <div className="text-sm text-white/40 mb-1">Total Revenue</div>
-                                        <div className="text-4xl font-display font-bold text-white">$142,309<span className="text-white/20">.00</span></div>
+                                        <div className="text-sm text-white/40 mb-1">Growth Metric</div>
+                                        <div className="text-4xl font-display font-bold text-white">Scaling<span className="text-white/20">...</span></div>
                                     </div>
-                                    <div className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold border border-green-500/30">+312%</div>
+                                    <div className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold border border-green-500/30">Active</div>
                                 </div>
 
                                 <div className="space-y-4">
@@ -181,15 +164,15 @@ const ProductMarketing: React.FC = () => {
                                         <div className="h-full bg-accent w-[75%] shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
                                     </div>
                                     <div className="flex justify-between text-xs text-white/40 font-mono">
-                                        <span>Campaign A</span>
-                                        <span className="text-white">4.2 ROAS</span>
+                                        <span>Campaign Performance</span>
+                                        <span className="text-white">High ROAS</span>
                                     </div>
                                     <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                                         <div className="h-full bg-blue-500 w-[60%]" />
                                     </div>
                                     <div className="flex justify-between text-xs text-white/40 font-mono">
-                                        <span>Campaign B</span>
-                                        <span className="text-white">3.8 ROAS</span>
+                                        <span>Ad Reach</span>
+                                        <span className="text-white">Optimized</span>
                                     </div>
                                 </div>
                             </div>
