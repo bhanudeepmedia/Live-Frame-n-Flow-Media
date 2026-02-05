@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /growth-partner/dashboard
 
-Sitemap: https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/sitemap.xml
+Sitemap: https://framenflowmedia.in/sitemap.xml
