@@ -15,7 +15,7 @@ const SEO: React.FC<SEOProps> = ({
     title,
     description,
     canonical,
-    image = '/logo.png', // Default OG image
+    image = '/favicon.png', // Default OG image
     type = 'website',
     noindex = false,
     schema
@@ -39,7 +39,7 @@ const SEO: React.FC<SEOProps> = ({
         "url": siteUrl,
         "logo": {
             "@type": "ImageObject",
-            "url": `${siteUrl}/logo.png`,
+            "url": `${siteUrl}/favicon.png`,
             "width": "512",
             "height": "512"
         },

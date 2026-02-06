@@ -58,7 +58,7 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => 
                     <div className="absolute inset-0 bg-white/5 blur-3xl rounded-full scale-125" />
 
                     <img
-                        src="/logo.png"
+                        src="/favicon.png"
                         alt="Frame n Flow Media"
                         className="relative w-full h-auto object-contain drop-shadow-2xl"
                     />

@@ -27,7 +27,7 @@ const About: React.FC = () => {
             "url": "https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media",
             "logo": {
                 "@type": "ImageObject",
-                "url": "https://bhanudeepmedia.github.io/Live-Frame-n-Flow-Media/logo.png",
+                "url": "https://framenflowmedia.in/favicon.png",
                 "width": "512",
                 "height": "512"
             },

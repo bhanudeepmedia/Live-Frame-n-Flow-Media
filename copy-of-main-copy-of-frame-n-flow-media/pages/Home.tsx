@@ -467,11 +467,11 @@ const Home: React.FC = () => {
           "url": "https://framenflowmedia.in",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://framenflowmedia.in/logo.png",
+            "url": "https://framenflowmedia.in/favicon.png",
             "width": "512",
             "height": "512"
           },
-          "image": "https://framenflowmedia.in/logo.png",
+          "image": "https://framenflowmedia.in/favicon.png",
           "description": "AI-Integrated Marketing Agency specializing in Business Intelligence, Generative AI Visuals, and Automated Growth Systems.",
           "foundingDate": "2025",
           "founder": {
