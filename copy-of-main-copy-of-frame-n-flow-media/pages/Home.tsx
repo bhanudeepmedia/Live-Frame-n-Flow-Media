@@ -753,7 +753,7 @@ const Home: React.FC = () => {
             transition={{ delay: 0.8, duration: 0.8 }}
             className="text-base md:text-xl text-white max-w-2xl mx-auto font-medium leading-relaxed mb-10 md:mb-12 px-6 mt-8 md:mt-4 text-center z-10"
           >
-            An AI-powered multimedia marketing agency. We don't just post content; we engineer <span className="text-white font-bold decoration-white underline underline-offset-4">market dominance</span>.
+            AI-powered Marketing Studio. We don't just post content; we engineer <span className="text-white font-bold decoration-white underline underline-offset-4">market dominance</span>.
           </motion.p>
 
           <motion.div

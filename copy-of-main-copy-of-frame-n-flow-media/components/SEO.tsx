@@ -28,7 +28,7 @@ const SEO: React.FC<SEOProps> = ({
     }
     const fullImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
 
-    const defaultKeywords = "AI Marketing Agency, Digital Marketing USA, Marketing Agency India, Strategy First Marketing, AI Visuals, Growth Automation, Frame n Flow Media";
+    const defaultKeywords = "AI Marketing Studio, AI Marketing Agency, Digital Marketing USA, Marketing Agency India, Strategy First Marketing, AI Visuals, Growth Automation, Frame n Flow Media";
 
     const defaultSchema = {
         "@context": "https://schema.org",
