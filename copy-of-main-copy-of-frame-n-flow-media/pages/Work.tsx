@@ -36,6 +36,26 @@ const Work: React.FC = () => {
   // KINETIC SEQUENCES (VIDEOS)
   const kineticPortfolio = [
     {
+      url: "https://www.instagram.com/reel/DUlsQNhEgjR/embed",
+      title: "Cinematic Motion",
+      description: "High-fidelity motion graphics for premium brand storytelling."
+    },
+    {
+      url: "https://www.instagram.com/reel/DUWGfzHjMle/embed",
+      title: "Dynamic Flow",
+      description: "Seamless visual transitions designed to capture audience attention."
+    },
+    {
+      url: "https://www.instagram.com/reel/DUgOmapClt6/embed",
+      title: "Visual Synthesis",
+      description: "AI-driven video generation tailored for social media engagement."
+    },
+    {
+      url: "https://www.instagram.com/reel/DUBr01riV4x/embed",
+      title: "Abstract Energy",
+      description: "Energetic visual loops that convey brand dynamism and power."
+    },
+    {
       url: "https://www.instagram.com/reel/DN2Gtyy6lQb/embed",
       title: "Luxury Product Showcase",
       description: "Highlighting exquisite details with photorealistic light and physics simulations."
@@ -79,6 +99,26 @@ const Work: React.FC = () => {
 
   // STATIC ARTIFACTS (IMAGES)
   const staticPortfolio = [
+    {
+      url: "https://www.instagram.com/p/DUlr23iiWxT/embed",
+      title: "Editorial Composition",
+      description: "Studio-grade lighting and composition in a digital environment."
+    },
+    {
+      url: "https://www.instagram.com/p/DUBro5HAU7F/embed",
+      title: "Product Focus",
+      description: "Clean, distraction-free product presentation with perfect lighting."
+    },
+    {
+      url: "https://www.instagram.com/p/DUBsCmCDyc2/embed",
+      title: "Texture Study",
+      description: "Detailed exploration of digital materials and surfaces."
+    },
+    {
+      url: "https://www.instagram.com/p/DUWGwtlEdtH/embed",
+      title: "Atmospheric Depth",
+      description: "Creating a sense of space and mood through synthesized imagery."
+    },
     {
       url: "https://www.instagram.com/p/DT3F0HKFAR_/embed",
       title: "Editorial Portraiture",
