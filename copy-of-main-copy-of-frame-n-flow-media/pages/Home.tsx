@@ -60,13 +60,120 @@ const LightningDoodle = ({ className, delay = 0 }: { className?: string, delay?:
   </motion.svg>
 );
 
-// --- BACKGROUND GRID COMPONENT (Pure Black + Light Grid) ---
-const BackgroundGrid = () => (
-  <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-black">
-    {/* Light Grey Grid Lines, Low Opacity, Static */}
-    <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:40px_40px]" />
-  </div>
-);
+// --- BACKGROUND GRID COMPONENT (Space Atmosphere) ---
+const SpaceBackground = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let particles: { x: number, y: number, vx: number, vy: number, size: number }[] = [];
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initParticles();
+    };
+
+    const initParticles = () => {
+      const particleCount = window.innerWidth < 768 ? 30 : 60;
+      particles = [];
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.3, // Slow movement
+          vy: (Math.random() - 0.5) * 0.3,
+          size: Math.random() * 1.5 + 0.5
+        });
+      }
+    };
+
+    const draw = () => {
+      // 1. Fill Background (Deep Black)
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 2. Add Electric Blue Glow (Subtle ambient)
+      const gradient = ctx.createRadialGradient(
+        canvas.width * 0.5, canvas.height * 0.5, 0,
+        canvas.width * 0.5, canvas.height * 0.5, canvas.width
+      );
+      gradient.addColorStop(0, 'rgba(10, 20, 40, 0.4)'); // Deep blue/black center
+      gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 3. Add Spot Glows (Electric Blue Accents)
+      const spotGlow = (x: number, y: number, radius: number, color: string) => {
+        const g = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        g.addColorStop(0, color);
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+      }
+
+      // Top right blue glow
+      spotGlow(canvas.width * 0.8, canvas.height * 0.2, 600, 'rgba(34, 211, 238, 0.06)');
+      // Bottom left purple/blue hint
+      spotGlow(canvas.width * 0.2, canvas.height * 0.8, 500, 'rgba(50, 50, 100, 0.05)');
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'; // Star color
+      ctx.strokeStyle = 'rgba(34, 211, 238, 0.1)'; // Line color (Electric Blue, faint)
+
+      particles.forEach((p, i) => {
+        // Update
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Connect
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p.x - p2.x;
+          const dy = p.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 150) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.lineWidth = (1 - dist / 150) * 0.8;
+            ctx.stroke();
+          }
+        }
+      });
+
+      animationFrameId = requestAnimationFrame(draw);
+    };
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    draw();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none" />;
+};
 
 // --- MICRO-INTERACTION UTILS ---
 const playHoverCue = () => {
@@ -376,7 +483,7 @@ const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-12 md:py-20 bg-[#080808] border-t border-white/5 relative overflow-hidden">
+    <section className="py-12 md:py-20 bg-transparent border-t border-white/5 relative overflow-hidden">
       {/* Decorative Background */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none" />
@@ -454,7 +561,9 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <div className="w-full overflow-hidden" ref={scrollRef}>
+    <div className="w-full overflow-hidden min-h-screen relative" ref={scrollRef}>
+      {/* GLOBAL BACKGROUND - Fixed Space Atmosphere */}
+      <SpaceBackground />
       <SEO
         title="Frame n Flow Media | Best Marketing Agency in USA, UK, India & Europe"
         description="Frame n Flow Media is a Strategy-First AI Marketing Agency serving USA, UK, India & Europe. We combine Business Intelligence & AI Visuals to drive qualified leads. 100% Refund Guarantee."
@@ -529,10 +638,8 @@ const Home: React.FC = () => {
       </AnimatePresence>
 
       {/* HERO SECTION */}
-      <section className="relative min-h-screen flex flex-col justify-center items-center px-0 md:px-6 pt-20 overflow-hidden perspective-1000 bg-black">
-
-        {/* HERO BACKGROUND - Pure Black with subtle grid only */}
-        <BackgroundGrid />
+      <section className="relative min-h-screen flex flex-col justify-center items-center px-0 md:px-6 pt-20 overflow-hidden perspective-1000 bg-transparent">
+        {/* HERO BACKGROUND - Transparent to show SpaceBackground */}
 
         {/* Floating Doodles - Kept as content elements, but removed background noise/blobs */}
         <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
@@ -768,7 +875,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* CLIENT LOCATIONS MARQUEE */}
-      <section className="py-8 bg-black border-y border-white/5 overflow-hidden relative z-20">
+      <section className="py-8 bg-transparent border-y border-white/5 overflow-hidden relative z-20">
         <div className="container mx-auto px-6 text-center mb-6">
           <span className="text-[10px] md:text-xs font-mono text-white/40 uppercase tracking-[0.2em]">
             Working with Clients across
@@ -799,7 +906,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* TESTIMONIALS MARQUEE */}
-      <section className="py-8 bg-[#e5e5e5] border-b border-white/5 overflow-hidden relative z-20">
+      <section className="py-8 bg-transparent border-b border-white/5 overflow-hidden relative z-20">
         <div className="relative flex w-full overflow-hidden">
           <motion.div
             className="flex whitespace-nowrap items-center"
@@ -811,8 +918,8 @@ const Home: React.FC = () => {
                 {TESTIMONIALS.map((t, idx) => (
                   <div key={idx} className="flex items-center mx-10 md:mx-16">
                     <div className="flex flex-col text-left">
-                      <span className="text-lg md:text-2xl font-display font-bold text-black">"{t.text}"</span>
-                      <span className="text-xs font-mono text-black/70 mt-1 uppercase tracking-wider">— {t.name} ({t.location})</span>
+                      <span className="text-lg md:text-2xl font-display font-bold text-white">"{t.text}"</span>
+                      <span className="text-xs font-mono text-white/70 mt-1 uppercase tracking-wider">— {t.name} ({t.location})</span>
                     </div>
                     {/* Divider */}
                     <div className="w-2 h-2 rounded-full bg-accent ml-10 md:ml-16" />
@@ -825,7 +932,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* SERVICES SECTION - DUAL PATHWAYS */}
-      <section className="py-12 md:py-24 px-6 relative overflow-hidden bg-black">
+      <section className="py-12 md:py-24 px-6 relative overflow-hidden bg-transparent">
         {/* Background Effects */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-[30%] left-[20%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px]" />
@@ -941,7 +1048,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* APPROACH SECTION (Renamed from Ecosystem) */}
-      <section className="py-12 md:py-20 bg-surface relative overflow-visible">
+      <section className="py-12 md:py-20 bg-transparent relative overflow-visible">
         {/* Glow Line */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
 
@@ -1080,7 +1187,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* FOUNDER SECTION */}
-      <section className="py-12 md:py-20 bg-surfaceHighlight relative overflow-hidden">
+      <section className="py-12 md:py-20 bg-transparent relative overflow-hidden">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
             <div className="md:col-span-5 order-2 md:order-1 relative">
@@ -1142,7 +1249,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-    </div>
+    </div >
   );
 };
 

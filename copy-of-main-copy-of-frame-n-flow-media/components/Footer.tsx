@@ -24,7 +24,7 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-[#050505] border-t border-white/10 relative overflow-hidden z-20">
+    <footer className="bg-transparent border-t border-white/10 relative overflow-hidden z-20">
 
       {/* SCROLLING MARQUEE SECTION */}
       <div className="py-16 md:py-24 border-b border-white/10 overflow-hidden flex relative z-10 bg-background/50 backdrop-blur-sm transform-gpu">

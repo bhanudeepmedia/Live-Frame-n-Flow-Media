@@ -79,7 +79,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const shouldHide = hideNavFooterSteps.includes(location.pathname);
 
   return (
-    <div className="min-h-screen bg-background text-white font-sans selection:bg-accent selection:text-background">
+    <div className="min-h-screen bg-transparent text-white font-sans selection:bg-accent selection:text-background">
       <HashHandler />
       <ScrollToTop />
       <CustomCursor />
