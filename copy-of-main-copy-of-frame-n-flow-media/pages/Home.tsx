@@ -824,6 +824,122 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* SERVICES SECTION - DUAL PATHWAYS */}
+      <section className="py-12 md:py-24 px-6 relative overflow-hidden bg-black">
+        {/* Background Effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-[30%] left-[20%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px]" />
+          <div className="absolute bottom-[20%] right-[20%] w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]" />
+        </div>
+
+        <div className="container mx-auto relative z-10 max-w-6xl">
+          <FadeIn className="mb-14 text-center">
+            <span className="text-accent uppercase tracking-widest text-xs font-bold mb-4 block">Choose Your Path</span>
+            <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">How We Scale Brands</h2>
+            <p className="text-white/50 max-w-2xl mx-auto text-lg font-light">
+              We combine creative dominance with operational intelligence. Select your growth engine.
+            </p>
+          </FadeIn>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            {/* PATH 1: MARKETING */}
+            <FadeIn className="group relative h-full">
+              <div
+                onClick={() => navigate('/services', { state: { activeTab: 'marketing' } })}
+                className="h-full bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden relative transition-all duration-500 hover:border-accent/40 hover:shadow-[0_0_30px_rgba(34,211,238,0.1)] cursor-pointer flex flex-col"
+              >
+                {/* Image/Visual Top */}
+                <div className="h-64 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700 mix-blend-luminosity group-hover:mix-blend-normal" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
+
+                  <div className="absolute top-6 left-6 bg-white/10 backdrop-blur border border-white/10 px-3 py-1 rounded-full text-xs text-white font-bold flex items-center gap-2">
+                    <Camera size={14} className="text-accent" />
+                    Creative Infrastructure
+                  </div>
+                </div>
+
+                {/* Content Bottom */}
+                <div className="p-8 flex-1 flex flex-col">
+                  <h3 className="text-3xl font-display font-bold text-white mb-3 group-hover:text-accent transition-colors">Marketing</h3>
+                  <p className="text-white/60 leading-relaxed mb-8 flex-1">
+                    Dominant visuals, high-converting websites, and data-driven ad campaigns. The "Frontend" of your success.
+                  </p>
+
+                  <div className="flex items-center gap-4 text-sm font-bold text-white group-hover:translate-x-2 transition-transform">
+                    Explore Services <ArrowRight size={16} className="text-accent" />
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+
+            {/* PATH 2: WEB/APP DEV */}
+            <FadeIn delay={0.1} className="group relative h-full">
+              <div
+                onClick={() => navigate('/services', { state: { activeTab: 'webdev' } })}
+                className="h-full bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden relative transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] cursor-pointer flex flex-col"
+              >
+                {/* Image/Visual Top */}
+                <div className="h-64 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700 mix-blend-luminosity group-hover:mix-blend-normal" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
+
+                  <div className="absolute top-6 left-6 bg-emerald-500/10 backdrop-blur border border-emerald-500/20 px-3 py-1 rounded-full text-xs text-emerald-300 font-bold flex items-center gap-2">
+                    <Code size={14} />
+                    Digital Infrastructure
+                  </div>
+                </div>
+
+                {/* Content Bottom */}
+                <div className="p-8 flex-1 flex flex-col">
+                  <h3 className="text-3xl font-display font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors">Web & App Dev</h3>
+                  <p className="text-white/60 leading-relaxed mb-8 flex-1">
+                    Lightning-fast websites and custom apps built on modern infrastructure. SEO-optimized and AI-ready.
+                  </p>
+
+                  <div className="flex items-center gap-4 text-sm font-bold text-white group-hover:translate-x-2 transition-transform">
+                    View Architecture <ArrowRight size={16} className="text-emerald-400" />
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+
+            {/* PATH 2: AUTOMATION */}
+            <FadeIn delay={0.2} className="group relative h-full">
+              <div
+                onClick={() => navigate('/services', { state: { activeTab: 'automation' } })}
+                className="h-full bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden relative transition-all duration-500 hover:border-purple-500/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] cursor-pointer flex flex-col"
+              >
+                {/* Image/Visual Top */}
+                <div className="h-64 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700 mix-blend-luminosity group-hover:mix-blend-normal" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
+
+                  <div className="absolute top-6 left-6 bg-purple-500/10 backdrop-blur border border-purple-500/20 px-3 py-1 rounded-full text-xs text-purple-300 font-bold flex items-center gap-2">
+                    <Bot size={14} />
+                    AI Systems
+                  </div>
+                </div>
+
+                {/* Content Bottom */}
+                <div className="p-8 flex-1 flex flex-col">
+                  <h3 className="text-3xl font-display font-bold text-white mb-3 group-hover:text-purple-400 transition-colors">Automation</h3>
+                  <p className="text-white/60 leading-relaxed mb-8 flex-1">
+                    Intelligent chatbots, CRM agents, and 24/7 lead nurturing. The "Backend" engine of your growth.
+                  </p>
+
+                  <div className="flex items-center gap-4 text-sm font-bold text-white group-hover:translate-x-2 transition-transform">
+                    Explore AI Tools <ArrowRight size={16} className="text-purple-400" />
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+
+          </div>
+        </div>
+      </section>
+
       {/* APPROACH SECTION (Renamed from Ecosystem) */}
       <section className="py-12 md:py-20 bg-surface relative overflow-visible">
         {/* Glow Line */}
@@ -959,122 +1075,6 @@ const Home: React.FC = () => {
                 <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </NavLink>
-          </div>
-        </div>
-      </section>
-
-      {/* SERVICES SECTION - DUAL PATHWAYS */}
-      <section className="py-12 md:py-24 px-6 relative overflow-hidden bg-black">
-        {/* Background Effects */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-[30%] left-[20%] w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px]" />
-          <div className="absolute bottom-[20%] right-[20%] w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]" />
-        </div>
-
-        <div className="container mx-auto relative z-10 max-w-6xl">
-          <FadeIn className="mb-14 text-center">
-            <span className="text-accent uppercase tracking-widest text-xs font-bold mb-4 block">Choose Your Path</span>
-            <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">How We Scale Brands</h2>
-            <p className="text-white/50 max-w-2xl mx-auto text-lg font-light">
-              We combine creative dominance with operational intelligence. Select your growth engine.
-            </p>
-          </FadeIn>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-            {/* PATH 1: MARKETING */}
-            <FadeIn className="group relative h-full">
-              <div
-                onClick={() => navigate('/services', { state: { activeTab: 'marketing' } })}
-                className="h-full bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden relative transition-all duration-500 hover:border-accent/40 hover:shadow-[0_0_30px_rgba(34,211,238,0.1)] cursor-pointer flex flex-col"
-              >
-                {/* Image/Visual Top */}
-                <div className="h-64 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700 mix-blend-luminosity group-hover:mix-blend-normal" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
-
-                  <div className="absolute top-6 left-6 bg-white/10 backdrop-blur border border-white/10 px-3 py-1 rounded-full text-xs text-white font-bold flex items-center gap-2">
-                    <Camera size={14} className="text-accent" />
-                    Creative Infrastructure
-                  </div>
-                </div>
-
-                {/* Content Bottom */}
-                <div className="p-8 flex-1 flex flex-col">
-                  <h3 className="text-3xl font-display font-bold text-white mb-3 group-hover:text-accent transition-colors">Marketing</h3>
-                  <p className="text-white/60 leading-relaxed mb-8 flex-1">
-                    Dominant visuals, high-converting websites, and data-driven ad campaigns. The "Frontend" of your success.
-                  </p>
-
-                  <div className="flex items-center gap-4 text-sm font-bold text-white group-hover:translate-x-2 transition-transform">
-                    Explore Services <ArrowRight size={16} className="text-accent" />
-                  </div>
-                </div>
-              </div>
-            </FadeIn>
-
-            {/* PATH 2: WEB/APP DEV */}
-            <FadeIn delay={0.1} className="group relative h-full">
-              <div
-                onClick={() => navigate('/services', { state: { activeTab: 'webdev' } })}
-                className="h-full bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden relative transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] cursor-pointer flex flex-col"
-              >
-                {/* Image/Visual Top */}
-                <div className="h-64 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700 mix-blend-luminosity group-hover:mix-blend-normal" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
-
-                  <div className="absolute top-6 left-6 bg-emerald-500/10 backdrop-blur border border-emerald-500/20 px-3 py-1 rounded-full text-xs text-emerald-300 font-bold flex items-center gap-2">
-                    <Code size={14} />
-                    Digital Infrastructure
-                  </div>
-                </div>
-
-                {/* Content Bottom */}
-                <div className="p-8 flex-1 flex flex-col">
-                  <h3 className="text-3xl font-display font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors">Web & App Dev</h3>
-                  <p className="text-white/60 leading-relaxed mb-8 flex-1">
-                    Lightning-fast websites and custom apps built on modern infrastructure. SEO-optimized and AI-ready.
-                  </p>
-
-                  <div className="flex items-center gap-4 text-sm font-bold text-white group-hover:translate-x-2 transition-transform">
-                    View Architecture <ArrowRight size={16} className="text-emerald-400" />
-                  </div>
-                </div>
-              </div>
-            </FadeIn>
-
-            {/* PATH 2: AUTOMATION */}
-            <FadeIn delay={0.2} className="group relative h-full">
-              <div
-                onClick={() => navigate('/services', { state: { activeTab: 'automation' } })}
-                className="h-full bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden relative transition-all duration-500 hover:border-purple-500/40 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] cursor-pointer flex flex-col"
-              >
-                {/* Image/Visual Top */}
-                <div className="h-64 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-700 mix-blend-luminosity group-hover:mix-blend-normal" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
-
-                  <div className="absolute top-6 left-6 bg-purple-500/10 backdrop-blur border border-purple-500/20 px-3 py-1 rounded-full text-xs text-purple-300 font-bold flex items-center gap-2">
-                    <Bot size={14} />
-                    AI Systems
-                  </div>
-                </div>
-
-                {/* Content Bottom */}
-                <div className="p-8 flex-1 flex flex-col">
-                  <h3 className="text-3xl font-display font-bold text-white mb-3 group-hover:text-purple-400 transition-colors">Automation</h3>
-                  <p className="text-white/60 leading-relaxed mb-8 flex-1">
-                    Intelligent chatbots, CRM agents, and 24/7 lead nurturing. The "Backend" engine of your growth.
-                  </p>
-
-                  <div className="flex items-center gap-4 text-sm font-bold text-white group-hover:translate-x-2 transition-transform">
-                    Explore AI Tools <ArrowRight size={16} className="text-purple-400" />
-                  </div>
-                </div>
-              </div>
-            </FadeIn>
-
           </div>
         </div>
       </section>
