@@ -114,7 +114,7 @@ const BlogPost: React.FC = () => {
                         User experience (UX) isn't a luxury—it's a revenue multiplier. Every second of delay in page load time can reduce conversions by 7%. For a business generating $100,000 per day, that single second costs $2.5 million annually.
                     </p>
                     <p>
-                        Whether your audience is browsing from Hyderabad, Houston, Dubai, or Dublin, they expect seamless experiences. Key elements include fast loading (< 2s), intuitive navigation, and mobile responsiveness.
+                        Whether your audience is browsing from Hyderabad, Houston, Dubai, or Dublin, they expect seamless experiences. Key elements include fast loading (under 2 seconds), intuitive navigation, and mobile responsiveness.
                     </p>
 
                     <h3 className="text-2xl font-bold text-white mt-10 mb-4 flex items-center gap-3">
