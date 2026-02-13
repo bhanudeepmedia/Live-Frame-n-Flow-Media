@@ -77,6 +77,16 @@ const routes = [
     title: "Terms of Service | Frame n Flow Media",
     description: "Terms of Service for Frame n Flow Media."
   },
+  {
+    path: '/blog',
+    title: "Blog | Frame n Flow Media - Insights & Strategies",
+    description: "Explore our latest articles on digital marketing, website development, AI automation, and revenue growth strategies for businesses across India, USA, UAE, and Europe."
+  },
+  {
+    path: '/blog/revenue-growth-2026',
+    title: "How a Great Website Increases Business Revenue | Frame n Flow Media",
+    description: "Discover why investing in a professional website drives business revenue growth. Learn proven strategies and tools to boost conversions, credibility, and sales online."
+  },
   { path: '/growth-partner' },
   { path: '/growth-partner/apply' },
   { path: '/growth-partner/signup' },

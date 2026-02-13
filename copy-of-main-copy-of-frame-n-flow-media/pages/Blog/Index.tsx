@@ -10,20 +10,45 @@ const BlogIndex: React.FC = () => {
             title: "Why a Great Website Increases the Revenue of Your Business in 2026",
             excerpt: "Discover why investing in a professional website drives business revenue growth. Learn proven strategies and tools to boost conversions, credibility, and sales online.",
             date: "Feb 14, 2026",
+            dateISO: "2026-02-14",
             author: "Frame n Flow Team",
             readTime: "10 min read",
             slug: "/blog/revenue-growth-2026",
-            image: "/assets/blog/website-revenue-2026.png", // Ideally use the generated image path
+            image: "/assets/blog/website-revenue-2026.png",
             category: "Business Growth"
         }
     ];
+
+    const blogListSchema = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Blog | Frame n Flow Media",
+        "description": "Explore our latest articles on digital marketing, website development, AI automation, and revenue growth strategies for businesses across India, USA, UAE, and Europe.",
+        "url": "https://framenflowmedia.in/blog/",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Frame n Flow Media",
+            "url": "https://framenflowmedia.in",
+            "logo": { "@type": "ImageObject", "url": "https://framenflowmedia.in/favicon.png" }
+        },
+        "mainEntity": {
+            "@type": "ItemList",
+            "itemListElement": BLOG_POSTS.map((post, i) => ({
+                "@type": "ListItem",
+                "position": i + 1,
+                "url": `https://framenflowmedia.in${post.slug}/`,
+                "name": post.title
+            }))
+        }
+    };
 
     return (
         <div className="min-h-screen bg-background pt-24 md:pt-32 pb-20 font-sans text-white">
             <SEO
                 title="Blog | Frame n Flow Media - Insights & Strategies"
-                description="Explore our latest articles on digital marketing, website development, AI automation, and revenue growth strategies."
+                description="Explore our latest articles on digital marketing, website development, AI automation, and revenue growth strategies for businesses across India, USA, UAE, and Europe."
                 canonical="/blog"
+                schema={blogListSchema}
             />
 
             <div className="container mx-auto px-6 relative z-10">
