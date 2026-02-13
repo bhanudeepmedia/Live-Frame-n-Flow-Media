@@ -25,6 +25,10 @@ import GrowthPartnerLogin from './pages/GrowthPartner/Login';
 import GrowthPartnerDashboard from './pages/GrowthPartner/Dashboard';
 import AdminDashboard from './pages/Admin/Dashboard';
 
+// Blog Imports
+import BlogIndex from './pages/Blog/Index';
+import RevenueGrowthPost from './pages/Blog/RevenueGrowth';
+
 export const routes: RouteObject[] = [
     { path: '/', element: <Home /> },
     { path: '/about', element: <About /> },
@@ -53,4 +57,8 @@ export const routes: RouteObject[] = [
     { path: '/service-marketing', element: <ServiceMarketing /> },
     { path: '/startup-marketing', element: <StartupMarketing /> },
     { path: '/realtor-marketing', element: <RealtorMarketing /> },
+
+    // Blog
+    { path: '/blog', element: <BlogIndex /> },
+    { path: '/blog/revenue-growth-2026', element: <RevenueGrowthPost /> },
 ];

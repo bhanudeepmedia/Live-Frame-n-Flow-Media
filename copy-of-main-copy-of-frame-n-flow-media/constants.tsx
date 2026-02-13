@@ -25,6 +25,7 @@ export const FOOTER_ITEMS: NavItem[] = [
   { label: 'Work', path: '/work' },
   { label: 'Insights', path: '/insights' },
   { label: 'GPP', path: '/growth-partner' },
+  { label: 'Blog', path: '/blog' },
   { label: 'Contact', path: '/contact' },
 ];
 
