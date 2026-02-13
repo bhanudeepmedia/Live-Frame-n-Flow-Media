@@ -458,10 +458,6 @@ const AuditPopup = ({ onClose }: { onClose: () => void }) => {
 // --- FAQ DATA & COMPONENT ---
 const FAQ_DATA = [
   {
-    question: "How does the 100% Refund Guarantee work?",
-    answer: "It's simple. If we don't hit the qualified lead targets defined in our service agreement within the first 90 days, we refund our entire management fee. We bear the risk, not you."
-  },
-  {
     question: "Why use AI visuals instead of traditional photography?",
     answer: "Speed and Cost. Traditional shoots require renting studios, hiring models, and expensive equipment, costing $10k+. AI generates higher-quality, physics-defying assets for a fraction of the price, in days instead of weeks."
   },
@@ -470,12 +466,38 @@ const FAQ_DATA = [
     answer: "Yes. We have specific 'Growth Engines' designed for startups that need aggressive market entry. We focus on low-cost acquisition and high-velocity testing for new brands."
   },
   {
-    question: "Who owns the creative assets you produce?",
-    answer: "You do. Unlike many agencies that hold IP hostage, everything we create—from strategy docs to final video renders—is 100% your property upon delivery."
+    question: "Do you provide SEO with website development?",
+    answer: `Yes. Basic on-page SEO setup is included:
+
+• Meta titles and descriptions
+• Optimized structure
+• Speed optimization
+• Schema basics
+• Search console setup
+
+For advanced SEO campaigns, we provide dedicated strategy support.`
   },
   {
-    question: "What is the typical turnaround time?",
-    answer: "For the 'Audit & Strategy' phase, 7 days. For AI Visuals, 3-5 days per asset batch. For Performance Marketing campaigns, we typically go live within 10 days of onboarding."
+    question: "Can you redesign my existing website?",
+    answer: "Yes. We audit your current website, identify performance gaps, and redesign it with improved structure, speed, and conversion strategy."
+  },
+  {
+    question: "How long does it take to see results?",
+    answer: `Initial data collection: 7–14 days
+Optimization phase: 30–45 days
+
+Performance marketing is about structured testing, not instant luck.`
+  },
+  {
+    question: "Do you provide reporting?",
+    answer: `Yes. You receive:
+
+• Performance dashboards
+• Weekly or bi-weekly reports
+• Key metric breakdown
+• Strategy improvement insights
+
+Transparency is part of our process.`
   }
 ];
 
@@ -519,7 +541,7 @@ const FAQSection = () => {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                     >
-                      <div className="px-6 pb-6 text-white/60 font-light leading-relaxed">
+                      <div className="px-6 pb-6 text-white/60 font-light leading-relaxed whitespace-pre-line">
                         {item.answer}
                       </div>
                     </motion.div>
