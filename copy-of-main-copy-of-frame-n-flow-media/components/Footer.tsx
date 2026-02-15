@@ -98,7 +98,17 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-white/20 text-xs font-mono uppercase tracking-widest">
-          <p>© {new Date().getFullYear()} Frame n Flow Media. All rights reserved.</p>
+          <div className="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
+            <p>© {new Date().getFullYear()} Frame n Flow Media. All rights reserved.</p>
+            <a
+              href="https://framenflowmedia.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              Designed and Developed by Frame n Flow Media
+            </a>
+          </div>
           <div className="flex gap-8 mt-4 md:mt-0">
             <NavLink to="/privacy-policy" onClick={handleLinkClick} className="hover:text-white transition-colors">Privacy Policy</NavLink>
             <NavLink to="/terms-of-service" onClick={handleLinkClick} className="hover:text-white transition-colors">Terms of Service</NavLink>
