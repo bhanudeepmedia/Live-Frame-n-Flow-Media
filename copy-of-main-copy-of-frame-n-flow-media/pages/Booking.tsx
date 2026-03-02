@@ -254,7 +254,7 @@ const Booking: React.FC = () => {
             {/* SECTION 1: HERO WITH CALENDAR */}
             <section className="pt-32 pb-20 px-6 relative z-10">
                 <div className="container mx-auto max-w-7xl">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-12 items-center">
+                    <div className="grid grid-cols-1 xl:grid-cols-[1fr_800px] gap-16 xl:gap-12 items-center">
 
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -289,7 +289,7 @@ const Booking: React.FC = () => {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.6, delay: 0.2 }}
-                            className="relative w-full"
+                            className="relative w-full max-w-[800px] mx-auto xl:max-w-none"
                         >
                             <div className="absolute -inset-1 bg-gradient-to-r from-accent/30 to-blue-600/30 rounded-[2.5rem] blur-xl opacity-70"></div>
                             <BookingWidget id="hero" />
@@ -456,7 +456,7 @@ const Booking: React.FC = () => {
                         Trusted by Local Businesses Across Birmingham, Manchester, Leeds and Beyond
                     </h3>
 
-                    <div className="max-w-xl mx-auto relative">
+                    <div className="max-w-[800px] mx-auto relative">
                         <div className="absolute -inset-1 bg-gradient-to-r from-accent/30 to-blue-600/30 rounded-[2.5rem] blur-xl opacity-70"></div>
                         <BookingWidget id="footer" />
                     </div>
