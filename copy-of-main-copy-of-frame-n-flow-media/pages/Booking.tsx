@@ -33,7 +33,7 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
     );
 };
 
-const BookingWidget = ({ id, lazy = false }: { id: string, lazy?: boolean }) => (
+const BookingWidget = ({ id }: { id: string }) => (
     <div className="relative bg-surface p-2 md:p-4 rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden min-h-[700px] flex flex-col w-full z-10">
         <div className="flex items-center space-x-2 px-4 py-3 border-b border-white/5 bg-surfaceHighlight/30 rounded-t-2xl mb-2">
             <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
@@ -46,7 +46,6 @@ const BookingWidget = ({ id, lazy = false }: { id: string, lazy?: boolean }) => 
                 src="https://links.framenflowmedia.in/widget/booking/mjSuWbVPKsTiOCi8Od1Z"
                 style={{ width: '100%', height: '100%', border: 'none', minHeight: '650px' }}
                 scrolling="no"
-                loading={lazy ? "lazy" : "eager"}
                 id={`mjSuWbVPKsTiOCi8Od1Z_${id}`}
                 title="Appointment Booking Widget"
             ></iframe>
@@ -261,7 +260,7 @@ const Booking: React.FC = () => {
             />
 
             {/* SECTION 1: HERO WITH CALENDAR */}
-            <section className="pt-8 md:pt-16 pb-20 px-4 md:px-6 relative z-10 w-full overflow-hidden">
+            <section className="pt-8 md:pt-16 pb-12 md:pb-20 px-4 md:px-6 relative z-10 w-full overflow-hidden">
                 <div className="container mx-auto max-w-7xl">
                     <div className="flex flex-col xl:flex-row gap-8 xl:gap-12 items-start justify-between">
 
@@ -329,9 +328,9 @@ const Booking: React.FC = () => {
             </section>
 
             {/* SECTION 2: HOW UK BUSINESSES GENERATE CONSISTENT LEADS ON AUTOPILOT */}
-            <section className="py-24 px-6 bg-surface/50 relative z-10">
+            <section className="py-16 md:py-24 px-6 bg-surface/50 relative z-10">
                 <div className="container mx-auto max-w-7xl">
-                    <div className="text-center mb-16">
+                    <div className="text-center mb-10 md:mb-16">
                         <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">How UK Businesses Generate Consistent Leads on Autopilot</h2>
                         <div className="w-24 h-1 bg-accent mx-auto rounded-full"></div>
                     </div>
@@ -378,9 +377,9 @@ const Booking: React.FC = () => {
             </section>
 
             {/* SECTION 3: WHAT OUR SYSTEM DOES FOR YOUR BUSINESS */}
-            <section className="py-24 px-6 relative z-10">
+            <section className="py-16 md:py-24 px-6 relative z-10">
                 <div className="container mx-auto max-w-7xl">
-                    <div className="text-center mb-16">
+                    <div className="text-center mb-10 md:mb-16">
                         <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">What Our System Does for Your Business</h2>
                         <div className="w-24 h-1 bg-accent mx-auto rounded-full"></div>
                     </div>
@@ -414,7 +413,7 @@ const Booking: React.FC = () => {
             </section>
 
             {/* SECTION 4: BUILT FOR LOCAL UK BUSINESSES READY TO GROW */}
-            <section className="py-24 px-6 bg-surface/30 relative z-10 border-y border-white/5 overflow-hidden">
+            <section className="py-16 md:py-24 px-6 bg-surface/30 relative z-10 border-y border-white/5 overflow-hidden">
                 {/* Premium Background Effects */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-full bg-gradient-to-b from-accent/5 to-transparent blur-3xl pointer-events-none"></div>
 
@@ -432,21 +431,21 @@ const Booking: React.FC = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.1 }}
-                        className="text-xl md:text-2xl text-accent font-medium mb-16"
+                        className="text-xl md:text-2xl text-accent font-medium mb-10 md:mb-16"
                     >
                         Serving Businesses Across the United Kingdom
                     </motion.h2>
 
                     {/* Premium Motion Graphics Marquee */}
-                    <div className="relative w-full flex flex-col gap-6 mb-16 overflow-hidden py-4">
-                        {/* CSS Mask for fading edges */}
-                        <div className="absolute inset-0 z-20 pointer-events-none" style={{ background: 'linear-gradient(90deg, #0a0a0a 0%, transparent 15%, transparent 85%, #0a0a0a 100%)' }}></div>
-
+                    <div
+                        className="relative w-full flex flex-col gap-6 mb-10 md:mb-16 py-4"
+                        style={{ WebkitMaskImage: 'linear-gradient(90deg, transparent, black 15%, black 85%, transparent)', maskImage: 'linear-gradient(90deg, transparent, black 15%, black 85%, transparent)' }}
+                    >
                         <div className="w-[200%] md:w-full flex">
                             <motion.div
                                 className="flex whitespace-nowrap min-w-full"
                                 animate={{ x: ["0%", "-50%"] }}
-                                transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+                                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
                             >
                                 {[...Array(2)].map((_, i) => (
                                     <div key={i} className="flex gap-4 pr-4">
@@ -455,7 +454,7 @@ const Booking: React.FC = () => {
                                             "Extension Builders", "Roofing Companies", "Tree Surgeons",
                                             "Kitchen Fitters"
                                         ].map((tag, j) => (
-                                            <div key={j} className="px-6 py-3 rounded-2xl bg-surfaceHighlight/80 backdrop-blur-md border border-white/10 text-white font-medium text-lg shadow-[0_4px_20px_rgba(34,211,238,0.05)] hover:border-accent/40 hover:text-accent transition-colors">
+                                            <div key={j} className="px-6 py-3 rounded-2xl bg-surfaceHighlight/50 backdrop-blur-md border border-white/20 text-white font-semibold text-lg shadow-[0_4px_20px_rgba(34,211,238,0.15)] hover:border-accent hover:text-accent hover:bg-accent/5 transition-all">
                                                 {tag}
                                             </div>
                                         ))}
@@ -468,7 +467,7 @@ const Booking: React.FC = () => {
                             <motion.div
                                 className="flex whitespace-nowrap min-w-full"
                                 animate={{ x: ["-50%", "0%"] }}
-                                transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
+                                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                             >
                                 {[...Array(2)].map((_, i) => (
                                     <div key={i} className="flex gap-4 pr-4">
@@ -477,7 +476,7 @@ const Booking: React.FC = () => {
                                             "Photographers", "Wedding Vendors", "Private Nurseries",
                                             "Mortgage Brokers", "Chiropractors"
                                         ].map((tag, j) => (
-                                            <div key={j} className="px-6 py-3 rounded-2xl bg-surfaceHighlight/80 backdrop-blur-md border border-white/10 text-white font-medium text-lg shadow-[0_4px_20px_rgba(34,211,238,0.05)] hover:border-accent/40 hover:text-accent transition-colors">
+                                            <div key={j} className="px-6 py-3 rounded-2xl bg-surfaceHighlight/50 backdrop-blur-md border border-white/20 text-white font-semibold text-lg shadow-[0_4px_20px_rgba(34,211,238,0.15)] hover:border-accent hover:text-accent hover:bg-accent/5 transition-all">
                                                 {tag}
                                             </div>
                                         ))}
@@ -491,7 +490,7 @@ const Booking: React.FC = () => {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-xl md:text-2xl text-white/70 italic max-w-3xl mx-auto font-light leading-relaxed"
+                        className="text-lg md:text-2xl text-white/70 italic max-w-3xl mx-auto font-light leading-relaxed"
                     >
                         "If your business relies on local customers finding you, our growth system is precisely engineered for your specific needs."
                     </motion.p>
@@ -499,9 +498,9 @@ const Booking: React.FC = () => {
             </section>
 
             {/* SECTION 5: EVERYTHING YOU NEED TO KNOW (PREMIUM FAQ) */}
-            <section className="py-24 px-6 relative z-10">
+            <section className="py-16 md:py-24 px-6 relative z-10">
                 <div className="container mx-auto max-w-3xl">
-                    <div className="text-center mb-16">
+                    <div className="text-center mb-10 md:mb-16">
                         <h2 className="text-4xl font-display font-bold mb-4">Everything You Need to Know</h2>
                         <div className="w-24 h-1 bg-accent mx-auto rounded-full"></div>
                     </div>
@@ -528,7 +527,7 @@ const Booking: React.FC = () => {
             </section>
 
             {/* SECTION 6: FINAL CTA */}
-            <section className="pt-16 pb-32 px-6 relative z-10">
+            <section className="pt-16 pb-20 md:pb-32 px-6 relative z-10">
                 <div className="container mx-auto max-w-4xl text-center">
                     <h2 className="text-4xl md:text-6xl font-display font-bold mb-4">
                         Your Competitors Are Already on Google — Are You?
@@ -546,7 +545,7 @@ const Booking: React.FC = () => {
 
                     <div className="max-w-[800px] mx-auto relative">
                         <div className="absolute -inset-1 bg-gradient-to-r from-accent/30 to-blue-600/30 rounded-[2.5rem] blur-xl opacity-70"></div>
-                        <BookingWidget id="footer" lazy={true} />
+                        <BookingWidget id="footer" />
                     </div>
 
                     <div className="mt-16 pt-8 border-t border-white/10">
