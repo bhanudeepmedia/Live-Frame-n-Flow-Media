@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import SEO from '../components/SEO';
 import { Globe, Phone, Star, Calendar, MessageSquare, BarChart3, ChevronDown, CheckCircle2 } from 'lucide-react';
@@ -187,9 +186,6 @@ const faqSchema = {
 const combinedSchemas = [localBusinessSchema, serviceSchema, faqSchema];
 
 const Booking: React.FC = () => {
-    const { scrollYProgress } = useScroll();
-    const bgY1 = useTransform(scrollYProgress, [0, 1], ["0%", "150%"]);
-    const bgY2 = useTransform(scrollYProgress, [0, 1], ["0%", "-150%"]);
     const [loadFooter, setLoadFooter] = useState(false);
 
     useEffect(() => {
@@ -253,18 +249,18 @@ const Booking: React.FC = () => {
                 </p>
             </div>
 
-            {/* Background Ambient Gradients - Parallax Motion Graphics */}
+            {/* Background Ambient Gradients - Optimized for Mobile (No Scroll Lag) */}
             <motion.div
-                animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                style={{ y: bgY1 }}
-                className="fixed top-[-20%] left-[-10%] w-[500px] h-[500px] bg-accent/15 rounded-full blur-[120px] pointer-events-none z-0"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 150, repeat: Infinity, ease: "linear" }}
+                style={{ willChange: "transform" }}
+                className="fixed top-[-20%] left-[-10%] w-[500px] h-[500px] md:w-[700px] md:h-[700px] bg-accent/10 rounded-full blur-[100px] md:blur-[120px] pointer-events-none z-0"
             />
             <motion.div
-                animate={{ rotate: -360, scale: [1, 1.2, 1] }}
-                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                style={{ y: bgY2 }}
-                className="fixed bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-blue-600/15 rounded-full blur-[150px] pointer-events-none z-0 mix-blend-screen"
+                animate={{ rotate: -360 }}
+                transition={{ duration: 150, repeat: Infinity, ease: "linear" }}
+                style={{ willChange: "transform" }}
+                className="fixed bottom-[-20%] right-[-10%] w-[600px] h-[600px] md:w-[800px] md:h-[800px] bg-blue-600/10 rounded-full blur-[120px] md:blur-[150px] pointer-events-none z-0"
             />
 
             {/* Visual Grid Overlays for Premium Vibe */}
@@ -334,69 +330,100 @@ const Booking: React.FC = () => {
                 </div>
             </section>
 
-            {/* SECTION 2: THE GROWTH PIPELINE (VISUAL) */}
-            <section className="py-16 md:py-24 px-6 bg-surface/50 relative z-10 overflow-hidden">
+            {/* SECTION 2: THE GROWTH PIPELINE (VISUAL MOTION GRAPHIC) */}
+            <section className="py-16 md:py-24 px-4 md:px-6 bg-surface/50 relative z-10 overflow-hidden border-y border-white/5">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl h-full bg-accent/5 blur-[120px] pointer-events-none"></div>
 
                 <div className="container mx-auto max-w-7xl relative z-10">
-                    <div className="text-center mb-16 md:mb-24">
+                    <div className="text-center mb-16">
                         <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">How We Generate Consistent Leads on Autopilot</h2>
                         <div className="w-24 h-1 bg-accent mx-auto rounded-full"></div>
+                        <p className="mt-6 text-white/60 max-w-2xl mx-auto text-lg pt-4">Watch our completely automated growth system in action. We intercept local traffic and convert it directly into booked appointments without you lifting a finger.</p>
                     </div>
 
-                    <div className="relative">
-                        {/* Connecting Line */}
-                        <div className="hidden md:block absolute top-[120px] left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-transparent via-accent/30 to-transparent"></div>
+                    <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+                        {/* LEFT: Live Animated UI Mockup */}
+                        <div className="w-full lg:w-1/2 relative">
+                            {/* Premium glowing background behind the mockup */}
+                            <div className="absolute inset-0 bg-gradient-to-tr from-accent/30 to-blue-600/30 blur-3xl opacity-40 rounded-full transform -rotate-12 pointer-events-none"></div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 relative z-10">
+                            <motion.div
+                                className="relative bg-surfaceHighlight/80 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-2xl overflow-hidden"
+                            >
+                                {/* Abstract Browser UI header */}
+                                <div className="flex gap-2 mb-8 border-b border-white/5 pb-4">
+                                    <div className="w-3 h-3 rounded-full bg-red-400/50"></div>
+                                    <div className="w-3 h-3 rounded-full bg-yellow-400/50"></div>
+                                    <div className="w-3 h-3 rounded-full bg-green-400/50"></div>
+                                    <div className="ml-auto flex gap-2">
+                                        <div className="w-20 h-3 rounded-full bg-white/5"></div>
+                                        <div className="w-8 h-3 rounded-full bg-white/5"></div>
+                                    </div>
+                                </div>
+
+                                {/* Animated Notification Sequence */}
+                                <div className="space-y-4 relative min-h-[320px]">
+                                    <motion.div
+                                        animate={{ opacity: [0, 1, 1, 0.4, 0.4], y: [20, 0, 0, -15, -15], scale: [0.95, 1, 1, 0.98, 0.98] }}
+                                        transition={{ duration: 9, repeat: Infinity, times: [0, 0.1, 0.35, 0.45, 1], ease: "easeInOut" }}
+                                        className="bg-white/5 border border-white/10 p-4 rounded-xl flex items-center gap-4 relative z-10"
+                                    >
+                                        <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 flex-shrink-0"><Globe size={20} /></div>
+                                        <div>
+                                            <p className="font-semibold text-white">Local Search Intercepted</p>
+                                            <p className="text-sm text-white/50">"Plumber near me" - rank #1 achieved.</p>
+                                        </div>
+                                    </motion.div>
+
+                                    <motion.div
+                                        animate={{ opacity: [0, 0, 1, 1, 0.4, 0.4], y: [20, 20, 0, 0, -15, -15], scale: [0.95, 0.95, 1, 1, 0.98, 0.98] }}
+                                        transition={{ duration: 9, repeat: Infinity, times: [0, 0.15, 0.25, 0.6, 0.7, 1], ease: "easeInOut" }}
+                                        className="bg-surfaceHighlight border border-white/10 p-4 rounded-xl flex items-center gap-4 relative z-20 shadow-lg absolute top-[72px] left-0 right-0"
+                                    >
+                                        <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent flex-shrink-0"><MessageSquare size={20} /></div>
+                                        <div>
+                                            <p className="font-semibold text-white">Automated SMS Deployed</p>
+                                            <p className="text-sm text-white/50">"Hi! Yes, we can quote that today."</p>
+                                        </div>
+                                    </motion.div>
+
+                                    <motion.div
+                                        animate={{ opacity: [0, 0, 0, 1, 1], y: [20, 20, 20, 0, 0], scale: [0.95, 0.95, 0.95, 1, 1] }}
+                                        transition={{ duration: 9, repeat: Infinity, times: [0, 0.35, 0.45, 0.55, 1], ease: "easeInOut" }}
+                                        className="bg-gradient-to-r from-accent/20 to-blue-600/20 border border-accent/30 p-4 md:p-5 rounded-xl flex items-center gap-4 relative z-30 shadow-[0_4px_30px_rgba(34,211,238,0.2)] absolute top-[144px] left-0 right-0"
+                                    >
+                                        <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-background flex-shrink-0 shadow-lg"><Calendar size={24} /></div>
+                                        <div>
+                                            <p className="font-bold text-lg text-white">Appointment Booked!</p>
+                                            <p className="text-sm text-white/80">Client added directly to your calendar.</p>
+                                        </div>
+                                    </motion.div>
+                                </div>
+                            </motion.div>
+                        </div>
+
+                        {/* RIGHT: Explanatory Content Breakdown */}
+                        <div className="w-full lg:w-1/2 space-y-8 md:space-y-10 mt-8 lg:mt-0">
                             {[
-                                {
-                                    step: "01",
-                                    title: "Market Analysis",
-                                    copy: "We pinpoint exactly where your local competitors are winning and reverse-engineer their success.",
-                                    icon: <Globe size={32} className="text-accent" />
-                                },
-                                {
-                                    step: "02",
-                                    title: "System Deployment",
-                                    copy: "We build your high-converting assets, automated follow-ups, and reputation scaling engines.",
-                                    icon: <MessageSquare size={32} className="text-accent" />
-                                },
-                                {
-                                    step: "03",
-                                    title: "Predictable Scale",
-                                    copy: "You focus purely on fulfilling the work while the pipeline fills your calendar with qualified leads.",
-                                    icon: <BarChart3 size={32} className="text-accent" />
-                                }
-                            ].map((card, i) => (
+                                { step: "01", title: "We Dominate Local Search", desc: "First, we reverse-engineer the top players in your specific area and deploy a custom-built, SEO-optimized digital storefront designed strictly to harvest that exact local traffic." },
+                                { step: "02", title: "The AI Funnel Takes Over", desc: "When a potential lead interacts, our system responds via SMS, WhatsApp, or email within seconds. We educate them on your specific services before competitors even wake up." },
+                                { step: "03", title: "You Get Paid", desc: "The system dynamically books the qualified prospect straight into your calendar. You never chase leads again—you just fulfill the jobs and scale your revenue predictably." }
+                            ].map((item, i) => (
                                 <motion.div
                                     key={i}
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.6, delay: i * 0.2 }}
-                                    className="flex flex-col items-center text-center relative group"
+                                    initial={{ opacity: 0, x: 20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true, margin: "-100px" }}
+                                    transition={{ duration: 0.5, delay: i * 0.15 }}
+                                    className="flex gap-5 md:gap-6 items-start group"
                                 >
-                                    {/* Visual Node */}
-                                    <div className="w-32 h-32 mb-8 relative flex flex-col items-center justify-center">
-                                        <motion.div
-                                            className="absolute inset-0 bg-accent/10 rounded-full blur-xl group-hover:bg-accent/20 transition-colors duration-500"
-                                            animate={{ scale: [1, 1.1, 1] }}
-                                            transition={{ duration: 4, repeat: Infinity, delay: i * 0.5 }}
-                                        ></motion.div>
-                                        <div className="absolute inset-0 border border-accent/30 rounded-full group-hover:border-accent group-hover:scale-105 transition-all duration-500"></div>
-                                        <div className="absolute inset-2 border border-white/10 rounded-full bg-surfaceHighlight/80 backdrop-blur-sm z-10 flex items-center justify-center">
-                                            {card.icon}
-                                        </div>
-
-                                        {/* Floating Badge */}
-                                        <div className="absolute -top-3 -right-3 w-10 h-10 bg-accent text-background font-bold text-lg rounded-full flex items-center justify-center z-20 shadow-[0_0_20px_rgba(34,211,238,0.4)]">
-                                            {card.step}
-                                        </div>
+                                    <div className="flex-shrink-0 w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-surfaceHighlight border border-white/10 flex items-center justify-center text-accent font-display font-bold text-lg md:text-xl group-hover:bg-accent group-hover:text-background transition-colors duration-500 shadow-lg">
+                                        {item.step}
                                     </div>
-
-                                    <h3 className="text-2xl font-bold mb-4">{card.title}</h3>
-                                    <p className="text-white/60 leading-relaxed max-w-sm">{card.copy}</p>
+                                    <div>
+                                        <h3 className="text-xl md:text-2xl font-bold mb-2 group-hover:text-accent transition-colors duration-500">{item.title}</h3>
+                                        <p className="text-white/60 leading-relaxed text-base md:text-lg">{item.desc}</p>
+                                    </div>
                                 </motion.div>
                             ))}
                         </div>
