@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import SEO from '../components/SEO';
 import { Globe, Phone, Star, Calendar, MessageSquare, BarChart3, ChevronDown, CheckCircle2 } from 'lucide-react';
@@ -187,6 +187,11 @@ const faqSchema = {
 const combinedSchemas = [localBusinessSchema, serviceSchema, faqSchema];
 
 const Booking: React.FC = () => {
+    const { scrollYProgress } = useScroll();
+    const bgY1 = useTransform(scrollYProgress, [0, 1], ["0%", "150%"]);
+    const bgY2 = useTransform(scrollYProgress, [0, 1], ["0%", "-150%"]);
+    const [loadFooter, setLoadFooter] = useState(false);
+
     useEffect(() => {
         const scriptId = 'ghl-form-embed-script';
         if (!document.getElementById(scriptId)) {
@@ -209,6 +214,7 @@ const Booking: React.FC = () => {
             />
 
             <Helmet>
+                <link rel="preload" href="https://links.framenflowmedia.in/widget/booking/mjSuWbVPKsTiOCi8Od1Z" as="document" />
                 <meta name="geo.region" content="GB" />
                 <meta name="geo.placename" content="United Kingdom" />
                 <meta name="language" content="en-GB" />
@@ -247,80 +253,81 @@ const Booking: React.FC = () => {
                 </p>
             </div>
 
-            {/* Background Ambient Gradients */}
+            {/* Background Ambient Gradients - Parallax Motion Graphics */}
             <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 150, repeat: Infinity, ease: "linear" }}
-                className="fixed top-[-20%] left-[-10%] w-[500px] h-[500px] bg-accent/10 rounded-full blur-[120px] pointer-events-none z-0"
+                animate={{ rotate: 360, scale: [1, 1.2, 1] }}
+                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                style={{ y: bgY1 }}
+                className="fixed top-[-20%] left-[-10%] w-[500px] h-[500px] bg-accent/15 rounded-full blur-[120px] pointer-events-none z-0"
             />
             <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 150, repeat: Infinity, ease: "linear" }}
-                className="fixed bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none z-0"
+                animate={{ rotate: -360, scale: [1, 1.2, 1] }}
+                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                style={{ y: bgY2 }}
+                className="fixed bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-blue-600/15 rounded-full blur-[150px] pointer-events-none z-0 mix-blend-screen"
             />
+
+            {/* Visual Grid Overlays for Premium Vibe */}
+            <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-0" style={{ backgroundImage: 'linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
 
             {/* SECTION 1: HERO WITH CALENDAR */}
             <section className="pt-8 md:pt-16 pb-12 md:pb-20 px-4 md:px-6 relative z-10 w-full overflow-hidden">
-                <div className="container mx-auto max-w-7xl">
-                    <div className="flex flex-col xl:flex-row gap-8 xl:gap-12 items-start justify-between">
+                <div className="container mx-auto max-w-7xl relative">
+                    <div className="grid grid-cols-1 xl:grid-cols-[1fr_800px] gap-8 xl:gap-12 xl:gap-y-6 items-start">
 
-                        {/* LEFT COLUMN: Text Content */}
-                        <div className="flex-1 w-full flex flex-col z-20">
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6 }}
-                            >
-                                <h1 className="text-4xl md:text-5xl lg:text-7xl font-display font-bold mb-6 leading-tight">
-                                    Your Business Deserves to Be <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-blue-500">Found First</span>
-                                </h1>
-                            </motion.div>
-
-                            {/* MOBILE ONLY CALENDAR: Immediately after H1 */}
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.6, delay: 0.2 }}
-                                className="relative w-full mb-8 xl:hidden"
-                            >
-                                <div className="absolute -inset-1 bg-gradient-to-r from-accent/30 to-blue-600/30 rounded-[2.5rem] blur-xl opacity-70"></div>
-                                <BookingWidget id="hero-mobile" />
-                            </motion.div>
-
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6, delay: 0.3 }}
-                            >
-                                <h2 className="text-xl md:text-2xl text-white/90 font-light mb-8 leading-relaxed">
-                                    A Complete Digital Growth System Built for Your Business.
-                                </h2>
-
-                                <div className="space-y-4 md:space-y-5">
-                                    {[
-                                        "Less than 30 minute strategy call — completely bespoke",
-                                        "Analysis of your business, local market, and competitors",
-                                        "Strictly limited availability to maintain quality",
-                                        "Engineered for local UK businesses expecting growth"
-                                    ].map((item, i) => (
-                                        <div key={i} className="flex items-center space-x-4 bg-white/5 p-4 rounded-xl border border-white/10 backdrop-blur-sm transition-colors hover:bg-white/10 hover:border-accent/30 shadow-[0_4px_20px_rgba(255,255,255,0.02)]">
-                                            <CheckCircle2 className="text-accent flex-shrink-0" size={24} />
-                                            <span className="text-base md:text-lg text-white/90 font-medium">{item}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </motion.div>
-                        </div>
-
-                        {/* DESKTOP ONLY CALENDAR */}
+                        {/* Part 1: Text Content Header */}
                         <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            className="relative w-full max-w-[800px] xl:w-[800px] hidden xl:block flex-shrink-0 z-20 mt-4"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                            className="order-1 xl:col-start-1 xl:row-start-1 z-20"
                         >
-                            <div className="absolute -inset-1 bg-gradient-to-r from-accent/30 to-blue-600/30 rounded-[2.5rem] blur-xl opacity-70"></div>
-                            <BookingWidget id="hero-desktop" />
+                            <h1 className="text-4xl md:text-5xl lg:text-7xl font-display font-bold mb-4 leading-tight">
+                                Your Business Deserves to Be <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-blue-500">Found First</span>
+                            </h1>
+                        </motion.div>
+
+                        {/* Part 2: Calendar - Placed logically via CSS Grid for all views without duplicating DOM */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            className="order-2 xl:col-start-2 xl:row-start-1 xl:row-span-2 relative w-full z-20"
+                        >
+                            <div className="absolute -inset-2 bg-gradient-to-br from-accent/20 via-transparent to-blue-600/20 rounded-[2.5rem] blur-xl opacity-70 animate-pulse"></div>
+                            <BookingWidget id="hero" />
+                        </motion.div>
+
+                        {/* Part 3: Text Content Footer */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.3 }}
+                            className="order-3 xl:col-start-1 xl:row-start-2 z-20"
+                        >
+                            <h2 className="text-xl md:text-2xl text-white/90 font-light mb-8 leading-relaxed max-w-xl">
+                                A Complete Digital Growth System Built for Your Business.
+                            </h2>
+
+                            <div className="space-y-4 md:space-y-5 max-w-xl">
+                                {[
+                                    "Less than 30 minute strategy call — completely bespoke",
+                                    "Analysis of your business, local market, and competitors",
+                                    "Strictly limited availability to maintain quality",
+                                    "Engineered for local UK businesses expecting growth"
+                                ].map((item, i) => (
+                                    <motion.div
+                                        key={i}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ duration: 0.4, delay: 0.4 + (i * 0.1) }}
+                                        className="flex items-center space-x-4 bg-surfaceHighlight/30 p-4 rounded-xl border border-white/10 backdrop-blur-sm transition-all hover:bg-surfaceHighlight/50 hover:border-accent/40 shadow-[0_4px_20px_rgba(34,211,238,0.03)] group"
+                                    >
+                                        <CheckCircle2 className="text-accent flex-shrink-0 group-hover:scale-110 transition-transform" size={24} />
+                                        <span className="text-base md:text-lg text-white/90 font-medium">{item}</span>
+                                    </motion.div>
+                                ))}
+                            </div>
                         </motion.div>
 
                     </div>
@@ -579,10 +586,20 @@ const Booking: React.FC = () => {
                         Trusted by Local Businesses Across Birmingham, Manchester, Leeds and Beyond
                     </h3>
 
-                    <div className="max-w-[800px] mx-auto relative">
+                    <motion.div
+                        className="max-w-[800px] mx-auto relative min-h-[700px]"
+                        onViewportEnter={() => setLoadFooter(true)}
+                        viewport={{ once: true, margin: "200px" }}
+                    >
                         <div className="absolute -inset-1 bg-gradient-to-r from-accent/30 to-blue-600/30 rounded-[2.5rem] blur-xl opacity-70"></div>
-                        <BookingWidget id="footer" />
-                    </div>
+                        {loadFooter ? (
+                            <BookingWidget id="footer" />
+                        ) : (
+                            <div className="relative bg-surface p-2 md:p-4 rounded-[2rem] border border-white/10 shadow-2xl h-full w-full flex items-center justify-center">
+                                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent"></div>
+                            </div>
+                        )}
+                    </motion.div>
 
                     <div className="mt-16 pt-8 border-t border-white/10">
                         <h3 className="text-xs uppercase tracking-widest text-white/20 font-semibold text-center mb-2">Bhanu Deep — Digital Growth Specialist</h3>
