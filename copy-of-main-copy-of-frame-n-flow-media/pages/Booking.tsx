@@ -42,7 +42,7 @@ const BookingWidget = ({ id }: { id: string }) => (
             <span className="ml-4 text-[11px] font-bold text-white/50 tracking-widest uppercase">Live Booking Portal</span>
         </div>
 
-        <div className="flex-1 w-full bg-background/50 overflow-hidden">
+        <div className="flex-1 w-full bg-background/50 overflow-visible">
             <iframe
                 src="https://links.framenflowmedia.in/widget/booking/mjSuWbVPKsTiOCi8Od1Z"
                 style={{ width: '100%', border: 'none', minHeight: '650px' }}
