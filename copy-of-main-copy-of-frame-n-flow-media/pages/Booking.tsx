@@ -45,7 +45,7 @@ const BookingWidget = ({ id }: { id: string }) => (
         <div className="flex-1 w-full bg-background/50 overflow-hidden">
             <iframe
                 src="https://links.framenflowmedia.in/widget/booking/mjSuWbVPKsTiOCi8Od1Z"
-                style={{ width: '100%', height: '100%', border: 'none', minHeight: '650px' }}
+                style={{ width: '100%', border: 'none', minHeight: '650px' }}
                 scrolling="no"
                 id={`mjSuWbVPKsTiOCi8Od1Z_${id}`}
                 title="Appointment Booking Widget"
