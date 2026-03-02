@@ -42,8 +42,7 @@ const BookingWidget = ({ id }: { id: string }) => (
             <span className="ml-4 text-[11px] font-bold text-white/50 tracking-widest uppercase">Live Booking Portal</span>
         </div>
 
-        {/* We use a fixed height wrapper with overflow scrolling. This guarantees the calendar is never cut off, even if GoHighLevel scripts fail to calculate exact iframe heights. */}
-        <div className="w-full bg-background/50 overflow-y-auto custom-scrollbar" style={{ height: "650px", WebkitOverflowScrolling: "touch" }}>
+        <div className="flex-1 w-full bg-background/50 overflow-hidden">
             <iframe
                 src="https://links.framenflowmedia.in/widget/booking/mjSuWbVPKsTiOCi8Od1Z"
                 style={{ width: '100%', border: 'none', minHeight: '1200px' }}
