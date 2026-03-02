@@ -327,85 +327,117 @@ const Booking: React.FC = () => {
                 </div>
             </section>
 
-            {/* SECTION 2: HOW UK BUSINESSES GENERATE CONSISTENT LEADS ON AUTOPILOT */}
-            <section className="py-16 md:py-24 px-6 bg-surface/50 relative z-10">
-                <div className="container mx-auto max-w-7xl">
-                    <div className="text-center mb-10 md:mb-16">
-                        <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">How UK Businesses Generate Consistent Leads on Autopilot</h2>
+            {/* SECTION 2: THE GROWTH PIPELINE (VISUAL) */}
+            <section className="py-16 md:py-24 px-6 bg-surface/50 relative z-10 overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl h-full bg-accent/5 blur-[120px] pointer-events-none"></div>
+
+                <div className="container mx-auto max-w-7xl relative z-10">
+                    <div className="text-center mb-16 md:mb-24">
+                        <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">How We Generate Consistent Leads on Autopilot</h2>
                         <div className="w-24 h-1 bg-accent mx-auto rounded-full"></div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                            {
-                                step: "01",
-                                title: "We Analyze Your Local Market",
-                                copy: "We look at exactly who is getting the business in your area, and how we can position you to take market share."
-                            },
-                            {
-                                step: "02",
-                                title: "We Deploy the Growth System",
-                                copy: "We set up professional systems that automatically rank your business, follow up with leads, and request five-star reviews from every customer."
-                            },
-                            {
-                                step: "03",
-                                title: "You Scale Predictably",
-                                copy: "With automated lead generation taking over, you focus on what you do best—delivering high-quality service while your pipeline stays full."
-                            }
-                        ].map((card, i) => (
-                            <motion.div
-                                key={i}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: i * 0.1 }}
-                                className="bg-surfaceHighlight p-8 rounded-3xl border border-white/5 hover:border-accent/40 transition-colors relative overflow-hidden group"
-                            >
-                                <div className="text-7xl font-display font-bold text-white/5 absolute -top-4 -right-2 group-hover:text-accent/5 transition-colors pointer-events-none">
-                                    {card.step}
-                                </div>
-                                <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center text-accent font-bold mb-6 border border-accent/20">
-                                    {i + 1}
-                                </div>
-                                {/* Structuring as bold text rather than explicit Hx to keep strictly to prompt's H3s, but let's make it look prominent */}
-                                <div className="text-2xl font-bold mb-4">{card.title}</div>
-                                <p className="text-white/60 leading-relaxed">{card.copy}</p>
-                            </motion.div>
-                        ))}
+                    <div className="relative">
+                        {/* Connecting Line */}
+                        <div className="hidden md:block absolute top-[120px] left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-transparent via-accent/30 to-transparent"></div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 relative z-10">
+                            {[
+                                {
+                                    step: "01",
+                                    title: "Market Analysis",
+                                    copy: "We pinpoint exactly where your local competitors are winning and reverse-engineer their success.",
+                                    icon: <Globe size={32} className="text-accent" />
+                                },
+                                {
+                                    step: "02",
+                                    title: "System Deployment",
+                                    copy: "We build your high-converting assets, automated follow-ups, and reputation scaling engines.",
+                                    icon: <MessageSquare size={32} className="text-accent" />
+                                },
+                                {
+                                    step: "03",
+                                    title: "Predictable Scale",
+                                    copy: "You focus purely on fulfilling the work while the pipeline fills your calendar with qualified leads.",
+                                    icon: <BarChart3 size={32} className="text-accent" />
+                                }
+                            ].map((card, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.6, delay: i * 0.2 }}
+                                    className="flex flex-col items-center text-center relative group"
+                                >
+                                    {/* Visual Node */}
+                                    <div className="w-32 h-32 mb-8 relative flex flex-col items-center justify-center">
+                                        <motion.div
+                                            className="absolute inset-0 bg-accent/10 rounded-full blur-xl group-hover:bg-accent/20 transition-colors duration-500"
+                                            animate={{ scale: [1, 1.1, 1] }}
+                                            transition={{ duration: 4, repeat: Infinity, delay: i * 0.5 }}
+                                        ></motion.div>
+                                        <div className="absolute inset-0 border border-accent/30 rounded-full group-hover:border-accent group-hover:scale-105 transition-all duration-500"></div>
+                                        <div className="absolute inset-2 border border-white/10 rounded-full bg-surfaceHighlight/80 backdrop-blur-sm z-10 flex items-center justify-center">
+                                            {card.icon}
+                                        </div>
+
+                                        {/* Floating Badge */}
+                                        <div className="absolute -top-3 -right-3 w-10 h-10 bg-accent text-background font-bold text-lg rounded-full flex items-center justify-center z-20 shadow-[0_0_20px_rgba(34,211,238,0.4)]">
+                                            {card.step}
+                                        </div>
+                                    </div>
+
+                                    <h3 className="text-2xl font-bold mb-4">{card.title}</h3>
+                                    <p className="text-white/60 leading-relaxed max-w-sm">{card.copy}</p>
+                                </motion.div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* SECTION 3: WHAT OUR SYSTEM DOES FOR YOUR BUSINESS */}
+            {/* SECTION 3: VISUAL GRID SYSTEM */}
             <section className="py-16 md:py-24 px-6 relative z-10">
                 <div className="container mx-auto max-w-7xl">
-                    <div className="text-center mb-10 md:mb-16">
-                        <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">What Our System Does for Your Business</h2>
+                    <div className="text-center mb-16 md:mb-20">
+                        <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">The Complete Digital Architecture</h2>
                         <div className="w-24 h-1 bg-accent mx-auto rounded-full"></div>
+                        <p className="mt-6 text-white/60 max-w-2xl mx-auto text-lg pt-4">We replace 5 different software tools and 3 agencies with one centralized growth system engineered specifically for your local dominance.</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {[
-                            { icon: <Globe size={28} />, title: "Professional Website Design and Development", copy: "Ranking on Google and bringing you new clients every single month automatically." },
-                            { icon: <Star size={28} />, title: "Google Rankings That Bring You Clients Monthly", copy: "Your business at the top when local customers search for your exact services." },
-                            { icon: <MessageSquare size={28} />, title: "Automated Review Collection and Reputation Management", copy: "After every job your system automatically requests a Google review — building your reputation while you sleep." },
-                            { icon: <Phone size={28} />, title: "Lead Follow Up That Never Sleeps", copy: "Every enquiry gets an instant automated reply within seconds — day or night." },
-                            { icon: <Calendar size={28} />, title: "Centralised Business Management Platform", copy: "Instagram DMs, WhatsApp, website enquiries, missed calls — all in one specific app." },
-                            { icon: <BarChart3 size={28} />, title: "Monthly Performance and Growth Reports", copy: "Track the growth. Monitor exactly how your performance improves month on month." }
+                            { icon: <Globe size={24} />, title: "Premium SEO Website", copy: "Lightning-fast, high-converting digital storefront built to convert traffic into booked jobs.", highlight: true },
+                            { icon: <Star size={24} />, title: "Reputation Engine", copy: "Automated review requests sent via SMS to drastically boost your local Google map pack ranking.", highlight: false },
+                            { icon: <Phone size={24} />, title: "Missed Call Text-Back", copy: "Never lose a lead to a competitor. If you miss their call, the system instantly texts them back.", highlight: true },
+                            { icon: <MessageSquare size={24} />, title: "Centralized Inbox", copy: "Instagram DMs, WhatsApp, SMS, and Facebook messages — all handled from one single dashboard.", highlight: false },
+                            { icon: <CheckCircle2 size={24} />, title: "Lead Nurturing", copy: "Pre-built SMS & Email drip campaigns that educate prospects until they are ready to buy.", highlight: false },
+                            { icon: <BarChart3 size={24} />, title: "Live ROI Dashboard", copy: "See exactly how much revenue the system is generating for you in real time.", highlight: true }
                         ].map((feature, i) => (
                             <motion.div
                                 key={i}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
+                                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                                whileInView={{ opacity: 1, scale: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                                className="bg-surface/60 backdrop-blur-sm p-8 rounded-3xl border border-white/5 hover:bg-surfaceHighlight transition-colors"
+                                className={`p-[1px] rounded-3xl overflow-hidden relative group ${feature.highlight ? 'bg-gradient-to-br from-accent/50 to-blue-600/50' : 'bg-white/10'}`}
                             >
-                                <div className="text-accent mb-6 bg-accent/10 w-16 h-16 rounded-2xl flex items-center justify-center border border-accent/20">
-                                    {feature.icon}
+                                <div className="absolute inset-0 bg-gradient-to-br from-accent/0 to-accent/0 group-hover:from-accent/20 group-hover:to-blue-600/20 transition-all duration-500"></div>
+                                <div className="bg-surfaceHighlight/90 backdrop-blur-xl w-full h-full p-8 rounded-[23px] relative z-10 flex flex-col h-full">
+                                    <div className="flex items-center gap-4 mb-6">
+                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${feature.highlight ? 'bg-accent text-background' : 'bg-white/5 text-accent border border-white/10'}`}>
+                                            {feature.icon}
+                                        </div>
+                                        <h3 className="text-xl font-bold leading-tight flex-1">{feature.title}</h3>
+                                    </div>
+                                    <p className="text-white/60 leading-relaxed text-sm md:text-base flex-1">{feature.copy}</p>
+
+                                    {/* Abstract visual decor inside card */}
+                                    <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none transform translate-x-1/4 translate-y-1/4 group-hover:scale-110 transition-transform duration-500">
+                                        {feature.icon}
+                                    </div>
                                 </div>
-                                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                                <p className="text-white/60 leading-relaxed">{feature.copy}</p>
                             </motion.div>
                         ))}
                     </div>
@@ -506,6 +538,10 @@ const Booking: React.FC = () => {
                     </div>
 
                     <div className="space-y-4">
+                        <FAQItem
+                            question="Do you also offer a complimentary website?"
+                            answer="Yes, we do. As part of our digital growth consultation, we offer a professionally designed, SEO-optimised website for qualifying local UK businesses with absolutely no upfront design cost. We can explore exactly how this works and show you options during our strategy meeting."
+                        />
                         <FAQItem
                             question="What is the investment for your digital growth system?"
                             answer="We offer structured packages tailored to your specific goals and requirements. During our strategy call, we completely outline our systems and discuss options that align directly with your growth ambitions with no hidden fees."
