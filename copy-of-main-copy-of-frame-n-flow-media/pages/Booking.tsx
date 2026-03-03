@@ -33,8 +33,8 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
     );
 };
 
-const BookingWidget = ({ id }: { id: string }) => (
-    <div className="bg-surface/80 backdrop-blur-3xl rounded-[2rem] border border-white/10 overflow-hidden flex flex-col w-full z-10 shadow-[0_0_50px_rgba(0,0,0,0.5)] relative">
+const BookingWidget = ({ id, minHeight = '650px' }: { id: string, minHeight?: string }) => (
+    <div className="bg-surface/80 backdrop-blur-3xl rounded-[2rem] border border-white/10 overflow-hidden flex flex-col w-full h-full z-10 shadow-[0_0_50px_rgba(0,0,0,0.5)] relative">
         <div className="flex items-center space-x-2 px-5 py-4 border-b border-white/5 bg-gradient-to-r from-surfaceHighlight/50 to-transparent">
             <div className="w-3 h-3 rounded-full bg-[#FF5F56]"></div>
             <div className="w-3 h-3 rounded-full bg-[#FFBD2E]"></div>
@@ -45,8 +45,8 @@ const BookingWidget = ({ id }: { id: string }) => (
         <div className="flex-1 w-full bg-background/50 overflow-hidden relative">
             <iframe
                 src="https://links.framenflowmedia.in/widget/booking/mjSuWbVPKsTiOCi8Od1Z"
-                style={{ width: '100%', height: '100%', border: 'none', minHeight: '650px' }}
-                scrolling="no"
+                style={{ width: '100%', height: '100%', border: 'none', minHeight: minHeight }}
+                scrolling="yes"
                 id={`mjSuWbVPKsTiOCi8Od1Z_${id}`}
                 title="Appointment Booking Widget"
             ></iframe>
@@ -651,7 +651,7 @@ const Booking: React.FC = () => {
                     >
                         <div className="absolute -inset-1 bg-gradient-to-r from-accent/30 to-blue-600/30 rounded-[2.5rem] blur-xl opacity-70"></div>
                         {loadFooter ? (
-                            <BookingWidget id="footer" />
+                            <BookingWidget id="footer" minHeight="750px" />
                         ) : (
                             <div className="relative bg-surface p-2 md:p-4 rounded-[2rem] border border-white/10 shadow-2xl h-full w-full flex items-center justify-center">
                                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent"></div>
