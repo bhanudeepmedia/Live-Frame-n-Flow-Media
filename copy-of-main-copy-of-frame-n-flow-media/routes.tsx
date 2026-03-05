@@ -58,7 +58,7 @@ export const routes: RouteObject[] = [
     { path: '/service-marketing', element: <ServiceMarketing /> },
     { path: '/startup-marketing', element: <StartupMarketing /> },
     { path: '/realtor-marketing', element: <RealtorMarketing /> },
-    { path: '/appointment', element: <Booking /> },
+    { path: '/web-design-australia', element: <Booking /> },
 
     // Blog
     { path: '/blog', element: <BlogIndex /> },
