@@ -34,18 +34,18 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
 };
 
 const BookingWidget = ({ id }: { id: string }) => (
-    <div className="relative bg-surface p-2 md:p-4 rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden min-h-[700px] flex flex-col w-full z-10">
+    <div className="relative bg-surface p-2 md:p-4 rounded-[2rem] border border-white/10 shadow-2xl overflow-visible flex flex-col w-full z-10">
         <div className="flex items-center space-x-2 px-4 py-3 border-b border-white/5 bg-surfaceHighlight/30 rounded-t-2xl mb-2">
             <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
             <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
             <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
             <span className="ml-4 text-xs font-medium text-white/40 tracking-wider">SECURE BOOKING PORTAL</span>
         </div>
-        <div className="flex-1 w-full bg-background rounded-b-2xl overflow-hidden">
+        <div className="flex-1 w-full bg-background rounded-b-2xl overflow-visible">
             <iframe
                 src="https://links.framenflowmedia.in/widget/booking/mjSuWbVPKsTiOCi8Od1Z"
                 style={{ width: '100%', height: '100%', border: 'none', minHeight: '650px' }}
-                scrolling="no"
+                scrolling="yes"
                 id={`mjSuWbVPKsTiOCi8Od1Z_${id}`}
                 title="Appointment Booking Widget"
             ></iframe>
@@ -252,7 +252,7 @@ const UKBooking: React.FC = () => {
             <div className="fixed bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none" />
 
             {/* SECTION 1: HERO WITH CALENDAR */}
-            <section className="pt-32 pb-20 px-6 relative z-10">
+            <section className="pt-10 md:pt-20 pb-20 px-6 relative z-10">
                 <div className="container mx-auto max-w-7xl">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-12 items-center">
 
