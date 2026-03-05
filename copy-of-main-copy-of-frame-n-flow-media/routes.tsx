@@ -17,6 +17,7 @@ import ServiceMarketing from './pages/ServiceMarketing';
 import StartupMarketing from './pages/StartupMarketing';
 import RealtorMarketing from './pages/RealtorMarketing';
 import Booking from './pages/Booking';
+import UKBooking from './pages/UKBooking';
 
 // Growth Partner Imports
 import GrowthPartnerLanding from './pages/GrowthPartner/Landing';
@@ -59,6 +60,7 @@ export const routes: RouteObject[] = [
     { path: '/startup-marketing', element: <StartupMarketing /> },
     { path: '/realtor-marketing', element: <RealtorMarketing /> },
     { path: '/web-design-australia', element: <Booking /> },
+    { path: '/appointment', element: <UKBooking /> },
 
     // Blog
     { path: '/blog', element: <BlogIndex /> },

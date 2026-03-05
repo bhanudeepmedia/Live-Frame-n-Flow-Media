@@ -75,7 +75,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     '/admin/growth-partners-dashboard',
     '/growth-partner/signup',
     '/growth-partner/login',
-    '/web-design-australia'
+    '/web-design-australia',
+    '/appointment'
   ];
   const shouldHide = hideNavFooterSteps.includes(location.pathname);
 
