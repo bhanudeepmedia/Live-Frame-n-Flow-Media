@@ -31,8 +31,14 @@ import AdminDashboard from './pages/Admin/Dashboard';
 import BlogIndex from './pages/Blog/Index';
 import RevenueGrowthPost from './pages/Blog/RevenueGrowth';
 
+// Offer Imports
+import WebsiteOffer from './pages/Offers/WebsiteOffer';
+import WebsiteTerms from './pages/Offers/WebsiteTerms';
+
 export const routes: RouteObject[] = [
     { path: '/', element: <Home /> },
+    { path: '/offers/website-10k', element: <WebsiteOffer /> },
+    { path: '/offers/website-10k/terms', element: <WebsiteTerms /> },
     { path: '/about', element: <About /> },
     { path: '/approach', element: <Approach /> },
     { path: '/services', element: <Services /> },

@@ -70,7 +70,12 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Track page views for GTM on route changes
   useGTMPageTracking();
 
-  const hideNavFooterSteps = [
+  const hideNavbarOnly = [
+    '/offers/website-10k',
+    '/offers/website-10k/terms'
+  ];
+
+  const hideBoth = [
     '/growth-partner/dashboard',
     '/admin/growth-partners-dashboard',
     '/growth-partner/signup',
@@ -78,22 +83,24 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     '/web-design-australia',
     '/appointment'
   ];
-  const shouldHide = hideNavFooterSteps.includes(location.pathname);
+
+  const shouldHideNavbar = hideNavbarOnly.includes(location.pathname) || hideBoth.includes(location.pathname);
+  const shouldHideFooter = hideBoth.includes(location.pathname);
 
   return (
     <div className="min-h-screen bg-transparent text-white font-sans selection:bg-accent selection:text-background">
       <HashHandler />
       <ScrollToTop />
       <CustomCursor />
-      {!shouldHide && <Navbar />}
+      {!shouldHideNavbar && <Navbar />}
 
       <main>
         {children}
       </main>
 
-      {!shouldHide && <Footer />}
+      {!shouldHideFooter && <Footer />}
 
-      {!shouldHide && <WhatsAppWidget />}
+      {!shouldHideFooter && <WhatsAppWidget />}
     </div>
   );
 };

@@ -110,6 +110,7 @@ const Footer: React.FC = () => {
             </a>
           </div>
           <div className="flex gap-8 mt-4 md:mt-0">
+            <NavLink to="/offers/website-10k" onClick={handleLinkClick} className="text-accent font-bold hover:scale-105 transition-all">₹10,000 Website Offer</NavLink>
             <NavLink to="/appointment" onClick={handleLinkClick} className="hover:text-white transition-colors">UK Strategy Call</NavLink>
             <NavLink to="/web-design-australia" onClick={handleLinkClick} className="hover:text-white transition-colors">Australia Strategy Call</NavLink>
             <NavLink to="/privacy-policy" onClick={handleLinkClick} className="hover:text-white transition-colors">Privacy Policy</NavLink>
