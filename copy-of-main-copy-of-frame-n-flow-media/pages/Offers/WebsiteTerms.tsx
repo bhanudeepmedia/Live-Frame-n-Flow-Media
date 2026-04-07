@@ -3,10 +3,11 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, FileText, CheckCircle2, ChevronRight } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import SEO from '../../components/SEO';
+import Button from '../../components/Button';
 
 const WebsiteTerms: React.FC = () => {
   const terms = [
-    { title: "Domain Registration", detail: "One free domain (.com or .in) is provided based on direct availability. Premimum or auctioned domains incur separate charges. If you already own a domain, we will connect it to the new hosting." },
+    { title: "Domain Registration", detail: "One free domain is provided based on availability. Premimum or auctioned domains incur separate charges. If you already own a domain, we will connect it to the new hosting." },
     { title: "Hosting & Maintenance", detail: "Hosting is provided free for the first year. From the second year onwards, the renewal cost is ₹4,500/year, which includes hosting and basic security maintenance." },
     { title: "Payment Structure", detail: "A non-refundable 50% upfront payment is required to initiate the project. The remaining 50% balance must be cleared after the final preview and before the website goes live on the public domain." },
     { title: "Revisions", detail: "This offer includes exactly ONE (1) round of revision. Any additional revision cycles or major design changes after the first revision will be billed at ₹1,500 per cycle." },
