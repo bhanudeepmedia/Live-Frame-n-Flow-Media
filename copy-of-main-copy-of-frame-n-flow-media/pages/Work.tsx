@@ -183,7 +183,23 @@ const Work: React.FC = () => {
     {
       url: "https://www.thegraftonvault.com",
       title: "The Grafton Vault",
+      thumbnail: "https://thegraftonvault.com/temp/main_logo_bg.png",
       description: "A premium digital vault experience. High-security backend architecture with a luxurious, motion-rich frontend interface."
+    },
+    {
+      url: "https://dosaxpress.netlify.app/",
+      title: "Dosa Xpress",
+      description: "A modern, vibrant landing page for an Indian fast-casual restaurant, featuring high-quality food photography and seamless ordering flow."
+    },
+    {
+      url: "https://mniconcrete.netlify.app/",
+      title: "MNI Concrete",
+      description: "Professional landing page for concrete and construction services, showcasing industrial expertise with a clean, trustworthy aesthetic."
+    },
+    {
+      url: "https://aiautomationbiz.netlify.app/",
+      title: "AI Automation Biz",
+      description: "Futuristic and high-tech platform for AI automation services, featuring sleek UI elements and data-driven workflow visualizations."
     },
     {
       url: "https://connvel.in",
@@ -600,12 +616,20 @@ const Work: React.FC = () => {
 
                         {/* Website Preview */}
                         <div className="absolute inset-0 pt-6">
-                          <iframe
-                            src={item.url}
-                            className="w-full h-[200%] border-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500 origin-top transform scale-50"
-                            style={{ pointerEvents: 'none', width: '200%', height: '200%', transform: 'scale(0.5)', transformOrigin: 'top left' }}
-                            title={item.title}
-                          />
+                          {('thumbnail' in item) ? (
+                            <img 
+                              src={(item as any).thumbnail} 
+                              alt={item.title}
+                              className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                            />
+                          ) : (
+                            <iframe
+                              src={item.url}
+                              className="w-full h-[200%] border-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500 origin-top transform scale-50"
+                              style={{ pointerEvents: 'none', width: '200%', height: '200%', transform: 'scale(0.5)', transformOrigin: 'top left' }}
+                              title={item.title}
+                            />
+                          )}
                         </div>
 
                         {/* Visit Overlay */}
