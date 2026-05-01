@@ -181,6 +181,11 @@ const Work: React.FC = () => {
 
   const devPortfolio = [
     {
+      url: "https://amazonppclearn.com/",
+      title: "Amazon PPC Learn",
+      description: "A comprehensive learning platform for Amazon PPC mastery. Features a clean, educational-focused UI with optimized performance for large-scale video content and interactive modules."
+    },
+    {
       url: "https://www.thegraftonvault.com",
       title: "The Grafton Vault",
       thumbnail: "https://thegraftonvault.com/temp/main_logo_bg.png",
