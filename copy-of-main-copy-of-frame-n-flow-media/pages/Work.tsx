@@ -181,15 +181,25 @@ const Work: React.FC = () => {
 
   const devPortfolio = [
     {
+      url: "https://www.thegraftonvault.com",
+      title: "Grafton World",
+      thumbnail: "https://thegraftonvault.com/temp/main_logo_bg.png",
+      description: "A premium digital vault experience. High-security backend architecture with a luxurious, motion-rich frontend interface."
+    },
+    {
+      url: "https://connvel.in",
+      title: "Conwell",
+      description: "Next-gen networking platform. Real-time data synchronization, AI-enhanced user matching, and a fluid, app-like web experience."
+    },
+    {
+      url: "https://realestatehyd.netlify.app/",
+      title: "Real Grow Realtors",
+      description: "A premium real estate platform for luxury properties in Hyderabad. Features high-end property listings, interactive maps, and a seamless lead generation system."
+    },
+    {
       url: "https://amazonppclearn.com/",
       title: "Amazon PPC Learn",
       description: "A comprehensive learning platform for Amazon PPC mastery. Features a clean, educational-focused UI with optimized performance for large-scale video content and interactive modules."
-    },
-    {
-      url: "https://www.thegraftonvault.com",
-      title: "The Grafton Vault",
-      thumbnail: "https://thegraftonvault.com/temp/main_logo_bg.png",
-      description: "A premium digital vault experience. High-security backend architecture with a luxurious, motion-rich frontend interface."
     },
     {
       url: "https://dosaxpress.netlify.app/",
@@ -205,11 +215,6 @@ const Work: React.FC = () => {
       url: "https://aiautomationbiz.netlify.app/",
       title: "AI Automation Biz",
       description: "Futuristic and high-tech platform for AI automation services, featuring sleek UI elements and data-driven workflow visualizations."
-    },
-    {
-      url: "https://connvel.in",
-      title: "Connvel",
-      description: "Next-gen networking platform. Real-time data synchronization, AI-enhanced user matching, and a fluid, app-like web experience."
     },
     {
       url: "https://framenflowmedia.in",
