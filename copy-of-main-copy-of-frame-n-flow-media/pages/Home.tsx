@@ -897,87 +897,86 @@ const Home: React.FC = () => {
       </section>
 
       {/* TESTIMONIAL VIDEO SECTION */}
-      <section className="py-12 md:py-24 relative z-20 overflow-hidden bg-transparent">
+      <section className="py-10 md:py-16 relative z-20 overflow-hidden bg-transparent border-b border-white/5">
         <div className="container mx-auto px-6">
-          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-10 max-w-6xl mx-auto">
             {/* Text Side */}
-            <div className="flex-1 text-center lg:text-left order-2 lg:order-1">
+            <div className="flex-1 text-center lg:text-left order-2 lg:order-1 max-w-xl">
               <FadeIn>
-                <span className="text-accent uppercase tracking-[0.3em] text-xs font-bold mb-6 block">Direct Impact</span>
-                <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-8 leading-tight">
-                  Built for <span className="text-accent">Dominance</span>.
+                <div className="flex items-center justify-center lg:justify-start gap-2 mb-4">
+                  <span className="text-accent uppercase tracking-[0.3em] text-[10px] font-bold">Client Success</span>
+                  <div className="w-1 h-1 bg-white/20 rounded-full" />
+                  <span className="text-white/40 uppercase tracking-[0.2em] text-[10px]">Dublin, Ireland</span>
+                </div>
+                
+                <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6 leading-tight">
+                  Driving <span className="text-accent italic">Global</span> Impact.
                 </h2>
-                <p className="text-lg md:text-xl text-white/60 font-light leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0">
-                  We don't just deliver videos; we engineer <span className="text-white font-bold">market-shifting assets</span>. See how we've helped brands transform their digital presence and drive unprecedented engagement.
-                </p>
-                <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-10">
-                  <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
-                    <CheckCircle2 size={16} className="text-accent" />
-                    <span className="text-sm text-white/80">Revenue Focused</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
-                    <CheckCircle2 size={16} className="text-accent" />
-                    <span className="text-sm text-white/80">AI Optimized</span>
+                
+                <div className="relative mb-8">
+                  <div className="absolute -left-4 -top-4 text-accent/20 text-6xl font-serif">"</div>
+                  <p className="text-lg md:text-xl text-white font-medium leading-relaxed relative z-10 italic">
+                    I'm looking forward to working with Bhanu and his team for the next 20 years.
+                  </p>
+                  <div className="mt-4 flex items-center justify-center lg:justify-start gap-3">
+                    <div className="w-8 h-px bg-accent/50" />
+                    <span className="text-sm font-mono text-white/50 uppercase tracking-widest">Partner Testimonial</span>
                   </div>
                 </div>
-                <div className="pt-4 border-t border-white/5">
-                  <div className="flex items-center justify-center lg:justify-start gap-6">
-                    <div className="text-center lg:text-left">
-                      <div className="text-3xl font-display font-bold text-white">90%</div>
-                      <div className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Cost Reduction</div>
-                    </div>
-                    <div className="w-px h-12 bg-white/10" />
-                    <div className="text-center lg:text-left">
-                      <div className="text-3xl font-display font-bold text-white">4X</div>
-                      <div className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Faster Delivery</div>
-                    </div>
+
+                <div className="flex flex-wrap justify-center lg:justify-start gap-3">
+                  <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-sm">
+                    <CheckCircle2 size={14} className="text-accent" />
+                    <span className="text-[11px] text-white/70">Strategic Partnership</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-sm">
+                    <CheckCircle2 size={14} className="text-accent" />
+                    <span className="text-[11px] text-white/70">Dublin HQ</span>
                   </div>
                 </div>
               </FadeIn>
             </div>
 
             {/* Video Side */}
-            <div className="flex-1 w-full max-w-[420px] relative order-1 lg:order-2">
+            <div className="flex-1 w-full max-w-[320px] relative order-1 lg:order-2">
               <FadeIn delay={0.2}>
-                {/* Premium Floating Badge */}
-                <motion.div 
-                  className="absolute -top-6 -right-6 z-40 bg-accent text-black px-4 py-2 rounded-xl font-bold text-sm shadow-[0_0_30px_rgba(34,211,238,0.5)] border border-white/20"
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  LIVE RESULT
-                </motion.div>
-
-                {/* Phone Mockup Frame */}
-                <div className="relative aspect-[9/19] w-full bg-[#050505] rounded-[3.5rem] p-3 border-[8px] border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.8)] overflow-hidden">
-                  {/* Notch Overlay */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-7 bg-[#050505] rounded-b-2xl z-20 flex items-center justify-center">
-                    <div className="w-12 h-1 bg-white/10 rounded-full" />
-                  </div>
+                {/* Phone Mockup Frame - Scaled Down */}
+                <div className="relative aspect-[9/18] w-full bg-[#050505] rounded-[2.5rem] p-2 border-[5px] border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden group/video">
                   
-                  {/* Video Embed */}
-                  <div className="w-full h-full rounded-[2.8rem] overflow-hidden relative z-10 bg-black">
+                  {/* Video Embed - Interaction Required for Sound */}
+                  <div className="w-full h-full rounded-[2rem] overflow-hidden relative z-10 bg-black">
                     <iframe
-                      src="https://www.youtube.com/embed/L_DryjVTpCY?autoplay=1&mute=1&loop=1&playlist=L_DryjVTpCY&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3"
+                      src="https://www.youtube.com/embed/L_DryjVTpCY?controls=1&modestbranding=1&rel=0&showinfo=0"
                       title="Client Testimonial"
-                      className="absolute inset-0 w-full h-full object-cover scale-105"
+                      className="absolute inset-0 w-full h-full object-cover"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     ></iframe>
+
+                    {/* Sound Hint Overlay - Appears only before interaction */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-[2px] group-hover/video:bg-black/0 transition-all duration-500 pointer-events-none z-20">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-black shadow-[0_0_20px_rgba(34,211,238,0.5)]">
+                          <Play size={20} className="fill-current ml-1" />
+                        </div>
+                        <span className="text-[10px] font-bold text-white uppercase tracking-widest bg-black/40 px-3 py-1 rounded-full backdrop-blur-md">Click to Play with Sound</span>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* High-End Gloss Effect */}
+                  {/* Reflection */}
                   <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-transparent via-white/5 to-transparent z-30" />
                 </div>
                 
-                {/* Backdrop Glows */}
-                <div className="absolute -top-20 -right-20 w-64 h-64 bg-accent/20 rounded-full blur-[100px] -z-10 animate-pulse" />
-                <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-purple-500/10 rounded-full blur-[100px] -z-10 animate-pulse" />
+                {/* Subtle Glows */}
+                <div className="absolute -top-10 -right-10 w-48 h-48 bg-accent/10 rounded-full blur-[80px] -z-10" />
+                <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-purple-500/5 rounded-full blur-[80px] -z-10" />
               </FadeIn>
             </div>
           </div>
         </div>
       </section>
+
 
 
       {/* CLIENT LOCATIONS MARQUEE */}
