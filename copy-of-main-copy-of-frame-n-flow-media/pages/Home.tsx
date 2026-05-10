@@ -896,6 +896,90 @@ const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* TESTIMONIAL VIDEO SECTION */}
+      <section className="py-12 md:py-24 relative z-20 overflow-hidden bg-transparent">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+            {/* Text Side */}
+            <div className="flex-1 text-center lg:text-left order-2 lg:order-1">
+              <FadeIn>
+                <span className="text-accent uppercase tracking-[0.3em] text-xs font-bold mb-6 block">Direct Impact</span>
+                <h2 className="text-4xl md:text-6xl font-display font-bold text-white mb-8 leading-tight">
+                  Built for <span className="text-accent">Dominance</span>.
+                </h2>
+                <p className="text-lg md:text-xl text-white/60 font-light leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0">
+                  We don't just deliver videos; we engineer <span className="text-white font-bold">market-shifting assets</span>. See how we've helped brands transform their digital presence and drive unprecedented engagement.
+                </p>
+                <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-10">
+                  <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+                    <CheckCircle2 size={16} className="text-accent" />
+                    <span className="text-sm text-white/80">Revenue Focused</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+                    <CheckCircle2 size={16} className="text-accent" />
+                    <span className="text-sm text-white/80">AI Optimized</span>
+                  </div>
+                </div>
+                <div className="pt-4 border-t border-white/5">
+                  <div className="flex items-center justify-center lg:justify-start gap-6">
+                    <div className="text-center lg:text-left">
+                      <div className="text-3xl font-display font-bold text-white">90%</div>
+                      <div className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Cost Reduction</div>
+                    </div>
+                    <div className="w-px h-12 bg-white/10" />
+                    <div className="text-center lg:text-left">
+                      <div className="text-3xl font-display font-bold text-white">4X</div>
+                      <div className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Faster Delivery</div>
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* Video Side */}
+            <div className="flex-1 w-full max-w-[420px] relative order-1 lg:order-2">
+              <FadeIn delay={0.2}>
+                {/* Premium Floating Badge */}
+                <motion.div 
+                  className="absolute -top-6 -right-6 z-40 bg-accent text-black px-4 py-2 rounded-xl font-bold text-sm shadow-[0_0_30px_rgba(34,211,238,0.5)] border border-white/20"
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  LIVE RESULT
+                </motion.div>
+
+                {/* Phone Mockup Frame */}
+                <div className="relative aspect-[9/19] w-full bg-[#050505] rounded-[3.5rem] p-3 border-[8px] border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.8)] overflow-hidden">
+                  {/* Notch Overlay */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-7 bg-[#050505] rounded-b-2xl z-20 flex items-center justify-center">
+                    <div className="w-12 h-1 bg-white/10 rounded-full" />
+                  </div>
+                  
+                  {/* Video Embed */}
+                  <div className="w-full h-full rounded-[2.8rem] overflow-hidden relative z-10 bg-black">
+                    <iframe
+                      src="https://www.youtube.com/embed/L_DryjVTpCY?autoplay=1&mute=1&loop=1&playlist=L_DryjVTpCY&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3"
+                      title="Client Testimonial"
+                      className="absolute inset-0 w-full h-full object-cover scale-105"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+
+                  {/* High-End Gloss Effect */}
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-transparent via-white/5 to-transparent z-30" />
+                </div>
+                
+                {/* Backdrop Glows */}
+                <div className="absolute -top-20 -right-20 w-64 h-64 bg-accent/20 rounded-full blur-[100px] -z-10 animate-pulse" />
+                <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-purple-500/10 rounded-full blur-[100px] -z-10 animate-pulse" />
+              </FadeIn>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
       {/* CLIENT LOCATIONS MARQUEE */}
       <section className="py-8 bg-transparent border-y border-white/5 overflow-hidden relative z-20">
         <div className="container mx-auto px-6 text-center mb-6">
