@@ -931,12 +931,6 @@ const Home: React.FC = () => {
                       "I'm looking forward to working with Bhanu and his team for the next 20 years."
                     </p>
                     <div className="flex items-center justify-center lg:justify-start gap-4">
-                      <div className="w-12 h-12 rounded-full overflow-hidden border border-white/10 bg-white/5">
-                        {/* Placeholder for Client Avatar or just a nice Icon */}
-                        <div className="w-full h-full flex items-center justify-center text-white/40 bg-accent/10">
-                          <Aperture size={20} />
-                        </div>
-                      </div>
                       <div className="text-left">
                         <div className="text-lg font-bold text-white">Ian Conway</div>
                         <div className="text-xs font-mono text-white/40 uppercase tracking-widest">Managing Director</div>
