@@ -182,7 +182,7 @@ const Work: React.FC = () => {
   const devPortfolio = [
     {
       url: "https://www.thegraftonvault.com",
-      title: "Graft and Vault",
+      title: "The Grafton Vault",
       thumbnail: "https://thegraftonvault.com/temp/main_logo_bg.png",
       description: "A premium digital vault experience. High-security backend architecture with a luxurious, motion-rich frontend interface."
     },
