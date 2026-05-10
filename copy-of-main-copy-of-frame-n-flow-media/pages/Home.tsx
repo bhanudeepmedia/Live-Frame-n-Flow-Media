@@ -897,85 +897,104 @@ const Home: React.FC = () => {
       </section>
 
       {/* TESTIMONIAL VIDEO SECTION */}
-      <section className="py-10 md:py-16 relative z-20 overflow-hidden bg-transparent border-b border-white/5">
+      <section className="py-4 md:py-8 relative z-20 overflow-hidden bg-transparent">
         <div className="container mx-auto px-6">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-10 max-w-6xl mx-auto">
-            {/* Text Side */}
-            <div className="flex-1 text-center lg:text-left order-2 lg:order-1 max-w-xl">
-              <FadeIn>
-                <div className="flex items-center justify-center lg:justify-start gap-2 mb-4">
-                  <span className="text-accent uppercase tracking-[0.3em] text-[10px] font-bold">Client Success</span>
-                  <div className="w-1 h-1 bg-white/20 rounded-full" />
-                  <span className="text-white/40 uppercase tracking-[0.2em] text-[10px]">Dublin, Ireland</span>
-                </div>
-                
-                <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6 leading-tight">
-                  Driving <span className="text-accent italic">Global</span> Impact.
-                </h2>
-                
-                <div className="relative mb-8">
-                  <div className="absolute -left-4 -top-4 text-accent/20 text-6xl font-serif">"</div>
-                  <p className="text-lg md:text-xl text-white font-medium leading-relaxed relative z-10 italic">
-                    I'm looking forward to working with Bhanu and his team for the next 20 years.
-                  </p>
-                  <div className="mt-4 flex items-center justify-center lg:justify-start gap-3">
-                    <div className="w-8 h-px bg-accent/50" />
-                    <span className="text-sm font-mono text-white/50 uppercase tracking-widest">Partner Testimonial</span>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="relative max-w-6xl mx-auto bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 md:p-12 overflow-hidden shadow-2xl"
+          >
+            {/* Background Decorative Elements */}
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-accent/10 rounded-full blur-[100px] -z-10" />
+            <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-purple-500/5 rounded-full blur-[80px] -z-10" />
+            <div className="absolute inset-0 bg-noise opacity-[0.03] pointer-events-none" />
+            
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+              {/* Text Side */}
+              <div className="flex-1 text-center lg:text-left order-2 lg:order-1 max-w-xl">
+                <FadeIn>
+                  <div className="flex items-center justify-center lg:justify-start gap-2 mb-6">
+                    <div className="bg-accent/20 px-3 py-1 rounded-full border border-accent/30">
+                      <span className="text-accent uppercase tracking-[0.2em] text-[9px] font-bold">Client Success Story</span>
+                    </div>
+                    <div className="w-1 h-1 bg-white/20 rounded-full" />
+                    <span className="text-white/40 uppercase tracking-[0.2em] text-[9px]">Dublin, Ireland</span>
                   </div>
-                </div>
-
-                <div className="flex flex-wrap justify-center lg:justify-start gap-3">
-                  <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-sm">
-                    <CheckCircle2 size={14} className="text-accent" />
-                    <span className="text-[11px] text-white/70">Strategic Partnership</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-sm">
-                    <CheckCircle2 size={14} className="text-accent" />
-                    <span className="text-[11px] text-white/70">Dublin HQ</span>
-                  </div>
-                </div>
-              </FadeIn>
-            </div>
-
-            {/* Video Side */}
-            <div className="flex-1 w-full max-w-[320px] relative order-1 lg:order-2">
-              <FadeIn delay={0.2}>
-                {/* Phone Mockup Frame - Scaled Down */}
-                <div className="relative aspect-[9/18] w-full bg-[#050505] rounded-[2.5rem] p-2 border-[5px] border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden group/video">
                   
-                  {/* Video Embed - Interaction Required for Sound */}
-                  <div className="w-full h-full rounded-[2rem] overflow-hidden relative z-10 bg-black">
-                    <iframe
-                      src="https://www.youtube.com/embed/L_DryjVTpCY?controls=1&modestbranding=1&rel=0&showinfo=0"
-                      title="Client Testimonial"
-                      className="absolute inset-0 w-full h-full object-cover"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-
-                    {/* Sound Hint Overlay - Appears only before interaction */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-[2px] group-hover/video:bg-black/0 transition-all duration-500 pointer-events-none z-20">
-                      <div className="flex flex-col items-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-black shadow-[0_0_20px_rgba(34,211,238,0.5)]">
-                          <Play size={20} className="fill-current ml-1" />
+                  <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-8 leading-tight">
+                    Partnering for <span className="text-accent">Decades</span>.
+                  </h2>
+                  
+                  <div className="relative mb-8 pl-6 border-l-2 border-accent/30">
+                    <p className="text-xl md:text-2xl text-white font-medium leading-relaxed italic mb-6">
+                      "I'm looking forward to working with Bhanu and his team for the next 20 years."
+                    </p>
+                    <div className="flex items-center justify-center lg:justify-start gap-4">
+                      <div className="w-12 h-12 rounded-full overflow-hidden border border-white/10 bg-white/5">
+                        {/* Placeholder for Client Avatar or just a nice Icon */}
+                        <div className="w-full h-full flex items-center justify-center text-white/40 bg-accent/10">
+                          <Aperture size={20} />
                         </div>
-                        <span className="text-[10px] font-bold text-white uppercase tracking-widest bg-black/40 px-3 py-1 rounded-full backdrop-blur-md">Click to Play with Sound</span>
+                      </div>
+                      <div className="text-left">
+                        <div className="text-lg font-bold text-white">Ian Conway</div>
+                        <div className="text-xs font-mono text-white/40 uppercase tracking-widest">Managing Director</div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Reflection */}
-                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-transparent via-white/5 to-transparent z-30" />
-                </div>
-                
-                {/* Subtle Glows */}
-                <div className="absolute -top-10 -right-10 w-48 h-48 bg-accent/10 rounded-full blur-[80px] -z-10" />
-                <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-purple-500/5 rounded-full blur-[80px] -z-10" />
-              </FadeIn>
+                  <div className="flex flex-wrap justify-center lg:justify-start gap-3">
+                    <div className="flex items-center gap-2 bg-accent/5 border border-accent/20 px-4 py-2 rounded-xl backdrop-blur-sm">
+                      <CheckCircle2 size={14} className="text-accent" />
+                      <span className="text-[11px] text-white/80 font-bold">90% Efficiency Gain</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-xl backdrop-blur-sm">
+                      <CheckCircle2 size={14} className="text-white/40" />
+                      <span className="text-[11px] text-white/60">Long-term Vision</span>
+                    </div>
+                  </div>
+                </FadeIn>
+              </div>
+
+              {/* Video Side */}
+              <div className="flex-1 w-full max-w-[340px] relative order-1 lg:order-2">
+                <FadeIn delay={0.2}>
+                  {/* Premium Frame with Glass Border */}
+                  <div className="relative aspect-[9/16] w-full bg-black rounded-[3rem] p-2.5 border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.6)] overflow-hidden">
+                    {/* Inner Video Container */}
+                    <div className="w-full h-full rounded-[2.5rem] overflow-hidden relative z-10 bg-black">
+                      <iframe
+                        src="https://www.youtube.com/embed/L_DryjVTpCY?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0&showinfo=1&loop=1&playlist=L_DryjVTpCY"
+                        title="Ian Conway Testimonial"
+                        className="absolute inset-0 w-full h-full object-cover"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      ></iframe>
+                    </div>
+
+                    {/* Subtle Overlay Glow */}
+                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-transparent via-white/[0.02] to-transparent z-30" />
+                  </div>
+                  
+                  {/* Decorative Floating Element */}
+                  <motion.div 
+                    animate={{ y: [0, -10, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute -bottom-6 -right-6 bg-[#0a0a0a] border border-white/10 rounded-2xl p-4 shadow-2xl z-40 backdrop-blur-md"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                      <span className="text-[10px] font-bold text-white uppercase tracking-widest">Verified Result</span>
+                    </div>
+                  </motion.div>
+                </FadeIn>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
+
 
 
 
