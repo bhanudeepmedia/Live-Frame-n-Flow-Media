@@ -192,6 +192,11 @@ const Work: React.FC = () => {
       description: "Next-gen networking platform. Real-time data synchronization, AI-enhanced user matching, and a fluid, app-like web experience."
     },
     {
+      url: "https://jacobotennis.netlify.app/",
+      title: "Jacobo Hernandez Tennis",
+      description: "Elite high-performance tennis coaching platform. Features a premium, dynamic interface tailored for professional athlete development and mentorship."
+    },
+    {
       url: "https://realestatehyd.netlify.app/",
       title: "Real Grow Realtors",
       description: "A premium real estate platform for luxury properties in Hyderabad. Features high-end property listings, interactive maps, and a seamless lead generation system."
