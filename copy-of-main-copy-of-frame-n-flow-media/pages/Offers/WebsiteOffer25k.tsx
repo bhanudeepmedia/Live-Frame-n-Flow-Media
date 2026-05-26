@@ -144,6 +144,25 @@ const trackGAEvent = (eventName: string, params?: Record<string, any>) => {
   }
 };
 
+// --- META PIXEL TRACKING HELPERS ---
+const trackPixelEvent = (eventName: string, params?: Record<string, any>) => {
+  if (typeof window !== 'undefined' && (window as any).fbq) {
+    (window as any).fbq('trackCustom', eventName, params);
+    console.log(`[Meta Pixel Custom Event Tracked] ${eventName}`, params);
+  } else {
+    console.log(`[Meta Pixel Custom Event Skipped - fbq not found] ${eventName}`, params);
+  }
+};
+
+const trackPixelStandardEvent = (eventName: string, params?: Record<string, any>) => {
+  if (typeof window !== 'undefined' && (window as any).fbq) {
+    (window as any).fbq('track', eventName, params);
+    console.log(`[Meta Pixel Standard Event Tracked] ${eventName}`, params);
+  } else {
+    console.log(`[Meta Pixel Standard Event Skipped - fbq not found] ${eventName}`, params);
+  }
+};
+
 const WebsiteOffer25k: React.FC = () => {
   const WHATSAPP_PHONE = "917995533838";
 
@@ -168,15 +187,18 @@ const WebsiteOffer25k: React.FC = () => {
   // Track initial landing page view
   useEffect(() => {
     trackGAEvent('offer_25k_landing_view');
+    trackPixelEvent('Offer25kLandingView');
   }, []);
 
-  // Sync current step transitions with Google Analytics
+  // Sync current step transitions with Google Analytics and Meta Pixel
   const handleStepGA = (nextStep: number) => {
-    trackGAEvent(`step_${step}_completed`, {
+    const eventParams = {
       current_step: step,
       next_step: nextStep,
       form_progress: `${Math.round((step / 5) * 100)}%`
-    });
+    };
+    trackGAEvent(`step_${step}_completed`, eventParams);
+    trackPixelEvent(`Step${step}Completed`, eventParams);
   };
 
   const handleNextStep = () => {
@@ -215,19 +237,23 @@ const WebsiteOffer25k: React.FC = () => {
   const selectWebsiteType = (type: string) => {
     setFormData(prev => ({ ...prev, websiteType: type }));
     trackGAEvent('website_type_selected', { type });
+    trackPixelEvent('WebsiteTypeSelected', { type });
     // Slick auto-advance
     trackGAEvent('step_4_completed', { current_step: 4, next_step: 5 });
+    trackPixelEvent('Step4Completed', { current_step: 4, next_step: 5 });
     setStep(5);
   };
 
   const selectInvestment = (commitment: string) => {
     setFormData(prev => ({ ...prev, canInvest: commitment }));
     trackGAEvent('investment_commitment_checked', { ready: commitment });
+    trackPixelEvent('InvestmentCommitmentChecked', { ready: commitment });
     
     if (commitment === 'No') {
       // Go to Rejection screen (Step 7)
       setStep(7);
       trackGAEvent('form_rejection_shown');
+      trackPixelEvent('FormRejectionShown');
     } else {
       // Advance to final redirect page (Step 6)
       setStep(6);
@@ -252,6 +278,13 @@ const WebsiteOffer25k: React.FC = () => {
       business: dataToSubmit.businessName,
       type: dataToSubmit.websiteType,
       ready_to_invest: dataToSubmit.canInvest
+    });
+
+    trackPixelStandardEvent('Lead', {
+      value: 25000,
+      currency: 'INR',
+      content_name: 'Premium Business Website Offer',
+      content_category: 'Offer_25k_Wizard'
     });
 
     // Auto redirect after a short transition delay
