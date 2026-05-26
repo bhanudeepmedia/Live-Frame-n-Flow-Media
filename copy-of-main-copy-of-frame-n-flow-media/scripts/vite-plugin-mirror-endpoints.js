@@ -22,6 +22,7 @@ export default function generateMirrorEndpoints() {
                 { path: '/work', name: 'work' },
                 { path: '/insights', name: 'insights' },
                 { path: '/growth-partner', name: 'growth-partner' },
+                { path: '/offers/website-25k', name: 'website-25k' },
             ];
 
             console.log('\n📄 Generating mirror endpoints (.txt and .json)...\n');

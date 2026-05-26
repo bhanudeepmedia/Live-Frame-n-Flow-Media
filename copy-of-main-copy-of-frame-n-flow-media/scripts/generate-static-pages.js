@@ -87,6 +87,11 @@ const routes = [
     title: "How a Great Website Increases Business Revenue | Frame n Flow Media",
     description: "Discover why investing in a professional website drives business revenue growth. Learn proven strategies and tools to boost conversions, credibility, and sales online."
   },
+  {
+    path: '/offers/website-25k',
+    title: "Premium Business Website at ₹25,000 | Frame n Flow Media",
+    description: "Get a high-performance standard, e-commerce, or custom-coded website for ₹25,000. Includes Google Analytics, SEO, and free hosting & domain for 1 year. Built for Indian businesses."
+  },
   { path: '/growth-partner' },
   { path: '/growth-partner/apply' },
   { path: '/growth-partner/signup' },

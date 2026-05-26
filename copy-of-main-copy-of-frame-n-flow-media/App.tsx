@@ -76,6 +76,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   ];
 
   const hideBoth = [
+    '/offers/website-25k',
     '/growth-partner/dashboard',
     '/admin/growth-partners-dashboard',
     '/growth-partner/signup',
@@ -107,7 +108,15 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 const App: React.FC = () => {
   const element = useRoutes(routes);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      if (path === '/offers/website-25k' || path.startsWith('/offers/website-25k')) {
+        return false;
+      }
+    }
+    return true;
+  });
 
   return (
     <>

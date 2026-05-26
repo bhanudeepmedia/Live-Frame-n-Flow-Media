@@ -16,8 +16,7 @@ import ProductMarketing from './pages/ProductMarketing';
 import ServiceMarketing from './pages/ServiceMarketing';
 import StartupMarketing from './pages/StartupMarketing';
 import RealtorMarketing from './pages/RealtorMarketing';
-import Booking from './pages/Booking';
-import UKBooking from './pages/UKBooking';
+
 
 // Growth Partner Imports
 import GrowthPartnerLanding from './pages/GrowthPartner/Landing';
@@ -32,13 +31,12 @@ import BlogIndex from './pages/Blog/Index';
 import RevenueGrowthPost from './pages/Blog/RevenueGrowth';
 
 // Offer Imports
-import WebsiteOffer from './pages/Offers/WebsiteOffer';
-import WebsiteTerms from './pages/Offers/WebsiteTerms';
+import WebsiteOffer25k from './pages/Offers/WebsiteOffer25k';
 
 export const routes: RouteObject[] = [
     { path: '/', element: <Home /> },
-    { path: '/offers/website-10k', element: <WebsiteOffer /> },
-    { path: '/offers/website-10k/terms', element: <WebsiteTerms /> },
+
+    { path: '/offers/website-25k', element: <WebsiteOffer25k /> },
     { path: '/about', element: <About /> },
     { path: '/approach', element: <Approach /> },
     { path: '/services', element: <Services /> },
@@ -65,8 +63,7 @@ export const routes: RouteObject[] = [
     { path: '/service-marketing', element: <ServiceMarketing /> },
     { path: '/startup-marketing', element: <StartupMarketing /> },
     { path: '/realtor-marketing', element: <RealtorMarketing /> },
-    { path: '/web-design-australia', element: <Booking /> },
-    { path: '/appointment', element: <UKBooking /> },
+
 
     // Blog
     { path: '/blog', element: <BlogIndex /> },
