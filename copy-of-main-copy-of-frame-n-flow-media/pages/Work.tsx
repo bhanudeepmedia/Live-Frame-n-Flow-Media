@@ -187,6 +187,11 @@ const Work: React.FC = () => {
       description: "A premium digital vault experience. High-security backend architecture with a luxurious, motion-rich frontend interface."
     },
     {
+      url: "https://nihirafinserv.com/",
+      title: "Nihira Finserv",
+      description: "A premium wealth management and financial advisory platform. Engineered for seamless navigation, dynamic calculator tools, and highly optimized lead capture workflows."
+    },
+    {
       url: "https://connvel.in",
       title: "Connvel",
       description: "Next-gen networking platform. Real-time data synchronization, AI-enhanced user matching, and a fluid, app-like web experience."
