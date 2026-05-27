@@ -864,9 +864,9 @@ const Services: React.FC = () => {
                     description: "Premium financial planning and advisory portal with integrated calculators and optimized lead generation."
                   },
                   {
-                    url: "https://connvel.in",
-                    title: "Connvel",
-                    description: "Fluid networking hub featuring real-time data sync, AI-driven matchmaking, and an app-like web experience."
+                    url: "https://jacobotennis.netlify.app/",
+                    title: "Jacobo Hernandez Tennis",
+                    description: "Elite high-performance tennis coaching platform. Features a premium, dynamic interface tailored for professional athlete development and mentorship."
                   }
                 ].map((item, index) => (
                   <FadeIn key={index} delay={index * 0.1} className="flex flex-col h-full">

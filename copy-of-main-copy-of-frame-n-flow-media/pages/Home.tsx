@@ -595,9 +595,9 @@ const Home: React.FC = () => {
       description: "A premium wealth management and financial advisory platform. Engineered for seamless navigation, dynamic calculator tools, and highly optimized lead capture workflows."
     },
     {
-      url: "https://connvel.in",
-      title: "Connvel",
-      description: "Next-gen networking platform. Real-time data synchronization, AI-enhanced user matching, and a fluid, app-like web experience."
+      url: "https://jacobotennis.netlify.app/",
+      title: "Jacobo Hernandez Tennis",
+      description: "Elite high-performance tennis coaching platform. Features a premium, dynamic interface tailored for professional athlete development and mentorship."
     }
   ];
 
