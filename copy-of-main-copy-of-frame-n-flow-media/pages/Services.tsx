@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import Button from '../components/Button';
 import {
   Target, Cpu, TrendingUp, PenTool, Camera, ShieldCheck, Filter,
   ShoppingCart, Code, PlayCircle, Users, MessageSquare,
   Bot, Calendar, Database, Mail, Star, Phone, DollarSign, Activity,
-  Layers, Zap, Workflow
+  Layers, Zap, Workflow, ArrowRight, Globe
 } from 'lucide-react';
 
 // --- ANIMATION COMPONENTS ---
@@ -448,6 +448,7 @@ import { useWhatsApp } from '../contexts/WhatsAppContext';
 const Services: React.FC = () => {
   const { open } = useWhatsApp();
   const location = useLocation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'marketing' | 'automation' | 'webdev' | 'selection'>('selection');
 
   // React to Navigation State
@@ -835,6 +836,100 @@ const Services: React.FC = () => {
                 <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>👉 Start Your Project</Button>
                 <button onClick={open} className="px-6 py-3 border border-white/20 hover:bg-white/5 rounded-full font-bold transition-all text-white">
                   Talk to Tech Lead
+                </button>
+              </div>
+            </div>
+
+            {/* PREVIOUS WORKS / PORTFOLIO SECTION */}
+            <div className="py-12 border-t border-white/5 relative z-10">
+              <div className="text-center mb-10">
+                <span className="text-emerald-400 uppercase tracking-widest text-[10px] font-bold mb-3 block">Engineering Portfolio</span>
+                <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-4">Our Previous Works</h3>
+                <p className="text-sm text-white/50 max-w-xl mx-auto font-light">
+                  A select showcase of fast, responsive, and conversion-optimized custom platforms we engineered.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {[
+                  {
+                    url: "https://www.thegraftonvault.com",
+                    title: "The Grafton Vault",
+                    thumbnail: "https://thegraftonvault.com/temp/main_logo_bg.png",
+                    description: "High-security digital vault architecture. Luxurious, motion-rich, and highly secure frontend interface."
+                  },
+                  {
+                    url: "https://nihirafinserv.com/",
+                    title: "Nihira Finserv",
+                    description: "Premium financial planning and advisory portal with integrated calculators and optimized lead generation."
+                  },
+                  {
+                    url: "https://connvel.in",
+                    title: "Connvel",
+                    description: "Fluid networking hub featuring real-time data sync, AI-driven matchmaking, and an app-like web experience."
+                  }
+                ].map((item, index) => (
+                  <FadeIn key={index} delay={index * 0.1} className="flex flex-col h-full">
+                    <div className="bg-[#121212] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group h-full flex flex-col hover:border-emerald-500/40 transition-all duration-300">
+                      <div className="relative w-full aspect-[4/3] bg-black overflow-hidden group-hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] transition-shadow duration-500">
+                        {/* Browser Top Bar Mockup */}
+                        <div className="absolute top-0 left-0 right-0 h-6 bg-[#1a1a1a] border-b border-white/5 flex items-center px-3 gap-1.5 z-20">
+                          <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
+                          <div className="w-2 h-2 rounded-full bg-yellow-500/50"></div>
+                          <div className="w-2 h-2 rounded-full bg-green-500/50"></div>
+                        </div>
+
+                        {/* Website Preview */}
+                        <div className="absolute inset-0 pt-6">
+                          {item.thumbnail ? (
+                            <img 
+                              src={item.thumbnail} 
+                              alt={item.title}
+                              className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                            />
+                          ) : (
+                            <iframe
+                              src={item.url}
+                              className="w-full h-[200%] border-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500 origin-top transform scale-50"
+                              style={{ pointerEvents: 'none', width: '200%', height: '200%', transform: 'scale(0.5)', transformOrigin: 'top left' }}
+                              title={item.title}
+                            />
+                          )}
+                        </div>
+
+                        {/* Visit Overlay */}
+                        <div
+                          className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer z-30 backdrop-blur-sm"
+                          onClick={() => window.open(item.url, '_blank')}
+                        >
+                          <div className="flex items-center gap-2 bg-emerald-500 text-black px-6 py-3 rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <Globe size={18} />
+                            Visit Live Site
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-6 border-t border-white/5 bg-surfaceHighlight flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                            <Code size={14} />
+                          </div>
+                          <h3 className="text-xl font-bold text-white">{item.title}</h3>
+                        </div>
+                        <p className="text-sm text-white/50 leading-relaxed">{item.description}</p>
+                      </div>
+                    </div>
+                  </FadeIn>
+                ))}
+              </div>
+
+              <div className="mt-10 text-center">
+                <button
+                  onClick={() => navigate('/work', { state: { activeTab: 'dev' } })}
+                  className="group inline-flex items-center gap-2 bg-white/5 border border-white/10 hover:border-emerald-500/40 text-white hover:bg-emerald-500 hover:text-black px-8 py-3.5 rounded-full font-bold transition-all duration-300"
+                >
+                  See Entire Engineering Portfolio
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
             </div>

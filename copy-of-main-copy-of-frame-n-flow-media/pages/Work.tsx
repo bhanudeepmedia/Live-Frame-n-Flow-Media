@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import Button from '../components/Button';
 import { Zap, Layers, DollarSign, Play, CheckCircle2, Cpu, Aperture, Repeat, Music, Mic, Headphones, Radio, Volume2, Globe, Database, Smartphone, Code } from 'lucide-react';
 import SEO from '../components/SEO';
@@ -30,8 +31,16 @@ const RevealText: React.FC<{ children: React.ReactNode, delay?: number, classNam
 );
 
 const Work: React.FC = () => {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState<'visuals' | 'sonic' | 'dev'>('visuals');
   const [visualMode, setVisualMode] = useState<'kinetic' | 'static'>('kinetic');
+
+  useEffect(() => {
+    const state = location.state as { activeTab?: 'visuals' | 'sonic' | 'dev' } | null;
+    if (state?.activeTab) {
+      setActiveTab(state.activeTab);
+    }
+  }, [location]);
 
   // KINETIC SEQUENCES (VIDEOS)
   const kineticPortfolio = [

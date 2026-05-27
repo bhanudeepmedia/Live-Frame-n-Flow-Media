@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence 
 import Button from '../components/Button';
 import { NavLink, useNavigate } from 'react-router-dom';
 // import { SERVICES, PROCESS_STEPS } from '../constants';
-import { CheckCircle2, FileSearch, Music, Sparkles, TrendingUp, ArrowRight, Laptop, Play, Camera, Aperture, PlayCircle, X, Search, Plus, Bot, Code } from 'lucide-react';
+import { CheckCircle2, FileSearch, Music, Sparkles, TrendingUp, ArrowRight, Laptop, Play, Camera, Aperture, PlayCircle, X, Search, Plus, Bot, Code, Globe } from 'lucide-react';
 
 const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: string }> = ({ children, delay = 0, className = "" }) => (
   <motion.div
@@ -580,6 +580,25 @@ const Home: React.FC = () => {
     { name: "Ian", location: "Ireland", text: "I'm very happy with the work, The page looks great." },
     { name: "Santosh", location: "India", text: "Excellent Result for the Investment" },
     { name: "Mark", location: "USA", text: "Frame n Flow Media is a game changer" },
+  ];
+
+  const featuredDevProjects = [
+    {
+      url: "https://www.thegraftonvault.com",
+      title: "The Grafton Vault",
+      thumbnail: "https://thegraftonvault.com/temp/main_logo_bg.png",
+      description: "A premium digital vault experience. High-security backend architecture with a luxurious, motion-rich frontend interface."
+    },
+    {
+      url: "https://nihirafinserv.com/",
+      title: "Nihira Finserv",
+      description: "A premium wealth management and financial advisory platform. Engineered for seamless navigation, dynamic calculator tools, and highly optimized lead capture workflows."
+    },
+    {
+      url: "https://connvel.in",
+      title: "Connvel",
+      description: "Next-gen networking platform. Real-time data synchronization, AI-enhanced user matching, and a fluid, app-like web experience."
+    }
   ];
 
   return (
@@ -1161,6 +1180,90 @@ const Home: React.FC = () => {
               </div>
             </FadeIn>
 
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURED WORK SECTION - WEB & APP DEV */}
+      <section className="py-12 md:py-24 px-6 bg-transparent relative overflow-hidden z-20 border-t border-white/5">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-[20%] right-[10%] w-[400px] h-[400px] bg-accent/5 rounded-full blur-[100px]" />
+          <div className="absolute bottom-[20%] left-[10%] w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-[100px]" />
+        </div>
+
+        <div className="container mx-auto max-w-6xl relative z-10">
+          <FadeIn className="mb-14 text-center">
+            <span className="text-accent uppercase tracking-widest text-xs font-bold mb-4 block">Proven Execution</span>
+            <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">Featured Engineering Projects</h2>
+            <p className="text-white/50 max-w-2xl mx-auto text-lg font-light">
+              Explore our latest high-performance launches. We combine premium design with solid backends.
+            </p>
+          </FadeIn>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {featuredDevProjects.map((item, index) => (
+              <FadeIn key={index} delay={index * 0.1} className="flex flex-col h-full">
+                <div className="bg-[#121212] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group h-full flex flex-col hover:border-accent/40 transition-all duration-300">
+                  <div className="relative w-full aspect-[4/3] bg-black overflow-hidden group-hover:shadow-[0_0_30px_rgba(34,211,238,0.2)] transition-shadow duration-500">
+                    {/* Browser Top Bar Mockup */}
+                    <div className="absolute top-0 left-0 right-0 h-6 bg-[#1a1a1a] border-b border-white/5 flex items-center px-3 gap-1.5 z-20">
+                      <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
+                      <div className="w-2 h-2 rounded-full bg-yellow-500/50"></div>
+                      <div className="w-2 h-2 rounded-full bg-green-500/50"></div>
+                    </div>
+
+                    {/* Website Preview */}
+                    <div className="absolute inset-0 pt-6">
+                      {item.thumbnail ? (
+                        <img 
+                          src={item.thumbnail} 
+                          alt={item.title}
+                          className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                        />
+                      ) : (
+                        <iframe
+                          src={item.url}
+                          className="w-full h-[200%] border-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500 origin-top transform scale-50"
+                          style={{ pointerEvents: 'none', width: '200%', height: '200%', transform: 'scale(0.5)', transformOrigin: 'top left' }}
+                          title={item.title}
+                        />
+                      )}
+                    </div>
+
+                    {/* Visit Overlay */}
+                    <div
+                      className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer z-30 backdrop-blur-sm"
+                      onClick={() => window.open(item.url, '_blank')}
+                    >
+                      <div className="flex items-center gap-2 bg-accent text-black px-6 py-3 rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <Globe size={18} />
+                        Visit Live Site
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6 border-t border-white/5 bg-surfaceHighlight flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-accent">
+                        <Code size={14} />
+                      </div>
+                      <h3 className="text-xl font-bold text-white">{item.title}</h3>
+                    </div>
+                    <p className="text-sm text-white/50 leading-relaxed">{item.description}</p>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+
+          <div className="mt-14 text-center">
+            <button
+              onClick={() => navigate('/work', { state: { activeTab: 'dev' } })}
+              className="group inline-flex items-center gap-2 bg-white/5 border border-white/10 hover:border-accent/40 text-white hover:bg-accent hover:text-black px-8 py-4 rounded-full font-bold transition-all duration-300"
+            >
+              View All Web & App Engineering
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </button>
           </div>
         </div>
       </section>
