@@ -198,46 +198,55 @@ const Work: React.FC = () => {
     {
       url: "https://nihirafinserv.com/",
       title: "Nihira Finserv",
+      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://nihirafinserv.com/",
       description: "A premium wealth management and financial advisory platform. Engineered for seamless navigation, dynamic calculator tools, and highly optimized lead capture workflows."
     },
     {
       url: "https://connvel.in",
       title: "Connvel",
+      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://connvel.in/",
       description: "Next-gen networking platform. Real-time data synchronization, AI-enhanced user matching, and a fluid, app-like web experience."
     },
     {
       url: "https://jacobotennis.netlify.app/",
       title: "Jacobo Hernandez Tennis",
+      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://jacobotennis.netlify.app/",
       description: "Elite high-performance tennis coaching platform. Features a premium, dynamic interface tailored for professional athlete development and mentorship."
     },
     {
       url: "https://realestatehyd.netlify.app/",
       title: "Real Grow Realtors",
+      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://realestatehyd.netlify.app/",
       description: "A premium real estate platform for luxury properties in Hyderabad. Features high-end property listings, interactive maps, and a seamless lead generation system."
     },
     {
       url: "https://dosaxpress.netlify.app/",
       title: "Dosa Xpress",
+      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://dosaxpress.netlify.app/",
       description: "A modern, vibrant landing page for an Indian fast-casual restaurant, featuring high-quality food photography and seamless ordering flow."
     },
     {
       url: "https://mniconcrete.netlify.app/",
       title: "MNI Concrete",
+      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://mniconcrete.netlify.app/",
       description: "Professional landing page for concrete and construction services, showcasing industrial expertise with a clean, trustworthy aesthetic."
     },
     {
       url: "https://amazonppclearn.com/",
       title: "Amazon PPC Learn",
+      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://amazonppclearn.com/",
       description: "A comprehensive learning platform for Amazon PPC mastery. Features a clean, educational-focused UI with optimized performance for large-scale video content and interactive modules."
     },
     {
       url: "https://aiautomationbiz.netlify.app/",
       title: "AI Automation Biz",
+      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://aiautomationbiz.netlify.app/",
       description: "Futuristic and high-tech platform for AI automation services, featuring sleek UI elements and data-driven workflow visualizations."
     },
     {
       url: "https://framenflowmedia.in",
       title: "Frame n Flow Media",
+      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://framenflowmedia.in/",
       description: "Our own digital HQ. A testament to performance optimization, SEO dominance, and immersive storytelling."
     }
   ];
@@ -644,19 +653,34 @@ const Work: React.FC = () => {
                         </div>
 
                         {/* Website Preview */}
-                        <div className="absolute inset-0 pt-6">
-                          {('thumbnail' in item) ? (
+                        <div className="absolute inset-0 pt-6 bg-gradient-to-br from-[#141414] to-[#080808]">
+                          {/* Elegant visual placeholder underneath the image */}
+                          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#141414] to-[#080808] z-0">
+                            <Globe size={40} className="text-accent/20 mb-2 group-hover:text-accent/40 transition-colors duration-300" />
+                            <span className="text-[10px] text-white/30 tracking-widest uppercase font-mono">
+                              {item.url.replace('https://', '').replace('http://', '').replace('www.', '').split('/')[0]}
+                            </span>
+                          </div>
+
+                          {item.thumbnail ? (
                             <img 
-                              src={(item as any).thumbnail} 
+                              src={item.thumbnail} 
                               alt={item.title}
-                              className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                              loading="lazy"
+                              className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 relative z-10"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
                             />
                           ) : (
-                            <iframe
-                              src={item.url}
-                              className="w-full h-[200%] border-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500 origin-top transform scale-50"
-                              style={{ pointerEvents: 'none', width: '200%', height: '200%', transform: 'scale(0.5)', transformOrigin: 'top left' }}
-                              title={item.title}
+                            <img 
+                              src={`https://image.thum.io/get/width/600/crop/800/${item.url}`} 
+                              alt={item.title}
+                              loading="lazy"
+                              className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 relative z-10"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
                             />
                           )}
                         </div>

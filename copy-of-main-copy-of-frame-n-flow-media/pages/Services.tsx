@@ -861,11 +861,13 @@ const Services: React.FC = () => {
                   {
                     url: "https://nihirafinserv.com/",
                     title: "Nihira Finserv",
+                    thumbnail: "https://image.thum.io/get/width/600/crop/800/https://nihirafinserv.com/",
                     description: "Premium financial planning and advisory portal with integrated calculators and optimized lead generation."
                   },
                   {
                     url: "https://jacobotennis.netlify.app/",
                     title: "Jacobo Hernandez Tennis",
+                    thumbnail: "https://image.thum.io/get/width/600/crop/800/https://jacobotennis.netlify.app/",
                     description: "Elite high-performance tennis coaching platform. Features a premium, dynamic interface tailored for professional athlete development and mentorship."
                   }
                 ].map((item, index) => (
@@ -880,19 +882,34 @@ const Services: React.FC = () => {
                         </div>
 
                         {/* Website Preview */}
-                        <div className="absolute inset-0 pt-6">
+                        <div className="absolute inset-0 pt-6 bg-gradient-to-br from-[#141414] to-[#080808]">
+                          {/* Elegant visual placeholder underneath the image */}
+                          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#141414] to-[#080808] z-0">
+                            <Globe size={40} className="text-accent/20 mb-2 group-hover:text-accent/40 transition-colors duration-300" />
+                            <span className="text-[10px] text-white/30 tracking-widest uppercase font-mono">
+                              {item.url.replace('https://', '').replace('http://', '').replace('www.', '').split('/')[0]}
+                            </span>
+                          </div>
+
                           {item.thumbnail ? (
                             <img 
                               src={item.thumbnail} 
                               alt={item.title}
-                              className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                              loading="lazy"
+                              className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 relative z-10"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
                             />
                           ) : (
-                            <iframe
-                              src={item.url}
-                              className="w-full h-[200%] border-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500 origin-top transform scale-50"
-                              style={{ pointerEvents: 'none', width: '200%', height: '200%', transform: 'scale(0.5)', transformOrigin: 'top left' }}
-                              title={item.title}
+                            <img 
+                              src={`https://image.thum.io/get/width/600/crop/800/${item.url}`} 
+                              alt={item.title}
+                              loading="lazy"
+                              className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 relative z-10"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
                             />
                           )}
                         </div>
