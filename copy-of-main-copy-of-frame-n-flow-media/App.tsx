@@ -89,25 +89,24 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const shouldHideFooter = hideBoth.includes(location.pathname);
 
   return (
-    <div className="min-h-[100dvh] bg-transparent text-white font-sans selection:bg-accent selection:text-background">
+    <div className="flex flex-col min-h-[100dvh] bg-transparent text-white font-sans selection:bg-accent selection:text-background">
       <HashHandler />
       <ScrollToTop />
       <CustomCursor />
       {!shouldHideNavbar && <Navbar />}
 
-      <main>
+      <main className="flex-1">
         {children}
       </main>
 
       {!shouldHideFooter && <Footer />}
-
-      {!shouldHideFooter && <WhatsAppWidget />}
     </div>
   );
 };
 
 const App: React.FC = () => {
   const element = useRoutes(routes);
+  const location = useLocation();
   const [loading, setLoading] = useState(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
@@ -117,6 +116,18 @@ const App: React.FC = () => {
     }
     return true;
   });
+
+  const hideBoth = [
+    '/offers/website-25k',
+    '/growth-partner/dashboard',
+    '/admin/growth-partners-dashboard',
+    '/growth-partner/signup',
+    '/growth-partner/login',
+    '/web-design-australia',
+    '/appointment'
+  ];
+
+  const shouldHideFooter = hideBoth.includes(location.pathname);
 
   return (
     <>
@@ -132,6 +143,8 @@ const App: React.FC = () => {
             {element}
           </Layout>
         )}
+
+        {!loading && !shouldHideFooter && <WhatsAppWidget />}
       </WhatsAppProvider>
     </>
   );
