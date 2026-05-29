@@ -586,20 +586,23 @@ const Home: React.FC = () => {
     {
       url: "https://www.thegraftonvault.com",
       title: "The Grafton Vault",
-      thumbnail: "https://thegraftonvault.com/temp/main_logo_bg.png",
-      description: "A premium digital vault experience. High-security backend architecture with a luxurious, motion-rich frontend interface."
+      thumbnail: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=600&auto=format&fit=crop",
+      description: "A premium luxury digital vault experience. High-security backend architecture with a luxurious, motion-rich frontend interface.",
+      tech: ["Next.js", "Tailwind CSS", "Framer Motion"]
     },
     {
       url: "https://nihirafinserv.com/",
       title: "Nihira Finserv",
-      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://nihirafinserv.com/",
-      description: "A premium wealth management and financial advisory platform. Engineered for seamless navigation, dynamic calculator tools, and highly optimized lead capture workflows."
+      thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop",
+      description: "A premium wealth management and financial advisory platform. Engineered for seamless navigation, dynamic calculator tools, and highly optimized lead capture workflows.",
+      tech: ["React", "Chart.js", "Lead Capture"]
     },
     {
       url: "https://jacobotennis.netlify.app/",
       title: "Jacobo Hernandez Tennis",
-      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://jacobotennis.netlify.app/",
-      description: "Elite high-performance tennis coaching platform. Features a premium, dynamic interface tailored for professional athlete development and mentorship."
+      thumbnail: "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?q=80&w=600&auto=format&fit=crop",
+      description: "Elite high-performance tennis coaching platform. Features a premium, dynamic interface tailored for professional athlete development and mentorship.",
+      tech: ["Vite", "Tailwind CSS", "Netlify"]
     }
   ];
 
@@ -1052,71 +1055,50 @@ const Home: React.FC = () => {
             </p>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredDevProjects.map((item, index) => (
               <FadeIn key={index} delay={index * 0.1} className="flex flex-col h-full">
-                <div className="bg-[#121212] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group h-full flex flex-col hover:border-accent/40 transition-all duration-300">
-                  <div className="relative w-full aspect-[4/3] bg-black overflow-hidden group-hover:shadow-[0_0_30px_rgba(34,211,238,0.2)] transition-shadow duration-500">
+                <div 
+                  onClick={() => window.open(item.url, '_blank')}
+                  className="bg-[#121212] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group h-full flex flex-col hover:border-accent/40 transition-all duration-300 cursor-pointer"
+                >
+                  <div className="relative w-full aspect-video bg-black overflow-hidden">
                     {/* Browser Top Bar Mockup */}
                     <div className="absolute top-0 left-0 right-0 h-6 bg-[#1a1a1a] border-b border-white/5 flex items-center px-3 gap-1.5 z-20">
-                      <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
-                      <div className="w-2 h-2 rounded-full bg-yellow-500/50"></div>
-                      <div className="w-2 h-2 rounded-full bg-green-500/50"></div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-500/50"></div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/50"></div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-500/50"></div>
                     </div>
 
                     {/* Website Preview */}
-                    <div className="absolute inset-0 pt-6 bg-gradient-to-br from-[#141414] to-[#080808]">
-                      {/* Elegant visual placeholder underneath the image */}
-                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[#141414] to-[#080808] z-0">
-                        <Globe size={40} className="text-accent/20 mb-2 group-hover:text-accent/40 transition-colors duration-300" />
-                        <span className="text-[10px] text-white/30 tracking-widest uppercase font-mono">
-                          {item.url.replace('https://', '').replace('http://', '').replace('www.', '').split('/')[0]}
-                        </span>
-                      </div>
-
-                      {item.thumbnail ? (
-                        <img 
-                          src={item.thumbnail} 
-                          alt={item.title}
-                          loading="lazy"
-                          className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 relative z-10"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                      ) : (
-                        <img 
-                          src={`https://image.thum.io/get/width/600/crop/800/${item.url}`} 
-                          alt={item.title}
-                          loading="lazy"
-                          className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 relative z-10"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                      )}
-                    </div>
-
-                    {/* Visit Overlay */}
-                    <div
-                      className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer z-30 backdrop-blur-sm"
-                      onClick={() => window.open(item.url, '_blank')}
-                    >
-                      <div className="flex items-center gap-2 bg-accent text-black px-6 py-3 rounded-full font-bold transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                        <Globe size={18} />
-                        Visit Live Site
-                      </div>
+                    <div className="absolute inset-0 pt-6">
+                      <img 
+                        src={item.thumbnail} 
+                        alt={item.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500 relative z-10"
+                      />
                     </div>
                   </div>
 
-                  <div className="p-6 border-t border-white/5 bg-surfaceHighlight flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-accent">
-                        <Code size={14} />
+                  <div className="p-5 flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-mono text-accent uppercase tracking-wider">{item.tech[0]}</span>
+                        <span className="text-white/20 text-xs">•</span>
+                        <span className="text-[10px] text-white/40 font-mono">{item.url.replace('https://', '').replace('www.', '').split('/')[0]}</span>
                       </div>
-                      <h3 className="text-xl font-bold text-white">{item.title}</h3>
+                      <h3 className="text-lg font-bold text-white mb-2 group-hover:text-accent transition-colors">{item.title}</h3>
+                      <p className="text-xs text-white/50 leading-relaxed mb-4">{item.description}</p>
                     </div>
-                    <p className="text-sm text-white/50 leading-relaxed">{item.description}</p>
+
+                    <div className="flex flex-wrap gap-1.5 mt-auto pt-2">
+                      {item.tech.map((t, idx) => (
+                        <span key={idx} className="px-2 py-0.5 rounded bg-white/5 border border-white/5 text-[9px] font-mono text-white/60">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </FadeIn>
