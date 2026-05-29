@@ -6,7 +6,7 @@ import {
   Target, Cpu, TrendingUp, PenTool, Camera, ShieldCheck, Filter,
   ShoppingCart, Code, PlayCircle, Users, MessageSquare,
   Bot, Calendar, Database, Mail, Star, Phone, DollarSign, Activity,
-  Layers, Zap, Workflow, ArrowRight, Globe
+  Layers, Zap, Workflow, ArrowRight, Globe, Plus
 } from 'lucide-react';
 
 // --- ANIMATION COMPONENTS ---
@@ -445,63 +445,120 @@ import SEO from '../components/SEO';
 
 import { useWhatsApp } from '../contexts/WhatsAppContext';
 
-const Services: React.FC = () => {
+interface ServicesProps {
+  tab?: 'marketing' | 'automation' | 'webdev' | 'selection';
+}
+
+const Services: React.FC<ServicesProps> = ({ tab }) => {
   const { open } = useWhatsApp();
   const location = useLocation();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'marketing' | 'automation' | 'webdev' | 'selection'>('selection');
+  const [activeTab, setActiveTab] = useState<'marketing' | 'automation' | 'webdev' | 'selection'>(tab || 'selection');
 
-  // React to Navigation State
+  // React to Prop & Navigation State
   useEffect(() => {
-    const state = location.state as { activeTab?: 'marketing' | 'automation' | 'webdev' } | null;
-    if (state?.activeTab) {
-      setActiveTab(state.activeTab);
+    if (tab) {
+      setActiveTab(tab);
     } else {
-      setActiveTab('selection');
+      const state = location.state as { activeTab?: 'marketing' | 'automation' | 'webdev' } | null;
+      if (state?.activeTab) {
+        setActiveTab(state.activeTab);
+      } else {
+        setActiveTab('selection');
+      }
     }
-  }, [location]);
+  }, [location, tab]);
+
+  let seoTitle = "Our Services | Frame n Flow Media - Marketing, Web Dev & AI";
+  let seoDescription = "Explore our premium services: Performance Marketing, Custom Web & App Development, and AI Automation Systems designed to scale your business.";
+  let seoCanonical = "/services";
+  let seoSchema: any[] = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "AI-Integrated Marketing",
+      "provider": {
+        "@type": "Organization",
+        "name": "Frame n Flow Media"
+      },
+      "description": "Comprehensive marketing strategy including Business Intelligence, Competitor Analysis, and Funnel Optimization.",
+      "areaServed": ["United States", "United Kingdom", "India", "Europe"]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "AI Product Visuals",
+      "provider": {
+        "@type": "Organization",
+        "name": "Frame n Flow Media"
+      },
+      "description": "Photorealistic AI generation for jewelry, furniture, and products, reducing production costs by 90%.",
+      "serviceType": "content creation"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Growth Automation Systems",
+      "provider": {
+        "@type": "Organization",
+        "name": "Frame n Flow Media"
+      },
+      "description": "Automated lead acquisition funnels and AI chatbots with 100% Refund Guarantee.",
+      "serviceType": "lead generation"
+    }
+  ];
+
+  if (activeTab === 'marketing') {
+    seoTitle = "Performance Marketing Agency Hyderabad | Frame n Flow Media";
+    seoDescription = "Scale your brand with the top performance marketing agency in Hyderabad. We specialize in ROI-driven lead generation, high-fidelity AI visuals, and automated growth systems.";
+    seoCanonical = "/services/marketing";
+    seoSchema = [
+      {
+        "@context": "https://schema.org",
+        "@type": "PerformanceMarketingAgency",
+        "name": "Frame n Flow Media Marketing",
+        "description": "Top Performance Marketing & AI Creative Agency Hyderabad.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Hyderabad",
+          "addressRegion": "Telangana",
+          "addressCountry": "India"
+        },
+        "url": "https://framenflowmedia.in/services/marketing"
+      }
+    ];
+  } else if (activeTab === 'webdev') {
+    seoTitle = "Best Website Development Agency in Bangalore | Custom Next.js";
+    seoDescription = "Partner with the best website development agency in Bangalore. We engineer ultra-fast React, Next.js, and custom SaaS architectures optimized for SEO and Conversions.";
+    seoCanonical = "/services/website-development";
+    seoSchema = [
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "Frame n Flow Media Web Development",
+        "description": "Best Website Development Agency in Bangalore.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Bangalore",
+          "addressRegion": "Karnataka",
+          "addressCountry": "India"
+        },
+        "url": "https://framenflowmedia.in/services/website-development"
+      }
+    ];
+  } else if (activeTab === 'automation') {
+    seoTitle = "AI Automation Agency | Frame n Flow Media";
+    seoDescription = "Deploy 24/7 intelligent AI systems, chatbots, and CRM integrations to automate customer interactions and lead flows.";
+    seoCanonical = "/services/ai-automation";
+  }
 
   return (
     <div className="pt-24 md:pt-32 min-h-screen bg-background overflow-x-hidden pb-20 font-sans">
       <SEO
-        title="Services | Frame n Flow Media - Marketing & Automation"
-        description="Explore our core services: Business Intelligence, AI Product Visuals, Growth Systems (100% Refund Guarantee), Web Development, and 24/7 AI Automation Agencies."
-        canonical="/services"
-        schema={[
-          {
-            "@context": "https://schema.org",
-            "@type": "Service",
-            "name": "AI-Integrated Marketing",
-            "provider": {
-              "@type": "Organization",
-              "name": "Frame n Flow Media"
-            },
-            "description": "Comprehensive marketing strategy including Business Intelligence, Competitor Analysis, and Funnel Optimization.",
-            "areaServed": ["United States", "United Kingdom", "India", "Europe"]
-          },
-          {
-            "@context": "https://schema.org",
-            "@type": "Service",
-            "name": "AI Product Visuals",
-            "provider": {
-              "@type": "Organization",
-              "name": "Frame n Flow Media"
-            },
-            "description": "Photorealistic AI generation for jewelry, furniture, and products, reducing production costs by 90%.",
-            "serviceType": "content creation"
-          },
-          {
-            "@context": "https://schema.org",
-            "@type": "Service",
-            "name": "Growth Automation Systems",
-            "provider": {
-              "@type": "Organization",
-              "name": "Frame n Flow Media"
-            },
-            "description": "Automated lead acquisition funnels and AI chatbots with 100% Refund Guarantee.",
-            "serviceType": "lead generation"
-          }
-        ]}
+        title={seoTitle}
+        description={seoDescription}
+        canonical={seoCanonical}
+        schema={seoSchema}
       />
 
       {/* HEADER WITH TABS - HIDDEN ON SELECTION SCREEN */}
@@ -513,7 +570,7 @@ const Services: React.FC = () => {
             </RevealText>
             <RevealText delay={0.1}>
               <h1 className="text-4xl md:text-7xl font-display font-bold mb-8 leading-tight">
-                {activeTab === 'marketing' ? 'Complete Marketing Infrastructure' : activeTab === 'webdev' ? 'Next-Gen Web & App Architecture' : 'AI Automations for Growth'}
+                {activeTab === 'marketing' ? 'Performance Marketing Agency Hyderabad' : activeTab === 'webdev' ? 'Website Development Agency Bangalore' : 'AI Automations for Growth'}
               </h1>
             </RevealText>
 
@@ -530,19 +587,19 @@ const Services: React.FC = () => {
                 }}
               ></div>
               <button
-                onClick={() => setActiveTab('marketing')}
+                onClick={() => navigate('/services/marketing')}
                 className={`relative z-10 w-32 md:w-40 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'marketing' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
               >
                 Marketing
               </button>
               <button
-                onClick={() => setActiveTab('webdev')}
+                onClick={() => navigate('/services/website-development')}
                 className={`relative z-10 w-32 md:w-40 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'webdev' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
               >
                 Web/App Dev
               </button>
               <button
-                onClick={() => setActiveTab('automation')}
+                onClick={() => navigate('/services/ai-automation')}
                 className={`relative z-10 w-32 md:w-40 py-2 rounded-full text-sm font-bold transition-colors ${activeTab === 'automation' ? 'text-white' : 'text-white/40 hover:text-white/60'}`}
               >
                 Automation
@@ -581,13 +638,13 @@ const Services: React.FC = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                onClick={() => setActiveTab('marketing')}
+                onClick={() => navigate('/services/marketing')}
                 className="group relative bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col"
                 whileHover={{ y: -10 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50" />
                 <div className="absolute -right-10 -top-10 w-40 h-40 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-colors" />
-
+ 
                 <div className="relative z-10 flex-1">
                   <div className="w-14 h-14 bg-black border border-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     <TrendingUp size={28} className="text-accent" />
@@ -601,19 +658,19 @@ const Services: React.FC = () => {
                   Explore <span className="ml-2">→</span>
                 </div>
               </motion.div>
-
+ 
               {/* WEB DEV CARD */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                onClick={() => setActiveTab('webdev')}
+                onClick={() => navigate('/services/website-development')}
                 className="group relative bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col"
                 whileHover={{ y: -10 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50" />
                 <div className="absolute -right-10 -top-10 w-40 h-40 bg-green-500/10 rounded-full blur-3xl group-hover:bg-green-500/20 transition-colors" />
-
+ 
                 <div className="relative z-10 flex-1">
                   <div className="w-14 h-14 bg-black border border-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     <Code size={28} className="text-green-400" />
@@ -627,19 +684,19 @@ const Services: React.FC = () => {
                   Explore <span className="ml-2">→</span>
                 </div>
               </motion.div>
-
+ 
               {/* AUTOMATION CARD */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                onClick={() => setActiveTab('automation')}
+                onClick={() => navigate('/services/ai-automation')}
                 className="group relative bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col"
                 whileHover={{ y: -10 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50" />
                 <div className="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl group-hover:bg-indigo-500/20 transition-colors" />
-
+ 
                 <div className="relative z-10 flex-1">
                   <div className="w-14 h-14 bg-black border border-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     <Bot size={28} className="text-indigo-400" />
@@ -811,6 +868,13 @@ const Services: React.FC = () => {
                 <OnsiteVisual />
               </div>
             </div>
+
+            {/* HYDERABAD MARKETING GEO-FAQ SECTION */}
+            <LocalFAQ
+              title="Frequently Asked Questions"
+              subtitle="Common questions about our Performance Marketing and AI visual solutions in Hyderabad."
+              faqs={HYDERABAD_MARKETING_FAQS}
+            />
 
             <div className="text-center mt-20">
               <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>Start Your Project</Button>
@@ -1049,6 +1113,13 @@ const Services: React.FC = () => {
               </div>
             </div>
 
+            {/* BANGALORE WEBSITE DEVELOPMENT GEO-FAQ SECTION */}
+            <LocalFAQ
+              title="Frequently Asked Questions"
+              subtitle="Common questions about our custom website development services in Bangalore."
+              faqs={BANGALORE_WEBDEV_FAQS}
+            />
+
             {/* Final WebDev CTA */}
             <div className="text-center mt-20">
               <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>Build Your Vision</Button>
@@ -1232,3 +1303,108 @@ const CheckBullet = () => (
 )
 
 export default Services;
+
+// --- LOCALIZED FAQ DATA ---
+const BANGALORE_WEBDEV_FAQS = [
+  {
+    question: "Why is Frame n Flow Media considered the best website development agency in Bangalore?",
+    answer: "As Bangalore's leading custom tech studio, we don't build generic template-based sites. We engineer premium, custom-coded React, Next.js, and Tailwind CSS web systems with sub-second load times. Our sites are completely optimized for local search engines and AI discovery tools (ChatGPT/Gemini ready), ensuring your business captures high-intent traffic across Bengaluru's competitive tech ecosystem."
+  },
+  {
+    question: "How do custom React and Next.js platforms help Bangalore businesses scale?",
+    answer: "Bangalore is India's tech capital, and slow websites kill conversions. Custom Next.js development uses server-side rendering (SSR) and static site generation (SSG) to deliver instantaneous load speeds, enterprise-grade security, and dynamic page responsiveness. This boosts your Google ranking, drives up organic traffic, and delivers a premium UX that converts tech-savvy users into active clients."
+  },
+  {
+    question: "Do you integrate AI automations or custom databases like Supabase in your web builds?",
+    answer: "Yes. Every custom website we build for Bangalore enterprises and startups can include robust cloud database backends (like Supabase, Firebase, or custom APIs) and native AI integrations. We build interactive custom portals, lead-nurturing dashboards, booking systems, and 24/7 AI chat interfaces directly into your web architecture."
+  },
+  {
+    question: "What is your website launch and SEO optimization timeline in Bangalore?",
+    answer: "A premium custom landing page or website generally takes 2 to 4 weeks from strategy design to final deployment. We conduct thorough competitor keyword mapping, inject structured schema markup, set up Google Analytics, and verify Core Web Vitals performance (LCP, INP) to ensure your website is search-ready on day one."
+  }
+];
+
+const HYDERABAD_MARKETING_FAQS = [
+  {
+    question: "What makes your performance marketing agency in Hyderabad different from traditional agencies?",
+    answer: "Traditional marketing agencies in Hyderabad rely on outdated billboard styles or generic social media postings. We focus on ROI-driven Growth Systems backed by hard business intelligence and competitive research. We combine direct-response copywriting, precise targeting, and our exclusive 100% Refund Guarantee (No Leads = No Pay) to generate high-intent customers for businesses across Hyderabad."
+  },
+  {
+    question: "How do AI Product Visuals benefit e-commerce and lifestyle brands in Hyderabad?",
+    answer: "Hyderabad is a major hub for luxury jewelry, fashion, real estate, and lifestyle brands. Traditional lifestyle photoshoots cost ₹2,00,000+ per session and take weeks of planning. We train advanced custom AI models on your product SKUs to render ultra-realistic, studio-quality lifestyle imagery in seconds. This slashes content production costs by 90% while allowing you to deploy new creatives daily."
+  },
+  {
+    question: "What industries in Hyderabad do you build growth and lead acquisition systems for?",
+    answer: "We specialize in scaling high-ticket service industries across Hyderabad, including luxury real estate developers, jewelry houses, financial planners, clinical practices, and premium D2C brands. Our funnels are automated from lead capture to SMS/WhatsApp follow-up, ensuring no lead is left cold."
+  },
+  {
+    question: "Is the 100% Refund Guarantee available for all marketing campaigns in Hyderabad?",
+    answer: "Yes. Our Performance Promise is active for our primary growth campaigns. If we do not generate qualified leads for your Hyderabad business within the agreed-upon timeline, we refund our service fee completely. We keep our skin in the game because we believe in our data-driven growth strategies."
+  }
+];
+
+// --- LOCAL ACCORDION FAQ COMPONENT ---
+const LocalFAQ: React.FC<{
+  title: string;
+  subtitle: string;
+  faqs: { question: string; answer: string }[];
+}> = ({ title, subtitle, faqs }) => {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  return (
+    <section className="py-12 md:py-20 bg-transparent border-t border-white/5 relative overflow-hidden w-full text-left">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="max-w-4xl mx-auto relative z-10">
+        <div className="text-center mb-10 md:mb-12">
+          <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">{title}</h2>
+          <p className="text-lg text-white/50 font-light">{subtitle}</p>
+        </div>
+
+        <div className="space-y-4">
+          {faqs.map((item, index) => (
+            <div
+              key={index}
+              className={`group rounded-2xl border transition-all duration-300 overflow-hidden ${
+                openIndex === index ? 'bg-white/5 border-white/20' : 'bg-transparent border-white/10 hover:border-white/20'
+              }`}
+            >
+              <button
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full flex items-center justify-between p-6 text-left"
+              >
+                <span className={`text-lg font-bold pr-8 transition-colors ${openIndex === index ? 'text-white' : 'text-white/70 group-hover:text-white'}`}>
+                  {item.question}
+                </span>
+                <div
+                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${
+                    openIndex === index
+                      ? 'bg-white border-white text-black rotate-45'
+                      : 'border-white/20 text-white/50 group-hover:border-white group-hover:text-white'
+                  }`}
+                >
+                  <Plus size={18} />
+                </div>
+              </button>
+              <AnimatePresence>
+                {openIndex === index && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    <div className="px-6 pb-6 text-white/60 font-light leading-relaxed whitespace-pre-line">
+                      {item.answer}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};

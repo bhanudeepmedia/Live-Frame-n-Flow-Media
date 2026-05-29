@@ -28,6 +28,21 @@ const routes = [
     description: "Explore our services: Business Intelligence, AI Visuals, Performance Marketing, and Automated Growth Systems."
   },
   {
+    path: '/services/marketing',
+    title: "Performance Marketing Agency Hyderabad | Frame n Flow Media",
+    description: "Scale your brand with the top performance marketing agency in Hyderabad. We specialize in ROI-driven lead generation, high-fidelity AI visuals, and automated growth systems."
+  },
+  {
+    path: '/services/website-development',
+    title: "Best Website Development Agency in Bangalore | Custom Next.js",
+    description: "Partner with the best website development agency in Bangalore. We engineer ultra-fast React, Next.js, and custom SaaS architectures optimized for SEO and Conversions."
+  },
+  {
+    path: '/services/ai-automation',
+    title: "AI Automation Agency | Frame n Flow Media",
+    description: "Deploy 24/7 intelligent AI systems, chatbots, and CRM integrations to automate customer interactions and lead flows."
+  },
+  {
     path: '/contact',
     title: "Contact Us | Frame n Flow Media - Book Your Strategy Call",
     description: "Schedule a free marketing audit with Frame n Flow Media. We analyze your funnel, identify leaks, and propose a roadmap for growth."
@@ -41,6 +56,21 @@ const routes = [
     path: '/work',
     title: "Our Work | Frame n Flow Media",
     description: "Case studies and success stories from Frame n Flow Media clients."
+  },
+  {
+    path: '/work/ai-visuals',
+    title: "AI Visuals Portfolio | Frame n Flow Media",
+    description: "Explore our photorealistic AI product visuals, kinetic motion designs, and digital lifestyle imagery for luxury brands."
+  },
+  {
+    path: '/work/sonic-branding',
+    title: "Sonic Branding Portfolio | Frame n Flow Media",
+    description: "Listen to our custom sonic identities, original audio compositions, and sound signatures designed for brand recall."
+  },
+  {
+    path: '/work/website-development',
+    title: "Website Development Projects | Bangalore Web Dev Portfolio",
+    description: "Explore our custom-built Next.js and React websites. High-performance web development projects in Bangalore engineered for conversions and SEO."
   },
   {
     path: '/insights',

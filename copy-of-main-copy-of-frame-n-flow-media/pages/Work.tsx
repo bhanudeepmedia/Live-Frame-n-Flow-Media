@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
-import { Zap, Layers, DollarSign, Play, CheckCircle2, Cpu, Aperture, Repeat, Music, Mic, Headphones, Radio, Volume2, Globe, Database, Smartphone, Code } from 'lucide-react';
+import { Zap, Layers, DollarSign, Play, CheckCircle2, Cpu, Aperture, Repeat, Music, Mic, Headphones, Radio, Volume2, Globe, Database, Smartphone, Code, Plus } from 'lucide-react';
 import SEO from '../components/SEO';
 
 const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: string }> = ({ children, delay = 0, className = "" }) => (
@@ -30,17 +30,74 @@ const RevealText: React.FC<{ children: React.ReactNode, delay?: number, classNam
   </div>
 );
 
-const Work: React.FC = () => {
+interface WorkProps {
+  tab?: 'visuals' | 'sonic' | 'dev' | 'selection';
+}
+
+const Work: React.FC<WorkProps> = ({ tab }) => {
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState<'visuals' | 'sonic' | 'dev'>('visuals');
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<'visuals' | 'sonic' | 'dev' | 'selection'>(tab || 'selection');
   const [visualMode, setVisualMode] = useState<'kinetic' | 'static'>('kinetic');
 
   useEffect(() => {
-    const state = location.state as { activeTab?: 'visuals' | 'sonic' | 'dev' } | null;
-    if (state?.activeTab) {
-      setActiveTab(state.activeTab);
+    if (tab) {
+      setActiveTab(tab);
+    } else {
+      const state = location.state as { activeTab?: 'visuals' | 'sonic' | 'dev' } | null;
+      if (state?.activeTab) {
+        setActiveTab(state.activeTab);
+      } else {
+        setActiveTab('selection');
+      }
     }
-  }, [location]);
+  }, [location, tab]);
+
+  let seoTitle = "Our Work | Frame n Flow Media - AI & Web Portfolio";
+  let seoDescription = "Browse our collection of AI product visuals, sonic branding, and custom web development projects designed for premium brands.";
+  let seoCanonical = "/work";
+  let seoSchema: any = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Frame n Flow Media Portfolio Pillars",
+    "description": "Explore our portfolio of AI product visuals, sonic branding, and custom website development.",
+    "url": "https://framenflowmedia.in/work"
+  };
+
+  if (activeTab === 'dev') {
+    seoTitle = "Website Development Projects | Bangalore Web Dev Portfolio";
+    seoDescription = "Explore our custom-built Next.js and React websites. High-performance web development projects in Bangalore engineered for conversions and SEO.";
+    seoCanonical = "/work/website-development";
+    seoSchema = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Website Development Portfolio Bangalore",
+      "description": "Premium React & Next.js websites built in Bangalore.",
+      "url": "https://framenflowmedia.in/work/website-development"
+    };
+  } else if (activeTab === 'visuals') {
+    seoTitle = "AI Visuals Portfolio | Frame n Flow Media";
+    seoDescription = "Explore our photorealistic AI product visuals, kinetic motion designs, and digital lifestyle imagery for luxury brands.";
+    seoCanonical = "/work/ai-visuals";
+    seoSchema = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "AI Visuals Portfolio",
+      "description": "Photorealistic AI product visuals and kinetic motion designs.",
+      "url": "https://framenflowmedia.in/work/ai-visuals"
+    };
+  } else if (activeTab === 'sonic') {
+    seoTitle = "Sonic Branding Portfolio | Frame n Flow Media";
+    seoDescription = "Listen to our custom sonic identities, original audio compositions, and sound signatures designed for brand recall.";
+    seoCanonical = "/work/sonic-branding";
+    seoSchema = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Sonic Branding Portfolio",
+      "description": "Custom sonic identities and sound design signatures.",
+      "url": "https://framenflowmedia.in/work/sonic-branding"
+    };
+  }
 
   // KINETIC SEQUENCES (VIDEOS)
   const kineticPortfolio = [
@@ -254,39 +311,10 @@ const Work: React.FC = () => {
   return (
     <div className="pt-24 md:pt-32 min-h-screen bg-background overflow-x-hidden pb-20">
       <SEO
-        title="Our Work | Frame n Flow Media - AI Visuals & Strategy Portfolio"
-        description="Explore our portfolio of AI product visuals, sonic branding, and high-performance marketing campaigns. See how we help brands dominate."
-        canonical="/work"
-        schema={{
-          "@context": "https://schema.org",
-          "@type": "CollectionPage",
-          "name": "Frame n Flow Media Portfolio",
-          "description": "A collection of AI visuals, sonic branding, and web development projects.",
-          "url": "https://framenflowmedia.in/work",
-          "mainEntity": {
-            "@type": "ItemList",
-            "itemListElement": [
-              {
-                "@type": "CreativeWork",
-                "position": 1,
-                "name": "Luxury Product Showcase",
-                "description": "Photorealistic light and physics simulations for luxury products."
-              },
-              {
-                "@type": "CreativeWork",
-                "position": 2,
-                "name": "Digital Fashion",
-                "description": "Dynamic fabric simulation and model animation."
-              },
-              {
-                "@type": "CreativeWork",
-                "position": 3,
-                "name": "Sonic Branding Signature",
-                "description": "Original sonic identity composed for brand authority."
-              }
-            ]
-          }
-        }}
+        title={seoTitle}
+        description={seoDescription}
+        canonical={seoCanonical}
+        schema={seoSchema}
       />
 
       {/* BACKGROUND ELEMENTS */}
@@ -308,33 +336,140 @@ const Work: React.FC = () => {
             </h1>
           </RevealText>
 
-          <div className="flex flex-wrap justify-center gap-4 mt-4 bg-white/5 p-2 rounded-full border border-white/10 backdrop-blur-md">
-            <button
-              onClick={() => setActiveTab('visuals')}
-              className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${activeTab === 'visuals' ? 'bg-accent text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
-            >
-              <Aperture size={18} />
-              AI Studio Visuals
-            </button>
-            <button
-              onClick={() => setActiveTab('sonic')}
-              className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${activeTab === 'sonic' ? 'bg-accent text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
-            >
-              <Music size={18} />
-              Sonic Branding
-            </button>
-            <button
-              onClick={() => setActiveTab('dev')}
-              className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${activeTab === 'dev' ? 'bg-accent text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
-            >
-              <Code size={18} />
-              Web & App Dev
-            </button>
-          </div>
+          {activeTab !== 'selection' && (
+            <div className="flex flex-wrap justify-center gap-4 mt-4 bg-white/5 p-2 rounded-full border border-white/10 backdrop-blur-md">
+              <button
+                onClick={() => navigate('/work/ai-visuals')}
+                className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${activeTab === 'visuals' ? 'bg-accent text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+              >
+                <Aperture size={18} />
+                AI Studio Visuals
+              </button>
+              <button
+                onClick={() => navigate('/work/sonic-branding')}
+                className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${activeTab === 'sonic' ? 'bg-accent text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+              >
+                <Music size={18} />
+                Sonic Branding
+              </button>
+              <button
+                onClick={() => navigate('/work/website-development')}
+                className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${activeTab === 'dev' ? 'bg-accent text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+              >
+                <Code size={18} />
+                Web & App Dev
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
       <AnimatePresence mode="wait">
+
+        {/* ==================== SELECTION SUBPAGE ==================== */}
+        {activeTab === 'selection' && (
+          <motion.div
+            key="selection"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.05 }}
+            transition={{ duration: 0.5 }}
+            className="container mx-auto px-6 py-10 min-h-[60vh] flex flex-col items-center justify-center relative z-20"
+          >
+            <div className="absolute inset-x-0 -top-40 h-[500px] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
+
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-4xl md:text-6xl font-display font-bold text-center mb-16 leading-tight max-w-4xl"
+            >
+              Explore our <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">Portfolio Pillars</span>
+            </motion.h1>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl">
+
+              {/* VISUALS CARD */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                onClick={() => navigate('/work/ai-visuals')}
+                className="group relative bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col"
+                whileHover={{ y: -10 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50" />
+                <div className="absolute -right-10 -top-10 w-40 h-40 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-colors" />
+
+                <div className="relative z-10 flex-1">
+                  <div className="w-14 h-14 bg-black border border-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <Aperture size={28} className="text-accent" />
+                  </div>
+                  <h3 className="text-2xl font-display font-bold text-white mb-4">AI Studio Visuals</h3>
+                  <p className="text-white/60 leading-relaxed text-sm">
+                    Studio quality without the studio. Generative visual production for jewelry, fashion, and premium products.
+                  </p>
+                </div>
+                <div className="relative z-10 mt-8 flex items-center text-accent font-bold text-sm tracking-widest uppercase group-hover:translate-x-2 transition-transform">
+                  View Works <span className="ml-2">→</span>
+                </div>
+              </motion.div>
+
+              {/* SONIC CARD */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                onClick={() => navigate('/work/sonic-branding')}
+                className="group relative bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col"
+                whileHover={{ y: -10 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50" />
+                <div className="absolute -right-10 -top-10 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-colors" />
+
+                <div className="relative z-10 flex-1">
+                  <div className="w-14 h-14 bg-black border border-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <Music size={28} className="text-purple-400" />
+                  </div>
+                  <h3 className="text-2xl font-display font-bold text-white mb-4">Sonic Branding</h3>
+                  <p className="text-white/60 leading-relaxed text-sm">
+                    Composition of original soundtracks, auditory assets, and sound strategies that establish brand authority.
+                  </p>
+                </div>
+                <div className="relative z-10 mt-8 flex items-center text-purple-400 font-bold text-sm tracking-widest uppercase group-hover:translate-x-2 transition-transform">
+                  View Works <span className="ml-2">→</span>
+                </div>
+              </motion.div>
+
+              {/* DEV CARD */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                onClick={() => navigate('/work/website-development')}
+                className="group relative bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col"
+                whileHover={{ y: -10 }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50" />
+                <div className="absolute -right-10 -top-10 w-40 h-40 bg-green-500/10 rounded-full blur-3xl group-hover:bg-green-500/20 transition-colors" />
+
+                <div className="relative z-10 flex-1">
+                  <div className="w-14 h-14 bg-black border border-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <Code size={28} className="text-green-400" />
+                  </div>
+                  <h3 className="text-2xl font-display font-bold text-white mb-4">Web & App Dev</h3>
+                  <p className="text-white/60 leading-relaxed text-sm">
+                    Premium custom websites and applications engineered for high conversion, local SEO dominance, and visual speed.
+                  </p>
+                </div>
+                <div className="relative z-10 mt-8 flex items-center text-green-400 font-bold text-sm tracking-widest uppercase group-hover:translate-x-2 transition-transform">
+                  View Works <span className="ml-2">→</span>
+                </div>
+              </motion.div>
+
+            </div>
+          </motion.div>
+        )}
 
         {/* ==================== VISUALS SUBPAGE ==================== */}
         {activeTab === 'visuals' && (
@@ -777,6 +912,13 @@ const Work: React.FC = () => {
               </div>
             </div>
 
+            {/* BANGALORE WEBSITE DEVELOPMENT PORTFOLIO GEO-FAQ SECTION */}
+            <LocalFAQ
+              title="Frequently Asked Questions"
+              subtitle="Common questions about our website engineering case studies and performance in Bangalore."
+              faqs={BANGALORE_PORTFOLIO_FAQS}
+            />
+
           </motion.div>
         )}
       </AnimatePresence>
@@ -799,3 +941,85 @@ const Work: React.FC = () => {
 };
 
 export default Work;
+
+// --- LOCALIZED PORTFOLIO FAQ DATA ---
+const BANGALORE_PORTFOLIO_FAQS = [
+  {
+    question: "How do your Bangalore web development case studies prove conversion success?",
+    answer: "Every project in our portfolio—from premium financial portals like Nihira Finserv to ultra-secure architectures like The Grafton Vault—is engineered to solve concrete business bottlenecks. By implementing custom-coded Next.js/React frontends, we regularly improve client page load speeds by 300% and lead-form conversion rates by over 40%."
+  },
+  {
+    question: "Can I view the core speed and SEO metrics for your Bangalore web projects?",
+    answer: "Absolutely. All our web architectures are built to pass Google's strict Core Web Vitals. We optimize for high Largest Contentful Paint (LCP) and low Interaction to Next Paint (INP). We embed structured JSON-LD schema so search bots and AI engines can instantly index and recommend our client websites."
+  },
+  {
+    question: "Do you offer post-launch maintenance for businesses in Bangalore?",
+    answer: "Yes. We offer enterprise-grade maintenance packages that cover continuous security scans, speed updates, content changes, and uptime tracking, so Bangalore businesses can focus on scaling their operations while we manage their web stability."
+  }
+];
+
+// --- LOCAL ACCORDION FAQ COMPONENT ---
+const LocalFAQ: React.FC<{
+  title: string;
+  subtitle: string;
+  faqs: { question: string; answer: string }[];
+}> = ({ title, subtitle, faqs }) => {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  return (
+    <section className="py-12 md:py-20 bg-transparent border-t border-white/5 relative overflow-hidden w-full text-left">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="max-w-4xl mx-auto relative z-10">
+        <div className="text-center mb-10 md:mb-12">
+          <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">{title}</h2>
+          <p className="text-lg text-white/50 font-light">{subtitle}</p>
+        </div>
+
+        <div className="space-y-4">
+          {faqs.map((item, index) => (
+            <div
+              key={index}
+              className={`group rounded-2xl border transition-all duration-300 overflow-hidden ${
+                openIndex === index ? 'bg-white/5 border-white/20' : 'bg-transparent border-white/10 hover:border-white/20'
+              }`}
+            >
+              <button
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full flex items-center justify-between p-6 text-left"
+              >
+                <span className={`text-lg font-bold pr-8 transition-colors ${openIndex === index ? 'text-white' : 'text-white/70 group-hover:text-white'}`}>
+                  {item.question}
+                </span>
+                <div
+                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${
+                    openIndex === index
+                      ? 'bg-white border-white text-black rotate-45'
+                      : 'border-white/20 text-white/50 group-hover:border-white group-hover:text-white'
+                  }`}
+                >
+                  <Plus size={18} />
+                </div>
+              </button>
+              <AnimatePresence>
+                {openIndex === index && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    <div className="px-6 pb-6 text-white/60 font-light leading-relaxed whitespace-pre-line">
+                      {item.answer}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
