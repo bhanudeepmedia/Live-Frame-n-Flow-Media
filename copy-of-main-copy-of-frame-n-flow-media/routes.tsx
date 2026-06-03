@@ -47,7 +47,6 @@ export const routes: RouteObject[] = [
     { path: '/founder-bhanudeep', element: <Founder /> },
     { path: '/work', element: <Work tab="selection" /> },
     { path: '/work/ai-visuals', element: <Work tab="visuals" /> },
-    { path: '/work/sonic-branding', element: <Work tab="sonic" /> },
     { path: '/work/website-development', element: <Work tab="dev" /> },
     { path: '/insights', element: <Insights /> },
     { path: '/privacy-policy', element: <PrivacyPolicy /> },

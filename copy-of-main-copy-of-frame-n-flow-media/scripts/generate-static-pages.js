@@ -63,11 +63,6 @@ const routes = [
     description: "Explore our photorealistic AI product visuals, kinetic motion designs, and digital lifestyle imagery for luxury brands."
   },
   {
-    path: '/work/sonic-branding',
-    title: "Sonic Branding Portfolio | Frame n Flow Media",
-    description: "Listen to our custom sonic identities, original audio compositions, and sound signatures designed for brand recall."
-  },
-  {
     path: '/work/website-development',
     title: "Website Development Projects | Bangalore Web Dev Portfolio",
     description: "Explore our custom-built Next.js and React websites. High-performance web development projects in Bangalore engineered for conversions and SEO."

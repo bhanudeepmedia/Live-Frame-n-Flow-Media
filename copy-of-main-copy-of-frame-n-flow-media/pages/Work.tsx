@@ -31,20 +31,20 @@ const RevealText: React.FC<{ children: React.ReactNode, delay?: number, classNam
 );
 
 interface WorkProps {
-  tab?: 'visuals' | 'sonic' | 'dev' | 'selection';
+  tab?: 'visuals' | 'dev' | 'selection';
 }
 
 const Work: React.FC<WorkProps> = ({ tab }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'visuals' | 'sonic' | 'dev' | 'selection'>(tab || 'selection');
+  const [activeTab, setActiveTab] = useState<'visuals' | 'dev' | 'selection'>(tab || 'selection');
   const [visualMode, setVisualMode] = useState<'kinetic' | 'static'>('kinetic');
 
   useEffect(() => {
     if (tab) {
       setActiveTab(tab);
     } else {
-      const state = location.state as { activeTab?: 'visuals' | 'sonic' | 'dev' } | null;
+      const state = location.state as { activeTab?: 'visuals' | 'dev' } | null;
       if (state?.activeTab) {
         setActiveTab(state.activeTab);
       } else {
@@ -53,14 +53,14 @@ const Work: React.FC<WorkProps> = ({ tab }) => {
     }
   }, [location, tab]);
 
-  let seoTitle = "Our Work | Frame n Flow Media - AI & Web Portfolio";
-  let seoDescription = "Browse our collection of AI product visuals, sonic branding, and custom web development projects designed for premium brands.";
+  let seoTitle = "Our Work | Frame n Flow Media - Marketing & Web Portfolio";
+  let seoDescription = "Browse our collection of marketing systems and custom web development projects designed for premium brands.";
   let seoCanonical = "/work";
   let seoSchema: any = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "name": "Frame n Flow Media Portfolio Pillars",
-    "description": "Explore our portfolio of AI product visuals, sonic branding, and custom website development.",
+    "description": "Explore our portfolio of marketing systems and custom website development.",
     "url": "https://framenflowmedia.in/work"
   };
 
@@ -76,26 +76,15 @@ const Work: React.FC<WorkProps> = ({ tab }) => {
       "url": "https://framenflowmedia.in/work/website-development"
     };
   } else if (activeTab === 'visuals') {
-    seoTitle = "AI Visuals Portfolio | Frame n Flow Media";
-    seoDescription = "Explore our photorealistic AI product visuals, kinetic motion designs, and digital lifestyle imagery for luxury brands.";
+    seoTitle = "Complete Marketing Systems Portfolio | Frame n Flow Media";
+    seoDescription = "Explore our high-converting campaigns, photorealistic AI product visuals, and automated growth paths.";
     seoCanonical = "/work/ai-visuals";
     seoSchema = {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
-      "name": "AI Visuals Portfolio",
-      "description": "Photorealistic AI product visuals and kinetic motion designs.",
+      "name": "Complete Marketing Systems Portfolio",
+      "description": "High-converting campaigns, photorealistic AI product visuals, and automated growth paths.",
       "url": "https://framenflowmedia.in/work/ai-visuals"
-    };
-  } else if (activeTab === 'sonic') {
-    seoTitle = "Sonic Branding Portfolio | Frame n Flow Media";
-    seoDescription = "Listen to our custom sonic identities, original audio compositions, and sound signatures designed for brand recall.";
-    seoCanonical = "/work/sonic-branding";
-    seoSchema = {
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      "name": "Sonic Branding Portfolio",
-      "description": "Custom sonic identities and sound design signatures.",
-      "url": "https://framenflowmedia.in/work/sonic-branding"
     };
   }
 
@@ -232,18 +221,7 @@ const Work: React.FC<WorkProps> = ({ tab }) => {
     },
   ];
 
-  const sonicPortfolio = [
-    {
-      url: "https://www.instagram.com/reel/DSUP84oEgyY/embed",
-      title: "Frame n Flow Signature",
-      description: "Original sonic identity composed for brand authority and recall."
-    },
-    {
-      url: "https://www.instagram.com/reel/DTp2jKbk1k6/embed",
-      title: "Sonic Brand integration",
-      description: "Seamless audio integration designed to amplify brand presence across social platforms."
-    }
-  ];
+
 
   const devPortfolio = [
     {
@@ -325,7 +303,7 @@ const Work: React.FC<WorkProps> = ({ tab }) => {
       </div>
 
       {/* HEADER & TOGGLE SECTION */}
-      <div className="container mx-auto px-6 mb-16 relative z-10">
+      <div className="container mx-auto px-6 mb-6 relative z-10">
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
           <RevealText>
             <span className="text-accent uppercase tracking-widest text-xs font-bold mb-4 block">Our Portfolio</span>
@@ -343,14 +321,7 @@ const Work: React.FC<WorkProps> = ({ tab }) => {
                 className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${activeTab === 'visuals' ? 'bg-accent text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
               >
                 <Aperture size={18} />
-                AI Studio Visuals
-              </button>
-              <button
-                onClick={() => navigate('/work/sonic-branding')}
-                className={`px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${activeTab === 'sonic' ? 'bg-accent text-black shadow-[0_0_20px_rgba(34,211,238,0.4)]' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
-              >
-                <Music size={18} />
-                Sonic Branding
+                Complete Marketing Systems
               </button>
               <button
                 onClick={() => navigate('/work/website-development')}
@@ -374,7 +345,7 @@ const Work: React.FC<WorkProps> = ({ tab }) => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}
             transition={{ duration: 0.5 }}
-            className="container mx-auto px-6 py-10 min-h-[60vh] flex flex-col items-center justify-center relative z-20"
+            className="container mx-auto px-6 py-4 relative z-20 flex flex-col items-center"
           >
             <div className="absolute inset-x-0 -top-40 h-[500px] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
 
@@ -382,12 +353,12 @@ const Work: React.FC<WorkProps> = ({ tab }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-4xl md:text-6xl font-display font-bold text-center mb-16 leading-tight max-w-4xl"
+              className="text-4xl md:text-6xl font-display font-bold text-center mb-8 leading-tight max-w-4xl"
             >
               Explore our <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">Portfolio Pillars</span>
             </motion.h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 w-full max-w-4xl">
 
               {/* VISUALS CARD */}
               <motion.div
@@ -405,38 +376,12 @@ const Work: React.FC<WorkProps> = ({ tab }) => {
                   <div className="w-14 h-14 bg-black border border-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     <Aperture size={28} className="text-accent" />
                   </div>
-                  <h3 className="text-2xl font-display font-bold text-white mb-4">AI Studio Visuals</h3>
+                  <h3 className="text-2xl font-display font-bold text-white mb-4">Complete Marketing Systems</h3>
                   <p className="text-white/60 leading-relaxed text-sm">
-                    Studio quality without the studio. Generative visual production for jewelry, fashion, and premium products.
+                    High-converting campaigns, photorealistic AI assets, and automated acquisition paths that turn traffic into customers.
                   </p>
                 </div>
                 <div className="relative z-10 mt-8 flex items-center text-accent font-bold text-sm tracking-widest uppercase group-hover:translate-x-2 transition-transform">
-                  View Works <span className="ml-2">→</span>
-                </div>
-              </motion.div>
-
-              {/* SONIC CARD */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                onClick={() => navigate('/work/sonic-branding')}
-                className="group relative bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden h-full flex flex-col"
-                whileHover={{ y: -10 }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50" />
-                <div className="absolute -right-10 -top-10 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-colors" />
-
-                <div className="relative z-10 flex-1">
-                  <div className="w-14 h-14 bg-black border border-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <Music size={28} className="text-purple-400" />
-                  </div>
-                  <h3 className="text-2xl font-display font-bold text-white mb-4">Sonic Branding</h3>
-                  <p className="text-white/60 leading-relaxed text-sm">
-                    Composition of original soundtracks, auditory assets, and sound strategies that establish brand authority.
-                  </p>
-                </div>
-                <div className="relative z-10 mt-8 flex items-center text-purple-400 font-bold text-sm tracking-widest uppercase group-hover:translate-x-2 transition-transform">
                   View Works <span className="ml-2">→</span>
                 </div>
               </motion.div>
@@ -621,141 +566,7 @@ const Work: React.FC<WorkProps> = ({ tab }) => {
           </motion.div>
         )}
 
-        {/* ==================== SONIC SUBPAGE ==================== */}
-        {activeTab === 'sonic' && (
-          <motion.div
-            key="sonic"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.5 }}
-          >
-            {/* SONIC HERO TEXT */}
-            <div className="container mx-auto px-6 mb-16 text-center">
-              <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed">
-                Brand identity isn't just what you see—it's what you hear. We curate dedicated original songs and sonic signatures that trigger instant brand recall.
-              </p>
-            </div>
 
-            {/* SONIC GRID */}
-            <div className="container mx-auto px-6 mb-32 relative z-10">
-              {/* Center the single item if there's only one, otherwise grid */}
-              <div className={`grid grid-cols-1 ${sonicPortfolio.length > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : 'justify-center'} gap-8`}>
-                {sonicPortfolio.map((item, index) => (
-                  <FadeIn key={index} delay={index * 0.1} className={`flex flex-col h-full ${sonicPortfolio.length === 1 ? 'max-w-md mx-auto w-full' : ''}`}>
-                    <div className="bg-[#121212] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative group h-full flex flex-col">
-                      <div className="relative w-full aspect-[9/16] bg-black">
-                        <iframe
-                          src={`${item.url}/captioned/`}
-                          className="absolute inset-0 w-full h-full object-cover"
-                          frameBorder="0"
-                          scrolling="no"
-                          allowTransparency={true}
-                          title={item.title}
-                        ></iframe>
-                      </div>
-                      <div className="p-6 border-t border-white/5 bg-surfaceHighlight flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-accent">
-                            <Volume2 size={14} />
-                          </div>
-                          <h3 className="text-xl font-bold text-white">{item.title}</h3>
-                        </div>
-                        <p className="text-sm text-white/50">{item.description}</p>
-                      </div>
-                    </div>
-                  </FadeIn>
-                ))}
-              </div>
-            </div>
-
-            {/* SONIC CONTENT: THE PSYCHOLOGY OF SOUND */}
-            <div className="bg-surfaceHighlight border-y border-white/5 py-24 relative overflow-hidden">
-              <div className="absolute inset-0 bg-noise opacity-5 pointer-events-none" />
-              <div className="container mx-auto px-6">
-                <div className="max-w-3xl mb-16">
-                  <FadeIn>
-                    <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">The Sound of Authority.</h2>
-                    <p className="text-xl text-white/60 font-light leading-relaxed">
-                      Music bypasses the logical brain and hits the emotional core directly. A custom sonic identity makes your brand felt before it is understood.
-                    </p>
-                  </FadeIn>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-                  <FadeIn delay={0.1}>
-                    <div className="bg-background/50 p-8 rounded-2xl border border-white/10 h-full hover:border-accent/30 transition-colors duration-300">
-                      <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6"><Headphones size={24} /></div>
-                      <h3 className="text-xl font-bold text-white mb-4">Original Composition</h3>
-                      <p className="text-white/50 leading-relaxed mb-4">
-                        No stock music. No generic beats. We compose original scores that map specifically to your brand's archetype and energy.
-                      </p>
-                    </div>
-                  </FadeIn>
-                  <FadeIn delay={0.2}>
-                    <div className="bg-background/50 p-8 rounded-2xl border border-white/10 h-full hover:border-accent/30 transition-colors duration-300">
-                      <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6"><Radio size={24} /></div>
-                      <h3 className="text-xl font-bold text-white mb-4">Neuro-Audio Engineering</h3>
-                      <p className="text-white/50 leading-relaxed mb-4">
-                        We use tempo, key, and instrumentation designed to maximize attention retention on social platforms like Reels and TikTok.
-                      </p>
-                    </div>
-                  </FadeIn>
-                  <FadeIn delay={0.3}>
-                    <div className="bg-background/50 p-8 rounded-2xl border border-white/10 h-full hover:border-accent/30 transition-colors duration-300">
-                      <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-accent mb-6"><Mic size={24} /></div>
-                      <h3 className="text-xl font-bold text-white mb-4">Voice & Tone</h3>
-                      <p className="text-white/50 leading-relaxed mb-4">
-                        Beyond music, we curate the vocal texture of your brand. AI voice models or human talent that perfectly align with your message.
-                      </p>
-                    </div>
-                  </FadeIn>
-                </div>
-              </div>
-            </div>
-
-            {/* SONIC PROCESS */}
-            <div className="container mx-auto px-6 py-24">
-              <div className="max-w-4xl mx-auto">
-                <FadeIn className="text-center mb-16">
-                  <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">The Sonic Workflow.</h2>
-                  <div className="w-16 h-1 bg-accent mx-auto rounded-full" />
-                </FadeIn>
-
-                <div className="space-y-6">
-                  <FadeIn delay={0.1}>
-                    <div className="flex items-start gap-6 bg-[#0a0a0a] p-6 rounded-2xl border border-white/5 hover:border-accent/20 transition-colors">
-                      <div className="text-4xl font-display font-bold text-white/10">01</div>
-                      <div>
-                        <h3 className="text-xl font-bold text-white mb-2">Auditory Audit</h3>
-                        <p className="text-white/50">We analyze your competitors and your current brand assets to identify the "white space" in the market's soundscape.</p>
-                      </div>
-                    </div>
-                  </FadeIn>
-                  <FadeIn delay={0.2}>
-                    <div className="flex items-start gap-6 bg-[#0a0a0a] p-6 rounded-2xl border border-white/5 hover:border-accent/20 transition-colors">
-                      <div className="text-4xl font-display font-bold text-white/10">02</div>
-                      <div>
-                        <h3 className="text-xl font-bold text-white mb-2">Composition & Synthesis</h3>
-                        <p className="text-white/50">Our composers and AI engineers build the track layers—melody, rhythm, and texture—to create a distinct sonic logo and full-length track.</p>
-                      </div>
-                    </div>
-                  </FadeIn>
-                  <FadeIn delay={0.3}>
-                    <div className="flex items-start gap-6 bg-[#0a0a0a] p-6 rounded-2xl border border-white/5 hover:border-accent/20 transition-colors">
-                      <div className="text-4xl font-display font-bold text-white/10">03</div>
-                      <div>
-                        <h3 className="text-xl font-bold text-white mb-2">Cross-Platform Integration</h3>
-                        <p className="text-white/50">We master the audio specifically for mobile devices (vertical video) and provide variations for Intros, Outros, and Background loops.</p>
-                      </div>
-                    </div>
-                  </FadeIn>
-                </div>
-              </div>
-            </div>
-
-          </motion.div>
-        )}
 
         {/* ==================== DEV SUBPAGE ==================== */}
         {activeTab === 'dev' && (
