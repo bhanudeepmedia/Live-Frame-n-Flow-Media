@@ -713,10 +713,10 @@ const Home: React.FC = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8 }}
-                className="relative z-10 flex justify-center w-full px-4 text-center"
+                className="relative z-10 flex justify-center w-full px-4"
               >
-                <h2 className="text-black text-[7vw] font-display font-black tracking-tight uppercase leading-tight">
-                  Get More Leads, Sales & Market Visibility.
+                <h2 className="text-black text-[8.5vw] font-display font-black whitespace-nowrap tracking-tighter uppercase leading-none">
+                  More Customers.
                 </h2>
               </motion.div>
             </div>
@@ -741,10 +741,10 @@ const Home: React.FC = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative z-10 flex justify-center w-full px-4 text-center"
+                className="relative z-10 flex justify-center w-full px-4"
               >
-                <h3 className="text-white text-[6vw] font-display font-black tracking-tight uppercase leading-tight">
-                  Without hiring an in-house marketing team.
+                <h3 className="text-white text-[7vw] font-display font-black whitespace-nowrap tracking-tight uppercase leading-none">
+                  More Revenue.
                 </h3>
               </motion.div>
             </div>
@@ -780,7 +780,7 @@ const Home: React.FC = () => {
           <div className="hidden md:flex flex-col items-center w-full max-w-7xl z-10">
 
             {/* Main Headline Group */}
-            <div className="text-center mb-10 px-4">
+            <div className="text-center mb-10">
               {/* Line 1 - Interactive */}
               <motion.div
                 initial={{ x: -100, opacity: 0 }}
@@ -797,9 +797,9 @@ const Home: React.FC = () => {
                   }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   onHoverStart={playHoverCue}
-                  className="relative inline-block bg-accent/80 text-black text-4xl md:text-5xl lg:text-6xl font-display font-bold px-8 py-4 border border-accent/20 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.3)] cursor-pointer max-w-4xl leading-tight"
+                  className="relative inline-block bg-accent/80 text-black text-5xl md:text-7xl lg:text-8xl font-display font-bold px-10 py-4 whitespace-nowrap border border-accent/20 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.3)] cursor-pointer"
                 >
-                  Get More Leads, Sales & Market Visibility.
+                  More Customers.
                 </motion.h1>
               </motion.div>
 
@@ -819,9 +819,9 @@ const Home: React.FC = () => {
                   }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   onHoverStart={playHoverCue}
-                  className="relative inline-block bg-white/5 text-white text-2xl md:text-3xl lg:text-4xl font-display font-bold px-6 py-4 border border-white/10 backdrop-blur-md rounded-2xl cursor-pointer max-w-3xl leading-tight"
+                  className="relative inline-block bg-white/5 text-white text-3xl md:text-5xl lg:text-7xl font-display font-bold px-8 py-4 whitespace-nowrap border border-white/10 backdrop-blur-md rounded-2xl cursor-pointer"
                 >
-                  Without hiring an in-house marketing team.
+                  More Revenue.
                 </motion.span>
               </motion.div>
             </div>
@@ -865,9 +865,9 @@ const Home: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.8 }}
-            className="text-base md:text-xl text-white max-w-3xl mx-auto font-medium leading-relaxed mb-10 md:mb-12 px-6 mt-8 md:mt-4 text-center z-10"
+            className="text-base md:text-xl text-white max-w-2xl mx-auto font-medium leading-relaxed mb-10 md:mb-12 px-6 mt-8 md:mt-4 text-center z-10"
           >
-            We help businesses grow through market research, content, advertising, websites, and AI-powered marketing systems designed for measurable business growth.
+            Research-driven marketing, advertising, and websites for growing businesses.
           </motion.p>
 
           <motion.div
