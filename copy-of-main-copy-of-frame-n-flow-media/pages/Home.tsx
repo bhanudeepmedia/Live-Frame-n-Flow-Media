@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence 
 import Button from '../components/Button';
 import { NavLink, useNavigate } from 'react-router-dom';
 // import { SERVICES, PROCESS_STEPS } from '../constants';
-import { CheckCircle2, FileSearch, Music, Sparkles, TrendingUp, ArrowRight, Laptop, Play, Camera, Aperture, PlayCircle, X, Search, Plus, Bot, Code, Globe } from 'lucide-react';
+import { CheckCircle2, FileSearch, Music, Sparkles, TrendingUp, ArrowRight, Laptop, Play, Camera, Aperture, PlayCircle, X, Search, Plus, Bot, Code, Globe, Users } from 'lucide-react';
 
 const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: string }> = ({ children, delay = 0, className = "" }) => (
   <motion.div
