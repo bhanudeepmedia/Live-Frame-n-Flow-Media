@@ -715,7 +715,7 @@ const Home: React.FC = () => {
                 transition={{ duration: 0.8 }}
                 className="relative z-10 flex justify-center w-full px-4"
               >
-                <h2 className="text-black text-[8.5vw] font-display font-black whitespace-nowrap tracking-tighter uppercase leading-none">
+                <h2 className="text-black text-[8.5vw] font-satoshi font-black whitespace-nowrap tracking-tighter uppercase leading-none">
                   More Customers.
                 </h2>
               </motion.div>
@@ -743,7 +743,7 @@ const Home: React.FC = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="relative z-10 flex justify-center w-full px-4"
               >
-                <h3 className="text-white text-[7vw] font-display font-black whitespace-nowrap tracking-tight uppercase leading-none">
+                <h3 className="text-white text-[7vw] font-satoshi font-bold whitespace-nowrap tracking-tight uppercase leading-none">
                   More Revenue.
                 </h3>
               </motion.div>
@@ -765,12 +765,12 @@ const Home: React.FC = () => {
               className="grid grid-cols-2 gap-4 w-full max-w-[360px] px-6 mt-14"
             >
               {/* Website Development */}
-              <NavLink to="/services/website-development" className="relative bg-white text-black text-xs font-bold py-4 px-2 rounded-xl flex items-center justify-center border border-white/20 z-30 shadow-lg text-center leading-none">
+              <NavLink to="/services/website-development" className="relative bg-white text-black text-xs font-satoshi font-semibold py-4 px-2 rounded-xl flex items-center justify-center border border-white/20 z-30 shadow-lg text-center leading-none">
                 💻 Web Dev
               </NavLink>
 
               {/* Marketing */}
-              <NavLink to="/services/marketing" className="relative bg-white/20 border border-white/10 text-white text-xs font-bold py-4 px-2 rounded-xl flex items-center justify-center z-20 text-center leading-none">
+              <NavLink to="/services/marketing" className="relative bg-white/20 border border-white/10 text-white text-xs font-satoshi font-semibold py-4 px-2 rounded-xl flex items-center justify-center z-20 text-center leading-none">
                 📈 Marketing
               </NavLink>
             </motion.div>
@@ -797,7 +797,7 @@ const Home: React.FC = () => {
                   }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   onHoverStart={playHoverCue}
-                  className="relative inline-block bg-accent/80 text-black text-5xl md:text-7xl lg:text-8xl font-display font-bold px-10 py-4 whitespace-nowrap border border-accent/20 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.3)] cursor-pointer overflow-hidden"
+                  className="relative inline-block bg-accent/80 text-black text-5xl md:text-7xl lg:text-8xl font-satoshi font-black tracking-tighter px-10 py-4 whitespace-nowrap border border-accent/20 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.3)] cursor-pointer overflow-hidden"
                 >
                   {/* Background Scroller Tape */}
                   <div className="absolute inset-0 overflow-hidden pointer-events-none select-none flex items-center">
@@ -829,7 +829,7 @@ const Home: React.FC = () => {
                   }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   onHoverStart={playHoverCue}
-                  className="relative inline-block bg-white/5 text-white text-3xl md:text-5xl lg:text-7xl font-display font-bold px-8 py-4 whitespace-nowrap border border-white/10 backdrop-blur-md rounded-2xl cursor-pointer overflow-hidden"
+                  className="relative inline-block bg-white/5 text-white text-3xl md:text-5xl lg:text-7xl font-satoshi font-bold tracking-tight px-8 py-4 whitespace-nowrap border border-white/10 backdrop-blur-md rounded-2xl cursor-pointer overflow-hidden"
                 >
                   {/* Background Scroller Tape */}
                   <div className="absolute inset-0 overflow-hidden pointer-events-none select-none flex items-center">
@@ -859,7 +859,7 @@ const Home: React.FC = () => {
                   whileHover={{ scale: 1.03 }}
                   transition={{ duration: 0.3 }}
                   onHoverStart={playHoverCue}
-                  className="bg-white text-black text-lg font-bold px-12 py-5 rounded-2xl border border-white/20 tracking-wider flex items-center cursor-pointer shadow-lg min-w-[240px] justify-center gap-3"
+                  className="bg-white text-black text-lg font-satoshi font-semibold px-12 py-5 rounded-2xl border border-white/20 tracking-wider flex items-center cursor-pointer shadow-lg min-w-[240px] justify-center gap-3"
                 >
                   💻 Website Development
                 </motion.div>
@@ -871,7 +871,7 @@ const Home: React.FC = () => {
                   whileHover={{ scale: 1.03 }}
                   transition={{ duration: 0.3 }}
                   onHoverStart={playHoverCue}
-                  className="bg-white/15 border border-white/20 text-white text-lg font-bold px-12 py-5 rounded-2xl tracking-wider flex items-center cursor-pointer hover:bg-white/25 min-w-[240px] justify-center gap-3 backdrop-blur-md"
+                  className="bg-white/15 border border-white/20 text-white text-lg font-satoshi font-semibold px-12 py-5 rounded-2xl tracking-wider flex items-center cursor-pointer hover:bg-white/25 min-w-[240px] justify-center gap-3 backdrop-blur-md"
                 >
                   📈 Marketing & Strategy
                 </motion.div>
@@ -885,7 +885,7 @@ const Home: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.8 }}
-            className="text-base md:text-xl text-white max-w-2xl mx-auto font-medium leading-relaxed mb-10 md:mb-12 px-6 mt-8 md:mt-4 text-center z-10"
+            className="text-base md:text-xl text-white max-w-2xl mx-auto font-satoshi font-medium leading-relaxed mb-10 md:mb-12 px-6 mt-8 md:mt-4 text-center z-10"
           >
             Research-driven marketing, advertising, and websites for growing businesses.
           </motion.p>
@@ -896,7 +896,7 @@ const Home: React.FC = () => {
             transition={{ delay: 1.0, type: "spring" }}
             className="flex justify-center z-10"
           >
-            <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>
+            <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'} className="font-satoshi font-semibold">
               Book a Free Growth Consultation
             </Button>
           </motion.div>
