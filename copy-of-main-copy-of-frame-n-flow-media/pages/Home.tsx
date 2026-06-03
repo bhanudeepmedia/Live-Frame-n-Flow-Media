@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence 
 import Button from '../components/Button';
 import { NavLink, useNavigate } from 'react-router-dom';
 // import { SERVICES, PROCESS_STEPS } from '../constants';
-import { CheckCircle2, FileSearch, Music, Sparkles, TrendingUp, ArrowRight, Laptop, Play, Camera, Aperture, PlayCircle, X, Search, Plus, Bot, Code, Globe, Users, Volume2 } from 'lucide-react';
+import { CheckCircle2, FileSearch, Music, Sparkles, TrendingUp, ArrowRight, Laptop, Camera, Aperture, PlayCircle, X, Search, Plus, Bot, Code, Globe, Users } from 'lucide-react';
 
 const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: string }> = ({ children, delay = 0, className = "" }) => (
   <motion.div
@@ -984,30 +984,6 @@ const Home: React.FC = () => {
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
                       ></iframe>
-                    </div>
-
-                    {/* Premium Interactive Player Control Overlay */}
-                    <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4 pt-12 z-30 flex flex-col gap-2 pointer-events-none">
-                      {/* Timeline Slider */}
-                      <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden">
-                        <div className="w-[35%] h-full bg-accent rounded-full" />
-                      </div>
-                      
-                      {/* Controls Bar */}
-                      <div className="flex items-center justify-between text-white/90">
-                        <div className="flex items-center gap-3">
-                          <Play size={10} className="fill-current text-accent" />
-                          <span className="text-[10px] font-mono opacity-80">0:18 / 0:45</span>
-                        </div>
-                        
-                        {/* Audio controls in a clean box */}
-                        <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-2.5 py-1.5 rounded-lg backdrop-blur-md">
-                          <Volume2 size={10} className="text-accent" />
-                          <div className="w-12 h-1 bg-white/20 rounded-full overflow-hidden">
-                            <div className="w-[75%] h-full bg-white" />
-                          </div>
-                        </div>
-                      </div>
                     </div>
 
                     {/* Glare and Refraction Overlays */}
