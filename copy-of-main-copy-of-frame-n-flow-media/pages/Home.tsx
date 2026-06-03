@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence 
 import Button from '../components/Button';
 import { NavLink, useNavigate } from 'react-router-dom';
 // import { SERVICES, PROCESS_STEPS } from '../constants';
-import { CheckCircle2, FileSearch, Music, Sparkles, TrendingUp, ArrowRight, Laptop, Play, Camera, Aperture, PlayCircle, X, Search, Plus, Bot, Code, Globe, Users } from 'lucide-react';
+import { CheckCircle2, FileSearch, Music, Sparkles, TrendingUp, ArrowRight, Laptop, Play, Camera, Aperture, PlayCircle, X, Search, Plus, Bot, Code, Globe, Users, Volume2 } from 'lucide-react';
 
 const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: string }> = ({ children, delay = 0, className = "" }) => (
   <motion.div
@@ -919,7 +919,7 @@ const Home: React.FC = () => {
             
             <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-16">
               {/* Text Side */}
-              <div className="flex-1 text-center lg:text-left order-2 lg:order-1 max-w-xl">
+              <div className="flex-1 text-center lg:text-left order-2 lg:order-1 w-full lg:max-w-xl">
                 <FadeIn>
                   <div className="flex items-center justify-center lg:justify-start gap-3 mb-8">
                     <div className="inline-flex items-center gap-1.5 bg-accent/10 border border-accent/25 px-3 py-1 rounded-full">
@@ -949,14 +949,22 @@ const Home: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap justify-center lg:justify-start gap-3">
-                    <div className="flex items-center gap-2.5 bg-white/[0.03] border border-white/10 px-4 py-2.5 rounded-2xl backdrop-blur-md hover:border-accent/30 transition-colors duration-300">
-                      <CheckCircle2 size={14} className="text-accent" />
-                      <span className="text-[11px] text-white/80 font-semibold font-satoshi">+90% Operational Efficiency</span>
+                  {/* Performance Metrics Grid */}
+                  <div className="grid grid-cols-3 gap-2 md:gap-4 mt-8 pt-8 border-t border-white/10 text-left">
+                    <div>
+                      <div className="text-2xl md:text-3xl font-satoshi font-black text-accent tracking-tight">3,500+</div>
+                      <div className="text-[10px] text-white/40 font-mono uppercase tracking-wider mt-1">Followers</div>
+                      <div className="text-[9px] text-white/60 font-satoshi mt-0.5 leading-tight">Instagram & TikTok</div>
                     </div>
-                    <div className="flex items-center gap-2.5 bg-white/[0.03] border border-white/10 px-4 py-2.5 rounded-2xl backdrop-blur-md hover:border-white/20 transition-colors duration-300">
-                      <CheckCircle2 size={14} className="text-white/40" />
-                      <span className="text-[11px] text-white/70 font-semibold font-satoshi">Multi-Decade Partnership</span>
+                    <div className="border-l border-white/10 pl-3 md:pl-4">
+                      <div className="text-2xl md:text-3xl font-satoshi font-black text-white tracking-tight">300K+</div>
+                      <div className="text-[10px] text-white/40 font-mono uppercase tracking-wider mt-1">Views</div>
+                      <div className="text-[9px] text-white/60 font-satoshi mt-0.5 leading-tight">First 30 Days</div>
+                    </div>
+                    <div className="border-l border-white/10 pl-3 md:pl-4">
+                      <div className="text-2xl md:text-3xl font-satoshi font-black text-white tracking-tight">$7,000+</div>
+                      <div className="text-[10px] text-white/40 font-mono uppercase tracking-wider mt-1">Revenue</div>
+                      <div className="text-[9px] text-white/60 font-satoshi mt-0.5 leading-tight">First 3 Months</div>
                     </div>
                   </div>
                 </FadeIn>
@@ -965,22 +973,10 @@ const Home: React.FC = () => {
               {/* Video Side */}
               <div className="flex-1 w-full max-w-[320px] relative order-1 lg:order-2">
                 <FadeIn delay={0.2}>
-                  {/* Smartphone Frame (iPhone 16 Pro Style Bezel & Details) */}
-                  <div className="relative aspect-[9/16] w-full bg-[#000000] rounded-[3.2rem] p-[7px] border-[5px] border-[#1f1f1f] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] ring-1 ring-white/10 overflow-hidden group">
-                    {/* Speaker/Camera Notch (Dynamic Island) */}
-                    <div className="absolute top-[16px] left-1/2 -translate-x-1/2 w-24 h-5.5 bg-[#000000] rounded-full z-40 flex items-center justify-between px-3 border border-white/5">
-                      <div className="w-2.5 h-2.5 bg-neutral-900 rounded-full border border-neutral-800" />
-                      <div className="w-1.5 h-1.5 bg-[#000022] rounded-full" />
-                    </div>
-
-                    {/* Side physical buttons */}
-                    <div className="absolute top-20 -left-[2px] w-[2px] h-8 bg-neutral-700 rounded-r z-50" />
-                    <div className="absolute top-32 -left-[2px] w-[2px] h-12 bg-neutral-700 rounded-r z-50" />
-                    <div className="absolute top-46 -left-[2px] w-[2px] h-12 bg-neutral-700 rounded-r z-50" />
-                    <div className="absolute top-28 -right-[2px] w-[2px] h-16 bg-neutral-700 rounded-l z-50" />
-
+                  {/* Premium Cinematic Video Player Container */}
+                  <div className="relative aspect-[9/16] w-full bg-black rounded-3xl border border-white/15 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.9)] overflow-hidden group">
                     {/* Inner Video Container */}
-                    <div className="w-full h-full rounded-[2.7rem] overflow-hidden relative z-10 bg-black">
+                    <div className="w-full h-full relative z-10 bg-black">
                       <iframe
                         src="https://www.youtube.com/embed/L_DryjVTpCY?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0&showinfo=1&loop=1&playlist=L_DryjVTpCY"
                         title="Ian Conway Testimonial"
@@ -990,23 +986,39 @@ const Home: React.FC = () => {
                       ></iframe>
                     </div>
 
+                    {/* Premium Interactive Player Control Overlay */}
+                    <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4 pt-12 z-30 flex flex-col gap-2 pointer-events-none">
+                      {/* Timeline Slider */}
+                      <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden">
+                        <div className="w-[35%] h-full bg-accent rounded-full" />
+                      </div>
+                      
+                      {/* Controls Bar */}
+                      <div className="flex items-center justify-between text-white/90">
+                        <div className="flex items-center gap-3">
+                          <Play size={10} className="fill-current text-accent" />
+                          <span className="text-[10px] font-mono opacity-80">0:18 / 0:45</span>
+                        </div>
+                        
+                        {/* Audio controls in a clean box */}
+                        <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-2.5 py-1.5 rounded-lg backdrop-blur-md">
+                          <Volume2 size={10} className="text-accent" />
+                          <div className="w-12 h-1 bg-white/20 rounded-full overflow-hidden">
+                            <div className="w-[75%] h-full bg-white" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Glare and Refraction Overlays */}
-                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-white/[0.01] via-transparent to-white/[0.03] z-30" />
+                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-white/[0.01] via-transparent to-white/[0.03] z-25" />
                   </div>
                   
-                  {/* Floating Analytics Widget (SaaS Style) */}
-                  <motion.div 
-                    animate={{ y: [0, -8, 0] }}
-                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute -bottom-4 -right-4 bg-black/95 border border-white/15 rounded-2xl p-4 shadow-[0_12px_40px_rgba(0,0,0,0.8)] z-40 backdrop-blur-xl min-w-[150px]"
-                  >
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                      <span className="text-[9px] font-bold text-white/50 uppercase tracking-widest">Verified Result</span>
-                    </div>
-                    <div className="text-xl font-satoshi font-black text-white leading-none mb-1">+240%</div>
-                    <div className="text-[9px] font-mono text-accent uppercase tracking-wider">Conversion Rate</div>
-                  </motion.div>
+                  {/* Verified Result Tag - Integrated Statically (No bounce animation) */}
+                  <div className="absolute -bottom-3 -right-3 bg-black/95 border border-white/15 rounded-xl px-3 py-2 shadow-2xl z-40 backdrop-blur-xl flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" />
+                    <span className="text-[9px] font-mono text-white/80 uppercase tracking-widest">Verified Result</span>
+                  </div>
                 </FadeIn>
               </div>
             </div>
