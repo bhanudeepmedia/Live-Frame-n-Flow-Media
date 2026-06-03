@@ -41,7 +41,7 @@
   
 
   <meta charset="UTF-8" >
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" >
   <title>Services | Frame n Flow Media - Marketing & AI</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -207,17 +207,40 @@
     }
   </script>
   <style>
+    html {
+      background-color: #000000;
+      /* Prevent overscroll bounce that shows a white/gap area at bottom on mobile */
+      overscroll-behavior: none;
+      overscroll-behavior-y: none;
+    }
+
     body {
-      background-color: #0a0a0a;
+      background-color: #000000;
       color: #ffffff;
       cursor: none;
-      /* Hide default cursor for custom implementation */
+      /* Prevents gap/notch visible when mobile browser address bar hides/shows */
+      overscroll-behavior: none;
+      overscroll-behavior-y: none;
+      /* iOS momentum scrolling */
+      -webkit-overflow-scrolling: touch;
     }
 
     /* Fallback for touch devices */
     @media (pointer: coarse) {
       body {
         cursor: auto;
+      }
+    }
+
+    /* Mobile-specific: reduce animation complexity to eliminate lag */
+    @media (max-width: 767px) {
+      /* Disable heavy CSS animations on mobile */
+      .animate-ping {
+        animation-duration: 2s;
+      }
+      /* Ensure background sections are always black so no gap ever shows */
+      html, body, #root {
+        background-color: #000000 !important;
       }
     }
 
@@ -242,8 +265,8 @@
   </style>
 
   <script src="https://link.msgsndr.com/js/form_embed.js"></script>
-  <script type="module" crossorigin src="/assets/index-_lxBlVdG.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BL08gpVV.css">
+  <script type="module" crossorigin src="/assets/index-BSlP1vSX.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BACq4crP.css">
 <link rel="canonical" href="https://framenflowmedia.in/services/"></head>
 
 <body>
