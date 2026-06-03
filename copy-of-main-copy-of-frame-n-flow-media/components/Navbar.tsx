@@ -55,7 +55,7 @@ const Navbar: React.FC = () => {
                     key={item.path}
                     to={item.path}
                     className={({ isActive }) =>
-                      `px-5 py-2.5 rounded-full text-[10px] tracking-[0.15em] uppercase font-bold transition-all duration-300 relative whitespace-nowrap overflow-hidden ${isActive
+                      `px-5 py-2.5 rounded-full text-[10px] tracking-[0.15em] uppercase font-semibold transition-all duration-300 relative whitespace-nowrap overflow-hidden ${isActive
                         ? 'text-black bg-white shadow-[0_0_20px_rgba(255,255,255,0.3)]'
                         : 'text-white/70 hover:text-white hover:bg-white/10'
                       }`
@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
               <div className="hidden md:block">
                 <Button
                   variant="primary"
-                  className="!py-3 !px-8 text-[11px] uppercase tracking-widest font-bold h-auto border-white/20 hover:border-white/40"
+                  className="!py-3 !px-8 text-[11px] uppercase tracking-widest font-semibold h-auto border-white/20 hover:border-white/40"
                   onClick={handleBookCall}
                 >
                   Book a Call
@@ -113,7 +113,7 @@ const Navbar: React.FC = () => {
                   <NavLink
                     to={item.path}
                     className={({ isActive }) =>
-                      `text-3xl font-display font-light ${isActive ? 'text-white' : 'text-white/50'}`
+                      `text-3xl font-display font-semibold ${isActive ? 'text-white' : 'text-white/50'}`
                     }
                   >
                     {item.label}
