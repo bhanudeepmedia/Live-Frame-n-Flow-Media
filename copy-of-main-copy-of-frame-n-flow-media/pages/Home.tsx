@@ -797,9 +797,19 @@ const Home: React.FC = () => {
                   }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   onHoverStart={playHoverCue}
-                  className="relative inline-block bg-accent/80 text-black text-5xl md:text-7xl lg:text-8xl font-display font-bold px-10 py-4 whitespace-nowrap border border-accent/20 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.3)] cursor-pointer"
+                  className="relative inline-block bg-accent/80 text-black text-5xl md:text-7xl lg:text-8xl font-display font-bold px-10 py-4 whitespace-nowrap border border-accent/20 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.3)] cursor-pointer overflow-hidden"
                 >
-                  More Customers.
+                  {/* Background Scroller Tape */}
+                  <div className="absolute inset-0 overflow-hidden pointer-events-none select-none flex items-center">
+                    <motion.div
+                      className="flex whitespace-nowrap text-black font-black text-[90px] opacity-[0.08] will-change-transform"
+                      animate={{ x: ["0%", "-50%"] }}
+                      transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                    >
+                      {Array(10).fill("MARKETING • ").join("")}
+                    </motion.div>
+                  </div>
+                  <span className="relative z-10">More Customers.</span>
                 </motion.h1>
               </motion.div>
 
@@ -810,7 +820,7 @@ const Home: React.FC = () => {
                 transition={{ duration: 0.8, ease: "backOut", delay: 0.2 }}
                 className="mt-6"
               >
-                <motion.span
+                <motion.div
                   initial={{ rotate: 0 }}
                   whileHover={{
                     scale: 1.02,
@@ -819,10 +829,20 @@ const Home: React.FC = () => {
                   }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   onHoverStart={playHoverCue}
-                  className="relative inline-block bg-white/5 text-white text-3xl md:text-5xl lg:text-7xl font-display font-bold px-8 py-4 whitespace-nowrap border border-white/10 backdrop-blur-md rounded-2xl cursor-pointer"
+                  className="relative inline-block bg-white/5 text-white text-3xl md:text-5xl lg:text-7xl font-display font-bold px-8 py-4 whitespace-nowrap border border-white/10 backdrop-blur-md rounded-2xl cursor-pointer overflow-hidden"
                 >
-                  More Revenue.
-                </motion.span>
+                  {/* Background Scroller Tape */}
+                  <div className="absolute inset-0 overflow-hidden pointer-events-none select-none flex items-center">
+                    <motion.div
+                      className="flex whitespace-nowrap text-white font-black text-[60px] opacity-[0.05] will-change-transform"
+                      animate={{ x: ["-50%", "0%"] }}
+                      transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                    >
+                      {Array(10).fill("SALES • ").join("")}
+                    </motion.div>
+                  </div>
+                  <span className="relative z-10">More Revenue.</span>
+                </motion.div>
               </motion.div>
             </div>
 
