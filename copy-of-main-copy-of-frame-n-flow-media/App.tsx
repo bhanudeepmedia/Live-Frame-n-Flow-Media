@@ -89,7 +89,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const shouldHideFooter = hideBoth.includes(location.pathname);
 
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-transparent text-white font-sans selection:bg-accent selection:text-background">
+    <div className="flex flex-col min-h-[100dvh] bg-black text-white font-sans selection:bg-accent selection:text-background">
       <HashHandler />
       <ScrollToTop />
       <CustomCursor />

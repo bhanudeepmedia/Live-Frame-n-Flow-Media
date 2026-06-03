@@ -71,6 +71,10 @@ const SpaceBackground = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const isMobile = window.innerWidth < 768;
+    // On mobile: skip SpaceBackground entirely for max performance
+    if (isMobile) return;
+
     let animationFrameId: number;
     let particles: { x: number, y: number, vx: number, vy: number, size: number }[] = [];
 
@@ -81,13 +85,13 @@ const SpaceBackground = () => {
     };
 
     const initParticles = () => {
-      const particleCount = window.innerWidth < 768 ? 30 : 60;
+      const particleCount = 45;
       particles = [];
       for (let i = 0; i < particleCount; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.3, // Slow movement
+          vx: (Math.random() - 0.5) * 0.3,
           vy: (Math.random() - 0.5) * 0.3,
           size: Math.random() * 1.5 + 0.5
         });
@@ -95,54 +99,45 @@ const SpaceBackground = () => {
     };
 
     const draw = () => {
-      // 1. Fill Background (Deep Black)
       ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // 2. Add Electric Blue Glow (Subtle ambient)
       const gradient = ctx.createRadialGradient(
         canvas.width * 0.5, canvas.height * 0.5, 0,
         canvas.width * 0.5, canvas.height * 0.5, canvas.width
       );
-      gradient.addColorStop(0, 'rgba(10, 20, 40, 0.4)'); // Deep blue/black center
+      gradient.addColorStop(0, 'rgba(10, 20, 40, 0.4)');
       gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // 3. Add Spot Glows (Electric Blue Accents)
       const spotGlow = (x: number, y: number, radius: number, color: string) => {
         const g = ctx.createRadialGradient(x, y, 0, x, y, radius);
         g.addColorStop(0, color);
         g.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = g;
         ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
-      }
+      };
 
-      // Top right blue glow
       spotGlow(canvas.width * 0.8, canvas.height * 0.2, 600, 'rgba(34, 211, 238, 0.06)');
-      // Bottom left purple/blue hint
       spotGlow(canvas.width * 0.2, canvas.height * 0.8, 500, 'rgba(50, 50, 100, 0.05)');
 
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'; // Star color
-      ctx.strokeStyle = 'rgba(34, 211, 238, 0.1)'; // Line color (Electric Blue, faint)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      ctx.strokeStyle = 'rgba(34, 211, 238, 0.1)';
 
       particles.forEach((p, i) => {
-        // Update
         p.x += p.vx;
         p.y += p.vy;
 
-        // Wrap
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
         if (p.y < 0) p.y = canvas.height;
         if (p.y > canvas.height) p.y = 0;
 
-        // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
 
-        // Connect
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dx = p.x - p2.x;
@@ -172,7 +167,7 @@ const SpaceBackground = () => {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none" />;
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none" style={{ willChange: 'transform' }} />;
 };
 
 // --- MICRO-INTERACTION UTILS ---
@@ -718,10 +713,10 @@ const Home: React.FC = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8 }}
-                className="relative z-10 flex justify-center w-full px-4"
+                className="relative z-10 flex justify-center w-full px-4 text-center"
               >
-                <h2 className="text-black text-[8.5vw] font-display font-black whitespace-nowrap tracking-tighter uppercase leading-none">
-                  AI-powered marketing
+                <h2 className="text-black text-[7vw] font-display font-black tracking-tight uppercase leading-tight">
+                  Get More Leads, Sales & Market Visibility.
                 </h2>
               </motion.div>
             </div>
@@ -746,10 +741,10 @@ const Home: React.FC = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative z-10 flex justify-center w-full px-4"
+                className="relative z-10 flex justify-center w-full px-4 text-center"
               >
-                <h3 className="text-white text-[7vw] font-display font-black whitespace-nowrap tracking-tight uppercase leading-none">
-                  built to drive real sales.
+                <h3 className="text-white text-[6vw] font-display font-black tracking-tight uppercase leading-tight">
+                  Without hiring an in-house marketing team.
                 </h3>
               </motion.div>
             </div>
@@ -785,7 +780,7 @@ const Home: React.FC = () => {
           <div className="hidden md:flex flex-col items-center w-full max-w-7xl z-10">
 
             {/* Main Headline Group */}
-            <div className="text-center mb-10">
+            <div className="text-center mb-10 px-4">
               {/* Line 1 - Interactive */}
               <motion.div
                 initial={{ x: -100, opacity: 0 }}
@@ -802,9 +797,9 @@ const Home: React.FC = () => {
                   }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   onHoverStart={playHoverCue}
-                  className="relative inline-block bg-accent/80 text-black text-5xl md:text-7xl lg:text-8xl font-display font-bold px-10 py-4 whitespace-nowrap border border-accent/20 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.3)] cursor-pointer"
+                  className="relative inline-block bg-accent/80 text-black text-4xl md:text-5xl lg:text-6xl font-display font-bold px-8 py-4 border border-accent/20 backdrop-blur-md rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.3)] cursor-pointer max-w-4xl leading-tight"
                 >
-                  AI-powered marketing
+                  Get More Leads, Sales & Market Visibility.
                 </motion.h1>
               </motion.div>
 
@@ -824,9 +819,9 @@ const Home: React.FC = () => {
                   }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
                   onHoverStart={playHoverCue}
-                  className="relative inline-block bg-white/5 text-white text-3xl md:text-5xl lg:text-7xl font-display font-bold px-8 py-4 whitespace-nowrap border border-white/10 backdrop-blur-md rounded-2xl cursor-pointer"
+                  className="relative inline-block bg-white/5 text-white text-2xl md:text-3xl lg:text-4xl font-display font-bold px-6 py-4 border border-white/10 backdrop-blur-md rounded-2xl cursor-pointer max-w-3xl leading-tight"
                 >
-                  built to drive real sales.
+                  Without hiring an in-house marketing team.
                 </motion.span>
               </motion.div>
             </div>
@@ -870,9 +865,9 @@ const Home: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.8 }}
-            className="text-base md:text-xl text-white max-w-2xl mx-auto font-medium leading-relaxed mb-10 md:mb-12 px-6 mt-8 md:mt-4 text-center z-10"
+            className="text-base md:text-xl text-white max-w-3xl mx-auto font-medium leading-relaxed mb-10 md:mb-12 px-6 mt-8 md:mt-4 text-center z-10"
           >
-            AI-powered Marketing Studio. We don't just post content; we engineer <span className="text-white font-bold decoration-white underline underline-offset-4">market dominance</span>.
+            We help businesses grow through market research, content, advertising, websites, and AI-powered marketing systems designed for measurable business growth.
           </motion.p>
 
           <motion.div
@@ -881,7 +876,9 @@ const Home: React.FC = () => {
             transition={{ delay: 1.0, type: "spring" }}
             className="flex justify-center z-10"
           >
-            <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>Book a Strategy Call</Button>
+            <Button onClick={() => window.location.href = 'https://calendly.com/bhanudeep-workprofile/30min'}>
+              Book a Free Growth Consultation
+            </Button>
           </motion.div>
         </div>
       </section>

@@ -18,6 +18,52 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+/* ===== MOBILE PERFORMANCE & LAYOUT STABILITY ===== */
+
+/* Fix the "notch" gap at the bottom on mobile scroll
+   by using dynamic viewport height and GPU-composited background */
+html, body {
+  height: 100%;
+  overscroll-behavior: none;
+  /* Prevent pull-to-refresh and rubber-banding that causes layout shifts */
+}
+
+body {
+  background-color: #000000;
+  -webkit-overflow-scrolling: touch; /* iOS momentum scrolling */
+}
+
+/* GPU-accelerate fixed backgrounds to avoid repaint on mobile scroll */
+canvas.fixed,
+.fixed {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Ensure fixed canvas fills viewport without triggering reflow */
+canvas[class*="fixed"] {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Smooth scroll performance hint for all pages */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent framer-motion layout thrash on mobile by isolating stacking context */
+@media (max-width: 767px) {
+  .framer-motion-isolate {
+    isolation: isolate;
+    contain: layout style;
+  }
+
+  /* Disable hover-only animations on touch devices to reduce paint/composite */
+  .group:hover .group-hover\:scale-110 {
+    transform: none;
+  }
+}
+
 /* ===== BLOG THEME SYSTEM ===== */
 .blog-theme {
   --blog-bg: #000000;

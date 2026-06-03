@@ -52,7 +52,7 @@ const WhatsAppWidget: React.FC = () => {
     };
 
     return (
-        <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-end gap-4">
+        <div className="fixed bottom-8 left-8 z-[100] flex flex-col items-start gap-4">
 
             {/* Options Menu */}
             <AnimatePresence>
