@@ -596,13 +596,6 @@ const Home: React.FC = () => {
       thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop",
       description: "A premium wealth management and financial advisory platform. Engineered for seamless navigation, dynamic calculator tools, and highly optimized lead capture workflows.",
       tech: ["React", "Chart.js", "Lead Capture"]
-    },
-    {
-      url: "https://jacobotennis.netlify.app/",
-      title: "Jacobo Hernandez Tennis",
-      thumbnail: "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?q=80&w=600&auto=format&fit=crop",
-      description: "Elite high-performance tennis coaching platform. Features a premium, dynamic interface tailored for professional athlete development and mentorship.",
-      tech: ["Vite", "Tailwind CSS", "Netlify"]
     }
   ];
 
