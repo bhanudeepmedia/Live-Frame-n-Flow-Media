@@ -237,12 +237,6 @@ const Work: React.FC<WorkProps> = ({ tab }) => {
       description: "Institute of Management and Business Studies. A premium, high-converting educational portal featuring interactive course selectors and GSAP animations."
     },
     {
-      url: "https://sakurastudio.in/",
-      title: "Sakura Studio",
-      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://sakurastudio.in/",
-      description: "A premium e-commerce fashion destination specializing in trend-forward women's apparel. Built with conversion-focused UX and seamless Shopify integrations."
-    },
-    {
       url: "https://nihirafinserv.com/",
       title: "Nihira Finserv",
       thumbnail: "https://image.thum.io/get/width/600/crop/800/https://nihirafinserv.com/",
@@ -259,6 +253,12 @@ const Work: React.FC<WorkProps> = ({ tab }) => {
       title: "Jacobo Hernandez Tennis",
       thumbnail: "https://image.thum.io/get/width/600/crop/800/https://jacobotennis.netlify.app/",
       description: "Elite high-performance tennis coaching platform. Features a premium, dynamic interface tailored for professional athlete development and mentorship."
+    },
+    {
+      url: "https://sakurastudio.in/",
+      title: "Sakura Studio",
+      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://sakurastudio.in/",
+      description: "A premium e-commerce fashion destination specializing in trend-forward women's apparel. Built with conversion-focused UX and seamless Shopify integrations."
     },
     {
       url: "https://realestatehyd.netlify.app/",
