@@ -584,6 +584,13 @@ const Home: React.FC = () => {
       tech: ["Next.js", "Tailwind CSS", "Framer Motion"]
     },
     {
+      url: "https://imbs.org.in/",
+      title: "IMBS",
+      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://imbs.org.in/",
+      description: "Institute of Management and Business Studies. A premium, high-converting educational portal featuring interactive course selectors and GSAP animations.",
+      tech: ["HTML5", "CSS3", "GSAP", "Lenis"]
+    },
+    {
       url: "https://nihirafinserv.com/",
       title: "Nihira Finserv",
       thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop",

@@ -231,6 +231,12 @@ const Work: React.FC<WorkProps> = ({ tab }) => {
       description: "A premium digital vault experience. High-security backend architecture with a luxurious, motion-rich frontend interface."
     },
     {
+      url: "https://imbs.org.in/",
+      title: "IMBS",
+      thumbnail: "https://image.thum.io/get/width/600/crop/800/https://imbs.org.in/",
+      description: "Institute of Management and Business Studies. A premium, high-converting educational portal featuring interactive course selectors and GSAP animations."
+    },
+    {
       url: "https://nihirafinserv.com/",
       title: "Nihira Finserv",
       thumbnail: "https://image.thum.io/get/width/600/crop/800/https://nihirafinserv.com/",
