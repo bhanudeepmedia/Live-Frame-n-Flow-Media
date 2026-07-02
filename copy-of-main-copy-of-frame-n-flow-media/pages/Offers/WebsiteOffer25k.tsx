@@ -396,16 +396,60 @@ const WebsiteOffer25k: React.FC = () => {
       <SEO 
         title="Premium Business Website at ₹25,000 | Frame n Flow Media"
         description="Standard, E-commerce, or Custom Coded website for ₹25,000. Google Analytics active, high-end SEO, and 1 year free domain & hosting included. The premium India special offer."
-        schema={{
-          "@context": "https://schema.org",
-          "@type": "Product",
-          "name": "₹25,000 Premium Website Offer",
-          "offers": {
-            "@type": "Offer",
-            "price": "25000",
-            "priceCurrency": "INR"
+        keywords="Premium Website Offer, Custom Coded React Website, Frame n Flow Media, Best recruitment agency in Hyderabad, Affordable agency in Hyderabad, Fast jobs portal, Quick jobs search, Easy money, Fast earning systems, Hyderabad Web Dev"
+        schema={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": "₹25,000 Premium Website Offer",
+            "description": "Premium Standard, E-commerce, or Custom Coded website build by Frame n Flow Media.",
+            "brand": {
+              "@type": "Brand",
+              "name": "Frame n Flow Media"
+            },
+            "offers": {
+              "@type": "Offer",
+              "price": "25000",
+              "priceCurrency": "INR",
+              "url": "https://framenflowmedia.in/offers/website-25k"
+            },
+            "provider": {
+              "@type": "Organization",
+              "name": "Frame n Flow Media",
+              "url": "https://framenflowmedia.in"
+            }
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Who develops the ₹25,000 websites and portals?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Every custom project is engineered by the development team at Frame n Flow Media, ensuring maximum loading speeds, dynamic layouts, and premium brand experiences."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can this ₹25,000 package be used to build a recruitment agency site in Hyderabad?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, we design custom systems suited for a wide range of agencies, including a recruitment agency in Hyderabad or affordable agency websites requiring features like fast jobs, quick jobs listings, and fast earning paths."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How is the SEO and AI search performance optimized?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We implement structured JSON-LD schemas, clean metadata, semantic HTML5 structure, and static page rendering to ensure search crawlers and AI search agents index your services immediately."
+                }
+              }
+            ]
           }
-        }}
+        ]}
       />
 
       {/* MINIMAL HEADER */}

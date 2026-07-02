@@ -8,6 +8,7 @@ interface SEOProps {
     image?: string;
     type?: string;
     noindex?: boolean;
+    keywords?: string;
     schema?: Record<string, any> | Record<string, any>[];
 }
 
@@ -18,6 +19,7 @@ const SEO: React.FC<SEOProps> = ({
     image = '/favicon.png', // Default OG image
     type = 'website',
     noindex = false,
+    keywords,
     schema
 }) => {
     const siteUrl = 'https://framenflowmedia.in';
@@ -88,7 +90,7 @@ const SEO: React.FC<SEOProps> = ({
             {/* Standard Metadata */}
             <title>{title}</title>
             <meta name="description" content={description} />
-            <meta name="keywords" content={defaultKeywords} />
+            <meta name="keywords" content={keywords || defaultKeywords} />
             {noindex && <meta name="robots" content="noindex, nofollow" />}
             <link rel="canonical" href={fullCanonical} />
 
