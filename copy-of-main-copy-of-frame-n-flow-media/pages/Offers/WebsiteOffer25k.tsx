@@ -48,37 +48,44 @@ const SpaceBackground = () => {
     };
 
     const initParticles = () => {
-      const particleCount = window.innerWidth < 768 ? 40 : 100;
+      // Significantly optimized particle counts (was 100 on desktop, 40 on mobile)
+      const particleCount = window.innerWidth < 768 ? 18 : 45;
       particles = [];
       for (let i = 0; i < particleCount; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.2,
-          vy: (Math.random() - 0.5) * 0.2,
-          size: Math.random() * 2 + 0.5,
-          color: Math.random() > 0.8 ? 'rgba(34, 211, 238, 0.4)' : 'rgba(255, 255, 255, 0.3)'
+          vx: (Math.random() - 0.5) * 0.15,
+          vy: (Math.random() - 0.5) * 0.15,
+          size: Math.random() * 1.5 + 0.5,
+          color: Math.random() > 0.8 ? 'rgba(34, 211, 238, 0.35)' : 'rgba(255, 255, 255, 0.22)'
         });
       }
     };
 
-    const draw = () => {
-      ctx.fillStyle = '#0a0a0a';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    let lastTime = 0;
+    const fps = 30; // Throttle to 30 FPS for buttery scroll and low CPU/GPU impact
+    const fpsInterval = 1000 / fps;
 
-      // Ambient Glows
-      const spotGlow = (x: number, y: number, radius: number, color1: string, color2: string) => {
-        const g = ctx.createRadialGradient(x, y, 0, x, y, radius);
-        g.addColorStop(0, color1);
-        g.addColorStop(1, color2);
-        ctx.fillStyle = g;
-        ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
-      }
+    const draw = (time: number) => {
+      animationFrameId = requestAnimationFrame(draw);
 
-      spotGlow(canvas.width * 0.8, canvas.height * 0.2, 800, 'rgba(34, 211, 238, 0.03)', 'rgba(0,0,0,0)');
-      spotGlow(canvas.width * 0.2, canvas.height * 0.8, 600, 'rgba(50, 50, 150, 0.05)', 'rgba(0,0,0,0)');
+      const elapsed = time - lastTime;
+      if (elapsed < fpsInterval) return;
 
-      particles.forEach((p, i) => {
+      lastTime = time - (elapsed % fpsInterval);
+
+      // Simple transparent clear
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw all connections in a single batch to maximize rendering speed
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+      ctx.lineWidth = 0.5;
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        
         p.x += p.vx;
         p.y += p.vy;
 
@@ -87,34 +94,32 @@ const SpaceBackground = () => {
         if (p.y < 0) p.y = canvas.height;
         if (p.y > canvas.height) p.y = 0;
 
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Connect
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dx = p.x - p2.x;
           const dy = p.y - p2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+          const distSq = dx * dx + dy * dy; // Avoid slow Math.sqrt
 
-          if (dist < 100) {
-            ctx.beginPath();
+          if (distSq < 10000) { // 100px range (100 * 100 = 10000)
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - dist/100)})`;
-            ctx.stroke();
           }
         }
-      });
+      }
+      ctx.stroke();
 
-      animationFrameId = requestAnimationFrame(draw);
+      // Draw particle dots
+      particles.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
     };
 
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
-    draw();
+    animationFrameId = requestAnimationFrame(draw);
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
@@ -122,13 +127,40 @@ const SpaceBackground = () => {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none" />;
+  return (
+    <>
+      {/* Hardware-accelerated CSS ambient glows (replaces heavy Canvas radial gradients) */}
+      <div className="fixed inset-0 bg-[#0a0a0a] -z-20 pointer-events-none" />
+      <div 
+        className="fixed top-[10%] right-[10%] w-[70vw] h-[70vw] md:w-[800px] md:h-[800px] rounded-full -z-10 pointer-events-none" 
+        style={{
+          background: 'radial-gradient(circle, rgba(34, 211, 238, 0.035) 0%, rgba(0,0,0,0) 70%)',
+          willChange: 'transform'
+        }}
+      />
+      <div 
+        className="fixed bottom-[10%] left-[10%] w-[60vw] h-[60vw] md:w-[600px] md:h-[600px] rounded-full -z-10 pointer-events-none" 
+        style={{
+          background: 'radial-gradient(circle, rgba(50, 50, 150, 0.05) 0%, rgba(0,0,0,0) 70%)',
+          willChange: 'transform'
+        }}
+      />
+      <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-60" />
+    </>
+  );
 };
 
-const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: string }> = ({ children, className = "" }) => (
-  <div className={className}>
+
+const FadeIn: React.FC<{ children: React.ReactNode, delay?: number, className?: string }> = ({ children, delay = 0, className = "" }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 15 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-60px" }}
+    transition={{ duration: 0.5, delay, ease: "easeOut" }}
+    className={className}
+  >
     {children}
-  </div>
+  </motion.div>
 );
 
 // --- GOOGLE ANALYTICS TRACKING HELPER ---
@@ -183,6 +215,20 @@ const WebsiteOffer25k: React.FC = () => {
     websiteType: '',
     canInvest: ''
   });
+
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
+
+  useEffect(() => {
+    const checkDevice = () => {
+      const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth < 768;
+      setIsMobileDevice(hasTouch || isSmallScreen);
+    };
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
+
 
   // Track initial landing page view
   useEffect(() => {
@@ -261,15 +307,18 @@ const WebsiteOffer25k: React.FC = () => {
     }
   };
 
-  const triggerWhatsAppRedirect = (dataToSubmit: typeof formData) => {
-    // Generate text message
-    const message = `Hi Frame n Flow Media, I'm interested in the ₹25,000 Premium Website Offer. Here are my details:
-- Name: ${dataToSubmit.name}
-- WhatsApp: ${dataToSubmit.phone}
-- Business Name: ${dataToSubmit.businessName}
-- Website Focus: ${dataToSubmit.websiteType}
-- Ready to Invest ₹25,000: ${dataToSubmit.canInvest}`;
+  // --- HELPERS ---
+  const generateWhatsAppMessage = (data: typeof formData) => {
+    return `Hi Frame n Flow Media, I'm interested in the ₹25,000 Premium Website Offer. Here are my details:
+- Name: ${data.name}
+- WhatsApp: ${data.phone}
+- Business Name: ${data.businessName}
+- Website Focus: ${data.websiteType}
+- Ready to Invest ₹25,000: ${data.canInvest}`;
+  };
 
+  const triggerWhatsAppRedirect = (dataToSubmit: typeof formData) => {
+    const message = generateWhatsAppMessage(dataToSubmit);
     const encodedMessage = encodeURIComponent(message);
     const waUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${encodedMessage}`;
 
@@ -287,11 +336,12 @@ const WebsiteOffer25k: React.FC = () => {
       content_category: 'Offer_25k_Wizard'
     });
 
-    // Auto redirect after a short transition delay
+    // Use window.location.href instead of window.open to guarantee bypass of popup blockers
     setTimeout(() => {
-      window.open(waUrl, '_blank', 'noopener,noreferrer');
+      window.location.href = waUrl;
     }, 1500);
   };
+
 
   const features = [
     { icon: <Paintbrush className="text-accent" />, title: "Standard Website", desc: "For high-ticket local services, luxury portfolios, & elite brand positioning. Structured to close leads instantly." },
@@ -430,10 +480,13 @@ const WebsiteOffer25k: React.FC = () => {
                             type="text" 
                             placeholder="Enter your full name"
                             value={formData.name}
-                            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                            onChange={(e) => {
+                              setFormData(prev => ({ ...prev, name: e.target.value }));
+                              if (errors.name) setErrors(prev => ({ ...prev, name: '' }));
+                            }}
                             onKeyDown={(e) => { if (e.key === 'Enter') handleNextStep(); }}
                             className="w-full bg-white/5 border-b border-white/20 focus:border-accent outline-none text-xl p-3 px-1 transition-all duration-300 font-light"
-                            autoFocus
+                            autoFocus={!isMobileDevice}
                           />
                           {errors.name && <p className="text-red-400 text-xs mt-2">{errors.name}</p>}
                         </div>
@@ -460,10 +513,13 @@ const WebsiteOffer25k: React.FC = () => {
                             type="tel" 
                             placeholder="10-digit number"
                             value={formData.phone}
-                            onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                            onChange={(e) => {
+                              setFormData(prev => ({ ...prev, phone: e.target.value }));
+                              if (errors.phone) setErrors(prev => ({ ...prev, phone: '' }));
+                            }}
                             onKeyDown={(e) => { if (e.key === 'Enter') handleNextStep(); }}
                             className="flex-grow bg-white/5 border-b border-white/20 focus:border-accent outline-none text-xl p-3 transition-all duration-300 font-light"
-                            autoFocus
+                            autoFocus={!isMobileDevice}
                           />
                         </div>
                         {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone}</p>}
@@ -489,10 +545,13 @@ const WebsiteOffer25k: React.FC = () => {
                             type="text" 
                             placeholder="Enter business name"
                             value={formData.businessName}
-                            onChange={(e) => setFormData(prev => ({ ...prev, businessName: e.target.value }))}
+                            onChange={(e) => {
+                              setFormData(prev => ({ ...prev, businessName: e.target.value }));
+                              if (errors.businessName) setErrors(prev => ({ ...prev, businessName: '' }));
+                            }}
                             onKeyDown={(e) => { if (e.key === 'Enter') handleNextStep(); }}
                             className="w-full bg-white/5 border-b border-white/20 focus:border-accent outline-none text-xl p-3 px-1 transition-all duration-300 font-light"
-                            autoFocus
+                            autoFocus={!isMobileDevice}
                           />
                           {errors.businessName && <p className="text-red-400 text-xs mt-2">{errors.businessName}</p>}
                         </div>
@@ -597,9 +656,7 @@ const WebsiteOffer25k: React.FC = () => {
                         </div>
                         
                         <a 
-                          href={`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(`Hi, I'm interested in the ₹25,000 Premium Website Offer.\nName: ${formData.name}\nWhatsApp: ${formData.phone}\nBusiness: ${formData.businessName}\nType: ${formData.websiteType}\nInvest Ready: ${formData.canInvest}`)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          href={`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(generateWhatsAppMessage(formData))}`}
                           className="inline-flex items-center space-x-2 px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/10 rounded-full text-xs font-mono uppercase tracking-widest transition-all"
                         >
                           <span>Click here if not redirected</span>
