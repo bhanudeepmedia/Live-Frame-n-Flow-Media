@@ -113,6 +113,11 @@ const routes = [
     description: "Discover why investing in a professional website drives business revenue growth. Learn proven strategies and tools to boost conversions, credibility, and sales online."
   },
   {
+    path: '/blog/oxygen-digital-marketing-hyderabad',
+    title: "Oxygen: Digital Marketing Company Helping Hyderabad Businesses Grow | Frame n Flow Media",
+    description: "A look at Oxygen, a Hyderabad-based digital marketing company helping businesses improve online visibility, attract the right audience, and generate quality leads through SEO, content, and web design."
+  },
+  {
     path: '/offers/website-25k',
     title: "Premium Business Website at ₹25,000 | Frame n Flow Media",
     description: "Get a high-performance standard, e-commerce, or custom-coded website for ₹25,000. Includes Google Analytics, SEO, and free hosting & domain for 1 year. Built for Indian businesses."

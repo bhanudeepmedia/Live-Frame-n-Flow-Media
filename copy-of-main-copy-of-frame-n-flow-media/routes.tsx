@@ -29,6 +29,7 @@ import AdminDashboard from './pages/Admin/Dashboard';
 // Blog Imports
 import BlogIndex from './pages/Blog/Index';
 import RevenueGrowthPost from './pages/Blog/RevenueGrowth';
+import OxygenPost from './pages/Blog/Oxygen';
 
 // Offer Imports
 import WebsiteOffer25k from './pages/Offers/WebsiteOffer25k';
@@ -73,4 +74,5 @@ export const routes: RouteObject[] = [
     // Blog
     { path: '/blog', element: <BlogIndex /> },
     { path: '/blog/revenue-growth-2026', element: <RevenueGrowthPost /> },
+    { path: '/blog/oxygen-digital-marketing-hyderabad', element: <OxygenPost /> },
 ];

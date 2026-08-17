@@ -7,6 +7,17 @@ import { Calendar, User, ArrowRight } from 'lucide-react';
 const BlogIndex: React.FC = () => {
     const BLOG_POSTS = [
         {
+            title: "Oxygen: Helping Hyderabad Businesses Grow With Smarter Digital Marketing",
+            excerpt: "A look at Oxygen, a Hyderabad-based digital marketing company helping businesses improve online visibility, attract the right audience, and generate quality leads through SEO, content, and web design.",
+            date: "Aug 17, 2026",
+            dateISO: "2026-08-17",
+            author: "Frame n Flow Team",
+            readTime: "6-8 min read",
+            slug: "/blog/oxygen-digital-marketing-hyderabad",
+            image: "https://images.unsplash.com/photo-1571677208775-cf69dc6dd0aa?q=80&w=2426&auto=format&fit=crop",
+            category: "Digital Marketing"
+        },
+        {
             title: "Why a Great Website Increases the Revenue of Your Business in 2026",
             excerpt: "Discover why investing in a professional website drives business revenue growth. Learn proven strategies and tools to boost conversions, credibility, and sales online.",
             date: "Feb 14, 2026",
