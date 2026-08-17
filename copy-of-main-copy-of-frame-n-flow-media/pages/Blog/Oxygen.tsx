@@ -29,7 +29,6 @@ const OxygenPost: React.FC = () => {
         "@type": "BlogPosting",
         "headline": "Oxygen: Helping Hyderabad Businesses Grow With Smarter Digital Marketing",
         "description": "A look at Oxygen, a Hyderabad-based digital marketing company helping businesses improve online visibility, attract the right audience, and generate quality leads through SEO, content, and web design.",
-        "image": "https://images.unsplash.com/photo-1571677208775-cf69dc6dd0aa?q=80&w=2426&auto=format&fit=crop",
         "author": { "@type": "Organization", "name": "Frame n Flow Media", "url": "https://framenflowmedia.in" },
         "publisher": { "@type": "Organization", "name": "Frame n Flow Media", "logo": { "@type": "ImageObject", "url": "https://framenflowmedia.in/logo.png" } },
         "datePublished": "2026-08-17",
@@ -63,7 +62,6 @@ const OxygenPost: React.FC = () => {
                     title="Oxygen: Digital Marketing Company Helping Hyderabad Businesses Grow | Frame n Flow Media"
                     description="A look at Oxygen, a Hyderabad-based digital marketing company helping businesses improve online visibility, attract the right audience, and generate quality leads through SEO, content, and web design."
                     canonical="/blog/oxygen-digital-marketing-hyderabad"
-                    image="https://images.unsplash.com/photo-1571677208775-cf69dc6dd0aa?q=80&w=2426&auto=format&fit=crop"
                     type="article"
                     schema={blogSchema}
                 />
@@ -102,12 +100,9 @@ const OxygenPost: React.FC = () => {
                                 <span className="hidden md:inline">•</span>
                                 <span>6-8 min read</span>
                             </div>
-                            <h1 className={`text-3xl md:text-5xl lg:text-6xl font-display font-bold mb-8 leading-tight ${heading}`}>
+                            <h1 className={`text-3xl md:text-5xl lg:text-6xl font-display font-bold leading-tight ${heading}`}>
                                 Oxygen: Helping Hyderabad Businesses Grow With <span className="text-accent">Smarter Digital Marketing</span>
                             </h1>
-                            <div className={`relative aspect-video rounded-3xl overflow-hidden border ${t('border-white/10', 'border-gray-200')} shadow-2xl mb-12 group`}>
-                                <img src="https://images.unsplash.com/photo-1571677208775-cf69dc6dd0aa?q=80&w=2426&auto=format&fit=crop" alt="Digital marketing strategy and analytics" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                            </div>
                         </div>
                     </FadeIn>
 

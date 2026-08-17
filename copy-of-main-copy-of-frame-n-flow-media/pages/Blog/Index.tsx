@@ -14,7 +14,7 @@ const BlogIndex: React.FC = () => {
             author: "Frame n Flow Team",
             readTime: "6-8 min read",
             slug: "/blog/oxygen-digital-marketing-hyderabad",
-            image: "https://images.unsplash.com/photo-1571677208775-cf69dc6dd0aa?q=80&w=2426&auto=format&fit=crop",
+            image: "",
             category: "Digital Marketing"
         },
         {
@@ -89,14 +89,15 @@ const BlogIndex: React.FC = () => {
                         >
                             <NavLink to={post.slug} className="relative aspect-video overflow-hidden block">
                                 <div className="absolute inset-0 bg-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 mix-blend-overlay" />
-                                <img
-                                    src={post.image}
-                                    alt={post.title}
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                    onError={(e) => {
-                                        e.currentTarget.src = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop";
-                                    }}
-                                />
+                                {post.image ? (
+                                    <img
+                                        src={post.image}
+                                        alt={post.title}
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-gradient-to-br from-accent/15 via-[#0a0a0a] to-black" />
+                                )}
                                 <div className="absolute top-4 left-4 bg-black/60 backdrop-blur border border-white/10 px-3 py-1 rounded-full text-xs font-mono uppercase tracking-widest text-white/80 z-20">
                                     {post.category}
                                 </div>
