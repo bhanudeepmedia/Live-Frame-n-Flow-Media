@@ -43,7 +43,7 @@ export default function MobileMenu() {
         >
           <div className="flex items-center justify-between pb-8">
             <Dialog.Title asChild>
-              <Logo />
+              <Logo onClick={close} />
             </Dialog.Title>
             <Dialog.Close asChild>
               <button

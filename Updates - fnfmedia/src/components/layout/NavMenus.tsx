@@ -10,15 +10,15 @@ export function ServiceCards({ onNavigate }: { onNavigate: () => void }) {
     <ul className="nav-cards">
       {serviceMenu.map((service) => (
         <li key={service.title}>
-          <Go href={service.href} className="nav-banner">
+          <Go href={service.href} onClick={onNavigate} className="nav-banner">
             <img src={service.banner} alt="" loading="lazy" />
             <span>{service.title}</span>
           </Go>
           <p>{service.summary}</p>
           <ul className="nav-links">
             {service.links.map((link) => (
-              <li key={link.label} onClick={onNavigate}>
-                <Go href={link.href} className="nav-link">
+              <li key={link.label}>
+                <Go href={link.href} onClick={onNavigate} className="nav-link">
                   {link.label}
                   <ArrowRight aria-hidden="true" className="h-4 w-4" />
                 </Go>

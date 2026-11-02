@@ -1,4 +1,4 @@
-import { Suspense, useLayoutEffect, useState } from 'react'
+import { Suspense, useLayoutEffect, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { scroller } from '@/components/layout/scroller'
 import AnnouncementBar from '@/components/layout/AnnouncementBar'
@@ -18,16 +18,20 @@ const DISMISS_KEY = 'fnf:announcement-dismissed'
 export default function Layout() {
   const [dismissed, setDismissed] = useState(() => sessionStorage.getItem(DISMISS_KEY) === '1')
   const location = useLocation()
+  const lastPage = useRef<string | null>(null)
 
-  // Every new page starts at the top. Lenis keeps its own scroll position, so it
-  // has to be moved too, or it puts the page back where the last one was. Deep
-  // links such as /web-development#custom-shopify-development then go to their section,
-  // again each time one is clicked, even if the address already shows that section.
+  // Every new page starts at the top, and so does a link to the page already open,
+  // such as the logo on Home. Lenis keeps its own scroll position, so it has to be
+  // moved too, or it puts the page back where the last one was. Deep links such as
+  // /web-development#custom-shopify-development then go to their section, again each
+  // time one is clicked, even if the address already shows that section.
   useLayoutEffect(() => {
+    if (location.hash && location.pathname === lastPage.current) return
+    lastPage.current = location.pathname
     window.history.scrollRestoration = 'manual'
     scroller.lenis?.scrollTo(0, { immediate: true, force: true })
     window.scrollTo(0, 0)
-  }, [location.pathname])
+  }, [location.pathname, location.key, location.hash])
 
   useLayoutEffect(() => {
     if (!location.hash) return
@@ -36,8 +40,11 @@ export default function Layout() {
     let timer = 0
     const go = () => {
       const target = document.getElementById(id)
-      // Anything inside a section is on its held frame, so go to the section.
-      if (target) (target.closest('.scene') ?? target).scrollIntoView({ block: 'start' })
+      // Anything inside a held section is on its frame, so go to the section.
+      // A closing menu keeps the page locked, and a jump made then is undone with the lock.
+      if (target && !document.body.hasAttribute('data-scroll-locked')) {
+        ;(target.closest('.scene:not(.scene--plain)') ?? target).scrollIntoView({ block: 'start' })
+      }
       // A page opened straight from a link may still be loading.
       else if (++tries < 40) timer = window.setTimeout(go, 150)
     }

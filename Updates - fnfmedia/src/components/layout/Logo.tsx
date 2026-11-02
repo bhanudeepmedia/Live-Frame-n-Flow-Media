@@ -7,10 +7,11 @@ import '@/components/layout/nav.css'
  * footer. The mark is a mask (public/brand/fnf-mark-black.svg), so in the header
  * it can take the colour of the wall in view; see useWallTint.
  */
-export default function Logo({ className }: { className?: string }) {
+export default function Logo({ className, onClick }: { className?: string; onClick?: () => void }) {
   return (
     <Link
       to="/"
+      onClick={onClick}
       aria-label="Frame n Flow Media — home"
       className={cn(
         'inline-flex shrink-0 items-center transition-opacity duration-[var(--motion-ui)] hover:opacity-85',

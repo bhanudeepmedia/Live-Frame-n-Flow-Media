@@ -32,13 +32,15 @@ export function WallFit({ name }: { name: string }) {
 /**
  * One section: a screen of content on its own wall, held in place while the
  * next section arrives. `exit` names the transition out of this section, read
- * by `useWallMotion`, such as "tilt" or "portal:.page-art".
+ * by `useWallMotion`, such as "tilt" or "portal:.page-art". A `flow` section
+ * drops all of that on a phone and scrolls like a normal page.
  */
 export default function Wall({
   id,
   wall,
   label,
   exit,
+  flow = false,
   className = '',
   children,
 }: {
@@ -46,6 +48,7 @@ export default function Wall({
   wall: string
   label: string
   exit?: string
+  flow?: boolean
   className?: string
   children: ReactNode
 }) {
@@ -57,6 +60,7 @@ export default function Wall({
       aria-label={label}
       data-wall={wall}
       data-exit={exit}
+      data-flow={flow || undefined}
       className={`scene ${plain ? 'scene--plain' : ''} ${className}`}
     >
       <div className="scene__stage">

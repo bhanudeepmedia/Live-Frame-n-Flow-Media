@@ -46,7 +46,8 @@ export function Earth() {
             // It waits behind the hero's websites until they start to leave.
             start: () => `top ${header + 1 - scene.offsetHeight * 0.16}px`,
             endTrigger: next ?? scene,
-            end: () => `top ${header - window.innerHeight}px`,
+            // A section that flows in pushes it off the screen. Others arrive over it.
+            end: () => `top ${next?.matches('[data-flow]') && window.innerWidth <= 900 ? header : header - window.innerHeight}px`,
             onToggle: (self) => setActive(self.isActive),
           }
         : { trigger: scene, start: 'top bottom', end: 'bottom top', onToggle: (self) => setActive(self.isActive) },

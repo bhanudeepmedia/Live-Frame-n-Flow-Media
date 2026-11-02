@@ -38,7 +38,7 @@ export function ClientVideo() {
 /** Ian Conway's words and video, on a wall of their own after the case study. */
 export function ClientWall() {
   return (
-    <Wall wall="green" label="What our client says" exit="cascade" className="client-scene">
+    <Wall wall="green" label="What our client says" exit="cascade" flow className="client-scene">
       <div className="wall__body">
         <figure className="testimonial m-0">
           <div>
@@ -57,7 +57,7 @@ export function ClientWall() {
 
 export default function CasesWall() {
   return (
-    <Wall id="case-studies" wall="cases" label="Case studies" exit="dolly" className="cases-scene">
+    <Wall id="case-studies" wall="cases" label="Case studies" exit="dolly" flow className="cases-scene">
       <div className="wall__body">
         <Lines className="wall-h" lines={['Real results,', 'not promises.']} />
 

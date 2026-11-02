@@ -278,6 +278,8 @@ function arrive(timeline: gsap.core.Timeline, stage: HTMLElement) {
  * images never repaint. A frame that does not fit the screen (an article, a very
  * short phone) scrolls to its end first. Under prefers-reduced-motion, and on
  * every page but Home (`enabled` is off), the page is plain flow, set in home.css.
+ * So are `flow` sections on a phone, which scroll in with no transition. The last
+ * of them still holds for the section after it, which arrives as it does anywhere.
  */
 export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, enabled = true) {
   useEffect(() => {
@@ -295,15 +297,13 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
     const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header'))
     const cross = () => root.querySelector<HTMLElement>('[data-cross]')?.offsetHeight ?? 0
     /** The stretch of scroll a section's arrival takes: how far it overlaps the last one, less a screen. */
-    const arrival = (scene: HTMLElement) => -parseFloat(getComputedStyle(scene).marginTop) - stages[0].offsetHeight
+    const arrival = (scene: HTMLElement) => Math.max(-parseFloat(getComputedStyle(scene).marginTop) - stages[0].offsetHeight, 0)
     const handover = (scene: HTMLElement) => `top ${header - arrival(scene) / 2}px`
+    const flowing = (scene: HTMLElement) => window.innerWidth <= 900 && scene.dataset.flow !== undefined
 
     let ctx: gsap.Context | undefined
     let settle = 0
     let transitions: gsap.core.Timeline[] = []
-    const row = root.querySelector<HTMLElement>('[data-row]')
-    const cards = row ? gsap.utils.toArray<HTMLElement>(row.children) : []
-    let rowRun: gsap.core.Timeline | undefined
 
     const build = () => {
       ctx?.revert()
@@ -315,8 +315,10 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
 
       ctx = gsap.context(() => {
         transitions = []
+        const arrivals: [gsap.core.Timeline, HTMLElement][] = []
 
         scenes.slice(1).forEach((scene, index) => {
+          if (flowing(scene)) return
           const from = stages[index]
           const to = stages[index + 1]
           gsap.set(to, { opacity: 0 })
@@ -332,42 +334,16 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
           // Fully covered now, so nothing behind it can show when the next section moves.
           timeline.set(from, { opacity: 0 }, 1)
           transitions.push(timeline)
+          arrivals.push([timeline, to])
         })
 
         // After the moves, which measure sections as they stand on the wall.
-        transitions.forEach((timeline, index) => arrive(timeline, stages[index + 1]))
-
-        // On a phone the cards wait in a row, and scrolling moves along it one card at a
-        // time, each resting in place for a moment. The first sits at the left edge, the
-        // last at the right, and any between them in the middle, with their neighbours showing.
-        const rowScene = row?.closest<HTMLElement>('.scene')
-        const afterRow = rowScene && scenes[scenes.indexOf(rowScene) + 1]
-        rowRun = undefined
-        if (row && rowScene && afterRow && window.innerWidth <= 900) {
-          const last = cards.length - 1
-          const farthest = cards[last].offsetLeft + cards[last].offsetWidth - row.clientWidth
-          const mark = rowScene.querySelector('.service-tabs__mark')
-          rowRun = gsap.timeline({
-            defaults: { ease: 'none' },
-            scrollTrigger: {
-              trigger: rowScene,
-              start: () => `top ${header - arrival(rowScene)}px`,
-              endTrigger: afterRow,
-              end: `top ${header}px`,
-              scrub: true,
-            },
-          })
-          cards.slice(1).forEach((card, index) => {
-            const shift = gsap.utils.clamp(0, farthest, card.offsetLeft + (card.offsetWidth - row.clientWidth) / 2)
-            rowRun?.to(cards, { x: -shift, duration: 0.76, ease: 'power2.inOut' }, index + 0.12)
-            rowRun?.to(mark, { xPercent: 100 * (index + 1), duration: 0.76, ease: 'power2.inOut' }, index + 0.12)
-          })
-          rowRun.to({}, { duration: 0.12 }, last - 0.12)
-        }
+        arrivals.forEach(([timeline, to]) => arrive(timeline, to))
 
         // A trigger is off at its exact start, so the first one starts above the page.
         // At 0, the hero's buttons could not be clicked until the visitor scrolled.
         scenes.forEach((scene, index) => {
+          if (flowing(scene)) return
           const next = scenes[index + 1]
           ScrollTrigger.create({
             trigger: scene,
@@ -387,16 +363,7 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
     let rested = window.scrollY
     let finishing = false
     let idle = 0
-    // When the visitor last scrolled by hand, so a link's scroll isn't stopped at the cards.
-    let touched = 0
     let fingerDown = false
-
-    /** Where the page stands when each card in the row is in place. */
-    const stops = () => {
-      const run = rowRun?.scrollTrigger
-      if (!run) return []
-      return cards.map((_, index) => run.start + ((run.end - run.start) * index) / (cards.length - 1))
-    }
 
     const glide = (target: number) => {
       const lenis = scroller.lenis
@@ -414,11 +381,6 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
       })
     }
 
-    const toCard = (index: number) => {
-      const stop = stops()[index]
-      if (stop !== undefined && !finishing && Math.abs(stop - window.scrollY) > 2) glide(stop)
-    }
-
     const finish = () => {
       const lenis = scroller.lenis
       if (!lenis || finishing) return
@@ -432,11 +394,7 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
       }
 
       const y = window.scrollY
-      const marks = stops()
-      const between = marks.findIndex((stop, index) => index > 0 && y > marks[index - 1] + 1 && y < stop - 1)
-      const inside =
-        transitions.find(({ scrollTrigger: run }) => run && y > run.start + 1 && y < run.end - 1)?.scrollTrigger ??
-        (between > 0 ? { start: marks[between - 1], end: marks[between] } : undefined)
+      const inside = transitions.find(({ scrollTrigger: run }) => run && y > run.start + 1 && y < run.end - 1)?.scrollTrigger
       if (!inside) {
         rested = y
         return
@@ -447,66 +405,20 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
 
     const onScroll = () => {
       if (finishing) return
-      // However hard the flick, it stops at the next card, so none of them flies past.
-      const y = window.scrollY
-      const marks = y > rested ? stops() : stops().reverse()
-      const reached = marks.find((stop) => (stop - rested) * (stop - y) <= 0 && Math.abs(stop - rested) > 2)
-      if (reached !== undefined && performance.now() - touched < 3000) {
-        // A flick on a touch screen runs on by itself until the page stops scrolling.
-        if (scroller.lenis?.isScrolling === 'native') {
-          document.documentElement.style.overflow = 'hidden'
-          requestAnimationFrame(() => document.documentElement.style.removeProperty('overflow'))
-        }
-        window.clearTimeout(idle)
-        glide(reached)
-        return
-      }
       window.clearTimeout(idle)
       idle = window.setTimeout(finish, 40)
     }
     window.addEventListener('scroll', onScroll, { passive: true })
 
-    const byHand = () => {
-      touched = performance.now()
-    }
     const fingerOn = () => {
       fingerDown = true
     }
     const fingerOff = () => {
       fingerDown = false
     }
-    const byLink = () => {
-      touched = 0
-    }
-    window.addEventListener('wheel', byHand, { passive: true })
-    window.addEventListener('touchmove', byHand, { passive: true })
     window.addEventListener('touchstart', fingerOn, { passive: true })
     window.addEventListener('touchend', fingerOff, { passive: true })
     window.addEventListener('touchcancel', fingerOff, { passive: true })
-    window.addEventListener('click', byLink)
-
-    // The cards also follow a sideways swipe, or a tap on their names.
-    let swipeX = 0
-    let swipeY = 0
-    const swipeStart = ({ touches }: TouchEvent) => {
-      swipeX = touches[0].clientX
-      swipeY = touches[0].clientY
-    }
-    const swipeEnd = ({ changedTouches }: TouchEvent) => {
-      const across = changedTouches[0].clientX - swipeX
-      const marks = stops()
-      if (!marks.length || Math.abs(across) < 40 || Math.abs(across) < 2 * Math.abs(changedTouches[0].clientY - swipeY)) return
-      const at = Math.round(((window.scrollY - marks[0]) / (marks[marks.length - 1] - marks[0])) * (marks.length - 1))
-      toCard(at + (across < 0 ? 1 : -1))
-    }
-    const tabs = root.querySelector('.service-tabs')
-    const tab = ({ target }: Event) => {
-      const button = (target as Element).closest<HTMLElement>('[data-card]')
-      if (button) toCard(Number(button.dataset.card))
-    }
-    row?.addEventListener('touchstart', swipeStart, { passive: true })
-    row?.addEventListener('touchend', swipeEnd, { passive: true })
-    tabs?.addEventListener('click', tab)
 
     const rebuild = () => {
       window.clearTimeout(settle)
@@ -529,10 +441,8 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
 
     // Tabbing moves through the page, so bring the section with the focus on screen.
     const followFocus = (event: FocusEvent) => {
-      const scene = (event.target as Element).closest('.scene')
-      if (scene && !scene.querySelector(`:scope > .${REST}`)) scene.scrollIntoView({ block: 'start' })
-      const card = (event.target as Element).closest<HTMLElement>('[data-row] > *')
-      if (card) toCard(cards.indexOf(card))
+      const scene = (event.target as Element).closest<HTMLElement>('.scene')
+      if (scene && !flowing(scene) && !scene.querySelector(`:scope > .${REST}`)) scene.scrollIntoView({ block: 'start' })
     }
     document.addEventListener('focusin', followFocus)
 
@@ -560,15 +470,9 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
       window.clearTimeout(settle)
       window.clearTimeout(idle)
       window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('wheel', byHand)
-      window.removeEventListener('touchmove', byHand)
       window.removeEventListener('touchstart', fingerOn)
       window.removeEventListener('touchend', fingerOff)
       window.removeEventListener('touchcancel', fingerOff)
-      window.removeEventListener('click', byLink)
-      row?.removeEventListener('touchstart', swipeStart)
-      row?.removeEventListener('touchend', swipeEnd)
-      tabs?.removeEventListener('click', tab)
       window.removeEventListener('resize', resize)
       window.removeEventListener('load', rebuild)
       document.removeEventListener('focusin', followFocus)

@@ -1172,6 +1172,10 @@ a.page-card:hover {
   scroll-margin-top: calc(var(--header) + 16px);
 }
 
+.page-card[id] {
+  scroll-margin-top: calc(var(--header) + 16px);
+}
+
 .project-tiles--row {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
