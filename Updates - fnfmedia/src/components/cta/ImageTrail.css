@@ -20,6 +20,11 @@
   box-shadow: 0 20px 50px rgba(60, 20, 0, 0.45);
 }
 
+/* Large enough on a phone to see the site, with room around it on the screen. */
+.fnf-cta-trail--touch .fnf-cta-trail__img {
+  width: clamp(170px, 46vw, 260px);
+}
+
 .fnf-cta-trail__img-inner {
   position: absolute;
   inset: 0;

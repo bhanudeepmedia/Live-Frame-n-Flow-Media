@@ -100,22 +100,25 @@ function track(timeline: gsap.core.Timeline, from: HTMLElement, to: HTMLElement,
 }
 
 /**
- * The takeover on a phone. The websites rise over the text with the swipe, then the
- * hero fades as one layer to show the next section, whole and in place behind it.
- * One move and one fade, so a phone has little to draw while it scrolls.
+ * The takeover on a phone, one move from start to finish. The next section stands
+ * behind the hero the whole time, so it never has to be drawn in the middle of a
+ * swipe. The websites rise with the finger and keep rising as they fade, the hero's
+ * wall clears from behind them, and the earth and its words come up as they go.
  */
 function rise(timeline: gsap.core.Timeline, from: HTMLElement, to: HTMLElement, band: HTMLElement, strip: HTMLElement) {
-  const covered = 0.45
   const earth = to.querySelector('.globe-float')
+  const words = to.querySelector('.globe-copy')
 
-  timeline.fromTo(band, { y: 0 }, { ...STILL, y: -strip.offsetTop, duration: covered, ease: 'sine.out' }, 0)
+  gsap.set(to, { opacity: 1 })
+  timeline.fromTo(band, { y: 0 }, { ...STILL, y: -strip.offsetTop - band.offsetHeight * 0.24, duration: 0.82 }, 0)
   timeline.fromTo([from.querySelector('.hero-trust'), from.querySelector('.hero-pause')], { opacity: 1 }, { ...STILL, opacity: 0, duration: 0.1 }, 0)
-  timeline.fromTo(from.querySelector('.hero-dim'), { opacity: 0 }, { ...STILL, opacity: 1, duration: covered * 0.7 }, 0)
-  timeline.fromTo(from.querySelector('.hero-ledge'), { opacity: 1 }, { ...STILL, opacity: 0, duration: covered * 0.7 }, 0)
+  timeline.fromTo(from.querySelector('.hero-copy'), { opacity: 1 }, { ...STILL, opacity: 0, duration: 0.24 }, 0)
+  timeline.fromTo(from.querySelector('.hero-ledge'), { opacity: 1 }, { ...STILL, opacity: 0, duration: 0.3 }, 0)
+  timeline.fromTo(parts(from).wall, { opacity: 1 }, { ...STILL, opacity: 0, duration: 0.32, ease: 'sine.inOut' }, 0.18)
+  timeline.fromTo(band, { opacity: 1 }, { ...STILL, opacity: 0, duration: 0.38, ease: 'sine.inOut' }, 0.4)
 
-  timeline.set(to, { opacity: 1 }, covered)
-  timeline.fromTo(from, { opacity: 1 }, { ...STILL, opacity: 0, duration: 0.5, ease: 'sine.inOut' }, covered)
-  if (earth) timeline.fromTo(earth, { scale: 0.92 }, { scale: 1, duration: 0.5, ease: 'sine.out' }, covered)
+  if (earth) timeline.fromTo(earth, { y: 56, scale: 0.92 }, { y: 0, scale: 1, duration: 0.56, ease: 'sine.out' }, 0.44)
+  if (words) timeline.fromTo(words, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.32, ease: 'sine.out' }, 0.66)
   // Its websites keep running otherwise, for the whole of the page below.
   timeline.set(from, { visibility: 'hidden' }, 1)
 }
@@ -307,7 +310,7 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
     const stages = scenes.map((scene) => scene.querySelector('.scene__stage') as HTMLElement)
     const frames = stages.map((stage) => stage.querySelector('.scene__frame') as HTMLElement)
 
-    document.querySelectorAll<HTMLImageElement>('.scene__wall img, .hero-card img').forEach((image) => {
+    document.querySelectorAll<HTMLImageElement>('.scene__wall img, .hero-card img, .globe-still').forEach((image) => {
       image.decode().catch(() => undefined)
     })
 
@@ -342,7 +345,8 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
 
           const timeline = gsap.timeline({
             defaults: { ease: 'none' },
-            scrollTrigger: { trigger: scene, start: `top ${header}px`, end: () => `+=${arrival(scene)}`, scrub: true },
+            // A phone reports scroll in uneven steps, so its one move glides between them.
+            scrollTrigger: { trigger: scene, start: `top ${header}px`, end: () => `+=${arrival(scene)}`, scrub: phone() ? 0.3 : true },
           })
           const exit = scenes[index].dataset.exit ?? CYCLE[index % CYCLE.length]
           const split = exit.indexOf(':')

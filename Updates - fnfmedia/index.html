@@ -27,6 +27,8 @@
         var phone = matchMedia('(max-width: 900px)').matches
         var home = ['/walls/hero-' + (phone ? 'phone' : 'laptop') + '.webp']
         if (phone) home.push('/portfolio/01-the-grafton-vault.webp', '/portfolio/02-therehva.webp', '/portfolio/05-al-mulla-carpentry.webp', '/portfolio/03-zhai-farms.webp')
+        // The earth's picture is next in line, behind everything on the first screen.
+        var after = phone && location.pathname === '/' ? ['/globe/earth-still.webp'] : []
         var pictures = {
           '/': home,
           '/web-development': ['/pages/web-hero.webp'],
@@ -36,12 +38,12 @@
           '/blog': ['/pages/blog-hero.webp'],
           '/offers/website-25k': ['/pages/offer-website.webp'],
         }
-        ;(pictures[location.pathname] || []).forEach(function (href) {
+        ;(pictures[location.pathname] || []).concat(after).forEach(function (href) {
           var link = document.createElement('link')
           link.rel = 'preload'
           link.as = 'image'
           link.href = href
-          link.fetchPriority = 'high'
+          link.fetchPriority = after.indexOf(href) < 0 ? 'high' : 'low'
           document.head.appendChild(link)
         })
       })()

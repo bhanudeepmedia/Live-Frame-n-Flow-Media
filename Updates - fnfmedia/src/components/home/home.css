@@ -678,6 +678,19 @@ body {
   inset: calc(var(--earth) * -0.194);
 }
 
+/* A phone's picture of the earth's first frame, under the live earth until it has drawn. */
+.globe-still {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.globe-float.is-ready .globe-still {
+  visibility: hidden;
+}
+
 /* The drag control sets touch-action: none on the canvas wrapper. A vertical
    swipe has to stay with the page, so only a sideways swipe spins the earth. */
 .globe-canvas * {
@@ -1597,13 +1610,8 @@ body {
     --earth: min(82vw, 42svh);
   }
 
-  /* It can land after a quick visitor has reached it, so it comes in gently. */
-  .globe-bob {
-    opacity: 0;
-    transition: opacity 400ms ease;
-  }
-
-  .globe-float.is-ready .globe-bob {
+  /* Its picture is there from the start, and so is its shadow. */
+  .globe-shadow {
     opacity: 1;
   }
 

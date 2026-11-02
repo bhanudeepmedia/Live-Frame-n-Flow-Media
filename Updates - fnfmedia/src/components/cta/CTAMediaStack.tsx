@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import ImageTrail from '@/components/cta/ImageTrail'
+import TouchTrail from '@/components/cta/TouchTrail'
 import { ctaTrailImages } from '@/data/final-cta'
 
 /**
@@ -8,16 +9,16 @@ import { ctaTrailImages } from '@/data/final-cta'
  * `pointer-events-none`, so the CTA button stays clickable regardless of
  * animation state (PRD.md §29). Gated by IntersectionObserver (only runs
  * in view) and disabled under prefers-reduced-motion, where a hover trail
- * has no non-motion equivalent worth faking, and on phones, where there is
- * no hover and the sites would pop up over the text with every swipe.
+ * has no non-motion equivalent worth faking. A screen with no hover gets
+ * TouchTrail instead, which follows the finger.
  */
 export default function CTAMediaStack() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [near, setNear] = useState(false)
   const [inView, setInView] = useState(false)
-  const off =
-    typeof window !== 'undefined' &&
-    (window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.innerWidth <= 900)
+  const off = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const touch = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
+  const Trail = touch ? TouchTrail : ImageTrail
 
   useEffect(() => {
     const node = containerRef.current
@@ -37,7 +38,7 @@ export default function CTAMediaStack() {
 
   return (
     <div ref={containerRef} className="absolute inset-0 overflow-hidden">
-      {near && <ImageTrail items={ctaTrailImages} active={inView} />}
+      {near && <Trail items={ctaTrailImages} active={inView} />}
     </div>
   )
 }
