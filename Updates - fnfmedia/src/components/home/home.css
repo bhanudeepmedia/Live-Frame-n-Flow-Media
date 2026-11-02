@@ -1494,14 +1494,19 @@ body {
   }
 
   :root {
-    --takeover: 130svh;
+    --takeover: 90svh;
   }
 
+  /* Open at the foot, so the columns reach the bottom of the screen when the address
+     bar hides. */
   .hero-scene .scene__frame {
+    overflow: visible;
     flex-direction: column;
   }
 
+  /* Under the dim and the columns, which rise over it. */
   .hero-copy {
+    z-index: auto;
     position: static;
     width: auto;
     gap: 14px;
@@ -1543,6 +1548,11 @@ body {
     min-width: 0;
     flex: 1 1 0;
     padding-inline: 5px;
+    will-change: auto;
+  }
+
+  .hero-col__plate {
+    display: none;
   }
 
   .hero-col:nth-child(n + 4) {
@@ -1585,6 +1595,16 @@ body {
 
   .globe-scene {
     --earth: min(82vw, 42svh);
+  }
+
+  /* It can land after a quick visitor has reached it, so it comes in gently. */
+  .globe-bob {
+    opacity: 0;
+    transition: opacity 400ms ease;
+  }
+
+  .globe-float.is-ready .globe-bob {
+    opacity: 1;
   }
 
   .globe-scene .wall__body {
@@ -1737,8 +1757,8 @@ body {
     aspect-ratio: 2.6 / 1;
   }
 
-  /* Services, results and the client run down the page like any other page: no held
-     screens, no transitions, nothing moving but the scroll itself. */
+  /* From Services down the sections run like any other page: no held screens, no
+     transitions, nothing moving but the scroll itself. */
   .scene[data-flow]:not(.scene--plain) {
     margin-top: 0;
     pointer-events: auto;
@@ -1774,14 +1794,28 @@ body {
     height: auto;
   }
 
-  /* Solid letters here: the painted ones are slow to draw while a phone scrolls. */
-  .scene[data-flow] :is(.wall-h, .case-name, .case-stats dd, .testimonial blockquote) {
+  .scene[data-flow] .work-grid {
+    --tile: 27vw;
+  }
+
+  /* The ledge fills the last 19% of this wall, and words stop above it. */
+  .scene[data-flow][data-wall='founder'] .wall__body {
+    padding-bottom: calc(100vw / var(--wall-ar) * 0.19 + 16px);
+  }
+
+  /* Solid letters on a phone: the painted ones are slow to draw while it scrolls. */
+  :is(.scene, .site-end) :is(.wall-h, .poster, .case-name, .case-stats dd, .testimonial blockquote) {
     filter: none;
   }
 
-  .scene[data-flow] :is(.wall-h .wl__in, .case-name, .case-stats dd, .testimonial blockquote) {
+  :is(.scene, .site-end) :is(.wall-h .wl__in, .poster .wl__in, .case-name, .case-stats dd, .testimonial blockquote) {
     background: none;
     color: var(--ink);
+  }
+
+  /* The footer follows the last section instead of rising over it. */
+  .page-depth:not(:has(.scene--plain)) .site-end {
+    margin-top: 0;
   }
 
   /* Results and the client's words read as one stretch of wall. */
@@ -1823,26 +1857,6 @@ body {
     height: calc(var(--rest) + var(--takeover));
   }
 
-  /* The client scrolls in, then holds while the businesses arrive over it, as on a
-     laptop. Its room is an arrival shorter, as it has none. */
-  @media (prefers-reduced-motion: no-preference) {
-    .client-scene:not(.scene--plain)::after {
-      display: block;
-      height: calc(var(--rest) + var(--cross));
-    }
-
-    .client-scene:not(.scene--plain) .scene__stage {
-      position: sticky;
-      top: calc(var(--header) - var(--over, 0px));
-      min-height: var(--frame);
-      will-change: transform;
-    }
-
-    .client-scene:not(.scene--plain) .scene__frame {
-      min-height: var(--frame);
-    }
-  }
-
   /* A phone's address bar slides away as the page scrolls and the screen grows past
      `svh`. Held walls run on under their stage by that much, in the colour at their
      foot, so the dark behind the page never shows. The picture stays on its foot. */
@@ -1855,12 +1869,23 @@ body {
     background: var(--foot, var(--wall-cream));
   }
 
-  .client-scene:not(.scene--plain) .scene__wall {
+  .hero-band {
+    height: calc(var(--frame) + var(--bar));
+  }
+
+  .hero-dim {
     bottom: calc(-1 * var(--bar));
   }
 
-  .hero-band {
-    height: calc(var(--frame) + var(--bar));
+  /* The wall in front of the columns reaches the foot of the screen too. */
+  .hero-ledge::after {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    height: var(--bar);
+    background: var(--foot);
+    content: '';
   }
 }
 
@@ -1869,8 +1894,7 @@ body {
     font-size: clamp(1.625rem, min(8.2vw, 5.4svh), 2.75rem);
   }
 
-  /* These phone walls end in a stone ledge, so words stop above it. */
-  .scene:not(.scene--plain)[data-wall='founder'] .wall__body,
+  /* This phone wall ends in a stone ledge, so words stop above it. */
   .scene:not(.scene--plain)[data-wall='green'] .wall__body {
     padding-bottom: calc(clamp(14px, 3svh, 40px) + 6svh);
   }
@@ -1883,6 +1907,10 @@ body {
   .work-grid--all {
     --tile: min(17.5svh, 36vw);
     row-gap: 10px;
+  }
+
+  .scene[data-flow] .work-grid {
+    --tile: 36vw;
   }
 
   .work-card__name {
@@ -1921,8 +1949,10 @@ body {
     height: auto;
   }
 
+  /* Sized to its column, which leaves out the fixed margins, so the name stays on
+     one line on the narrowest phones. */
   .founder-name {
-    font-size: 10.6vw;
+    font-size: calc(((100vw - 40px) * 0.61 - 16px) / 4.8);
   }
 
   .site-end__links {

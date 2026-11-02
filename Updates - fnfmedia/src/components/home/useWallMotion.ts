@@ -15,6 +15,8 @@ type Move = (timeline: gsap.core.Timeline, from: HTMLElement, to: HTMLElement, t
 
 const screen = () => ({ width: window.innerWidth, height: window.innerHeight })
 
+const phone = () => window.innerWidth <= 900
+
 const STILL = { ease: 'none', immediateRender: false }
 
 /** Everything that follows a section's heading into place. */
@@ -97,6 +99,27 @@ function track(timeline: gsap.core.Timeline, from: HTMLElement, to: HTMLElement,
   enter(timeline, to, 0.44)
 }
 
+/**
+ * The takeover on a phone. The websites rise over the text with the swipe, then the
+ * hero fades as one layer to show the next section, whole and in place behind it.
+ * One move and one fade, so a phone has little to draw while it scrolls.
+ */
+function rise(timeline: gsap.core.Timeline, from: HTMLElement, to: HTMLElement, band: HTMLElement, strip: HTMLElement) {
+  const covered = 0.45
+  const earth = to.querySelector('.globe-float')
+
+  timeline.fromTo(band, { y: 0 }, { ...STILL, y: -strip.offsetTop, duration: covered, ease: 'sine.out' }, 0)
+  timeline.fromTo([from.querySelector('.hero-trust'), from.querySelector('.hero-pause')], { opacity: 1 }, { ...STILL, opacity: 0, duration: 0.1 }, 0)
+  timeline.fromTo(from.querySelector('.hero-dim'), { opacity: 0 }, { ...STILL, opacity: 1, duration: covered * 0.7 }, 0)
+  timeline.fromTo(from.querySelector('.hero-ledge'), { opacity: 1 }, { ...STILL, opacity: 0, duration: covered * 0.7 }, 0)
+
+  timeline.set(to, { opacity: 1 }, covered)
+  timeline.fromTo(from, { opacity: 1 }, { ...STILL, opacity: 0, duration: 0.5, ease: 'sine.inOut' }, covered)
+  if (earth) timeline.fromTo(earth, { scale: 0.92 }, { scale: 1, duration: 0.5, ease: 'sine.out' }, covered)
+  // Its websites keep running otherwise, for the whole of the page below.
+  timeline.set(from, { visibility: 'hidden' }, 1)
+}
+
 const moves: Record<string, Move> = {
   /**
    * The hero's websites slide across until they fill the screen. Once they cover
@@ -106,6 +129,7 @@ const moves: Record<string, Move> = {
     const band = from.querySelector<HTMLElement>('.hero-band')
     const strip = from.querySelector<HTMLElement>('.hero-strip')
     if (!band || !strip) return moves.lift(timeline, from, to)
+    if (phone()) return rise(timeline, from, to, band, strip)
 
     const columns = gsap.utils
       .toArray<HTMLElement>(band.querySelectorAll('.hero-col'))
@@ -118,18 +142,12 @@ const moves: Record<string, Move> = {
     const ledge = from.querySelector('.hero-ledge')
     const { wall } = parts(from)
     const earth = to.querySelector('.globe-float')
-    const stacked = window.innerWidth <= 900
     const covered = 0.5
     const ease = 'power2.inOut'
+    const across = -band.offsetLeft
 
-    if (stacked) {
-      timeline.fromTo(band, { y: 0 }, { ...STILL, y: -strip.offsetTop, duration: covered, ease }, 0)
-      timeline.fromTo(copy, { opacity: 1 }, { ...STILL, opacity: 0, duration: covered * 0.6 }, 0)
-    } else {
-      const across = -band.offsetLeft
-      timeline.fromTo(band, { x: 0 }, { ...STILL, x: across, duration: covered, ease }, 0)
-      timeline.fromTo(copy, { x: 0 }, { ...STILL, x: across * 1.06, duration: covered, ease }, 0)
-    }
+    timeline.fromTo(band, { x: 0 }, { ...STILL, x: across, duration: covered, ease }, 0)
+    timeline.fromTo(copy, { x: 0 }, { ...STILL, x: across * 1.06, duration: covered, ease }, 0)
     timeline.fromTo([trust, pause], { opacity: 1 }, { ...STILL, opacity: 0, duration: 0.12 }, 0)
     timeline.fromTo(dim, { opacity: 0 }, { ...STILL, opacity: 1, duration: covered * 0.8 }, 0)
     timeline.fromTo(ledge, { yPercent: 0 }, { ...STILL, yPercent: 22, duration: covered * 0.6, ease }, 0)
@@ -278,8 +296,7 @@ function arrive(timeline: gsap.core.Timeline, stage: HTMLElement) {
  * images never repaint. A frame that does not fit the screen (an article, a very
  * short phone) scrolls to its end first. Under prefers-reduced-motion, and on
  * every page but Home (`enabled` is off), the page is plain flow, set in home.css.
- * So are `flow` sections on a phone, which scroll in with no transition. The last
- * of them still holds for the section after it, which arrives as it does anywhere.
+ * So are `flow` sections on a phone, which scroll in with no transition.
  */
 export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, enabled = true) {
   useEffect(() => {
@@ -299,7 +316,7 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
     /** The stretch of scroll a section's arrival takes: how far it overlaps the last one, less a screen. */
     const arrival = (scene: HTMLElement) => Math.max(-parseFloat(getComputedStyle(scene).marginTop) - stages[0].offsetHeight, 0)
     const handover = (scene: HTMLElement) => `top ${header - arrival(scene) / 2}px`
-    const flowing = (scene: HTMLElement) => window.innerWidth <= 900 && scene.dataset.flow !== undefined
+    const flowing = (scene: HTMLElement) => phone() && scene.dataset.flow !== undefined
 
     let ctx: gsap.Context | undefined
     let settle = 0
@@ -360,6 +377,7 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
     // A scroll that stops inside a transition finishes it, the way the visitor was going.
     // Lenis does this itself, so nothing else pulls on the scroll. `rested` is where they
     // last stopped, because scroll direction can tick backwards as smooth scrolling ends.
+    // A phone is left alone: the finish locks the page, and the next swipe gets lost.
     let rested = window.scrollY
     let finishing = false
     let idle = 0
@@ -404,7 +422,7 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
     }
 
     const onScroll = () => {
-      if (finishing) return
+      if (finishing || phone()) return
       window.clearTimeout(idle)
       idle = window.setTimeout(finish, 40)
     }
@@ -426,9 +444,10 @@ export default function useWallMotion(rootRef: RefObject<HTMLElement | null>, en
     }
 
     // Late images and fonts change frame heights, and the transitions are measured from them.
+    // A section in plain flow has no transition to measure, so it can't stall a scroll with a rebuild.
     const heights = new Map<HTMLElement, number>()
     const fit = new ResizeObserver(() => {
-      const moved = frames.filter((frame) => frame.offsetHeight !== heights.get(frame))
+      const moved = frames.filter((frame, index) => !flowing(scenes[index]) && frame.offsetHeight !== heights.get(frame))
       if (!moved.length) return
       moved.forEach((frame) => {
         heights.set(frame, frame.offsetHeight)

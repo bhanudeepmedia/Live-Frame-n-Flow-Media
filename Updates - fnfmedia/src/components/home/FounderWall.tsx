@@ -6,7 +6,7 @@ import { founderPrinciples } from '@/data/home'
 
 export default function FounderWall() {
   return (
-    <Wall id="founder" wall="founder" label="Founder" exit="portal:.founder-photo" className="founder-scene">
+    <Wall id="founder" wall="founder" label="Founder" exit="portal:.founder-photo" flow className="founder-scene">
       <div className="wall__body">
         <div className="founder-top">
           <div className="founder-head">

@@ -10,7 +10,9 @@ const EarthVisual = lazy(() => import('@/components/why/EarthVisual'))
  * then loads when the visitor first moves or after a few seconds, whichever comes
  * first, and draws one still frame, so the earth is already there when its section
  * arrives. It only turns while it is on screen, so a visitor always meets it at
- * its opening view.
+ * its opening view. On a phone it loads when a swipe has ended, never during one,
+ * and starts turning once the hero's websites have gone, so a phone is never doing
+ * both at once.
  */
 export function Earth() {
   const floatRef = useRef<HTMLDivElement>(null)
@@ -23,7 +25,20 @@ export function Earth() {
   useEffect(() => {
     const load = () => setLoaded(true)
     const moves = ['scroll', 'wheel', 'touchstart', 'pointermove', 'keydown']
-    const timer = window.setTimeout(load, 4000)
+    let timer = window.setTimeout(load, 4000)
+
+    if (window.innerWidth <= 900) {
+      const afterSwipe = () => {
+        window.clearTimeout(timer)
+        timer = window.setTimeout(load, 600)
+      }
+      window.addEventListener('scroll', afterSwipe, { passive: true })
+      return () => {
+        window.clearTimeout(timer)
+        window.removeEventListener('scroll', afterSwipe)
+      }
+    }
+
     moves.forEach((move) => window.addEventListener(move, load, { once: true, passive: true }))
     return () => {
       window.clearTimeout(timer)
@@ -38,13 +53,17 @@ export function Earth() {
     const root = getComputedStyle(document.documentElement)
     const header = parseFloat(root.getPropertyValue('--header'))
     const next = scene.nextElementSibling
+    const stage = scene.querySelector<HTMLElement>('.scene__stage')
+    /** How far the section's arrival has to run before the earth starts turning. */
+    const wait = () =>
+      window.innerWidth <= 900 ? (-parseFloat(getComputedStyle(scene).marginTop) - (stage?.offsetHeight ?? 0)) * 0.95 : scene.offsetHeight * 0.16
 
     const trigger = ScrollTrigger.create(
       held
         ? {
             trigger: scene,
             // It waits behind the hero's websites until they start to leave.
-            start: () => `top ${header + 1 - scene.offsetHeight * 0.16}px`,
+            start: () => `top ${header + 1 - wait()}px`,
             endTrigger: next ?? scene,
             // A section that flows in pushes it off the screen. Others arrive over it.
             end: () => `top ${next?.matches('[data-flow]') && window.innerWidth <= 900 ? header : header - window.innerHeight}px`,

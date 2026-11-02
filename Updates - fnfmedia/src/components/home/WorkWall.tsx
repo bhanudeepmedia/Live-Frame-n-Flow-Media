@@ -5,7 +5,7 @@ import { homePortfolio } from '@/data/portfolio'
 
 export default function WorkWall() {
   return (
-    <Wall id="work" wall="work" label="Businesses we've built with" exit="tilt" className="work-scene">
+    <Wall id="work" wall="work" label="Businesses we've built with" exit="tilt" flow className="work-scene">
       <div className="wall__body">
         <Lines className="wall-h" lines={["Businesses we've built with"]} />
         <div className="work-grid">
