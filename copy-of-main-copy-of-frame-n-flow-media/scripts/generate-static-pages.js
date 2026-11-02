@@ -187,7 +187,7 @@ try {
       }
 
       // Add canonical URL with trailing slash (to match directory structure behavior)
-      const canonicalUrl = `https://framenflowmedia.in${route === '/' ? '/' : (route.endsWith('/') ? route : route + '/')}`;
+      const canonicalUrl = `https://framenflowmedia.in/v1${route === '/' ? '/' : (route.endsWith('/') ? route : route + '/')}`;
       // Remove existing canonical to avoid duplicates if present in base
       const existingCanonical = root.querySelector('link[rel="canonical"]');
       if (existingCanonical) {

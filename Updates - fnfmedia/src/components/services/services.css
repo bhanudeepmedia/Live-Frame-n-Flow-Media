@@ -1,0 +1,23 @@
+/**
+ * Service panel logo marquee — DESIGN.md §16 "looping/marquee row" per
+ * tab. transform-only (RULE.md §2.5), disabled under reduced motion.
+ */
+.service-marquee-track {
+  animation: service-marquee-scroll 34s linear infinite;
+  will-change: transform;
+}
+
+@keyframes service-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-marquee-track {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,1929 @@
+/* Every page's sections. Each is one screen of content on its own wall, held
+   under the header while the next one arrives. The sections overlap by `--cross`,
+   the stretch of scroll a transition takes, and `--rest` is how far a section
+   stays put before that. Waiting sections stay at opacity 0, never hidden, so
+   they are painted before they are needed and the first reveal has no hitch. */
+
+:root {
+  --header: 70px;
+  --frame: calc(100svh - var(--header));
+  --cross: 80svh;
+  /* The hero's websites take the screen over a longer stretch than a plain handover. */
+  --takeover: 170svh;
+  --rest: 6svh;
+  --wall-ar: 1.7917;
+  --wall-h: max(calc(100vw / var(--wall-ar)), var(--frame));
+}
+
+html,
+body {
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+}
+
+[data-wall='hero'],
+[data-wall='services'],
+[data-wall='work'] {
+  --ink: var(--wall-blue);
+  --on-ink: var(--wall-cream);
+  --accent: var(--wall-red);
+  --edge: rgba(255, 244, 222, 0.5);
+}
+
+[data-wall='globe'] {
+  --ink: #0a1d36;
+  --on-ink: var(--wall-cream);
+  --accent: var(--wall-red);
+  --edge: rgba(226, 240, 250, 0.45);
+}
+
+[data-wall='cases'],
+[data-wall='green'],
+[data-wall='founder'],
+[data-wall='footer'] {
+  --ink: var(--wall-cream);
+  --on-ink: var(--wall-blue);
+  --accent: var(--wall-yellow);
+  --edge: rgba(12, 6, 2, 0.5);
+}
+
+/* The header logo's colour on each wall, deep enough to read on the off-white header. */
+[data-wall='hero'] {
+  --logo: #96692b;
+}
+
+[data-wall='globe'] {
+  --logo: var(--wall-sky);
+}
+
+[data-wall='services'] {
+  --logo: #b8761a;
+}
+
+[data-wall='cases'] {
+  --logo: #224057;
+}
+
+[data-wall='green'] {
+  --logo: #18453a;
+}
+
+[data-wall='work'] {
+  --logo: var(--wall-blue);
+}
+
+[data-wall='founder'] {
+  --logo: #932716;
+}
+
+[data-wall='footer'] {
+  --logo: #c2561f;
+}
+
+/* Inner pages: one plain, continuous page, in normal flow with no held sections
+   and no transitions. Sections take turns on the two walls' colours, the off-white
+   of "Businesses we've built with" and the blue of the globe, with the plaster's grain. */
+.scene.scene--plain {
+  --ink: var(--wall-blue);
+  --on-ink: var(--wall-cream);
+  --accent: var(--wall-red);
+  --edge: transparent;
+  --tint: var(--wall-cream);
+  --logo: var(--wall-red);
+  margin-top: 0;
+  pointer-events: auto;
+  scroll-margin-top: var(--header);
+}
+
+.scene.scene--plain:nth-of-type(even) {
+  --ink: var(--wall-cream);
+  --on-ink: var(--wall-blue);
+  --accent: var(--wall-yellow);
+  --tint: #1d4f7c;
+  --logo: #1d4f7c;
+}
+
+.scene.scene--plain::after {
+  display: none;
+}
+
+.scene--plain .scene__stage {
+  position: relative;
+  top: auto;
+  min-height: 0;
+  will-change: auto;
+}
+
+.scene--plain .scene__frame {
+  min-height: 0;
+}
+
+.scene--plain .scene__frame > .wall__body {
+  padding-block: clamp(48px, 7vw, 96px);
+}
+
+/* Only a trace of the plaster here, so text sits on an even colour. */
+.scene--plain .scene__wall {
+  background:
+    linear-gradient(color-mix(in srgb, var(--tint) 82%, transparent) 0 0),
+    url('/walls/plaster-grain.webp') 0 0 / 520px auto,
+    var(--tint);
+  background-blend-mode: normal, soft-light;
+}
+
+.scene--plain .scene__frame {
+  text-shadow: none;
+}
+
+/* Inner pages are for reading: solid letters, with no plaster running through them. */
+.scene--plain .wall-h,
+.scene--plain .poster,
+.scene--plain .case-name,
+.scene--plain .case-stats dd,
+.scene--plain .page-closing,
+.scene--plain .testimonial blockquote {
+  filter: none;
+}
+
+.scene--plain .wall-h .wl__in,
+.scene--plain .poster .wl__in,
+.scene--plain .case-name,
+.scene--plain .case-stats dd,
+.scene--plain .page-closing,
+.scene--plain .testimonial blockquote {
+  background: none;
+  color: var(--ink);
+}
+
+/* What a section falls back into when the next one comes forward. */
+.page-depth {
+  background: #0b1a2e;
+}
+
+.page-depth:has(.scene--plain) {
+  background: var(--wall-cream);
+}
+
+.scene-cross {
+  position: absolute;
+  height: var(--cross);
+  visibility: hidden;
+}
+
+.scene {
+  position: relative;
+  width: 100%;
+  margin-top: calc(-1 * (var(--frame) + var(--cross)));
+  color: var(--ink);
+  pointer-events: none;
+  scroll-margin-top: calc(var(--header) - var(--cross));
+}
+
+/* The room a section holds in: it arrives, rests, then stays while the next one
+   arrives over it. It has to be content, because a sticky stage cannot travel
+   into padding. */
+.scene::after {
+  display: block;
+  height: calc(var(--rest) + 2 * var(--cross));
+  content: '';
+}
+
+.hero-scene,
+.page-hero {
+  margin-top: 0;
+  scroll-margin-top: var(--header);
+}
+
+/* The next section waits behind the hero's websites, which leave to show it. */
+.hero-scene {
+  z-index: 1;
+}
+
+.globe-scene:not(.scene--plain) {
+  margin-top: calc(-1 * (var(--frame) + var(--takeover)));
+  scroll-margin-top: calc(var(--header) - var(--takeover));
+}
+
+.globe-scene:not(.scene--plain)::after {
+  height: calc(var(--rest) + var(--takeover) + var(--cross));
+}
+
+/* `--over` is how far a frame runs past the screen, if it does. It scrolls that
+   far, then holds on its last screen. */
+.scene__stage {
+  position: sticky;
+  top: calc(var(--header) - var(--over, 0px));
+  min-height: var(--frame);
+  will-change: transform;
+}
+
+.scene__stage.is-live {
+  pointer-events: auto;
+}
+
+.scene__wall {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: clip;
+  background: var(--wall-cream);
+  pointer-events: none;
+}
+
+.scene__shade {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  background: #0b1a2e;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scene--plain .scene__shade {
+  background: #6e6a62;
+}
+
+.scene__frame {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-height: var(--frame);
+  text-shadow: -0.5px 0.6px 0.4px var(--edge);
+}
+
+.wall__body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: 100%;
+  max-width: var(--container-max);
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(16px, 3svh, 36px);
+  margin-inline: auto;
+  padding: clamp(14px, 3svh, 40px) clamp(20px, 4vw, 86px);
+}
+
+/* A box that covers the screen at the wall image's true shape, standing on its
+   foot, so anything placed on the image (the ledge) stays lined up with it. */
+.wall-fit {
+  position: sticky;
+  top: var(--header);
+  height: var(--frame);
+  container-type: size;
+  overflow: hidden;
+}
+
+.wall-fit__box {
+  --w: max(100cqw, calc(100cqh * var(--wall-ar)));
+  position: absolute;
+  bottom: 0;
+  left: calc(50cqw - var(--w) / 2);
+  width: var(--w);
+  aspect-ratio: var(--wall-ar);
+}
+
+.wall-fit__box img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Type */
+.poster {
+  font-family: var(--font-poster);
+  font-size-adjust: none;
+  font-stretch: 125%;
+  font-variation-settings: 'wdth' 125;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+  text-transform: uppercase;
+}
+
+.wall-h {
+  font-family: var(--font-poster);
+  font-size-adjust: none;
+  font-size: clamp(2rem, min(4.3vw, 7.8svh), 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+.wall-lead {
+  max-width: 52ch;
+  margin: 0;
+  font-size: clamp(1.125rem, min(1.45vw, 2.7svh), 1.4375rem);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.wl,
+.wl__in {
+  display: block;
+}
+
+/* A heading climbs out of its own line, and this room keeps its descenders whole. */
+.wl {
+  overflow: clip;
+  margin-block: -0.1em;
+  padding-block: 0.1em;
+}
+
+/* Lettering painted on the plaster: the wall's grain runs through the paint, and
+   the sun, which comes from the right, gives it a hairline edge to the left. The
+   same light falls on everything fixed to a wall. */
+.wall-h,
+.poster:not(.site-end__mark),
+.case-name,
+.case-stats dd,
+.page-closing,
+.testimonial blockquote {
+  filter: drop-shadow(-1px 1.5px 0.6px var(--edge));
+}
+
+.wall-h .wl__in,
+.poster .wl__in,
+.case-name,
+.case-stats dd,
+.page-closing,
+.testimonial blockquote {
+  background: url('/walls/plaster-grain.webp') 0 0 / 520px auto, var(--ink);
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-blend-mode: soft-light;
+  color: transparent;
+  text-shadow: none;
+}
+
+/* A picture hung on the wall: a slim dark frame, a cream mount and a shadow
+   thrown down and to the left. */
+.wall-frame {
+  --rail: clamp(6px, 0.7vw, 11px);
+  --mount: clamp(8px, 1.1vw, 18px);
+  position: relative;
+  border: var(--rail) solid #1d1712;
+  padding: var(--mount);
+  background: var(--wall-cream);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5),
+    inset 2px -2px 5px rgba(60, 40, 20, 0.28),
+    0 0 0 1px rgba(255, 240, 220, 0.14),
+    -18px 22px 34px rgba(12, 6, 2, 0.42),
+    -5px 6px 9px rgba(12, 6, 2, 0.34);
+}
+
+.wall-frame img {
+  border: 1px solid rgba(40, 30, 20, 0.4);
+}
+
+.wall-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 26px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    translate var(--motion-ui, 200ms) ease,
+    background-color var(--motion-ui, 200ms) ease;
+}
+
+.wall-btn:hover {
+  translate: 0 -2px;
+}
+
+.wall-btn--solid {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.wall-btn--line {
+  border: 2px solid var(--ink);
+  color: var(--ink);
+}
+
+.wall-btn--line:hover {
+  background: rgba(127, 127, 127, 0.14);
+}
+
+/* Hero */
+.hero-scene {
+  --ledge: 83.3%;
+  --takeover-plate: #0b1a2e;
+}
+
+.hero-scene .scene__frame {
+  overflow: hidden;
+  height: var(--frame);
+}
+
+.hero-ledge {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero-ledge .wall-fit {
+  position: absolute;
+  inset: 0;
+  height: auto;
+}
+
+.hero-ledge img {
+  clip-path: inset(var(--ledge) 0 0 0);
+}
+
+.hero-copy {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  bottom: 0;
+  left: clamp(20px, 4vw, 86px);
+  display: flex;
+  width: 43vw;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(14px, 3svh, 28px);
+  padding-bottom: 13svh;
+}
+
+.hero-copy h1 {
+  font-size: clamp(2.25rem, min(3.85vw, 7.4svh), 5.25rem);
+}
+
+.hero-copy h1 .wl {
+  white-space: nowrap;
+}
+
+.hero-copy h1 em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.hero-copy .wall-lead {
+  max-width: 34ch;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.hero-trust {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.hero-strip {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  animation: hero-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  pointer-events: none;
+}
+
+/* The columns run on past the right of the screen, ready to slide across. */
+.hero-band {
+  --gap: 1.1vw;
+  --col: calc((48vw - 2 * var(--gap)) / 3);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(52vw - clamp(20px, 3vw, 64px) - var(--gap) / 2);
+  display: flex;
+  will-change: transform;
+}
+
+.hero-col {
+  position: relative;
+  width: calc(var(--col) + var(--gap));
+  flex: none;
+  padding-inline: calc(var(--gap) / 2);
+  pointer-events: auto;
+  will-change: transform;
+}
+
+/* Solid once the columns cover the screen, so nothing shows through as they fade.
+   A pixel wider than the column, so no hairline opens between two of them, and
+   taller, so no edge shows as the column drifts. */
+.hero-col__plate {
+  position: absolute;
+  inset: -12% -1px;
+  background: var(--takeover-plate);
+  opacity: 0;
+}
+
+.hero-dim {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: var(--takeover-plate);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-run {
+  position: relative;
+  animation: hero-up var(--t) linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.hero-run--rev {
+  animation-direction: reverse;
+}
+
+.hero-strip[data-paused='true'] .hero-run {
+  animation-play-state: paused;
+}
+
+@media (hover: hover) {
+  .hero-band:has(.hero-col:hover) .hero-run {
+    animation-play-state: paused;
+  }
+}
+
+.hero-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1792 / 2400;
+  margin-bottom: var(--gap);
+  border-radius: 10px;
+  box-shadow: -10px 14px 24px rgba(60, 40, 10, 0.34);
+}
+
+.hero-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Hover shows only this chip: nothing that moves the image, so a card passing
+   under a resting cursor during a scroll cannot flicker. */
+.hero-card__go {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: var(--wall-cream);
+  color: var(--wall-blue);
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.hero-card:hover .hero-card__go,
+.hero-card:focus-visible .hero-card__go,
+.work-card:hover .hero-card__go,
+.work-card:focus-visible .hero-card__go {
+  opacity: 1;
+}
+
+@keyframes hero-up {
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+}
+
+.hero-pause {
+  position: absolute;
+  z-index: 5;
+  right: 16px;
+  bottom: 20svh;
+  display: flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(21, 58, 102, 0.85);
+  color: var(--wall-cream);
+}
+
+/* Globe */
+.globe-scene {
+  --earth: min(38vw, 72svh);
+}
+
+/* The earth floats clear of the wall, so its shadow falls well away from it,
+   down and to the left, away from the sun. */
+.globe-float {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: clamp(20px, 7vw, 130px);
+  width: var(--earth);
+  height: var(--earth);
+  margin-top: calc(var(--earth) / -2);
+}
+
+.globe-shadow {
+  position: absolute;
+  inset: -4%;
+  background: radial-gradient(closest-side, rgba(9, 34, 66, 0.58) 62%, rgba(9, 34, 66, 0) 100%);
+  opacity: 0;
+  transform: translate(-15%, 14%);
+}
+
+.globe-float.is-ready .globe-shadow {
+  opacity: 1;
+}
+
+.globe-bob {
+  position: absolute;
+  inset: 0;
+  animation: globe-bob 7s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes globe-bob {
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+/* At this camera the earth fills 0.72 of the canvas. */
+.globe-canvas {
+  position: absolute;
+  inset: calc(var(--earth) * -0.194);
+}
+
+/* The drag control sets touch-action: none on the canvas wrapper. A vertical
+   swipe has to stay with the page, so only a sideways swipe spins the earth. */
+.globe-canvas * {
+  touch-action: pan-y !important;
+}
+
+.globe-canvas canvas {
+  cursor: grab;
+}
+
+.globe-canvas canvas:active {
+  cursor: grabbing;
+}
+
+/* The body spans the frame, so it has to let drags through to the earth. */
+.globe-scene .wall__body {
+  pointer-events: none;
+}
+
+.globe-copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: min(44vw, 620px);
+  flex-direction: column;
+  gap: clamp(14px, 3svh, 24px);
+}
+
+.globe-copy .wall-lead {
+  font-weight: 600;
+}
+
+.flag-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 16px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.flag-list li {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.flag-list img {
+  width: 30px;
+  height: 21px;
+  flex: none;
+  border-radius: 3px;
+  box-shadow: -2px 2px 3px rgba(9, 34, 66, 0.35);
+  object-fit: cover;
+}
+
+/* Services: every service on show at once, each with what it includes. */
+.services-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px clamp(32px, 4vw, 64px);
+}
+
+/* Beside the heading, on the plain wall, clear of the window's shadow. */
+.services-head .wall-lead {
+  max-width: 36ch;
+  color: #0e2645;
+  font-weight: 600;
+}
+
+.service-trio {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 22px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service-card {
+  display: flex;
+  min-width: 0;
+  overflow: hidden;
+  flex-direction: column;
+  border-radius: 14px;
+  box-shadow: -14px 18px 32px rgba(60, 36, 0, 0.28);
+  text-shadow: none;
+}
+
+.service-card--blue {
+  --ink: var(--wall-cream);
+  --on-ink: var(--wall-blue);
+  background: var(--wall-blue);
+  color: var(--wall-cream);
+}
+
+.service-card--red {
+  --ink: var(--wall-cream);
+  --on-ink: var(--wall-red);
+  background: var(--wall-red);
+  color: var(--wall-cream);
+}
+
+.service-card--cream {
+  --ink: var(--wall-blue);
+  --on-ink: var(--wall-cream);
+  background: var(--wall-cream);
+  color: var(--wall-blue);
+}
+
+.service-card__art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3.5 / 1;
+  object-fit: cover;
+}
+
+/* The laptop sits low in this picture. */
+.service-card--blue .service-card__art {
+  object-position: 50% 62%;
+}
+
+.service-card__in {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(6px, 1.2svh, 12px);
+  padding: clamp(14px, min(1.7vw, 2.6svh), 26px);
+}
+
+.service-card h3 {
+  font-family: var(--font-poster);
+  font-size: clamp(1.375rem, min(2vw, 3.6svh), 2.125rem);
+  font-size-adjust: none;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+}
+
+.service-card p {
+  margin: 0;
+  font-size: clamp(1rem, min(1.15vw, 2.3svh), 1.1875rem);
+  line-height: 1.38;
+}
+
+.service-card .service-list {
+  max-width: none;
+  margin-block: 2px 6px;
+}
+
+.service-card .wall-btn {
+  min-height: 46px;
+  margin-top: auto;
+}
+
+/* What is included, one numbered row at a time. */
+.service-list {
+  display: flex;
+  width: 100%;
+  max-width: 520px;
+  flex-direction: column;
+  margin: 0 0 4px;
+  padding: 0;
+  list-style: none;
+}
+
+.service-list li {
+  border-top: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+}
+
+.service-list li:last-child {
+  border-bottom: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+}
+
+.service-row {
+  display: flex;
+  min-height: clamp(36px, 4.6svh, 46px);
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  font-size: clamp(1rem, 2.3svh, 1.125rem);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.service-row__no {
+  flex: none;
+  width: 24px;
+  font-family: var(--font-poster);
+  font-size: 0.8125rem;
+  font-size-adjust: none;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  opacity: 0.72;
+}
+
+.service-row__label {
+  min-width: 0;
+  flex: 1;
+}
+
+.service-row__icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.service-row__icon--brand {
+  fill: currentColor;
+}
+
+.service-row__go {
+  width: 16px;
+  height: 16px;
+  transition: translate 200ms ease;
+}
+
+.service-row:hover .service-row__go {
+  translate: 4px 0;
+}
+
+.brand-logo {
+  display: block;
+  height: var(--logo-h, 22px);
+  aspect-ratio: var(--ratio);
+  background: currentColor;
+  -webkit-mask: var(--logo) center / contain no-repeat;
+  mask: var(--logo) center / contain no-repeat;
+}
+
+.client-strip {
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.client-strip li {
+  flex: none;
+}
+
+.client-strip li:nth-child(n + 8) {
+  display: none;
+}
+
+.client-strip li:nth-child(1),
+.client-strip li:nth-child(4),
+.client-strip li:nth-child(5) {
+  --logo-h: 14px;
+}
+
+.client-strip li:nth-child(3) {
+  --logo-h: 18px;
+}
+
+/* Case studies */
+.case-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(24px, 5vw, 96px);
+}
+
+/* 4:3 on every screen, so the picture made for it is never cut. A short screen
+   makes the whole frame smaller rather than trimming it. */
+.case-shot {
+  --tall: min(58svh, 560px);
+  display: block;
+  overflow: hidden;
+  width: min(100%, calc(var(--tall) * 4 / 3));
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  background: #051226;
+  box-shadow: -16px 22px 36px rgba(4, 12, 26, 0.5);
+}
+
+.case-shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.case-copy {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2svh, 20px);
+}
+
+.case-kicker {
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.case-name {
+  font-family: var(--font-poster);
+  font-size: clamp(1.75rem, min(3.4vw, 6svh), 3.5rem);
+  font-size-adjust: none;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+}
+
+.case-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+}
+
+.case-stats div {
+  border-top: 2px solid var(--wall-yellow);
+  padding-top: 12px;
+}
+
+.case-stats dd {
+  margin: 0;
+  font-family: var(--font-poster);
+  font-size: clamp(1.625rem, min(3vw, 5.4svh), 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.case-stats dt {
+  margin-top: 6px;
+  font-size: 1.0625rem;
+  line-height: 1.3;
+}
+
+.case-link {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  font-weight: 700;
+}
+
+.testimonial {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(24px, 6vw, 110px);
+}
+
+.testimonial blockquote {
+  margin: 0;
+  font-family: var(--font-poster);
+  font-size: clamp(1.625rem, min(3.4vw, 6.4svh), 3.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+
+.testimonial figcaption {
+  margin-top: 20px;
+  font-size: 1.0625rem;
+}
+
+.testimonial figcaption strong {
+  display: block;
+  font-weight: 700;
+}
+
+/* The client's video in a clean card. It plays where it stands. */
+.client-video {
+  position: relative;
+  overflow: hidden;
+  height: min(66svh, 600px);
+  aspect-ratio: 4 / 5;
+  border-radius: 14px;
+  background: #0a1526;
+  box-shadow: -14px 18px 32px rgba(4, 12, 26, 0.45);
+}
+
+.client-video button {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  background: none;
+  color: var(--wall-cream);
+  cursor: pointer;
+  text-shadow: none;
+}
+
+.client-video button::after {
+  position: absolute;
+  background: linear-gradient(to top, rgba(6, 14, 28, 0.78), transparent 34%);
+  content: '';
+  inset: 0;
+}
+
+.client-video img,
+.client-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+  object-position: 50% 12%;
+}
+
+.client-video__watch {
+  position: absolute;
+  z-index: 1;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.client-video__play {
+  display: flex;
+  width: 52px;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--wall-cream);
+  color: var(--wall-blue);
+  transition: scale 200ms ease;
+}
+
+.client-video button:hover .client-video__play {
+  scale: 1.08;
+}
+
+/* Businesses we've built with */
+/* Each tile shows the whole picture, so its size comes from `--tile`, the tile's
+   height. */
+.work-grid {
+  --tile: min(26svh, 18vw);
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  justify-content: space-between;
+  gap: clamp(12px, 2svh, 22px) 12px;
+}
+
+.work-card {
+  display: block;
+  width: calc(var(--tile) * 0.747);
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.work-card__shot {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: -8px 10px 18px rgba(21, 40, 70, 0.26);
+}
+
+.work-card__shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 760 / 1017;
+}
+
+.work-grid--all {
+  grid-template-columns: repeat(4, auto);
+  justify-content: center;
+  column-gap: clamp(24px, 5vw, 96px);
+}
+
+.work-card__name {
+  display: block;
+  overflow: hidden;
+  margin-top: 8px;
+  font-size: 1rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.work-card__role {
+  display: block;
+  overflow: hidden;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Founder */
+.founder-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  grid-template-rows: auto auto;
+  column-gap: clamp(32px, 5vw, 96px);
+  row-gap: clamp(12px, 2.4svh, 24px);
+}
+
+.founder-head {
+  display: flex;
+  flex-direction: column;
+  align-self: end;
+  gap: 8px;
+}
+
+.founder-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(12px, 2.4svh, 22px);
+}
+
+.founder-name {
+  font-size: clamp(3rem, min(7.4vw, 14svh), 7.5rem);
+}
+
+/* The frame comes down from above the wall, so it stays hidden until then. */
+.founder-scene .scene__stage,
+.scene:has(.page-photo) .scene__stage {
+  overflow: clip;
+}
+
+.founder-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 32px;
+}
+
+/* His name in his own hand, drawn in with the frame. */
+.autograph {
+  display: block;
+  height: clamp(44px, 8svh, 72px);
+  aspect-ratio: 2.907;
+  background: currentColor;
+  -webkit-mask: url('/founder/autograph.svg') center / contain no-repeat;
+  mask: url('/founder/autograph.svg') center / contain no-repeat;
+}
+
+.founder-photo {
+  width: fit-content;
+  grid-area: 1 / 2 / 3 / 3;
+  align-self: center;
+  justify-self: end;
+  margin: 0;
+}
+
+.founder-photo img {
+  display: block;
+  width: auto;
+  height: min(68svh, 600px);
+}
+
+/* The first section is there already. */
+.hero-scene::after {
+  height: calc(var(--rest) + var(--takeover));
+}
+
+/* Footer wall: one section from the call to action down to the ledge. On Home it
+   rises over the last section as the page scrolls; inner pages just run into it. */
+.site-end {
+  --ledge-foot: calc(100vw / var(--wall-ar) * 0.168);
+  --mark: min(26vw, 38svh);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  background: #c35720;
+  color: var(--ink);
+  text-shadow: -0.5px 0.6px 0.4px var(--edge);
+}
+
+.page-depth:not(:has(.scene--plain)) .site-end {
+  margin-top: calc(-1 * var(--cross));
+}
+
+/* Stands on the foot of the footer, so the ledge stays at the very bottom. */
+.site-end__wallpaper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+.site-end__cta {
+  position: relative;
+  display: flex;
+  min-height: var(--frame);
+}
+
+.site-end__cta .wall__body {
+  align-items: center;
+  text-align: center;
+}
+
+.site-end__cta h2 {
+  font-size: clamp(2.5rem, min(6.4vw, 12svh), 7rem);
+}
+
+.site-end__brand {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding: clamp(20px, 5svh, 56px) clamp(20px, 4vw, 86px) 0;
+}
+
+.site-end__brand a {
+  display: block;
+  width: clamp(160px, 14vw, 200px);
+}
+
+.site-end__brand img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.site-end__links {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 100%;
+  max-width: var(--container-max);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 24px 32px;
+  color: #fff;
+  margin-inline: auto;
+  padding: clamp(20px, 4svh, 40px) clamp(20px, 4vw, 86px) clamp(14px, 2.6svh, 28px);
+  text-shadow: 0 1px 2px rgba(58, 20, 2, 0.55);
+}
+
+.site-end__meta {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  max-width: var(--container-max);
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-inline: auto;
+  padding: 0 clamp(20px, 4vw, 86px);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(58, 20, 2, 0.55);
+}
+
+.site-end__meta p {
+  margin: 0;
+}
+
+.site-end__meta div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.site-end__meta a {
+  display: flex;
+  width: 30px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+
+.site-end__links h3 {
+  margin-bottom: 10px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-size-adjust: none;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.site-end__links ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-end__links a {
+  color: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+.site-end__links a:hover {
+  text-decoration: underline;
+}
+
+/* Room for the letters, which stand on the ledge, 16.8% up from the wall's foot. */
+.site-end__base {
+  position: relative;
+  height: calc(var(--mark) * 0.92 + var(--ledge-foot));
+  margin-top: clamp(16px, 3svh, 32px);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.site-end__mark {
+  position: absolute;
+  right: 0;
+  bottom: var(--ledge-foot);
+  left: 0;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  color: var(--wall-cream);
+  font-size: var(--mark);
+  letter-spacing: -0.03em;
+  line-height: 0.8;
+  text-shadow: none;
+  user-select: none;
+}
+
+/* Every client's name runs through the letters, tone on tone. */
+.site-end__mark span {
+  display: block;
+  padding-top: 0.06em;
+  background: var(--wall-cream) url('/footer/client-letters.webp') 0 0 / 62vw auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.site-end__mark span:nth-child(2) {
+  background-position: -14vw -3vw;
+}
+
+.site-end__mark span:nth-child(3) {
+  background-position: -29vw -7vw;
+}
+
+.site-end__mark span:nth-child(4) {
+  background-position: -46vw -11vw;
+}
+
+.site-end__legal {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 24px;
+  padding: 12px clamp(20px, 4vw, 86px);
+  background: #24120a;
+  color: var(--wall-cream);
+  font-size: 0.8125rem;
+}
+
+.site-end__legal a {
+  color: inherit;
+}
+
+.site-end__legal div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+}
+
+@media (max-width: 1100px) {
+  .client-strip li:nth-child(n + 5) {
+    display: none;
+  }
+
+  .work-grid,
+  .work-grid--all {
+    --tile: min(20svh, 27vw);
+    grid-template-columns: repeat(3, auto);
+    justify-content: space-evenly;
+  }
+
+  .work-card:nth-child(n + 10) {
+    display: none;
+  }
+
+  .work-grid--all .work-card:nth-child(n + 10) {
+    display: block;
+  }
+
+}
+
+@media (max-width: 900px) {
+  :root {
+    --wall-ar: 0.5581;
+  }
+
+  :root {
+    --takeover: 130svh;
+  }
+
+  .hero-scene .scene__frame {
+    flex-direction: column;
+  }
+
+  .hero-copy {
+    position: static;
+    width: auto;
+    gap: 14px;
+    padding: clamp(18px, 3.4svh, 36px) 20px 18px;
+  }
+
+  .hero-actions .wall-btn {
+    min-height: 48px;
+    flex: 1;
+    padding: 0 14px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(1.5rem, min(7.5vw, 5.6svh), 4.25rem);
+  }
+
+  /* The columns start under the text and run on past the foot of the screen, a full
+     screen tall, ready to rise over the text. */
+  .hero-strip {
+    position: relative;
+    inset: auto;
+    min-height: 0;
+    flex: 1;
+    overflow: visible;
+  }
+
+  .hero-band {
+    --gap: 10px;
+    top: 0;
+    right: 15px;
+    bottom: auto;
+    left: 15px;
+    overflow: clip;
+    height: var(--frame);
+  }
+
+  .hero-col {
+    width: auto;
+    min-width: 0;
+    flex: 1 1 0;
+    padding-inline: 5px;
+  }
+
+  .hero-col:nth-child(n + 4) {
+    display: none;
+  }
+
+  /* The same wall again in front of the columns, so they fade into it. */
+  .hero-ledge {
+    z-index: 3;
+  }
+
+  .hero-ledge img {
+    clip-path: none;
+    -webkit-mask-image: linear-gradient(to top, #000 8%, transparent 42%);
+    mask-image: linear-gradient(to top, #000 8%, transparent 42%);
+  }
+
+  .hero-card {
+    border-radius: 8px;
+  }
+
+  .hero-card__go {
+    display: none;
+  }
+
+  .hero-trust {
+    position: absolute;
+    z-index: 5;
+    right: 88px;
+    bottom: 18px;
+    left: 20px;
+  }
+
+  .hero-pause {
+    right: 26px;
+    bottom: 88px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .globe-scene {
+    --earth: min(82vw, 42svh);
+  }
+
+  .globe-scene .wall__body {
+    justify-content: flex-start;
+  }
+
+  .globe-float {
+    top: auto;
+    right: 50%;
+    bottom: 4svh;
+    margin-top: 0;
+    margin-right: calc(var(--earth) / -2);
+  }
+
+  .globe-copy {
+    width: 100%;
+  }
+
+  .flag-list li {
+    font-size: 0.8125rem;
+  }
+
+  .flag-list img {
+    width: 26px;
+    height: 18px;
+  }
+
+  .service-trio {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .service-card__art {
+    display: none;
+  }
+
+  .case-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .case-shot {
+    --tall: min(30svh, 320px);
+    justify-self: center;
+  }
+
+  .testimonial {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+
+  .client-video {
+    height: 40svh;
+  }
+
+  .site-end__links {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .site-end__legal {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .site-end__legal div {
+    justify-content: center;
+  }
+}
+
+/* On a laptop the pictures take what the screen can spare, and a short screen sets the
+   heading on one line to spare more. */
+@media (min-width: 901px) {
+  .service-card__art {
+    max-height: 19svh;
+    aspect-ratio: 2.6 / 1;
+  }
+
+  .service-row {
+    min-height: clamp(34px, 4svh, 42px);
+  }
+}
+
+@media (min-width: 901px) and (max-height: 880px) {
+  .services-head {
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px clamp(24px, 3vw, 48px);
+  }
+
+  .services-head .wall-h {
+    flex: none;
+    font-size: clamp(2rem, 5.6svh, 3rem);
+  }
+
+  .services-head .wl {
+    display: inline-block;
+    margin-right: 0.26em;
+  }
+
+  .services-head .wall-lead {
+    max-width: 40ch;
+  }
+}
+
+/* On a phone the three cards sit in a row running off the side of the screen, and
+   scrolling moves along it (see useWallMotion). `--deck` is the scroll that takes.
+   Without motion they stay in a column. */
+.service-tabs {
+  display: none;
+}
+
+@media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
+  :root {
+    --deck: 190svh;
+  }
+
+  .services-scene:not(.scene--plain)::after {
+    height: calc(var(--rest) + 2 * var(--cross) + var(--deck));
+  }
+
+  .services-scene .wall__body {
+    justify-content: flex-start;
+    gap: clamp(8px, 1.6svh, 16px);
+    overflow-x: clip;
+  }
+
+  .service-tabs {
+    position: relative;
+    display: grid;
+    flex: none;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 26%, transparent);
+  }
+
+  .service-tabs button {
+    min-height: 40px;
+    color: var(--ink);
+    font-size: 0.9375rem;
+    font-weight: 700;
+  }
+
+  .service-tabs__mark {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: calc(100% / 3);
+    height: 3px;
+    background: var(--ink);
+  }
+
+  .service-trio {
+    position: relative;
+    display: flex;
+    min-height: 0;
+    flex: 1;
+    gap: 12px;
+    touch-action: pan-y;
+  }
+
+  .service-card {
+    flex: 0 0 calc(100% - 34px);
+    box-shadow: -6px 10px 20px rgba(60, 36, 0, 0.24);
+  }
+
+  /* The picture takes whatever height the card has spare. */
+  .service-card__art {
+    display: block;
+    min-height: 0;
+    flex: 1 1 0;
+    aspect-ratio: auto;
+  }
+
+  .service-card__in {
+    flex: none;
+  }
+}
+
+/* A phone gives the height to the picture. The numbered list already says what the
+   summary would, and the tabs that there are three. */
+@media (max-width: 639px) and (prefers-reduced-motion: no-preference) {
+  .services-head .wall-lead,
+  .service-card p {
+    display: none;
+  }
+}
+
+/* A short screen keeps only what a card can't do without, so it still fits. */
+@media (max-width: 900px) and (max-height: 600px) and (prefers-reduced-motion: no-preference) {
+  .services-head .wall-lead,
+  .service-card p,
+  .service-card__art {
+    display: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .wall-h {
+    font-size: clamp(1.625rem, min(8.2vw, 5.4svh), 2.75rem);
+  }
+
+  /* These phone walls end in a stone ledge, so words stop above it. */
+  .scene:not(.scene--plain)[data-wall='founder'] .wall__body,
+  .scene:not(.scene--plain)[data-wall='green'] .wall__body {
+    padding-bottom: calc(clamp(14px, 3svh, 40px) + 6svh);
+  }
+
+  .client-strip {
+    display: none;
+  }
+
+  .work-grid,
+  .work-grid--all {
+    --tile: min(17.5svh, 36vw);
+    row-gap: 10px;
+  }
+
+  .work-card__name {
+    margin-top: 4px;
+    font-size: 0.75rem;
+  }
+
+  .work-card__role {
+    display: none;
+  }
+
+  .founder-top {
+    grid-template-columns: minmax(0, 1fr) 39%;
+    grid-template-rows: auto auto;
+    column-gap: 16px;
+    row-gap: 18px;
+  }
+
+  .founder-head {
+    align-self: center;
+  }
+
+  .founder-copy {
+    grid-area: 2 / 1 / 3 / 3;
+  }
+
+  .founder-photo {
+    --mount: 6px;
+    --rail: 5px;
+    width: 100%;
+    grid-area: 1 / 2 / 2 / 3;
+  }
+
+  .founder-photo img {
+    width: 100%;
+    height: auto;
+  }
+
+  .founder-name {
+    font-size: 10.6vw;
+  }
+
+  .site-end__links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 16px;
+  }
+
+  .site-end__links a {
+    font-size: 0.875rem;
+  }
+
+  .site-end__legal {
+    padding-block: 8px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Short laptop screens give the logos' room to the panel. */
+@media (max-height: 1000px) {
+  .client-strip {
+    display: none;
+  }
+}
+
+/* A tablet held sideways: fewer rows, more to a row. */
+@media (min-width: 901px) and (max-width: 1100px) and (max-height: 820px) {
+  .work-grid,
+  .work-grid--all {
+    --tile: min(27svh, 22vw);
+    grid-template-columns: repeat(4, auto);
+    justify-content: space-between;
+  }
+
+  .work-card:nth-child(n + 9) {
+    display: none;
+  }
+}
+
+@media (max-height: 700px) and (max-width: 639px) {
+  .case-shot {
+    --tall: 20svh;
+  }
+
+  .work-grid,
+  .work-grid--all {
+    --tile: 15svh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene {
+    margin-top: 0;
+  }
+
+  .scene::after {
+    display: none;
+  }
+
+  .scene__stage {
+    position: relative;
+    top: auto;
+    pointer-events: auto;
+    will-change: auto;
+  }
+
+  .page-depth:not(:has(.scene--plain)) .site-end {
+    margin-top: 0;
+  }
+
+  .hero-run,
+  .hero-strip,
+  .globe-bob {
+    animation: none;
+  }
+
+  .hero-col:nth-child(n + 4) {
+    display: none;
+  }
+
+  .hero-scene::after,
+  .globe-scene:not(.scene--plain)::after {
+    display: none;
+  }
+
+  .globe-scene:not(.scene--plain) {
+    margin-top: 0;
+  }
+
+  .hero-pause {
+    display: none;
+  }
+
+}

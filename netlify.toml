@@ -1,0 +1,8 @@
+[build]
+  command = "bash build-site.sh"
+  publish = "copy-of-main-copy-of-frame-n-flow-media/dist"
+  # Always build, so a change to only one of the two sites still deploys.
+  ignore = "false"
+
+[build.environment]
+  NODE_VERSION = "22"

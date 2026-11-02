@@ -27,6 +27,7 @@ export default defineConfig(({ mode }) => {
     ssr: {
       noExternal: ['react-router-dom'],
     },
-    // base removed for Netlify deployment
+    // The old site lives under /v1. The new site owns the root of the domain.
+    base: '/v1/',
   };
 });

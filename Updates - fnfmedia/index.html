@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/brand/fnf-logo-512.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/brand/fnf-logo-512.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100,400..900;125,800..900&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100,400..900;125,800..900&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <script>
+      // Each page's first pictures start loading now, not after the page's code has run.
+      ;(function () {
+        var phone = matchMedia('(max-width: 900px)').matches
+        var home = ['/walls/hero-' + (phone ? 'phone' : 'laptop') + '.webp']
+        if (phone) home.push('/portfolio/01-the-grafton-vault.webp', '/portfolio/02-therehva.webp', '/portfolio/05-al-mulla-carpentry.webp', '/portfolio/03-zhai-farms.webp')
+        var pictures = {
+          '/': home,
+          '/web-development': ['/pages/web-hero.webp'],
+          '/custom-shopify-development': ['/pages/shopify-hero.webp'],
+          '/marketing': ['/pages/marketing-hero.webp'],
+          '/seo-aeo': ['/pages/seo-search.webp'],
+          '/blog': ['/pages/blog-hero.webp'],
+          '/offers/website-25k': ['/pages/offer-website.webp'],
+        }
+        ;(pictures[location.pathname] || []).forEach(function (href) {
+          var link = document.createElement('link')
+          link.rel = 'preload'
+          link.as = 'image'
+          link.href = href
+          link.fetchPriority = 'high'
+          document.head.appendChild(link)
+        })
+      })()
+    </script>
+    <script>
+      // GA4 and Tag Manager, the same IDs as the old site. Hits queue here and the tags load after the page, so they don't slow it.
+      ;(function () {
+        window.dataLayer = window.dataLayer || []
+        window.gtag = function () {
+          dataLayer.push(arguments)
+        }
+        gtag('js', new Date())
+        // Seo.tsx reports each page, including the first.
+        gtag('config', 'G-MGKYJ45STW', { send_page_view: false, cookie_flags: 'SameSite=None;Secure' })
+        dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
+        addEventListener('load', function () {
+          setTimeout(function () {
+            ;['gtag/js?id=G-MGKYJ45STW', 'gtm.js?id=GTM-TFZ3N2MC'].forEach(function (path) {
+              var script = document.createElement('script')
+              script.async = true
+              script.src = 'https://www.googletagmanager.com/' + path
+              document.head.appendChild(script)
+            })
+          }, 1500)
+        })
+      })()
+    </script>
+    <title>Best Web &amp; Marketing Studio in India | Frame n Flow Media</title>
+    <meta
+      name="description"
+      content="Frame n Flow Media is a boutique web development and marketing studio. Custom-coded and Shopify websites, driven by Meta Ads, SEO and AEO. Start your project."
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://framenflowmedia.in/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Frame n Flow Media" />
+    <meta property="og:title" content="Best Web &amp; Marketing Studio in India | Frame n Flow Media" />
+    <meta
+      property="og:description"
+      content="Frame n Flow Media is a boutique web development and marketing studio. Custom-coded and Shopify websites, driven by Meta Ads, SEO and AEO. Start your project."
+    />
+    <meta property="og:url" content="https://framenflowmedia.in/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Best Web &amp; Marketing Studio in India | Frame n Flow Media" />
+    <meta
+      name="twitter:description"
+      content="Frame n Flow Media is a boutique web development and marketing studio. Custom-coded and Shopify websites, driven by Meta Ads, SEO and AEO. Start your project."
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Frame n Flow Media",
+        "alternateName": "Frame n Flow",
+        "url": "https://framenflowmedia.in/",
+        "logo": "https://framenflowmedia.in/fnf-logo.png",
+        "description": "Frame n Flow Media is a boutique web development and marketing studio. We take on a limited number of projects at a time, build custom-coded and Shopify websites, and drive qualified traffic to them with Meta Ads, SEO and AEO. One team, one roadmap, end to end.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Hyderabad",
+          "addressRegion": "Telangana",
+          "addressCountry": "IN"
+        },
+        "areaServed": ["IN", "US", "GB", "EU"],
+        "sameAs": [
+          "https://www.instagram.com/framenflowmedia/",
+          "https://www.linkedin.com/company/frame-n-flow-media/?viewAsMember=true",
+          "https://www.youtube.com/@framenflowmedia",
+          "https://www.facebook.com/profile.php?id=61585218869613"
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-TFZ3N2MC"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe>
+    </noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -23,12 +23,12 @@ const SEO: React.FC<SEOProps> = ({
     schema
 }) => {
     const siteUrl = 'https://framenflowmedia.in';
-    let fullCanonical = canonical ? `${siteUrl}${canonical}` : siteUrl;
+    let fullCanonical = canonical ? `${siteUrl}/v1${canonical}` : `${siteUrl}/v1`;
     // Ensure trailing slash for consistency with directory-based hosting
     if (!fullCanonical.endsWith('/')) {
         fullCanonical += '/';
     }
-    const fullImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
+    const fullImage = image.startsWith('http') ? image : `${siteUrl}/v1${image}`;
 
     const defaultKeywords = "AI Marketing Studio, AI Marketing Agency, Digital Marketing USA, Marketing Agency India, Strategy First Marketing, AI Visuals, Growth Automation, Frame n Flow Media";
 

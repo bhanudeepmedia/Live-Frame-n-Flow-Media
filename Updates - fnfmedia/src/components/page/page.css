@@ -1,0 +1,1578 @@
+/* Inner pages. They use the homepage's sections, so only what is new is
+   here. Layouts stay plain: a heading, what it means, and a picture or a list. */
+
+.page-head {
+  display: flex;
+  max-width: 900px;
+  flex-direction: column;
+  gap: clamp(8px, 1.6svh, 16px);
+}
+
+/* Text on one side, a picture or a form on the other. */
+.page-split {
+  display: grid;
+  align-content: center;
+  align-items: center;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(24px, 5vw, 88px);
+}
+
+.page-split__copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(10px, 2svh, 20px);
+}
+
+.page-split__side {
+  display: flex;
+  min-width: 0;
+  justify-content: flex-end;
+}
+
+.page-art {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  height: min(72svh, 640px);
+  border-radius: 14px;
+  box-shadow: -14px 18px 32px rgba(8, 12, 24, 0.36);
+  object-fit: cover;
+  object-position: 50% 35%;
+}
+
+.page-hero__title {
+  font-size: clamp(2.25rem, min(5.2vw, 9.6svh), 5.75rem);
+}
+
+.page-hero__name {
+  font-size: clamp(3rem, min(7.4vw, 14svh), 7.5rem);
+}
+
+.page-offer__title {
+  font-size: clamp(1.75rem, min(3.6vw, 6.8svh), 3.75rem);
+}
+
+.page-kicker {
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.page-note {
+  max-width: 54ch;
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+
+.page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+}
+
+.page-checks {
+  display: flex;
+  max-width: 58ch;
+  flex-direction: column;
+  gap: clamp(8px, 1.4svh, 14px);
+  margin: 0;
+  padding: 0;
+  font-size: clamp(1.0625rem, 2.4svh, 1.1875rem);
+  line-height: 1.42;
+  list-style: none;
+}
+
+.page-checks li {
+  display: flex;
+  gap: 10px;
+}
+
+.page-checks svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent);
+  stroke-width: 3;
+}
+
+.page-checks--inline {
+  max-width: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  font-weight: 600;
+}
+
+.page-closing {
+  max-width: 28ch;
+  margin: 0;
+  font-family: var(--font-poster);
+  font-size: clamp(1.5rem, min(3vw, 5.6svh), 3rem);
+  font-size-adjust: none;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.page-closing em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.page-story {
+  display: grid;
+  max-width: 1040px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 clamp(32px, 4vw, 64px);
+  font-size: clamp(1rem, 2.4svh, 1.125rem);
+  line-height: 1.55;
+}
+
+.page-story p {
+  margin: 0 0 12px;
+}
+
+.page-photo {
+  width: fit-content;
+  margin: 0;
+}
+
+.page-photo img {
+  display: block;
+  width: auto;
+  max-width: none;
+  height: min(60svh, 520px);
+}
+
+/* Takes the photo's width instead of setting it. */
+.page-photo figcaption {
+  width: 0;
+  min-width: 100%;
+  padding-top: 8px;
+  color: var(--wall-blue);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: none;
+}
+
+/* The earth beside the text on Who We Work With, in the flow of the hero. */
+.page-hero .globe-float {
+  --earth: min(34vw, 60svh);
+  position: relative;
+  top: auto;
+  right: auto;
+  margin: 0 3vw 0 0;
+}
+
+/* Websites running up beside the portfolio's title. */
+.portfolio-hero .page-split {
+  align-items: stretch;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  padding-block: 0 !important;
+}
+
+.portfolio-hero .page-split__copy {
+  justify-content: center;
+  padding-block: clamp(32px, 6vw, 80px);
+}
+
+.site-wall {
+  --gap: clamp(10px, 1.2vw, 18px);
+  display: grid;
+  width: 100%;
+  height: min(78svh, 760px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap);
+  overflow: hidden;
+}
+
+@media (hover: hover) {
+  .site-wall:hover .hero-run {
+    animation-play-state: paused;
+  }
+}
+
+.site-wall:focus-within .hero-run {
+  animation-play-state: paused;
+}
+
+.site-card {
+  display: block;
+  padding-bottom: var(--gap);
+}
+
+.site-card__shot {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 1792 / 2400;
+  border-radius: 10px;
+}
+
+.site-card__shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.site-card:hover .hero-card__go,
+.site-card:focus-visible .hero-card__go {
+  opacity: 1;
+}
+
+.work-note {
+  max-width: 68ch;
+  margin: clamp(12px, 2vw, 28px) 0 0;
+  padding-left: 18px;
+  border-left: 4px solid var(--accent);
+  font-size: clamp(1.125rem, 1.4vw, 1.3125rem);
+  line-height: 1.45;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(10px, 1.6vw, 22px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 1100px) {
+  .review-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .portfolio-hero .page-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .portfolio-hero .page-split__copy {
+    padding-block: 32px 0;
+  }
+
+  .portfolio-hero .site-wall {
+    height: 70svh;
+  }
+}
+
+@media (max-width: 639px) {
+  .portfolio-hero .site-wall {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    height: 56svh;
+  }
+
+  .review-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-wall {
+    height: auto;
+  }
+
+  .site-card[aria-hidden='true'] {
+    display: none;
+  }
+}
+
+/* Start Your Project: the ways to reach us, and the call booking beside them. */
+.contact-ways {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contact-ways a,
+.contact-ways button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+
+.contact-ways svg {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  padding: 12px;
+  border-radius: 6px;
+  background: var(--wall-blue);
+  color: var(--wall-cream);
+}
+
+.contact-ways strong {
+  display: block;
+  font-weight: 800;
+}
+
+.contact-book {
+  width: 100%;
+  max-width: 560px;
+  gap: 14px;
+}
+
+.contact-book h2 {
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+}
+
+.contact-book .wall-btn {
+  justify-content: center;
+  gap: 8px;
+}
+
+.contact-book .page-card__meta {
+  text-align: center;
+}
+
+/* On a pale tint, plain white cards with a soft edge. */
+.scene--plain .page-card,
+.scene--plain .page-sheet,
+.scene--plain .offer-form {
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgba(21, 58, 102, 0.08),
+    0 10px 24px rgba(21, 58, 102, 0.07);
+  color: var(--wall-blue);
+}
+
+.scene--plain .page-art {
+  height: auto;
+  aspect-ratio: 4 / 5;
+  box-shadow: 0 14px 32px rgba(21, 58, 102, 0.16);
+}
+
+.scene--plain .page-hero__title {
+  font-size: clamp(2.25rem, 5.2vw, 5rem);
+}
+
+/* A hero starts just under the header, and its picture fits the first screen whole. */
+.scene--plain.page-hero .scene__frame > .wall__body {
+  padding-block: clamp(20px, 2.4vw, 36px) clamp(40px, 5vw, 72px);
+}
+
+@media (min-width: 901px) {
+  .page-hero .page-split:has(.page-art) {
+    align-items: start;
+  }
+
+  .scene--plain.page-hero .page-art {
+    width: auto;
+    height: min(100svh - var(--header) - 112px, 620px);
+  }
+}
+
+/* Cards */
+.page-cards {
+  display: grid;
+  grid-template-columns: repeat(var(--columns, 3), minmax(0, 1fr));
+  gap: clamp(10px, 1.6vw, 22px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: clamp(6px, 1.2svh, 12px);
+  padding: clamp(14px, min(2.2vw, 3.4svh), 32px);
+  border-radius: 12px;
+  background: var(--wall-cream);
+  box-shadow: -10px 12px 24px rgba(20, 20, 10, 0.24);
+  color: var(--wall-blue);
+  text-decoration: none;
+  text-shadow: none;
+}
+
+.scene:not(.scene--plain)[data-wall='work'] .page-card {
+  background: var(--wall-blue);
+  color: var(--wall-cream);
+}
+
+.page-card h2,
+.page-card h3,
+.page-steps h3 {
+  font-family: var(--font-poster);
+  font-size: clamp(1.125rem, min(1.8vw, 3.2svh), 1.75rem);
+  font-size-adjust: none;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.14;
+}
+
+.page-card p {
+  margin: 0;
+  font-size: clamp(1.0625rem, 2.3svh, 1.125rem);
+  line-height: 1.45;
+}
+
+.page-card__go {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 4px;
+  font-weight: 700;
+}
+
+.page-card__meta {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.page-card__media {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+a.page-card {
+  transition: translate 200ms ease;
+}
+
+a.page-card:hover {
+  translate: 0 -3px;
+}
+
+.page-list-item {
+  min-width: 0;
+}
+
+.page-list-item > .page-card {
+  height: 100%;
+}
+
+.page-quote {
+  margin: 0;
+  font-size: clamp(1rem, 2.6svh, 1.1875rem);
+  font-weight: 600;
+  line-height: 1.38;
+}
+
+/* Steps under a rule */
+.page-steps {
+  display: grid;
+  grid-template-columns: repeat(var(--columns, 4), minmax(0, 1fr));
+  gap: clamp(14px, 2.6svh, 32px) clamp(20px, 2.6vw, 40px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-steps li {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: clamp(4px, 1svh, 10px);
+  border-top: 2px solid currentColor;
+  padding-top: clamp(8px, 1.6svh, 14px);
+}
+
+.page-steps__no {
+  font-family: var(--font-poster);
+  font-size: clamp(1.25rem, 3svh, 1.75rem);
+  font-size-adjust: none;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.page-steps p {
+  margin: 0;
+  font-size: clamp(1.0625rem, 2.3svh, 1.125rem);
+  line-height: 1.42;
+}
+
+/* A sheet of paper for reading, on any wall. */
+.page-sheet {
+  width: 100%;
+  max-width: 880px;
+  padding: clamp(6px, 1.4svh, 16px) clamp(16px, 3vw, 40px);
+  border-radius: 14px;
+  background: var(--wall-cream);
+  box-shadow: -14px 16px 30px rgba(20, 20, 10, 0.28);
+  color: var(--wall-blue);
+  text-shadow: none;
+}
+
+.page-sheet h3 {
+  font: inherit;
+  font-size: 1rem;
+  font-size-adjust: none;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.page-sheet--article {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-inline: auto;
+  padding: clamp(20px, 3.4vw, 56px);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.article-h2,
+.article-h3 {
+  font-family: var(--font-poster);
+  font-size-adjust: none;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+
+.article-h2 {
+  padding-top: 20px;
+  font-size: clamp(1.625rem, 3vw, 2.5rem);
+}
+
+.article-h3 {
+  padding-top: 10px;
+  font-size: clamp(1.3125rem, 2.2vw, 1.75rem);
+}
+
+.article-stat {
+  font-family: var(--font-poster);
+  font-size: clamp(2.25rem, 3.4vw, 3rem);
+  font-size-adjust: none;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.back-link {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  font-weight: 700;
+}
+
+/* Website offer form */
+.offer-form {
+  display: flex;
+  width: 100%;
+  max-width: 620px;
+  flex-direction: column;
+  gap: clamp(8px, 1.8svh, 14px);
+  padding: clamp(14px, min(2.4vw, 3.4svh), 32px);
+  border-radius: 14px;
+  background: var(--wall-cream);
+  box-shadow: -14px 16px 30px rgba(20, 20, 10, 0.28);
+  color: var(--wall-blue);
+  text-shadow: none;
+}
+
+.offer-form__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.offer-form label,
+.offer-form legend {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.offer-form fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.offer-form legend {
+  margin-bottom: 4px;
+  padding: 0;
+}
+
+.offer-field {
+  display: block;
+  width: 100%;
+  height: 44px;
+  margin-top: 3px;
+  padding: 0 12px;
+  border: 1.5px solid rgba(21, 58, 102, 0.3);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--wall-blue);
+  font-size: 1rem;
+  font-weight: 500;
+  outline: none;
+}
+
+.offer-field:focus {
+  border-color: var(--wall-blue);
+}
+
+.offer-choices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.offer-choice {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1px;
+  padding: 8px 10px;
+  border: 1.5px solid rgba(21, 58, 102, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  line-height: 1.25;
+  transition: background-color 200ms ease;
+}
+
+.offer-choice[data-active='true'] {
+  border-color: var(--wall-blue);
+  background: var(--wall-blue);
+  color: var(--wall-cream);
+}
+
+.offer-choice small {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.offer-ready {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+}
+
+.offer-ready label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.offer-form .wall-btn {
+  min-height: 48px;
+  gap: 8px;
+  border: 0;
+  background: var(--wall-blue);
+  color: var(--wall-cream);
+  cursor: pointer;
+}
+
+.offer-form__note {
+  margin: 0;
+  font-size: 0.8125rem;
+}
+
+@media (max-width: 1100px) {
+  .page-steps {
+    grid-template-columns: repeat(min(var(--columns, 4), 3), minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .page-split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(12px, 2.4svh, 24px);
+  }
+
+  .page-split__side {
+    justify-content: flex-start;
+    order: -1;
+  }
+
+  .page-hero .page-split__side {
+    order: 0;
+  }
+
+  .page-art {
+    max-width: min(100%, 560px);
+    height: min(26svh, 300px);
+  }
+
+  .page-photo img {
+    height: min(30svh, 300px);
+  }
+
+  .page-hero .globe-float {
+    --earth: min(70vw, 44svh);
+    margin: 13vw auto;
+  }
+
+  .page-split__side:has(.globe-float) {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 639px) {
+  .page-hero__title,
+  .page-offer__title {
+    font-size: clamp(1.625rem, min(8.2vw, 5.4svh), 2.5rem);
+  }
+
+  .page-cards,
+  .page-steps,
+  .page-story,
+  .offer-form__row,
+  .offer-choices {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page-steps--pairs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+  }
+
+  .page-steps--pairs h3 {
+    font-size: 0.9375rem;
+  }
+
+  .page-steps--pairs p {
+    font-size: 0.8125rem;
+    line-height: 1.32;
+  }
+
+  .page-steps {
+    gap: 8px 14px;
+  }
+
+  .page-steps li {
+    padding-top: 6px;
+  }
+
+  .page-steps p {
+    font-size: 0.875rem;
+    line-height: 1.34;
+  }
+
+  /* The picture sits beside the service name, where a thin strip would crop it. */
+  .page-offer {
+    align-items: start;
+    grid-template-columns: minmax(0, 1fr) 29%;
+    gap: 8px 14px;
+  }
+
+  .page-offer .page-split__copy {
+    display: contents;
+  }
+
+  .page-offer .page-split__copy > * {
+    grid-column: 1 / -1;
+  }
+
+  .page-offer .page-split__copy > .page-kicker,
+  .page-offer .page-split__copy > .page-offer__title {
+    grid-column: 1;
+  }
+
+  .page-offer .page-split__side {
+    align-self: center;
+    grid-area: 1 / 2 / 3 / 3;
+  }
+
+  .page-offer .page-art {
+    border-radius: 10px;
+  }
+
+  .page-cards {
+    gap: 8px;
+  }
+
+  .page-card {
+    gap: 3px;
+    padding: 11px 14px;
+  }
+
+  .page-card--short p:not(.page-card__meta) {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  /* Number on the left, words on the right, so a list of steps stays compact. */
+  .page-steps li:has(.page-steps__no) {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+    column-gap: 12px;
+  }
+
+  .page-steps__no {
+    grid-row: span 2;
+  }
+
+  .page-checks--extra,
+  .page-actions .page-note,
+  .page-photo figcaption,
+  .offer-form__note {
+    display: none;
+  }
+
+  .page-photo img {
+    height: 22svh;
+  }
+
+  #process .wall-lead,
+  #process .case-link {
+    display: none;
+  }
+
+  .page-sheet button {
+    padding-block: 11px;
+    font-size: 0.9375rem;
+  }
+
+  .page-sheet li > div {
+    padding-bottom: 11px;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  .page-checks li {
+    gap: 8px;
+  }
+
+  .page-checks svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .page-actions .wall-btn {
+    min-height: 48px;
+  }
+
+  .offer-form__row {
+    gap: 8px;
+  }
+
+  .offer-field {
+    height: 42px;
+  }
+
+  .offer-choice {
+    padding: 6px 10px;
+  }
+
+  .offer-choice small {
+    display: none;
+  }
+}
+
+/* Small phones: the same content, set a size smaller, with the pictures gone first. */
+@media (max-height: 700px) and (max-width: 639px) {
+  .page-art {
+    height: 20svh;
+  }
+
+  .page-hero .autograph {
+    height: 30px;
+  }
+
+  .page-steps--pairs {
+    row-gap: 4px;
+  }
+
+  .page-steps--pairs p {
+    font-size: 0.8125rem;
+    line-height: 1.3;
+  }
+
+  .page-card__media {
+    display: none;
+  }
+
+  .page-checks {
+    gap: 3px;
+    font-size: 0.875rem;
+    line-height: 1.32;
+  }
+
+  .page-checks--inline {
+    gap: 1px 12px;
+    font-size: 0.8125rem;
+  }
+
+  .page-story {
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  .page-story p {
+    margin-bottom: 8px;
+  }
+
+  .page-card {
+    gap: 3px;
+    padding: 10px 12px;
+  }
+
+  .page-card p,
+  .page-quote {
+    font-size: 0.875rem;
+    line-height: 1.32;
+  }
+
+  .page-steps {
+    gap: 6px 12px;
+  }
+
+  .page-steps p {
+    font-size: 0.8125rem;
+    line-height: 1.3;
+  }
+
+  .page-steps li {
+    padding-top: 4px;
+  }
+
+  .page-hero .globe-float {
+    --earth: 25svh;
+    margin-top: 0;
+  }
+
+  .page-photo img {
+    height: 17svh;
+  }
+
+  .page-sheet button {
+    padding-block: 8px;
+  }
+
+  .offer-claim .wall-lead {
+    display: none;
+  }
+
+  .offer-form {
+    gap: 6px;
+    padding: 12px;
+  }
+
+  .offer-form__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .offer-field {
+    height: 40px;
+  }
+}
+
+
+/* Each piece rises into place as it comes on screen. */
+[data-reveal] {
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-reveal='']:not(.wall-h) {
+  opacity: 0;
+  transform: translateY(26px);
+}
+
+.wall-h[data-reveal] .wl__in {
+  transition: transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: inherit;
+}
+
+.wall-h[data-reveal=''] .wl__in {
+  transform: translateY(108%);
+}
+
+/* The services at a glance, under the Our Services title. */
+.page-hero:has(.service-index) .scene__frame {
+  flex-direction: column;
+}
+
+.page-hero:has(.service-index) .scene__frame > .wall__body {
+  flex: none;
+  padding-bottom: clamp(20px, 3vw, 36px);
+}
+
+.service-index {
+  display: grid;
+  width: 100%;
+  max-width: var(--container-max);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 22px);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 86px) clamp(48px, 7vw, 96px);
+  list-style: none;
+}
+
+.service-index a {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(18px, 2vw, 30px);
+  border-radius: 12px;
+  background: var(--wall-blue);
+  color: var(--wall-cream);
+  text-decoration: none;
+  transition: translate 200ms ease;
+}
+
+.service-index a:hover {
+  translate: 0 -4px;
+}
+
+.service-index__no {
+  color: var(--wall-yellow);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.service-index strong {
+  font-family: var(--font-poster);
+  font-size: clamp(1.375rem, 1.9vw, 2rem);
+  font-size-adjust: none;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.service-index a > span:last-child {
+  font-size: 1.0625rem;
+  line-height: 1.4;
+}
+
+/* One service: what it is beside its picture, then what it includes. */
+.service-band__head {
+  display: grid;
+  align-items: center;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(24px, 5vw, 88px);
+}
+
+.service-band__art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.service-band__label {
+  margin: 0 0 12px;
+  font-family: inherit;
+  font-size: 1.125rem;
+  font-size-adjust: none;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: clamp(10px, 1.2vw, 18px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service-grid > li {
+  min-width: 0;
+}
+
+.service-tile {
+  position: relative;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(16px, 1.6vw, 24px);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgba(21, 58, 102, 0.08),
+    0 10px 24px rgba(21, 58, 102, 0.07);
+  color: var(--wall-blue);
+  text-decoration: none;
+  transition: translate 200ms ease;
+}
+
+.service-tile:hover {
+  translate: 0 -3px;
+}
+
+.service-tile__top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.service-tile .service-row__no {
+  width: auto;
+  color: var(--wall-red);
+  font-size: 1.125rem;
+  opacity: 1;
+}
+
+.service-tile .service-row__icon {
+  width: 20px;
+  height: 20px;
+  color: var(--wall-red);
+}
+
+.service-tile strong {
+  padding-right: 20px;
+  font-family: var(--font-poster);
+  font-size: clamp(1.1875rem, 1.45vw, 1.5rem);
+  font-size-adjust: none;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.16;
+}
+
+.service-tile > span {
+  font-size: 1.0625rem;
+  line-height: 1.42;
+}
+
+.service-tile .service-row__go {
+  position: absolute;
+  top: clamp(16px, 1.6vw, 24px);
+  right: clamp(16px, 1.6vw, 24px);
+}
+
+.service-tile:hover .service-row__go {
+  translate: 4px 0;
+}
+
+/* One tile to a project. */
+.project-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(20px, 2.6vw, 44px) clamp(14px, 2vw, 32px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-tiles > li {
+  min-width: 0;
+  scroll-margin-top: calc(var(--header) + 16px);
+}
+
+.project-tiles--row {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.project-tile {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+}
+
+.project-tile__shot {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 1792 / 2400;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  box-shadow: 0 14px 28px rgba(8, 22, 44, 0.2);
+}
+
+.project-tile__shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.project-tile:hover .project-tile__shot img {
+  transform: scale(1.035);
+}
+
+.project-tile:hover .hero-card__go,
+.project-tile:focus-visible .hero-card__go {
+  opacity: 1;
+}
+
+.project-tile strong {
+  font-family: var(--font-poster);
+  font-size: clamp(1.125rem, 1.5vw, 1.5rem);
+  font-size-adjust: none;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+.project-tile > span:last-child {
+  margin-top: 2px;
+  font-size: 1.0625rem;
+  line-height: 1.32;
+}
+
+.project-tiles--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 1200px;
+}
+
+.project-tiles--row .project-tile strong {
+  font-size: 1.125rem;
+}
+
+.project-tiles--row .project-tile > span:last-child {
+  font-size: 1rem;
+}
+
+.page-offer-wrap {
+  gap: clamp(28px, 4vw, 56px);
+}
+
+/* How a project runs. The section holds under the header while the steps pass. */
+.flow {
+  --stops: 5;
+}
+
+.flow .scene__stage {
+  position: sticky;
+  top: var(--header);
+  overflow: hidden;
+  height: var(--frame);
+  min-height: 0;
+}
+
+.flow::after {
+  display: block !important;
+  height: var(--travel, 0px);
+  content: '';
+}
+
+.flow .scene__frame {
+  height: 100%;
+}
+
+.flow .scene__frame > .flow__body {
+  justify-content: center;
+  gap: clamp(20px, 5svh, 56px);
+  padding-block: clamp(20px, 4svh, 48px);
+}
+
+.flow__rail {
+  position: relative;
+  padding-top: 32px;
+}
+
+/* A hairline right across the screen, and the part already travelled on top of it. */
+.flow__rail::before,
+.flow__line {
+  position: absolute;
+  top: 56px;
+  right: calc(-1 * clamp(20px, 4vw, 86px));
+  left: calc(-1 * clamp(20px, 4vw, 86px));
+  height: 3px;
+  content: '';
+}
+
+.flow__rail::before {
+  background: color-mix(in srgb, var(--ink) 24%, transparent);
+}
+
+.flow__line {
+  background: var(--accent);
+  transform-origin: 0 50%;
+}
+
+.flow__track {
+  position: relative;
+  display: flex;
+  width: max-content;
+  gap: clamp(40px, 6vw, 112px);
+  margin: 0;
+  padding: 0 28vw 0 0;
+  list-style: none;
+  will-change: transform;
+}
+
+.flow__step {
+  display: flex;
+  width: clamp(320px, 34vw, 560px);
+  flex: none;
+  flex-direction: column;
+  gap: clamp(6px, 1.2svh, 12px);
+}
+
+.flow__dot {
+  display: flex;
+  width: 52px;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: clamp(8px, 2svh, 22px);
+  border-radius: 10px;
+  background: var(--tint);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--ink) 40%, transparent);
+  color: var(--ink);
+  font-family: var(--font-poster);
+  font-size: 1.25rem;
+  font-size-adjust: none;
+  font-weight: 800;
+  line-height: 1;
+  transition:
+    background-color 300ms ease,
+    box-shadow 300ms ease,
+    color 300ms ease;
+}
+
+.flow__step.is-on .flow__dot {
+  background: var(--accent);
+  box-shadow: none;
+  color: #0e2645;
+}
+
+.flow__step h3 {
+  font-family: var(--font-poster);
+  font-size: clamp(2.25rem, min(4.2vw, 8svh), 4.25rem);
+  font-size-adjust: none;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+}
+
+.flow__step p {
+  max-width: 34ch;
+  margin: 0;
+  font-size: clamp(1.125rem, min(1.5vw, 2.8svh), 1.4375rem);
+  line-height: 1.42;
+}
+
+@media (max-width: 1400px) {
+  .project-tiles--row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1100px) {
+  .service-index {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .project-tiles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* A phone keeps the steps in a column, with the line drawing down their side. */
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  .flow .scene__stage {
+    position: relative;
+    top: auto;
+    overflow: visible;
+    height: auto;
+  }
+
+  .flow::after {
+    display: none !important;
+  }
+
+  .flow__rail {
+    padding: 0 0 0 68px;
+  }
+
+  .flow__rail::before,
+  .flow__line {
+    top: 0;
+    right: auto;
+    bottom: 0;
+    left: 25px;
+    width: 3px;
+    height: auto;
+  }
+
+  .flow__line {
+    transform-origin: 50% 0;
+  }
+
+  .flow__track {
+    width: auto;
+    flex-direction: column;
+    gap: 40px;
+    padding: 0;
+  }
+
+  .flow__step {
+    position: relative;
+    width: auto;
+  }
+
+  .flow__dot {
+    position: absolute;
+    top: 0;
+    left: -68px;
+  }
+
+  .flow__step h3 {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+  }
+}
+
+@media (max-width: 900px) {
+  .service-band__head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .service-band__art {
+    order: -1;
+  }
+}
+
+@media (max-width: 639px) {
+  .service-index,
+  .project-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .service-index {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .project-tile strong {
+    font-size: 1.0625rem;
+  }
+
+  .project-tile > span:last-child {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    transition: none;
+  }
+}
+
+/* Custom Shopify: each step of the build beside a picture of that step, which
+   stays on screen and changes as the steps go by. */
+.shopify-build {
+  display: grid;
+  align-items: start;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(32px, 6vw, 112px);
+}
+
+.shopify-steps {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shopify-step {
+  display: flex;
+  min-height: 62svh;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  opacity: 0.45;
+}
+
+.shopify-step[data-active='true'] {
+  opacity: 1;
+}
+
+.shopify-step[data-reveal='in'] {
+  transition: opacity 300ms ease;
+}
+
+.shopify-step[data-reveal='in'][data-active='false'] {
+  opacity: 0.45;
+}
+
+.shopify-step__no {
+  color: var(--accent);
+  font-size: 1.0625rem;
+  font-weight: 800;
+}
+
+.shopify-step h3 {
+  font-family: var(--font-poster);
+  font-size: clamp(1.75rem, 3vw, 3rem);
+  font-size-adjust: none;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+}
+
+.shopify-step p {
+  max-width: 42ch;
+  margin: 0;
+  font-size: clamp(1.125rem, 1.4vw, 1.3125rem);
+  line-height: 1.45;
+}
+
+.shopify-show {
+  position: sticky;
+  top: calc(var(--header) + 5svh);
+  height: min(84svh - var(--header), 680px);
+  min-height: 380px;
+}
+
+.shopify-show__part {
+  position: absolute;
+  display: flex;
+  overflow: hidden;
+  inset: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  padding: clamp(12px, 2.4vw, 32px);
+  border-radius: 16px;
+  container-type: size;
+  background: #fff;
+  box-shadow: 0 16px 36px rgba(4, 16, 34, 0.26);
+  color: var(--wall-blue);
+  opacity: 0;
+  transform: translateY(24px) scale(0.98);
+  transition:
+    opacity 450ms ease,
+    transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.shopify-show__part[data-active='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 900px) {
+  /* The picture stays at the top of the screen and the steps pass under it. */
+  .shopify-build {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .shopify-show {
+    z-index: 3;
+    top: calc(var(--header) + 8px);
+    height: 44svh;
+    min-height: 0;
+    order: -1;
+  }
+
+  .shopify-step {
+    min-height: 46svh;
+  }
+}
+

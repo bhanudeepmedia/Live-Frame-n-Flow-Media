@@ -195,7 +195,7 @@ const About: React.FC = () => {
                         <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
                             <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-accent/30 shrink-0">
                                 <img
-                                    src="/bhanudeep.png"
+                                    src={`${import.meta.env.BASE_URL}bhanudeep.png`}
                                     alt="Bhanu Deep - Founder of Frame n Flow Media"
                                     className="w-full h-full object-cover object-top"
                                 />

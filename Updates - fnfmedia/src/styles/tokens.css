@@ -1,0 +1,68 @@
+/**
+ * Design tokens — verbatim from DESIGN.md §62 "Design Tokens — Consolidated".
+ * Source of truth: DESIGN.md. Do not hand-edit values here without updating
+ * that section and recording the change in MEMORY.md (RULE.md §6.1).
+ */
+:root {
+  /* Typography */
+  --font-display: 'ImpactCustom', 'Impact', 'Anton', 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
+  --font-sans: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  --font-poster: 'Archivo', 'Arial Black', sans-serif;
+  --font-heading: var(--font-display);
+
+  /* Wall palette */
+  --wall-cream: #f3efe9;
+  --wall-blue: #153a66;
+  --wall-sky: #2b74b4;
+  --wall-red: #b3221f;
+  --wall-orange: #d9622b;
+  --wall-yellow: #e2a32d;
+  --wall-ink: #2a140b;
+
+  /* Colors */
+  --bg-primary: #08163c;
+  --bg-deep: #04102a;
+  --bg-surface: #0b1c45;
+  --bg-light: #f8f8f8;
+
+  --text-primary: #f8f8f8;
+  --text-dark: #08163c;
+  --text-muted: #a6b5d3;
+
+  --accent-blue: #1f6adc;
+  --accent-blue-light: #6da5f2;
+  --accent-green: #2bb278;
+  --accent-purple: #b88efa;
+  --accent-pink: #e652bb;
+  --accent-lavender: #f1c4fa;
+
+  /* Services */
+  --service-transform: #0d372e;
+  --service-build: #1860d3;
+  --service-operate: #b22260;
+  --service-growth: #2e0b66;
+
+  /* Borders */
+  --border-subtle: rgba(121, 170, 248, 0.18);
+  --border-strong: rgba(26, 99, 234, 0.6);
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+
+  /* Container */
+  --container-max: 1880px;
+
+  /* Motion */
+  --motion-fast: 180ms;
+  --motion-ui: 280ms;
+  --motion-standard: 500ms;
+  --motion-slow: 800ms;
+  --motion-cinematic: 1200ms;
+
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}

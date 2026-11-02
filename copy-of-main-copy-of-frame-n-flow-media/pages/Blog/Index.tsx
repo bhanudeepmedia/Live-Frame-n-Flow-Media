@@ -25,7 +25,7 @@ const BlogIndex: React.FC = () => {
             author: "Frame n Flow Team",
             readTime: "10 min read",
             slug: "/blog/revenue-growth-2026",
-            image: "/assets/blog/website-revenue-2026.png",
+            image: `${import.meta.env.BASE_URL}assets/blog/website-revenue-2026.png`,
             category: "Business Growth"
         }
     ];

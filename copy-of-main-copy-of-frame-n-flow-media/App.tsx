@@ -110,7 +110,7 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
-      if (path === '/offers/website-25k' || path.startsWith('/offers/website-25k')) {
+      if (path.includes('/offers/website-25k')) {
         return false;
       }
     }

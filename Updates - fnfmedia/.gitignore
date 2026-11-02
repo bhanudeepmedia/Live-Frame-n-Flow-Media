@@ -1,0 +1,53 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Playwright MCP QA screenshots (scratch, not a deliverable)
+.playwright-mcp
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+node_modules/
+.next/
+dist/
+build/
+out/
+.vercel/
+.netlify/
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Working files. The main website repo is public, so these stay on this Mac.
+/*.md
+/clean-images/
+/design-examples/
+/image-prompts/
+/portfolio-mockups/
+/portfolio-screenshots/
+/.claude/
+/.git-private-redesign/

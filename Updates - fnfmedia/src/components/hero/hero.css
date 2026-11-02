@@ -1,0 +1,126 @@
+/**
+ * Hero motion primitives — MOT-07 (mosaic drift) and MOT-11 (background
+ * shimmer) per MOTION.md. transform/opacity only (RULE.md §2.5 performance
+ * budget); all disabled under reduced motion.
+ */
+
+.hero-marquee-track {
+  animation: hero-marquee-scroll var(--marquee-duration, 60s) linear infinite;
+  animation-direction: var(--marquee-direction, normal);
+  will-change: transform;
+}
+
+@keyframes hero-marquee-scroll {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.hero-glow {
+  animation: hero-glow-pulse 11s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes hero-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1) translateX(0);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.06) translateX(2%);
+  }
+}
+
+/* Slow-moving gradient mesh — the "flowing" background breathing effect
+   behind the light strips (DESIGN.md §11). transform + opacity only. */
+.hero-gradient-flow {
+  animation: hero-gradient-drift 16s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+@keyframes hero-gradient-drift {
+  0% {
+    transform: translate3d(-10%, -8%, 0) scale(1) rotate(0deg);
+    opacity: 0.75;
+  }
+  33% {
+    transform: translate3d(8%, 6%, 0) scale(1.22) rotate(10deg);
+    opacity: 1;
+  }
+  66% {
+    transform: translate3d(-6%, 9%, 0) scale(1.15) rotate(-8deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(9%, -6%, 0) scale(1.25) rotate(6deg);
+    opacity: 1;
+  }
+}
+
+/* Fixed horizontal band texture (MOT-11) — the bands themselves never move;
+   only their visibility breathes on a tight 4s loop, matching the reference
+   site's own looping background video. It stays lit for most of the cycle
+   and briefly dips to flat dark navy for well under a second before
+   recovering — opacity only, no transform. */
+.hero-band-texture {
+  animation: hero-band-pulse 4s ease-in-out infinite;
+  will-change: opacity;
+}
+
+@keyframes hero-band-pulse {
+  0%,
+  32% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 0.12;
+  }
+  52% {
+    opacity: 0.06;
+  }
+  63% {
+    opacity: 0.85;
+  }
+  75%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* MOT-01 — initial hero content reveal on first paint (NOT OBSERVED in the
+   reference video, RECOMMENDED: standard fade-in, no skeleton screens). */
+.hero-content-enter {
+  animation: hero-content-in 700ms var(--ease-standard) both;
+}
+
+@keyframes hero-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-marquee-track {
+    animation: none !important;
+  }
+
+  .hero-glow,
+  .hero-gradient-flow,
+  .hero-band-texture {
+    animation: none !important;
+  }
+
+  .hero-content-enter {
+    animation: none !important;
+  }
+}

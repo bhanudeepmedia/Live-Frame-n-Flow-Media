@@ -1,0 +1,495 @@
+/* The motion graphic beside "How we build a custom Shopify store". Everything here
+   sits in its finished state, and ShopifyBuild.tsx animates it there from the start. */
+
+.sb-art {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+}
+
+.sb-caption {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* We plan the store */
+.sb-route {
+  fill: none;
+  stroke: var(--wall-blue);
+  stroke-dasharray: 1;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.sb-walker {
+  fill: var(--wall-red);
+  opacity: 0;
+  stroke: #fff;
+  stroke-width: 3;
+}
+
+.sb-page__box {
+  fill: var(--wall-cream);
+  stroke: var(--wall-blue);
+  stroke-width: 2.5;
+}
+
+.sb-block--fill {
+  fill: var(--wall-blue);
+}
+
+.sb-block--soft {
+  fill: rgba(21, 58, 102, 0.2);
+}
+
+.sb-block--line {
+  fill: rgba(21, 58, 102, 0.4);
+}
+
+.sb-block--accent {
+  fill: var(--wall-yellow);
+}
+
+.sb-label {
+  fill: var(--wall-blue);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.sb-done circle {
+  fill: #1e7a4c;
+}
+
+.sb-done svg {
+  color: #fff;
+}
+
+/* We design and code your theme */
+.sb-code {
+  background: #0d1c30;
+  color: #dbe6f3;
+}
+
+.sb-split {
+  display: grid;
+  min-height: 0;
+  flex: 1;
+  align-items: center;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(10px, 3cqw, 24px);
+}
+
+.sb-editor {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  gap: 0.5em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: clamp(0.625rem, 2.7cqw, 1rem);
+  font-size-adjust: none;
+}
+
+.sb-editor__file {
+  margin-bottom: 0.5em;
+  color: #8b9db3;
+}
+
+.sb-line {
+  display: block;
+  overflow: hidden;
+  max-width: 100%;
+  color: #f0b64a;
+  font: inherit;
+  line-height: 1.5;
+  white-space: pre;
+}
+
+.sb-store {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 10px;
+  background: var(--wall-cream);
+}
+
+.sb-store__nav {
+  height: 12px;
+  border-radius: 3px;
+  background: var(--wall-blue);
+}
+
+.sb-store__hero {
+  height: clamp(44px, 24cqh, 150px);
+  border-radius: 4px;
+  background: var(--wall-yellow);
+}
+
+.sb-store__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.sb-store__grid i {
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  background: rgba(21, 58, 102, 0.24);
+}
+
+.sb-store__foot {
+  height: 16px;
+  border-radius: 3px;
+  background: rgba(21, 58, 102, 0.5);
+}
+
+.sb-admin {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.sb-admin i {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.7);
+}
+
+.sb-admin i:nth-of-type(1) {
+  margin-left: auto;
+  background: var(--wall-red);
+}
+
+.sb-admin i:nth-of-type(2) {
+  background: var(--wall-blue);
+}
+
+.sb-admin i:nth-of-type(3) {
+  background: var(--wall-yellow);
+}
+
+/* We connect everything */
+.sb-connect {
+  background: var(--wall-blue);
+  color: var(--wall-cream);
+}
+
+.sb-wire {
+  fill: none;
+  stroke: var(--wall-yellow);
+  stroke-dasharray: 1;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.sb-packet {
+  fill: #fff;
+  opacity: 0;
+}
+
+.sb-hub rect {
+  fill: var(--wall-cream);
+}
+
+.sb-hub path {
+  fill: var(--wall-blue);
+}
+
+.sb-node__box {
+  fill: var(--wall-cream);
+}
+
+.sb-node__icon {
+  color: var(--wall-blue);
+}
+
+.sb-node__name {
+  fill: var(--wall-blue);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.sb-state {
+  fill: #1e7a4c;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.sb-tick circle {
+  fill: #1e7a4c;
+}
+
+.sb-tick svg {
+  color: #fff;
+}
+
+/* You go live */
+.sb-live {
+  background: var(--wall-yellow);
+  color: var(--wall-blue);
+}
+
+.sb-browser {
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 16px 30px rgba(42, 20, 11, 0.28);
+}
+
+.sb-browser__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--wall-cream);
+  font-size: clamp(0.75rem, 2.6cqw, 1rem);
+  font-weight: 600;
+}
+
+.sb-dots {
+  display: flex;
+  gap: 5px;
+}
+
+.sb-dots i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(21, 58, 102, 0.3);
+}
+
+.sb-url {
+  overflow: hidden;
+  width: 13ch;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size-adjust: none;
+  white-space: nowrap;
+}
+
+.sb-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-weight: 800;
+}
+
+.sb-status i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #8b9db3;
+}
+
+.sb-status b:last-child {
+  display: none;
+}
+
+.sb-status[data-live='true'] {
+  color: #1e7a4c;
+}
+
+.sb-status[data-live='true'] i {
+  background: #1e7a4c;
+  animation: sb-pulse 1.8s ease-out infinite;
+}
+
+.sb-status[data-live='true'] b:first-of-type {
+  display: none;
+}
+
+.sb-status[data-live='true'] b:last-child {
+  display: inline;
+}
+
+@keyframes sb-pulse {
+  from {
+    box-shadow: 0 0 0 0 rgba(30, 122, 76, 0.5);
+  }
+
+  to {
+    box-shadow: 0 0 0 9px rgba(30, 122, 76, 0);
+  }
+}
+
+.sb-browser__page {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+  flex: 1;
+}
+
+.sb-shop {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+}
+
+.sb-shop__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sb-shop__nav i {
+  width: 34%;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--wall-blue);
+}
+
+.sb-shop__nav svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sb-shop__hero {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  align-items: flex-end;
+  padding: 10px;
+  border-radius: 6px;
+  background: var(--wall-blue);
+}
+
+.sb-shop__hero span {
+  padding: 6px 12px;
+  border-radius: 4px;
+  background: var(--wall-yellow);
+  color: var(--wall-blue);
+  font-size: clamp(0.75rem, 2.5cqw, 0.9375rem);
+  font-weight: 800;
+}
+
+.sb-shop__row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.sb-shop__row i {
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: 4px;
+  background: rgba(21, 58, 102, 0.2);
+}
+
+.sb-cover {
+  position: absolute;
+  display: flex;
+  z-index: 1;
+  inset: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: var(--wall-blue);
+  color: var(--wall-cream);
+}
+
+.sb-cover span {
+  font-size: clamp(1.25rem, 5.4cqw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.sb-cover button {
+  padding: 8px 20px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--wall-yellow);
+  color: var(--wall-blue);
+  font: inherit;
+  font-weight: 800;
+}
+
+.sb-cursor {
+  position: absolute;
+  top: calc(50% + 26px);
+  left: calc(50% + 8px);
+  width: 24px;
+  height: 24px;
+  fill: #fff;
+  opacity: 0;
+  stroke: var(--wall-blue);
+  stroke-width: 1.4;
+}
+
+.sb-notes {
+  position: relative;
+  height: 46px;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sb-note {
+  position: absolute;
+  display: flex;
+  inset: 0;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  border-radius: 8px;
+  background: var(--wall-blue);
+  color: var(--wall-cream);
+  font-size: clamp(0.8125rem, 2.8cqw, 1.0625rem);
+  font-weight: 700;
+}
+
+.sb-note svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  color: var(--wall-yellow);
+}
+
+/* Shown finished and still, so the words are there without any motion. */
+.sb-note:not(:first-child) {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sb-cover {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .sb-caption,
+  .sb-admin {
+    font-size: 0.875rem;
+  }
+
+  .sb-notes {
+    height: 36px;
+  }
+
+  .sb-store {
+    gap: 4px;
+    padding: 6px;
+  }
+
+  .sb-store__grid {
+    gap: 4px;
+  }
+}

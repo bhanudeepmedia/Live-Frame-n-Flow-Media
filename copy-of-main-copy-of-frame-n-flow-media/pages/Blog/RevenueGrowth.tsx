@@ -123,7 +123,7 @@ const BlogPost: React.FC = () => {
                                 Why a Great Website Increases the <span className="text-accent">Revenue</span> of Your Business in 2026
                             </h1>
                             <div className={`relative aspect-video rounded-3xl overflow-hidden border ${t('border-white/10', 'border-gray-200')} shadow-2xl mb-12 group`}>
-                                <img src="/assets/blog/website-revenue-2026.png" alt="Website Revenue Growth 2026" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                <img src={`${import.meta.env.BASE_URL}assets/blog/website-revenue-2026.png`} alt="Website Revenue Growth 2026" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                     onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop"; }} />
                             </div>
                         </div>

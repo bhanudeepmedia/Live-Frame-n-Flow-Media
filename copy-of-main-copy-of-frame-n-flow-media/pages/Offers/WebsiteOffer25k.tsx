@@ -455,7 +455,7 @@ const WebsiteOffer25k: React.FC = () => {
       {/* MINIMAL HEADER */}
       <div className="absolute top-0 left-0 w-full z-50 p-6 md:px-12 flex justify-start items-center">
         <NavLink to="/" className="group flex items-center space-x-2">
-          <img src="/logo.png" alt="Frame n Flow Logo" className="h-12 md:h-16 w-auto transition-transform group-hover:scale-105" />
+          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Frame n Flow Logo" className="h-12 md:h-16 w-auto transition-transform group-hover:scale-105" />
         </NavLink>
       </div>
 
